@@ -6,8 +6,7 @@ import UserComponent from './components/UserComponent/UserComponent';
 
 function App() {
   const [count, setCount] = useState(0)
-  
-  
+
   return (
     <>
       <div>
@@ -27,13 +26,12 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-<<<<<<< HEAD
-        <button onClick={() => setCount((count) => count + 1000)}>
-=======
         <button onClick={() => setCount((count) => count + 10)}>
->>>>>>> 95c9bca714f5d6c6d6cc81cc11935f55ac1fd7cd
           count is {count}
         </button>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
