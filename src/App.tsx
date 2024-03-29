@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import UserComponent from './components/UserComponent/UserComponent';
+import RegisterComponent from './components/RegisterComponent/RegisterComponent';
+import RouteComponent from './components/RouteComponent/RouteComponent';
+import RouterComponent from './components/RouteComponent/RouteComponent';
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -10,35 +12,9 @@ function App() {
   return (
     <>
       <div>
-      <UserComponent  
-        username="john_doe"
-        password="password123"
-        email="john@example.com"
-        address="123 Main St, City, Country"
-        avatar="https://th.bing.com/th/id/OIP.KdRE7KHqL-46M8nrvOX2CgAAAA?rs=1&pid=ImgDetMain"></UserComponent>
-
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        hello
+        <RouterComponent></RouterComponent>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 10)}>
-          count is {count}
-        </button>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
