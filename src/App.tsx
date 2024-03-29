@@ -5,7 +5,8 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
-
+  let number2: number = 4;
+  
   return (
     <>
       <div>
@@ -18,9 +19,12 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 10)}>
+        <button onClick={() => setCount((count) => count + number2)}>
           count is {count}
         </button>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
