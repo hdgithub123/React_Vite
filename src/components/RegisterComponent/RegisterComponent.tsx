@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './RegisterComponent.css';
 
-const RegisterComponent = () => {
-  const history = useHistory();
-  
-  const [formData, setFormData] = useState({
+interface FormData {
+  username: string;
+  password: string;
+  fullName: string;
+  phone: string;
+  address: string;
+  email: string;
+  avatar: File | null;
+}
+
+const RegisterComponent: React.FC = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState<FormData>({
     username: '',
     password: '',
     fullName: '',
@@ -16,7 +25,7 @@ const RegisterComponent = () => {
     avatar: null
   });
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
       ...prevState,
@@ -24,7 +33,7 @@ const RegisterComponent = () => {
     }));
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     setFormData(prevState => ({
       ...prevState,
@@ -32,7 +41,7 @@ const RegisterComponent = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const formDataToSend = new FormData();
@@ -50,7 +59,7 @@ const RegisterComponent = () => {
       console.log('Register successful:', response.data);
 
       // Chuyển hướng đến trang "home" sau khi đăng ký thành công
-      history.push('/home');
+      navigate('/home');
     } catch (error) {
       console.error('Register failed:', error);
     }
@@ -62,27 +71,27 @@ const RegisterComponent = () => {
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="username">Username:</label>
-          <input type="text" id="username" name="username" onChange={handleInputChange} />
+          <input type="text" id="username" name="username" value={formData.username} onChange={handleInputChange} />
         </div>
         <div className="form-group">
           <label htmlFor="password">Password:</label>
-          <input type="password" id="password" name="password" onChange={handleInputChange} />
+          <input type="password" id="password" name="password" value={formData.password} onChange={handleInputChange} />
         </div>
         <div className="form-group">
           <label htmlFor="fullName">Full Name:</label>
-          <input type="text" id="fullName" name="fullName" onChange={handleInputChange} />
+          <input type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleInputChange} />
         </div>
         <div className="form-group">
           <label htmlFor="phone">Phone:</label>
-          <input type="text" id="phone" name="phone" onChange={handleInputChange} />
+          <input type="text" id="phone" name="phone" value={formData.phone} onChange={handleInputChange} />
         </div>
         <div className="form-group">
           <label htmlFor="address">Address:</label>
-          <input type="text" id="address" name="address" onChange={handleInputChange} />
+          <input type="text" id="address" name="address" value={formData.address} onChange={handleInputChange} />
         </div>
         <div className="form-group">
           <label htmlFor="email">Email:</label>
-          <input type="email" id="email" name="email" onChange={handleInputChange} />
+          <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} />
         </div>
         <div className="form-group">
           <label htmlFor="avatar">Avatar:</label>

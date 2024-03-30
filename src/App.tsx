@@ -1,21 +1,18 @@
 import { useState } from 'react'
-import './App.css'
-import UserComponent from './components/UserComponent/UserComponent';
-import RegisterComponent from './components/RegisterComponent/RegisterComponent';
-import RouteComponent from './components/RouteComponent/RouteComponent';
 import RouterComponent from './components/RouteComponent/RouteComponent';
+import './App.css'
 
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        hello
-        <RouterComponent></RouterComponent>
-      </div>
-    </>
+      <>
+        <h1>hello</h1>
+      <RouterComponent></RouterComponent>
+      
+      </>
+
   )
 }
 
