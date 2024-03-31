@@ -44,18 +44,17 @@ const RegisterComponent: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('username', formData.username);
-      formDataToSend.append('password', formData.password);
-      formDataToSend.append('fullName', formData.fullName);
-      formDataToSend.append('phone', formData.phone);
-      formDataToSend.append('address', formData.address);
-      formDataToSend.append('email', formData.email);
-      if (formData.avatar) {
-        formDataToSend.append('avatar', formData.avatar);
-      }
+      const formDataToSend = {
+        username: formData.username,
+        password: formData.password,
+        fullName: formData.fullName,
+        phone: formData.phone,
+        address: formData.address,
+        email: formData.email,
+        avatar: formData.avatar || ""
+      };
 
-      const response = await axios.post('http://your-api-endpoint/register', formDataToSend);
+      const response = await axios.post('http://localhost:3000/user/detail', formDataToSend);
       console.log('Register successful:', response.data);
 
       // Chuyển hướng đến trang "home" sau khi đăng ký thành công
