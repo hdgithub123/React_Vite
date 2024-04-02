@@ -1,10 +1,10 @@
+// TableComponent.tsx
 import React, { useState } from 'react';
 import CreateTableFilterComponent from './CreateTableFilterComponent';
 
 const TableComponent: React.FC = () => {
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  
 
-  // Dữ liệu mẫu
   const tableData = {
     title: {
       id: 'Mã',
@@ -13,7 +13,7 @@ const TableComponent: React.FC = () => {
       email: 'Email',
     },
     Datainsert: [
-      { id: '1', age: '30', email: 'john@example.com' },
+      { id: '1', name: 'John', age: '30', email: 'john@example.com' },
       { id: '2', name: 'Alice', age: '25', email: 'alice@example.com' },
       { id: '3', name: 'Bob', age: '35', email: 'bob@example.com' },
       { id: '4', name: 'Tom', age: '28', email: 'tom@example.com' },
@@ -26,35 +26,30 @@ const TableComponent: React.FC = () => {
       { id: '11', name: 'Elizabeth', age: '26', email: 'elizabeth@example.com' },
       { id: '12', name: 'Daniel', age: '30', email: 'daniel@example.com' },
       { id: '13', name: 'Sophia', age: '28', email: 'sophia@example.com' },
-      { id: '14', name: 'Alexander', age: '33', email: 'alexander@example.com' }
     ],
   };
 
-  const handleRowSelect = (id: string) => {
-    if (selectedRows.includes(id)) {
-      setSelectedRows(selectedRows.filter(rowId => rowId !== id));
-    } else {
-      setSelectedRows([...selectedRows, id]);
-    }
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+
+  const handleSelectedRowsChange = (newSelectedRows: string[]) => {
+    setSelectedRows(newSelectedRows);
   };
 
-  const filteredData = tableData.Datainsert.filter(row => selectedRows.includes(row.id));
 
   return (
     <div>
+      
       <div>
         <h2>Selected Rows</h2>
         <ul>
-          {filteredData.map(row => (
-            <li key={row.id}>
-              {row.id} - {row.name} - {row.age} - {row.email}
+          {selectedRows.map(id => (
+            <li key={id}>
+              {tableData.Datainsert.find(row => row.id === id)?.id} - {tableData.Datainsert.find(row => row.id === id)?.name} - {tableData.Datainsert.find(row => row.id === id)?.age} - {tableData.Datainsert.find(row => row.id === id)?.email}
             </li>
           ))}
         </ul>
       </div>
-      <p>Table Example</p>
-      <CreateTableFilterComponent Data={tableData} selectedRows={selectedRows} onRowSelect={handleRowSelect} />
-      
+      <CreateTableFilterComponent Data={tableData} selectedRows={selectedRows} onSelectedRowsChange={handleSelectedRowsChange} />
     </div>
   );
 };
