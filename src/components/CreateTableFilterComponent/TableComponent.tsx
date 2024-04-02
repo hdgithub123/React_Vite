@@ -33,6 +33,7 @@ const TableComponent: React.FC = () => {
 
   const handleSelectedRowsChange = (newSelectedRows: string[]) => {
     setSelectedRows(newSelectedRows);
+    console.log("selectedRows",selectedRows)
   };
 
 
