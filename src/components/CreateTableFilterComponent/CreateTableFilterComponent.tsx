@@ -9,48 +9,15 @@ interface TableData {
 
 interface Props {
   Data: TableData;
-  selectedRows: string[];
-  onSelectedRowsChange: (selectedRows: string[]) => void;
+  onDataSelected: (selectedData:{ [key: string]: string }[]) => void;
 }
 
-const CreateTableFilterComponent: React.FC<Props> = ({ Data, selectedRows, onSelectedRowsChange }) => {
+const CreateTableFilterComponent: React.FC<Props> = ({Data , onDataSelected }) => {
   const { title, Datainsert } = Data;
   const [filterValues, setFilterValues] = useState<{ [key: string]: string }>({});
   const [checkboxStates, setCheckboxStates] = useState<{ [key: string]: boolean }>({});
   const [filterStates, setfilterStates] = useState<{[key: string]: string }[]>([]);
-
-  useEffect(() => {
-    setfilterStates(filterDatas(Datainsert, filterValues))
-  }, [filterStates]);
-
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>, columnName: string) => {
-    const { value } = e.target;
-    setFilterValues(prevState => ({
-      ...prevState,
-      [columnName]: value
-    }));
-  };
-
-  const handleCheckboxChange = (id: string) => {
-    const updatedCheckboxStates = { ...checkboxStates, [id]: !checkboxStates[id] };
-    setCheckboxStates(updatedCheckboxStates);
-    const updatedSelectedRows = Object.keys(updatedCheckboxStates).filter(id => updatedCheckboxStates[id]);
-    onSelectedRowsChange(updatedSelectedRows);
-  };
-
-  const handleAllCheckboxFilterChange = () => {
-    const isCheckedAll = !allFilterCheck;
-    const newCheckboxStates: { [key: string]: boolean } = {};
-    const updatedSelectedRows: string[] = [];
-    filterStates.forEach(row => {
-      newCheckboxStates[row.id] = isCheckedAll;
-      if (isCheckedAll) {
-        updatedSelectedRows.push(row.id);
-      }
-    });
-    setCheckboxStates(newCheckboxStates);
-    onSelectedRowsChange(updatedSelectedRows);
-  };
+  const [checkallboxStates, setCheckallboxStates] = useState<boolean>(false);
 
   const filterDatas = (data: { [key: string]: string }[], filterValues: { [key: string]: string }) => {
     return data.filter(row => {
@@ -61,8 +28,41 @@ const CreateTableFilterComponent: React.FC<Props> = ({ Data, selectedRows, onSel
       });
     });
   };
-  
-  const allFilterCheck = filterStates.length > 0 && filterStates.every(row => checkboxStates[row.id]);
+
+
+
+  useEffect(() => {
+    setfilterStates(filterDatas(Datainsert, filterValues))
+  }, [filterValues]);
+
+  useEffect(() => {
+    const selectedData = Datainsert.filter(row => checkboxStates[row.id]);
+    onDataSelected(selectedData);
+    console.log("checkboxStates",checkboxStates)
+  }, [checkboxStates]);
+
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>, columnName: string) => {
+    const { value } = e.target;
+     setFilterValues(prevState => ({
+      ...prevState,
+      [columnName]: value
+    }));
+  };
+
+  const handleCheckboxChange = (id: string) => {
+    const updatedCheckboxStates = { ...checkboxStates, [id]: !checkboxStates[id] };
+    setCheckboxStates(updatedCheckboxStates);
+  };
+  const handleAllCheckboxFilterChange = () => {
+    const allFilterCheck = filterStates.length > 0 && filterStates.every(row => checkboxStates[row.id]);
+    const isCheckedAll = !allFilterCheck;
+    setCheckallboxStates(isCheckedAll);
+    const newCheckboxStates: { [key: string]: boolean } = {...checkboxStates};
+    filterStates.forEach(row => {
+      newCheckboxStates[row.id] = isCheckedAll;
+    });
+    setCheckboxStates(newCheckboxStates);  
+  };
 
   return (
     <div className="table-container">
@@ -74,7 +74,7 @@ const CreateTableFilterComponent: React.FC<Props> = ({ Data, selectedRows, onSel
               <th key={index}>
                 <input
                   type="text"
-                  value={filterValues[key] || ''}
+                  value={filterValues[key]}
                   onChange={(e) => handleFilterChange(e, key)}
                   placeholder={`Filter ${title[key]}`}
                 />
@@ -85,8 +85,8 @@ const CreateTableFilterComponent: React.FC<Props> = ({ Data, selectedRows, onSel
             <th>
               <input
                 type="checkbox"
-                checked={allFilterCheck}
-                onClick={handleAllCheckboxFilterChange}
+                checked={checkallboxStates}
+                onChange={handleAllCheckboxFilterChange}
               />
             </th>
             {Object.keys(title).map((key, index) => (
@@ -102,7 +102,7 @@ const CreateTableFilterComponent: React.FC<Props> = ({ Data, selectedRows, onSel
               <td>
                 <input
                   type="checkbox"
-                  checked={checkboxStates[rowData.id]}
+                  checked={checkboxStates[rowData.id] || false}
                   onChange={() => handleCheckboxChange(rowData.id)}
                 />
               </td>

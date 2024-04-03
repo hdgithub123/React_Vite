@@ -1,10 +1,8 @@
-// TableComponent.tsx
 import React, { useState } from 'react';
 import CreateTableFilterComponent from './CreateTableFilterComponent';
 
 const TableComponent: React.FC = () => {
   
-
   const tableData = {
     title: {
       id: 'Mã',
@@ -29,28 +27,28 @@ const TableComponent: React.FC = () => {
     ],
   };
 
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
-  const handleSelectedRowsChange = (newSelectedRows: string[]) => {
-    setSelectedRows(newSelectedRows);
-    console.log("selectedRows",selectedRows)
+  const [selectedData, setSelectedData] = useState<{ [key: string]: string }[]>([]);
+
+  const handleSelectedRowsChange = (newSelectedRows: { [key: string]: string }[]) => {
+    setSelectedData(newSelectedRows);
   };
-
 
   return (
     <div>
-      
       <div>
         <h2>Selected Rows</h2>
-        <ul>
-          {selectedRows.map(id => (
-            <li key={id}>
-              {tableData.Datainsert.find(row => row.id === id)?.id} - {tableData.Datainsert.find(row => row.id === id)?.name} - {tableData.Datainsert.find(row => row.id === id)?.age} - {tableData.Datainsert.find(row => row.id === id)?.email}
-            </li>
-          ))}
-        </ul>
+        {null || (
+          <ul>
+            {selectedData.map(row => (
+              <li key={row.id}>
+                {row.id} - {row.name} - {row.age} - {row.email}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
-      <CreateTableFilterComponent Data={tableData} selectedRows={selectedRows} onSelectedRowsChange={handleSelectedRowsChange} />
+      <CreateTableFilterComponent Data={tableData} onDataSelected={handleSelectedRowsChange} />
     </div>
   );
 };
