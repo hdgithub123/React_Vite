@@ -1,5 +1,5 @@
 // CreateTableFilterComponent.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './CreateTableFilterComponent.css';
 
 interface TableData {
@@ -18,6 +18,7 @@ const CreateTableFilterComponent: React.FC<Props> = ({Data , onDataSelected }) =
   const [checkboxStates, setCheckboxStates] = useState<{ [key: string]: boolean }>({});
   const [filterStates, setfilterStates] = useState<{[key: string]: string }[]>([]);
   const [checkallboxStates, setCheckallboxStates] = useState<boolean>(false);
+  const [itemCheck, setitemCheck] = useState<string>("A");
 
   const filterDatas = (data: { [key: string]: string }[], filterValues: { [key: string]: string }) => {
     return data.filter(row => {
@@ -29,16 +30,26 @@ const CreateTableFilterComponent: React.FC<Props> = ({Data , onDataSelected }) =
     });
   };
 
-
-
   useEffect(() => {
     setfilterStates(filterDatas(Datainsert, filterValues))
   }, [filterValues]);
 
   useEffect(() => {
+    let selectedData : {[key: string]: string }[] = []
+    if (itemCheck === "A") {
+      selectedData = Datainsert
+    } else if (itemCheck === "C") {
+      selectedData = Datainsert.filter(row => checkboxStates[row.id]);
+    } else {
+      selectedData = Datainsert.filter(row => !checkboxStates[row.id]);
+    }
+    setfilterStates(selectedData);
+  }, [itemCheck]);
+
+
+  useEffect(() => {
     const selectedData = Datainsert.filter(row => checkboxStates[row.id]);
     onDataSelected(selectedData);
-    console.log("checkboxStates",checkboxStates)
   }, [checkboxStates]);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>, columnName: string) => {
@@ -64,17 +75,31 @@ const CreateTableFilterComponent: React.FC<Props> = ({Data , onDataSelected }) =
     setCheckboxStates(newCheckboxStates);  
   };
 
+  const handleItemCheck = () => {
+    let nextValue;
+  
+    if (itemCheck === "A") {
+      nextValue = "C";
+    } else if (itemCheck === "C") {
+      nextValue = "UC";
+    } else {
+      nextValue = "A";
+    }
+  
+    setitemCheck(nextValue);
+  };
+  
   return (
     <div className="table-container">
       <table>
         <thead>
           <tr>
-            <th></th>
+            <th><button className="btn" onClick={handleItemCheck}>{null||itemCheck}</button></th>
             {Object.keys(title).map((key, index) => (
               <th key={index}>
                 <input
                   type="text"
-                  value={filterValues[key]}
+                  value={filterValues[key] || ""}
                   onChange={(e) => handleFilterChange(e, key)}
                   placeholder={`Filter ${title[key]}`}
                 />
@@ -85,7 +110,7 @@ const CreateTableFilterComponent: React.FC<Props> = ({Data , onDataSelected }) =
             <th>
               <input
                 type="checkbox"
-                checked={checkallboxStates}
+                checked={checkallboxStates || false}
                 onChange={handleAllCheckboxFilterChange}
               />
             </th>
