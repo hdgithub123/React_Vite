@@ -20,8 +20,7 @@ const CreateTableFilterComponent: React.FC<Props> = ({ Data, selectedRows, onSel
   const [filterStates, setfilterStates] = useState<{[key: string]: string }[]>([]);
 
   useEffect(() => {
-    const filteredData = filterDatas(Datainsert, filterValues);
-    setfilterStates(filteredData)
+    setfilterStates(filterDatas(Datainsert, filterValues))
   }, [filterStates]);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>, columnName: string) => {
