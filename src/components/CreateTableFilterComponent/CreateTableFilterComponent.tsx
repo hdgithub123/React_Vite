@@ -30,9 +30,15 @@ const CreateTableFilterComponent: React.FC<Props> = ({Data , onDataSelected }) =
     });
   };
 
+  const allFilterCheck : boolean = filterStates.length > 0 && filterStates.every(row => checkboxStates[row.id]);
+  
   useEffect(() => {
     setfilterStates(filterDatas(Datainsert, filterValues))
   }, [filterValues]);
+
+  useEffect(() => {
+    setCheckallboxStates(allFilterCheck)
+  }, [allFilterCheck]);
 
   useEffect(() => {
     let selectedData : {[key: string]: string }[] = []
@@ -65,9 +71,10 @@ const CreateTableFilterComponent: React.FC<Props> = ({Data , onDataSelected }) =
   const handleCheckboxChange = (id: string) => {
     const updatedCheckboxStates = { ...checkboxStates, [id]: !checkboxStates[id] };
     setCheckboxStates(updatedCheckboxStates);
+    setCheckallboxStates(allFilterCheck)
   };
   const handleAllCheckboxFilterChange = () => {
-    const allFilterCheck = filterStates.length > 0 && filterStates.every(row => checkboxStates[row.id]);
+    
     const isCheckedAll = !allFilterCheck;
     setCheckallboxStates(isCheckedAll);
     const newCheckboxStates: { [key: string]: boolean } = {...checkboxStates};
