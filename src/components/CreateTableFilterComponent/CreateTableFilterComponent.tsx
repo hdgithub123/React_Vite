@@ -36,12 +36,14 @@ const CreateTableFilterComponent: React.FC<Props> = ({Data , onDataSelected }) =
 
   useEffect(() => {
     let selectedData : {[key: string]: string }[] = []
+    let selectedStore : {[key: string]: string }[] = []
+    selectedStore = filterDatas(Datainsert, filterValues)
     if (itemCheck === "A") {
-      selectedData = Datainsert
+      selectedData = selectedStore
     } else if (itemCheck === "C") {
-      selectedData = Datainsert.filter(row => checkboxStates[row.id]);
+      selectedData = selectedStore.filter(row => checkboxStates[row.id]);
     } else {
-      selectedData = Datainsert.filter(row => !checkboxStates[row.id]);
+      selectedData = selectedStore.filter(row => !checkboxStates[row.id]);
     }
     setfilterStates(selectedData);
   }, [itemCheck]);
