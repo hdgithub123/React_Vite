@@ -4,8 +4,9 @@
     text-align: left;
     padding: 8px;
   }
-  
-.btn{
+
+.searchBtncheckall{
   padding: 1px;
-  font-size: smaller;
+  text-align: center;
 }
+

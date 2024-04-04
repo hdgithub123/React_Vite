@@ -96,7 +96,7 @@ const CreateTableFilterComponent: React.FC<Props> = ({Data , onDataSelected }) =
       <table>
         <thead>
           <tr>
-            <th><button className="btn" onClick={handleItemCheck}>{null||itemCheck}</button></th>
+            <th><button className="searchBtncheckall" onClick={handleItemCheck}>{null||itemCheck}</button></th>
             {Object.keys(title).map((key, index) => (
               <th key={index}>
                 <input
