@@ -1,12 +1,11 @@
 /* Trong file CreateTableFilterComponent.css */
-.table-container th,
-.table-container td {
+.table-container th, .table-container td {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
 }
 
-.btn {
-  padding: 5px;
-  font-size: smaller;
+.searchBtncheckall{
+padding: 1px;
+text-align: center;
 }
