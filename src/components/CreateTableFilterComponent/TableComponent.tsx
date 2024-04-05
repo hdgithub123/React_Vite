@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import CreateTableFilterComponent from './CreateTableFilterComponent';
 
 const TableComponent: React.FC = () => {
-  
+
   const tableData = {
     title: {
       id: 'Mã',

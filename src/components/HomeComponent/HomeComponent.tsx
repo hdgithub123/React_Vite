@@ -5,6 +5,9 @@ interface HomeComponentProps {
   // Các props nếu cần
 }
 
+
+
+
 // HomeComponent là một Functional Component, sử dụng React.FC để xác định kiểu
 const HomeComponent: React.FC<HomeComponentProps> = () => {
   return (
