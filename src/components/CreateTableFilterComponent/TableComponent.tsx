@@ -10,7 +10,7 @@ const TableComponent: React.FC = () => {
       age: 'Tuổi',
       email: 'Email',
     },
-    Datainsert: [
+    Contents: [
       { id: '1', name: 'John', age: '30', email: 'john@example.com' },
       { id: '2', name: 'Alice', age: '25', email: 'alice@example.com' },
       { id: '3', name: 'Bob', age: '35', email: 'bob@example.com' },

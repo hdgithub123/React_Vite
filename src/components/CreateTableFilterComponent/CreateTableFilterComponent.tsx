@@ -4,7 +4,7 @@ import './CreateTableFilterComponent.css';
 
 interface TableData {
   title: { [key: string]: string };
-  Datainsert: { [key: string]: string }[];
+  Contents: { [key: string]: string }[];
 }
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const CreateTableFilterComponent: React.FC<Props> = ({ Data, onDataSelected,onRowSelected }) => {
-  const { title, Datainsert } = Data;
+  const { title, Contents } = Data;
   const [filterValues, setFilterValues] = useState<{ [key: string]: string }>({});
   const [checkboxStates, setCheckboxStates] = useState<{ [key: string]: boolean }>({});
   const [filterStates, setfilterStates] = useState<{ [key: string]: string }[]>([]);
@@ -35,7 +35,7 @@ const CreateTableFilterComponent: React.FC<Props> = ({ Data, onDataSelected,onRo
   const allFilterCheck: boolean = filterStates.length > 0 && filterStates.every(row => checkboxStates[row.id]);
 
   useEffect(() => {
-    setfilterStates(filterDatas(Datainsert, filterValues))
+    setfilterStates(filterDatas(Contents, filterValues))
   }, [filterValues]);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const CreateTableFilterComponent: React.FC<Props> = ({ Data, onDataSelected,onRo
   useEffect(() => {
     let selectedData: { [key: string]: string }[] = []
     let selectedStore: { [key: string]: string }[] = []
-    selectedStore = filterDatas(Datainsert, filterValues)
+    selectedStore = filterDatas(Contents, filterValues)
     if (itemCheck === "A") {
       selectedData = selectedStore
     } else if (itemCheck === "C") {
@@ -58,7 +58,7 @@ const CreateTableFilterComponent: React.FC<Props> = ({ Data, onDataSelected,onRo
 
 
   useEffect(() => {
-    const selectedData = Datainsert.filter(row => checkboxStates[row.id]);
+    const selectedData = Contents.filter(row => checkboxStates[row.id]);
     onDataSelected(selectedData);
   }, [checkboxStates]);
 
