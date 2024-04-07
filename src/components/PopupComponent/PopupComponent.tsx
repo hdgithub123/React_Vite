@@ -1,33 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
-const PopupComponent = () => {
-  const [showPopup, setShowPopup] = useState(false);
-
-  const togglePopup = () => {
-    setShowPopup(!showPopup);
-  };
-  
-
-  const textchangePopup = () => {
-    setShowPopup(true);
-  };
-
+const PopupComponent: React.FC = () => {
   return (
-    <div>
-      <input onChange={textchangePopup}></input>
-      <button onClick={togglePopup}>Click me</button>
-      {showPopup && (
-        <div className="popup">
-          <p>This is a popup content</p>
-          <p>This is a popup content</p>
-          <p>This is a popup content</p>
-          <p>This is a popup content</p>
-          <p>This is a popup content</p>
-          <p>This is a popup content</p>
-          <p>This is a popup content</p>
-        </div>
-      )}
-    </div>
+    <Popup trigger={<input></input>} position="bottom left">
+      <div>Popup content here !!</div>
+      <div>Popup content here !!</div>
+      <div>Popup content here !!</div>
+      <div>Popup content here !!</div>
+      <div>Popup content here !!</div>
+      <div>Popup content here !!</div>
+      <div>Popup content here !!</div>
+    </Popup>
   );
 };
 

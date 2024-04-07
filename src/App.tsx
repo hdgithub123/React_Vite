@@ -20,7 +20,7 @@ function App() {
       {/* <TableComponentNoSelect></TableComponentNoSelect> */}
       <PopupComponent></PopupComponent>
 
-    <DropdownComponent></DropdownComponent>
+    {/* <DropdownComponent></DropdownComponent> */}
       <h1>ket thuc dong cuoi</h1>
 
       </>
