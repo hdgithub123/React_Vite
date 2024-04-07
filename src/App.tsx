@@ -2,12 +2,12 @@ import { useState } from 'react'
 import RouterComponent from './components/RouteComponent/RouteComponent';
 import './App.css'
 
-import CreateTableFilterComponent from './components/CreateTableFilterComponent/CreateTableFilterComponent';
+
 import TableComponent from './components/CreateTableFilterComponent/TableComponent';
 
 
 function App() {
-  const [count, setCount] = useState(0)
+
 
   
 

@@ -24,18 +24,40 @@ const TableComponent: React.FC = () => {
       { id: '11', name: 'Elizabeth', age: '26', email: 'elizabeth@example.com' },
       { id: '12', name: 'Daniel', age: '30', email: 'daniel@example.com' },
       { id: '13', name: 'Sophia', age: '28', email: 'sophia@example.com' },
+      { id: '14', name: 'Liam', age: '33', email: 'liam@example.com' },
+      { id: '15', name: 'Olivia', age: '29', email: 'olivia@example.com' },
+      { id: '16', name: 'Noah', age: '31', email: 'noah@example.com' },
+      { id: '17', name: 'Emma', age: '27', email: 'emma@example.com' },
+      { id: '18', name: 'William', age: '35', email: 'william@example.com' },
+      { id: '19', name: 'Ava', age: '30', email: 'ava@example.com' },
+      { id: '20', name: 'James', age: '32', email: 'james@example.com' },
+      { id: '21', name: 'Isabella', age: '28', email: 'isabella@example.com' },
+      { id: '22', name: 'Alexander', age: '34', email: 'alexander@example.com' },
+      { id: '23', name: 'Mia', age: '26', email: 'mia@example.com' },
     ],
   };
 
 
   const [selectedData, setSelectedData] = useState<{ [key: string]: string }[]>([]);
+  const [selectedClickRow, setSelectedClickRow] = useState<{ [key: string]: string }>({});
 
   const handleSelectedRowsChange = (newSelectedRows: { [key: string]: string }[]) => {
     setSelectedData(newSelectedRows);
   };
-
+  const handleClickRowsChange = (newRowSelectedRow: { [key: string]: string }) => {
+    setSelectedClickRow(newRowSelectedRow);
+  };
   return (
     <div>
+      <div>
+      <h2>Selected click</h2>
+        <ul>
+          <li key= {selectedClickRow.id}>
+          {selectedClickRow.id} - {selectedClickRow.name} - {selectedClickRow.age} - {selectedClickRow.email}
+          </li>
+
+        </ul>
+      </div>
       <div>
         <h2>Selected Rows</h2>
         {null || (
@@ -48,7 +70,7 @@ const TableComponent: React.FC = () => {
           </ul>
         )}
       </div>
-      <CreateTableFilterComponent Data={tableData} onDataSelected={handleSelectedRowsChange} />
+      <CreateTableFilterComponent Data={tableData} onDataSelected={handleSelectedRowsChange} onRowSelected={handleClickRowsChange} />
     </div>
   );
 };

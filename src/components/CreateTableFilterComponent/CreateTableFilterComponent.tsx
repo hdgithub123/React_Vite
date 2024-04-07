@@ -10,15 +10,17 @@ interface TableData {
 interface Props {
   Data: TableData;
   onDataSelected: (selectedData: { [key: string]: string }[]) => void;
+  onRowSelected: (selectedRoeData: { [key: string]: string }) => void;
 }
 
-const CreateTableFilterComponent: React.FC<Props> = ({ Data, onDataSelected }) => {
+const CreateTableFilterComponent: React.FC<Props> = ({ Data, onDataSelected,onRowSelected }) => {
   const { title, Datainsert } = Data;
   const [filterValues, setFilterValues] = useState<{ [key: string]: string }>({});
   const [checkboxStates, setCheckboxStates] = useState<{ [key: string]: boolean }>({});
   const [filterStates, setfilterStates] = useState<{ [key: string]: string }[]>([]);
   const [checkallboxStates, setCheckallboxStates] = useState<boolean>(false);
   const [itemCheck, setitemCheck] = useState<string>("A");
+  const [selectedRow, setSelectedRow] = useState<string | null>(null);
 
   const filterDatas = (data: { [key: string]: string }[], filterValues: { [key: string]: string }) => {
     return data.filter(row => {
@@ -98,6 +100,12 @@ const CreateTableFilterComponent: React.FC<Props> = ({ Data, onDataSelected }) =
     setitemCheck(nextValue);
   };
 
+  const handleSelectRowClick = (rowData: { [key: string]: string }) => {
+    setSelectedRow(rowData.id);
+    onRowSelected(rowData);
+  };
+
+
   return (
     <div className="table-container">
       <table>
@@ -132,7 +140,7 @@ const CreateTableFilterComponent: React.FC<Props> = ({ Data, onDataSelected }) =
         </thead>
         <tbody>
           {filterStates.map((rowData, rowIndex) => (
-            <tr key={rowIndex}>
+            <tr key={rowIndex} onClick={()=> handleSelectRowClick(rowData)} className={rowData.id === selectedRow ? 'selected-row' : ''} >
               <td>
                 <input
                   type="checkbox"
