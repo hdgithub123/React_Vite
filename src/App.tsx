@@ -7,6 +7,11 @@ import TableComponent from './components/CreateTableFilterComponent/TableCompone
 import TableComponentNoSelect from './components/CreateTableFilterComponentNoSelect/TableComponentNoSelect';
  import PopupComponent from './components/PopupComponent/PopupComponent';
 import DropdownComponent from './components/DropdownComponent/DropdownComponent';
+
+import CheckSearchBox from './components/SeachboxComponent/CheckSearchBox';
+
+
+
 function App() {
 
 
@@ -14,6 +19,7 @@ function App() {
 
   return (
       <>
+      <CheckSearchBox></CheckSearchBox>
         <h1>hello</h1>
       <RouterComponent></RouterComponent>
       {/* <TableComponent></TableComponent> */}
@@ -21,6 +27,8 @@ function App() {
       <PopupComponent></PopupComponent>
 
     <DropdownComponent></DropdownComponent>
+
+   
       <h1>ket thuc dong cuoi</h1>
 
       </>
