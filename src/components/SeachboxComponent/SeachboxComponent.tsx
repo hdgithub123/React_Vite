@@ -30,19 +30,9 @@ const SearchBox: React.FC<SearchBoxProps> = ({ title, searchKeys, data }) => {
         });
 
         setFilteredData(filteredData);
+        setShowSuggestions(filteredData.length > 0);
     };
 
-
-
-
-
-    const handleInputChange = (e) => {
-        const value = e.target.value;
-        setSearchTerm(value);
-
-        // Show suggestions when input is not empty
-        setShowSuggestions(value.trim().length > 0);
-    };
 
     return (
         <section className='search-section'>
