@@ -1,0 +1,45 @@
+Datainsert: [
+      { id: '1', name: 'John', age: '30', email: 'john@example.com' },
+      { id: '2', name: 'Alice', age: '25', email: 'alice@example.com' },
+      { id: '3', name: 'Bob', age: '35', email: 'bob@example.com' },
+      { id: '4', name: 'Tom', age: '28', email: 'tom@example.com' },
+      { id: '5', name: 'Emma', age: '32', email: 'emma@example.com' },
+      { id: '6', name: 'Michael', age: '33', email: 'michael@example.com' },
+      { id: '7', name: 'Jessica', age: '29', email: 'jessica@example.com' },
+      { id: '8', name: 'William', age: '31', email: 'william@example.com' },
+      { id: '9', name: 'Olivia', age: '27', email: 'olivia@example.com' },
+      { id: '10', name: 'James', age: '34', email: 'james@example.com' },
+      { id: '11', name: 'Elizabeth', age: '26', email: 'elizabeth@example.com' },
+      { id: '12', name: 'Daniel', age: '30', email: 'daniel@example.com' },
+      { id: '13', name: 'Sophia', age: '28', email: 'sophia@example.com' },
+      { id: '14', name: 'Alexander', age: '33', email: 'alexander@example.com' },
+      { id: '15', name: 'Mia', age: '29', email: 'mia@example.com' },
+      { id: '16', name: 'David', age: '32', email: 'david@example.com' },
+      { id: '17', name: 'Emily', age: '30', email: 'emily@example.com' },
+      { id: '18', name: 'Matthew', age: '27', email: 'matthew@example.com' },
+      { id: '19', name: 'Charlotte', age: '31', email: 'charlotte@example.com' },
+      { id: '20', name: 'Ava', age: '28', email: 'ava@example.com' },
+      { id: '21', name: 'Joseph', age: '29', email: 'joseph@example.com' },
+      { id: '22', name: 'Samantha', age: '32', email: 'samantha@example.com' },
+      { id: '23', name: 'Benjamin', age: '30', email: 'benjamin@example.com' },
+      { id: '24', name: 'Chloe', age: '28', email: 'chloe@example.com' },
+      { id: '25', name: 'Lucas', age: '31', email: 'lucas@example.com' },
+      { id: '26', name: 'Grace', age: '29', email: 'grace@example.com' },
+      { id: '27', name: 'Andrew', age: '33', email: 'andrew@example.com' },
+      { id: '28', name: 'Madison', age: '27', email: 'madison@example.com' },
+      { id: '29', name: 'Ethan', age: '30', email: 'ethan@example.com' },
+      { id: '30', name: 'Avery', age: '32', email: 'avery@example.com' }
+    ],
+
+
+npm init vite@latest
+
+
+192.160.10.150
+Mm7ZbudT
+HDGrs20@
+sip: HDsipGrs123@
+npm init vite@latest AG_grid --template react
+
+
+git clone https://github.com/vikas62081/material-table-YT.git

@@ -9,7 +9,7 @@ import TableComponentNoSelect from './components/CreateTableFilterComponentNoSel
 import DropdownComponent from './components/DropdownComponent/DropdownComponent';
 
 import CheckSearchBox from './components/SeachboxComponent/CheckSearchBox';
-
+import SearchTableDropdownEx from './components/SearchTableDropdown/SearchTableDropdownEx'
 
 
 function App() {
@@ -19,6 +19,8 @@ function App() {
 
   return (
       <>
+      <SearchTableDropdownEx></SearchTableDropdownEx>
+<p> end seach table</p>
       <CheckSearchBox></CheckSearchBox>
         <h1>hello</h1>
       <RouterComponent></RouterComponent>
@@ -30,6 +32,7 @@ function App() {
 
    
       <h1>ket thuc dong cuoi</h1>
+      <p> seach table</p>
 
       </>
 
