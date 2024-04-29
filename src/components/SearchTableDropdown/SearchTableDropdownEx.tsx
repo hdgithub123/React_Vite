@@ -1,4 +1,4 @@
-
+import React, { useState } from 'react';
 import SearchTableDropdown from './SearchTableDropdown';
 
 const SearchTableDropdownEx = () => {
@@ -15,23 +15,32 @@ const SearchTableDropdownEx = () => {
     { id: 11, name: 'Jack', age: 70, email: 'jack@example.com', address: '666 Pine St' },
     { id: 12, name: 'Kate', age: 75, email: 'kate@example.com', address: '777 Oak St' }
   ];
-  
 
-  const columnDisplay = {name:'ten', age: 'tuoi',address: "Địa chỉ", email: 'email'}; // Tên các cột sẽ hiển thị
-  const columnSearch = ['name', 'email']; // Các cột được tìm kiếm
+  const columnDisplay = { name: 'Tên', age: 'Tuổi', address: 'Địa chỉ', email: 'Email' };
+  const columnSearch = ['name', 'email'];
+
+  // State variable to hold the selected item
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  // Function to handle the selection of an item
+  const handleItemSelect = (item) => {
+    setSelectedItem(item);
+  };
 
   return (
     <div>
       <h1>Search Component Example</h1>
+      <h2>Selected Item: {selectedItem ? `${selectedItem.id} ${selectedItem.name} (${selectedItem.email})` : 'None'}</h2>
       <SearchTableDropdown
-       data={data}
-       columnDisplay={columnDisplay}
-       columnSearch={columnSearch}
-       displayValue="email" // chọn key muốn hiển thị
+        data={data}
+        columnDisplay={columnDisplay}
+        columnSearch={columnSearch}
+        displayValue="name"
+        DebounceTime={300}
+        onItemSelect={handleItemSelect} // Pass the function to handle item selection
       />
     </div>
   );
 };
 
 export default SearchTableDropdownEx;
-
