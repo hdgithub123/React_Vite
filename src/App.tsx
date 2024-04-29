@@ -20,8 +20,9 @@ function App() {
   return (
       <>
       <SearchTableDropdownEx></SearchTableDropdownEx>
-<p> end seach table</p>
-      <CheckSearchBox></CheckSearchBox>
+      <p> end seach table</p>
+      
+      {/* <CheckSearchBox></CheckSearchBox> */}
         <h1>hello</h1>
       <RouterComponent></RouterComponent>
       {/* <TableComponent></TableComponent> */}

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import './SearchTableDropdown.css'; // Import CSS file
 
 const SearchTableDropdown = ({ data, columnDisplay, columnSearch, position }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,39 +22,41 @@ const SearchTableDropdown = ({ data, columnDisplay, columnSearch, position }) =>
     setShowList(false); // Ẩn danh sách
   };
 
-  const getPositionStyle = () => {
-    switch (position) {
-      case 'top':
-        return { top: '-150%', left: '0' };
-      case 'left':
-        return { top: '0', left: '-150%' };
-      case 'right':
-        return { top: '0', left: '100%' };
-      default:
-        return { top: '100%', left: '0' }; // Mặc định hiển thị ở dưới
-    }
-  };
-
-  const dropdownStyle = position ? { position: 'absolute', backgroundColor: 'white', border: '1px solid #ccc', width: '100%', ...getPositionStyle() } : { position: 'absolute', backgroundColor: 'white', border: '1px solid #ccc', width: '100%', top: '100%', left: '0' };
+  const dropdownClasses = ['dropdown-style'];
+  if (position) {
+    dropdownClasses.push(`dropdown-${position}`);
+  } else {
+    dropdownClasses.push('dropdown-bottom');
+  }
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className={'container'}>
       <input
         type="text"
         value={searchTerm}
         onChange={handleSearch}
         placeholder="Search..."
+        className={'textboxsearch-style'}
       />
       {showList && (
-        <div style={dropdownStyle}>
-          {filteredData.map((item, index) => (
-            <div key={index} onClick={() => handleSelectItem(item)}>
-              {columnDisplay.map((key, i) => (
-                <span key={i}>{item[key]}</span>
+        <table className={dropdownClasses.join(' ')}>
+          <thead>
+            <tr>
+              {Object.keys(columnDisplay).map((key, index) => (
+                <th key={index}>{columnDisplay[key]}</th>
               ))}
-            </div>
-          ))}
-        </div>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredData.map((item, index) => (
+              <tr key={index} onClick={() => handleSelectItem(item)}>
+                {Object.keys(columnDisplay).map((key, i) => (
+                  <td key={i}>{item[key]}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );

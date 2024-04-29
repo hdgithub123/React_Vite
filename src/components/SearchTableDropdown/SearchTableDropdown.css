@@ -1,0 +1,68 @@
+/* CSS chung */
+.container {
+    position: 'relative';
+  
+    
+}   
+/* CSS ô seach */
+.textboxsearch-style{
+    font-weight: 900;
+    width: 50%;
+
+}
+/* CSS chung cho bảng dropdown */
+.dropdown-style {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  width: 100%;
+  
+}
+
+.dropdown-top {
+  top: -150%;
+  left: 0;
+}
+
+.dropdown-left {
+  top: 0;
+  left: -100%;
+}
+
+.dropdown-right {
+  top: 0;
+  left: 100%;
+}
+
+.dropdown-bottom {
+  top: 100%;
+  left: 0;
+}
+
+/* Thêm CSS cho các ô trong bảng */
+.dropdown-style table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .dropdown-style th,
+  .dropdown-style td {
+    border: 1px solid #ccc;
+    padding: 8px;
+  }
+  
+  .dropdown-style th {
+    background-color: #f2f2f2;
+    text-align: left;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .dropdown-style td {
+    border: 1px solid #ccc;
+    padding: 8px;
+  }
+
+  .dropdown-style tr:hover {
+    background-color: #f5f5f5; /* Màu nền highlight */
+  }
