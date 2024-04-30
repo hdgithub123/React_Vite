@@ -10,7 +10,8 @@ import DropdownComponent from './components/DropdownComponent/DropdownComponent'
 
 import CheckSearchBox from './components/SeachboxComponent/CheckSearchBox';
 import SearchTableDropdownEx from './components/SearchTableDropdown/SearchTableDropdownEx'
-import SearchTableDropdownEx2 from './components/SearchTableDropdownEx/SearchTableDropdownEx'
+import SearchTableDropdownExRTB from './components/SearchTableDropdownReactTable/SearchTableDropdownExRTB';
+
 
 function App() {
 
@@ -22,7 +23,7 @@ function App() {
       <SearchTableDropdownEx></SearchTableDropdownEx>
       <p> end seach table</p>
 
-      <SearchTableDropdownEx2></SearchTableDropdownEx2>
+     <SearchTableDropdownExRTB></SearchTableDropdownExRTB>
       <p> end seach table</p>
       
       {/* <CheckSearchBox></CheckSearchBox> */}
