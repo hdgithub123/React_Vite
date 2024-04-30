@@ -3,14 +3,14 @@ import { useTable, useBlockLayout, useResizeColumns } from "react-table";
 import './ReactTable.css'; // Import CSS file
 
 const ReactTable = ({ columns, data, onRowSelect }) => {
-  const defaultColumn = React.useMemo(
-    () => ({
-      minWidth: 30,
-      width: 150,
-      maxWidth: 200
-    }),
-    []
-  );
+  // const defaultColumn = React.useMemo(
+  //   () => ({
+  //     minWidth: 30,
+  //     width: 150,
+  //     maxWidth: 200
+  //   }),
+  //   []
+  // );
 
   // Use the state and functions returned from useTable to build your UI
   const {
@@ -19,14 +19,13 @@ const ReactTable = ({ columns, data, onRowSelect }) => {
     headerGroups,
     rows,
     prepareRow,
-    resetResizing
   } = useTable(
     {
       columns,
       data,
-      defaultColumn
+      // defaultColumn
     },
-    useBlockLayout,
+    useBlockLayout, // phải có thì mới Resize Colum được
     useResizeColumns
   );
   const [selectedIndex, setSelectedIndex] = useState(-1); // State để lưu trữ chỉ số của dòng được chọn
