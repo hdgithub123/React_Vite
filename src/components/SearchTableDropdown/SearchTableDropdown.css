@@ -12,8 +12,14 @@
 
 }
 /* CSS chung cho bảng dropdown */
-.dropdown-style {
+/* Thêm CSS cho các ô trong bảng */
+.dropdown-container {
   position: absolute;
+  max-height: 200px;
+  overflow-x: auto;
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+.dropdown-style {
   background-color: white;
   border: 1px solid #ccc;
   white-space: nowrap;
@@ -23,7 +29,7 @@
 
 
 
-/* Thêm CSS cho các ô trong bảng */
+
 .dropdown-style table {
     border-collapse: collapse;
     width: 100%;
@@ -40,11 +46,15 @@
     text-align: left;
     font-weight: bold;
     text-align: center;
+    top: 0;
+    z-index: 1;
+    position: sticky;
   }
 
   .dropdown-style td {
+    
     border: 1px solid #ccc;
-    padding: 8px;
+    padding: 5px;
   }
 
   .dropdown-style tr:hover {

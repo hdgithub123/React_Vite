@@ -7,56 +7,81 @@ const SearchTableDropdown = ({ data, columnDisplay, columnSearch, displayValue, 
   const [selectedIndex, setSelectedIndex] = useState(-1); // Lưu trạng thái hàng được chọn
   const [showList, setShowList] = useState(false);
   const [isFocused, setIsFocused] = useState(false); // Trạng thái của ô tìm kiếm
+  const [headerHeight, setHeaderHeight] = useState(0); // Chiều cao của header
   const inputRef = useRef(null); // Ref for input element
   const listRef = useRef(null); // Ref for list element
 
+  const debouncedsearchTerm = useDebounce(searchTerm, DebounceTime || 300);
+
   useEffect(() => {
-    // Define a timer variable
-    let timer;
+    if (isFocused) {
+      setShowList(!!debouncedsearchTerm);
+      const filteredData = data.filter(item =>
+        columnSearch.some(key => item[key].toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+      setFilteredData(filteredData);
+    }
+  }, [debouncedsearchTerm, isFocused, data, columnSearch, DebounceTime]);
 
-    // Set a delay of 300ms after the user stops typing before executing the search
-    timer = setTimeout(() => {
-      if (isFocused) { // Only show the list if the input is focused
-        setShowList(!!searchTerm); // Hiển thị danh sách khi có giá trị trong ô tìm kiếm
-        const filteredData = data.filter(item =>
-          columnSearch.some(key => item[key].toLowerCase().includes(searchTerm.toLowerCase()))
-        );
-        setFilteredData(filteredData);
+  useEffect(() => {
+    if (selectedIndex !== -1 && listRef.current) {
+      const listItem = listRef.current.querySelector(`tr:nth-child(${selectedIndex + 1})`);
+      if (listItem) {
+        const listItemRect = listItem.getBoundingClientRect();
+        const listContainerRect = listRef.current.getBoundingClientRect();
+        // Tính toán chiều cao của header
+        const theadHeight = listRef.current.querySelector('thead').getBoundingClientRect().height;
+        setHeaderHeight(theadHeight);
+
+        // Tính toán vị trí của dòng được highlight trong phần hiển thị trừ đi chiều cao của header
+        const relativeTop = listItemRect.top - listContainerRect.top - headerHeight;
+        if (relativeTop < 0 || relativeTop + listItemRect.height > listContainerRect.height - headerHeight) {
+          listRef.current.scrollTop = listRef.current.scrollTop + relativeTop;
+        }
       }
-    }, DebounceTime || 300); // Use DebounceTime if provided, otherwise default to 300
+    }
+  }, [selectedIndex, headerHeight]);
 
-    // Cleanup function to clear the timer on component unmount or when searchTerm changes
-    return () => clearTimeout(timer);
-  }, [searchTerm, isFocused, data, columnSearch, DebounceTime]);
+  function useDebounce(value, delay) {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+
+    useEffect(() => {
+      const handler = setTimeout(() => setDebouncedValue(value), delay);
+      return () => clearTimeout(handler);
+    }, [value]);
+
+    return debouncedValue;
+  }
 
   const handleKeyDown = (e) => {
-    if (e.key === 'ArrowUp') {
-      setSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0)); // Giảm index, nhưng tối thiểu là 0
-    } else if (e.key === 'ArrowDown') {
-      setSelectedIndex(prevIndex => Math.min(prevIndex + 1, filteredData.length - 1)); // Tăng index, nhưng tối đa là số lượng hàng - 1
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (e.key === 'ArrowUp') {
+        setSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
+      } else if (e.key === 'ArrowDown') {
+        setSelectedIndex(prevIndex => Math.min(prevIndex + 1, filteredData.length - 1));
+      }
     } else if (e.key === 'Enter') {
-      handleSelectItem(filteredData[selectedIndex], selectedIndex); // Gọi hàm handleSelectItem với dòng được chọn
-      inputRef.current.blur(); // Remove focus from the input field
-      setShowList(false); // Hide the list
+      handleSelectItem(filteredData[selectedIndex], selectedIndex);
+      inputRef.current.blur();
+      setShowList(false);
     }
   };
 
   const handleSelectItem = (item, index) => {
-    setSearchTerm(item[displayValue]); // Reset giá trị ô tìm kiếm khi chọn item
-    setSelectedIndex(index); // Lưu trạng thái hàng được chọn
+    setSearchTerm(item[displayValue]);
+    setSelectedIndex(index);
     if (onItemSelect) {
-      onItemSelect(item); // Call the callback function with the selected item
+      onItemSelect(item);
     }
-    setShowList(false); // Hide the list
+    setShowList(false);
   };
 
-  // Xử lý sự kiện click chuột ra ngoài
   const handleMouseDown = (e) => {
     if (listRef.current && !listRef.current.contains(e.target)) {
-      setShowList(false); // Ẩn danh sách nếu click ra ngoài phần tử danh sách
+      setShowList(false);
     }
   };
-
 
   return (
     <div className="container" onMouseDown={handleMouseDown}>
@@ -67,33 +92,35 @@ const SearchTableDropdown = ({ data, columnDisplay, columnSearch, displayValue, 
         onKeyDown={handleKeyDown}
         placeholder="Search..."
         className="textboxsearch-style"
-        onFocus={() => setIsFocused(true)} // Set isFocused to true when input is focused
-        onBlur={() => setIsFocused(false)} // Set isFocused to false when input loses focus
-        ref={inputRef} // Assign ref to the input element
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        ref={inputRef}
       />
       {showList && (
-        <table className="dropdown-style" ref={listRef}>
-          <thead>
-            <tr>
-              {Object.keys(columnDisplay).map((key, index) => (
-                <th key={index}>{columnDisplay[key]}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData.map((item, index) => (
-              <tr
-                key={index}
-                className={index === selectedIndex ? 'highlightkeymove' : ''}
-                onClick={() => handleSelectItem(item, index)}
-              >
-                {Object.keys(columnDisplay).map((key, i) => (
-                  <td key={i}>{item[key]}</td>
+        <div className="dropdown-container" ref={listRef}>
+          <table className="dropdown-style">
+            <thead>
+              <tr>
+                {Object.keys(columnDisplay).map((key, index) => (
+                  <th key={index}>{columnDisplay[key]}</th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredData.map((item, index) => (
+                <tr
+                  key={index}
+                  className={index === selectedIndex ? 'highlightkeymove' : ''}
+                  onClick={() => handleSelectItem(item, index)}
+                >
+                  {Object.keys(columnDisplay).map((key, i) => (
+                    <td key={i}>{item[key]}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
