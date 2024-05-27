@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import ReactTable from './ReactTable'; // Import ReactTable component
+import ReactTableCheckbox from './ReactTableCheckbox'; // Import ReactTable component
 
-const SearchTableDropdownExRTB = () => {
+const ReactTableEx = () => {
   const [selectedData, setSelectedData] = useState(null); // State to store the selected data from the table
 
   // Event handler when selecting a row in the table
@@ -43,6 +44,8 @@ const SearchTableDropdownExRTB = () => {
     { id: 1, name: 'Alice', age: 25, email: 'alice@example.com', address: '123 Main St' },
     { id: 9, name: 'Henry', age: 60, email: 'henry@example.com', address: '444 Spruce St' },
     { id: 10, name: 'Ivy', age: 65, email: 'ivy@example.com', address: '555 Birch St' },
+    { id: 9, name: 'Henry', age: 60, email: 'henry@example.com', address: '444 Spruce St' },
+    { id: 10, name: 'Ivy', age: 65, email: 'ivy@example.com', address: '555 Birch St' },
     { id: 11, name: 'Jack', age: 70, email: 'jack@example.com', address: '666 Pine St' },
     { id: 12, name: 'Kate', age: 75, email: 'kate@example.com', address: '777 Oak St' },
     { id: 2, name: 'Alice', age: 25, email: 'alice@example.com', address: '123 Main St' },
@@ -55,14 +58,14 @@ const SearchTableDropdownExRTB = () => {
     { id: 9, name: 'Henry', age: 60, email: 'henry@example.com', address: '444 Spruce St' },
     { id: 10, name: 'Ivy', age: 65, email: 'ivy@example.com', address: '555 Birch St' },
     { id: 11, name: 'Jack', age: 70, email: 'jack@example.com', address: '666 Pine St' },
-    { id: 12, name: 'Kate', age: 75, email: 'kate@example.com', address: '777 Oak St' },
-    { id: 12, name: 'Kate', age: 75, email: 'kate@example.com', address: '777 Oak St' },
+    { id: 12, name: 'Kate', age: 75, email: 'kate@example.com', address: '777 Oak St' }
   ];
 
   return (
     <div>
       <h1>Example Table</h1>
       <ReactTable columns={columns} data={data} onRowSelect={handleRowSelect} />
+      {/* <ReactTableCheckbox columns={columns} data={data} onRowSelect={handleRowSelect} /> */}
       {selectedData && (
         <div>
           <h2>Selected Data</h2>
@@ -77,4 +80,4 @@ const SearchTableDropdownExRTB = () => {
   );
 };
 
-export default SearchTableDropdownExRTB;
+export default ReactTableEx;

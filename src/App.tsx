@@ -1,6 +1,6 @@
 
 import RouterComponent from './components/RouteComponent/RouteComponent';
-import './App.css'
+// import './App.css'
 
 
 import TableComponent from './components/CreateTableFilterComponent/TableComponent';
@@ -10,9 +10,18 @@ import DropdownComponent from './components/DropdownComponent/DropdownComponent'
 
 import CheckSearchBox from './components/SeachboxComponent/CheckSearchBox';
 import SearchTableDropdownEx from './components/SearchTableDropdown/SearchTableDropdownEx'
-import SearchTableDropdownExRTB from './components/SearchTableDropdownReactTable/SearchTableDropdownExRTB';
+import ReactTableEx from './components/ReactTable/ReactTableEx';
+//import FilteringTable from './components/ReactTable/FilteringTable/FilteringTable';
+// import RowSelection from './components/ReactTable/RowSelection/RowSelection';
+// import SortingTable from './components/ReactTable/SortingTable/SortingTable';
+import GeneralTableEX from './components/ReactTable/GeneralTable/GeneralTableEX';
+import GeneralTableTanStack from './components/TanStackTable/GeneralTableTanStack/GeneralTableTanStack';
+import FiltersFaceted from './components/TanStackTable/FiltersFaceted/FiltersFaceted';
+import TotalTableTanStackEx from './components/TanStackTable/TotalTableTanStack/TotalTableTanStackEx';
+import DndTableRectFull from './components/TableReactFull/DndTable/DndTableRectFull';
+import DndAndGroupTable from './components/TableReactFull/DndAndGroupTable/DndAndGroupTable';
 
-
+import GroupTable from './components/TableReactFull/GroupTable/GroupTable';
 function App() {
 
 
@@ -23,9 +32,24 @@ function App() {
       <SearchTableDropdownEx></SearchTableDropdownEx>
       <p> end seach table</p>
 
-     <SearchTableDropdownExRTB></SearchTableDropdownExRTB>
-      <p> end seach table</p>
-      
+      <GroupTable></GroupTable>
+
+      <DndTableRectFull></DndTableRectFull>
+      <p> DndAndGroupTable</p>
+      <DndAndGroupTable></DndAndGroupTable>
+      {/* <TotalTableTanStackEx></TotalTableTanStackEx> */}
+      {/* <GeneralTableEX></GeneralTableEX> */}
+
+      {/* <GeneralTableTanStack></GeneralTableTanStack>
+      <FiltersFaceted></FiltersFaceted> */}
+      {/* <RowSelection></RowSelection> */}
+      {/* <SortingTable></SortingTable> */}
+{/* 
+     <ReactTableEx></ReactTableEx>
+      <p> end seach table</p> */}
+  
+      {/* <FilteringTable></FilteringTable>
+      <p> end seach FilteringTable</p> */}
       {/* <CheckSearchBox></CheckSearchBox> */}
         <h1>hello</h1>
       <RouterComponent></RouterComponent>
