@@ -134,8 +134,8 @@ function DndAndGroupTable() {
             {
                 accessorKey: 'firstName',
                 id: 'firstName',
-                // header: 'First Name',
-                header: () => <span>First Nameâ</span>,
+                header: 'First Name',
+                
                 cell: info => info.getValue(),
             },
             {
@@ -147,8 +147,8 @@ function DndAndGroupTable() {
             {
                 accessorKey: 'age',
                 id: 'age',
-                header: () => <span>Age</span>,
-                // header: () => 'Age',
+                
+                header: () => 'Age',
                 aggregatedCell: ({ getValue }) =>
                     Math.round(getValue<number>() * 100) / 100,
                 aggregationFn: 'median',
@@ -158,7 +158,7 @@ function DndAndGroupTable() {
                 id: 'visits',
                 header: () => <span>Visits</span>,
                 aggregationFn: 'sum',
-                // aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
+                aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
             },
             {
                 accessorKey: 'status',
@@ -181,14 +181,17 @@ function DndAndGroupTable() {
         ],
         []
     )
+    
     // const columns = useMemo<ColumnDef<Person>[]>(
     //     () => [
     //       {
     //         header: 'Name',
+           
     //         columns: [
     //           {
     //             accessorKey: 'firstName',
     //             header: 'First Name',
+    //             id: 'firstName',
     //             cell: (info) => info.getValue(),
     //             /**
     //              * override the value used for row grouping
@@ -206,9 +209,11 @@ function DndAndGroupTable() {
     //       },
     //       {
     //         header: 'Info',
+            
     //         columns: [
     //           {
     //             accessorKey: 'age',
+    //             id: 'age',
     //             header: () => 'Age',
     //             aggregatedCell: ({ getValue }) =>
     //               Math.round(getValue<number>() * 100) / 100,
@@ -216,19 +221,23 @@ function DndAndGroupTable() {
     //           },
     //           {
     //             header: 'More Info',
+               
     //             columns: [
     //               {
     //                 accessorKey: 'visits',
+    //                 id: 'visits',
     //                 header: () => <span>Visits</span>,
     //                 aggregationFn: 'sum',
-    //                 // aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
+    //                 aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
     //               },
     //               {
     //                 accessorKey: 'status',
+    //                 id: 'status',
     //                 header: 'Status',
     //               },
     //               {
     //                 accessorKey: 'progress',
+    //                 id: 'progress',
     //                 header: 'Profile Progress',
     //                 cell: ({ getValue }) =>
     //                   Math.round(getValue<number>() * 100) / 100 + '%',
@@ -242,7 +251,7 @@ function DndAndGroupTable() {
     //       },
     //     ],
     //     []
-    //   );
+    //   )
 
 
     const [data, setData] = useState(makeData);
@@ -281,6 +290,9 @@ function DndAndGroupTable() {
             id: header.column.id,
         });
 
+
+        const isLeafColumn = (column) => !column.columns || column.columns.length === 0;
+        
         const style: CSSProperties = {
             opacity: isDragging ? 0.8 : 1,
             position: 'relative',
@@ -307,8 +319,8 @@ function DndAndGroupTable() {
                                     }}
                                 >
                                     {header.column.getIsGrouped()
-                                        ? `🛑(${header.column.getGroupedIndex()}) `
-                                        : `👊 `}
+                                        ? `🛑(${header.column.getGroupedIndex() }) `
+                                        : `👊` }
                                 </button>
                             ) : null}{' '}
                             {flexRender(
@@ -316,9 +328,15 @@ function DndAndGroupTable() {
                                 header.getContext()
                             )}
                         </div>
-                        <button {...attributes} {...listeners}>
-                            🟰
-                        </button>
+
+                        {/* Colum DND Begin*/}
+                        {header.column.getIsGrouped() || !isLeafColumn(header.column.columnDef)
+                                        ? ''
+                                        : <button {...attributes} {...listeners}> 🟰 </button> }
+                                        {/* : isLeafColumn(header.column.columnDef) ? <button {...attributes} {...listeners}> 🟰 </button> : ''} */}
+                         {/* Colum DND End*/}
+
+                        
 
                         {/* Colum Resize Begin*/}
                         <div
@@ -416,6 +434,7 @@ function DndAndGroupTable() {
                 const oldIndex = columnOrder.indexOf(active.id as string);
                 const newIndex = columnOrder.indexOf(over.id as string);
                 return arrayMove(columnOrder, oldIndex, newIndex);
+                
             });
         }
     };
@@ -429,7 +448,7 @@ function DndAndGroupTable() {
     return (
         <DndContext
             collisionDetection={closestCenter}
-            // modifiers={[restrictToHorizontalAxis]}
+            //  modifiers={[restrictToHorizontalAxis]}
             onDragEnd={handleDragEnd}
             sensors={sensors}
         >

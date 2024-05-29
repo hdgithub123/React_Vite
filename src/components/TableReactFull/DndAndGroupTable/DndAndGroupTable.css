@@ -1,11 +1,4 @@
-* {
-  box-sizing: border-box;
-}
 
-html {
-  font-family: sans-serif;
-  font-size: 14px;
-}
 
 table,
 .divTable {
@@ -48,22 +41,24 @@ td,
 .resizer {
   position: absolute;
   top: 0;
+  right: -0.3rem;
+  /* căn chỉnh hiện thanh resize */
   height: 100%;
-  width: 5px;
+  width: 3px;
   /* background: rgba(0, 0, 0, 0.5); */
-  /* background: transparent; */
+  background: transparent;
   cursor: col-resize;
   user-select: none;
   touch-action: none;
 }
 
-.resizer.ltr {
+/* .resizer.ltr {
   right: 0;
-}
+} */
 
-.resizer.rtl {
-  left: 0;
-}
+/* .resizer.rtl {
+  left: 0.1;
+} */
 
 .resizer.isResizing {
   background: blue;
@@ -71,14 +66,11 @@ td,
 }
 
 @media (hover: hover) {
-  
   .resizer {
     opacity: 0;
-  
   }
 
-  *:hover > .resizer {
+  *:hover>.resizer {
     opacity: 1;
-   
   }
 }
