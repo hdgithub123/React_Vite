@@ -1,5 +1,7 @@
 import { useState, useMemo, CSSProperties } from 'react';
+import './DndAndGroupTable.css';
 import {
+
 
 
     GroupingState,
@@ -119,131 +121,14 @@ const makeData = [
     },
 ];
 
-const DraggableTableHeader = ({ header }: { header: Header<any, unknown> }) => {
-    const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
-        id: header.column.id,
-    });
 
-    const style: CSSProperties = {
-        opacity: isDragging ? 0.8 : 1,
-        position: 'relative',
-        transform: CSS.Translate.toString(transform),
-        transition: 'width transform 0.2s ease-in-out',
-        whiteSpace: 'nowrap',
-        width: header.column.getSize(),
-        zIndex: isDragging ? 1 : 0,
-    };
-
-    return (
-        <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
-            {header.isPlaceholder ? null : (
-                <>
-                  
-                    <div>
-                        {header.column.getCanGroup() ? (
-                            // If the header can be grouped, let's add a toggle
-                            <button
-                                {...{
-                                    onClick: header.column.getToggleGroupingHandler(),
-                                    style: {
-                                        cursor: 'pointer',
-                                    },
-                                }}
-                            >
-                                {header.column.getIsGrouped()
-                                    ? `🛑(${header.column.getGroupedIndex()}) `
-                                    : `👊 `}
-                            </button>
-                        ) : null}{' '}
-                        {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                        )}
-                    </div>
-
-                    <button {...attributes} {...listeners}>
-                        🟰
-                    </button>
-                </>
-            )}
-        </th>
-    );
-};
-
-const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
-    const { isDragging, setNodeRef, transform } = useSortable({
-        id: cell.column.id,
-    });
-
-    const style: CSSProperties = {
-        opacity: isDragging ? 0.8 : 1,
-        position: 'relative',
-        transform: CSS.Translate.toString(transform),
-        transition: 'width transform 0.2s ease-in-out',
-        width: cell.column.getSize(),
-        zIndex: isDragging ? 1 : 0,
-    };
-
-    const { row } = cell.getContext();
-
-    return (
-        <td
-            ref={setNodeRef}
-            style={style}
-            {...{
-                key: cell.id,
-                style: {
-                    background: cell.getIsGrouped()
-                        ? '#0aff0082'
-                        : cell.getIsAggregated()
-                            ? '#ffa50078'
-                            : cell.getIsPlaceholder()
-                                ? '#ff000042'
-                                : 'white',
-                },
-            }}
-        >
-            {cell.getIsGrouped() ? (
-                // If it's a grouped cell, add an expander and row count
-                <>
-                    <button
-                        {...{
-                            onClick: row.getToggleExpandedHandler(),
-                            style: {
-                                cursor: row.getCanExpand() ? 'pointer' : 'normal',
-                            },
-                        }}
-                    >
-                        {row.getIsExpanded() ? '👇' : '👉'}{' '}
-                        {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                        )}{' '}
-                        ({row.subRows.length})
-                    </button>
-                </>
-            ) : cell.getIsAggregated() ? (
-                // If the cell is aggregated, use the Aggregated renderer for cell
-                flexRender(
-                    cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
-                    cell.getContext()
-                )
-            ) : cell.getIsPlaceholder() ? null : (
-                // For cells with repeated values, render null
-                // Otherwise, just render the regular cell
-                flexRender(
-                    cell.column.columnDef.cell,
-                    cell.getContext()
-                )
-            )}
-        </td>
-    );
-};
 
 
 function DndAndGroupTable() {
     const [columnFilters, setColumnFilters] = useState([]);
     // const FilterT = {filterFn: "includesStringSensitive", accessorKey: 'firstName',}
+    
+    
     const columns = useMemo<ColumnDef<Person>[]>(
         () => [
             {
@@ -259,9 +144,6 @@ function DndAndGroupTable() {
                 header: () => <span>Last Name</span>,
                 cell: info => info.getValue(),
             },
-
-
-
             {
                 accessorKey: 'age',
                 id: 'age',
@@ -280,10 +162,13 @@ function DndAndGroupTable() {
             },
             {
                 accessorKey: 'status',
+                id: 'status',
+                size: 150,
                 header: 'Status',
             },
             {
                 accessorKey: 'progress',
+                id: 'progress',
                 header: 'Profile Progress',
                 cell: ({ getValue }) =>
                     Math.round(getValue<number>() * 100) / 100 + '%',
@@ -296,6 +181,69 @@ function DndAndGroupTable() {
         ],
         []
     )
+    // const columns = useMemo<ColumnDef<Person>[]>(
+    //     () => [
+    //       {
+    //         header: 'Name',
+    //         columns: [
+    //           {
+    //             accessorKey: 'firstName',
+    //             header: 'First Name',
+    //             cell: (info) => info.getValue(),
+    //             /**
+    //              * override the value used for row grouping
+    //              * (otherwise, defaults to the value derived from accessorKey / accessorFn)
+    //              */
+    //             getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
+    //           },
+    //           {
+    //             accessorFn: (row) => row.lastName,
+    //             id: 'lastName',
+    //             header: () => <span>Last Name</span>,
+    //             cell: (info) => info.getValue(),
+    //           },
+    //         ],
+    //       },
+    //       {
+    //         header: 'Info',
+    //         columns: [
+    //           {
+    //             accessorKey: 'age',
+    //             header: () => 'Age',
+    //             aggregatedCell: ({ getValue }) =>
+    //               Math.round(getValue<number>() * 100) / 100,
+    //             aggregationFn: 'median',
+    //           },
+    //           {
+    //             header: 'More Info',
+    //             columns: [
+    //               {
+    //                 accessorKey: 'visits',
+    //                 header: () => <span>Visits</span>,
+    //                 aggregationFn: 'sum',
+    //                 // aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
+    //               },
+    //               {
+    //                 accessorKey: 'status',
+    //                 header: 'Status',
+    //               },
+    //               {
+    //                 accessorKey: 'progress',
+    //                 header: 'Profile Progress',
+    //                 cell: ({ getValue }) =>
+    //                   Math.round(getValue<number>() * 100) / 100 + '%',
+    //                 aggregationFn: 'mean',
+    //                 aggregatedCell: ({ getValue }) =>
+    //                   Math.round(getValue<number>() * 100) / 100 + '%',
+    //               },
+    //             ],
+    //           },
+    //         ],
+    //       },
+    //     ],
+    //     []
+    //   );
+
 
     const [data, setData] = useState(makeData);
     const [columnOrder, setColumnOrder] = useState<string[]>(() => columns.map(c => c.id!));
@@ -313,11 +261,9 @@ function DndAndGroupTable() {
     };
 
     const table = useReactTable({
-
-
-
         data,
         columns,
+        columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         state: { columnOrder, columnFilters, grouping, },
@@ -329,6 +275,139 @@ function DndAndGroupTable() {
         getGroupedRowModel: getGroupedRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
     });
+
+    const DraggableTableHeader = ({ header }: { header: Header<any, unknown> }) => {
+        const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
+            id: header.column.id,
+        });
+
+        const style: CSSProperties = {
+            opacity: isDragging ? 0.8 : 1,
+            position: 'relative',
+            transform: CSS.Translate.toString(transform),
+            transition: 'width transform 0.2s ease-in-out',
+            whiteSpace: 'nowrap',
+            width: header.column.getSize(),
+            zIndex: isDragging ? 1 : 0,
+        };
+
+        return (
+            <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
+                {header.isPlaceholder ? null : (
+                    <>
+                        <div>
+                            {header.column.getCanGroup() ? (
+                                // If the header can be grouped, let's add a toggle
+                                <button
+                                    {...{
+                                        onClick: header.column.getToggleGroupingHandler(),
+                                        style: {
+                                            cursor: 'pointer',
+                                        },
+                                    }}
+                                >
+                                    {header.column.getIsGrouped()
+                                        ? `🛑(${header.column.getGroupedIndex()}) `
+                                        : `👊 `}
+                                </button>
+                            ) : null}{' '}
+                            {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                            )}
+                        </div>
+                        <button {...attributes} {...listeners}>
+                            🟰
+                        </button>
+
+                        {/* Colum Resize Begin*/}
+                        <div
+                            {...{
+                                onMouseDown: header.getResizeHandler(),
+                                onTouchStart: header.getResizeHandler(),
+                                className: `resizer ${table.options.columnResizeDirection
+                                    } ${header.column.getIsResizing() ? 'isResizing' : ''
+                                    }`,
+                            }}
+                        />
+                        {/* Colum Resize end*/}
+                    </>
+                )}
+            </th>
+        );
+    };
+
+    const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
+        const { isDragging, setNodeRef, transform } = useSortable({
+            id: cell.column.id,
+        });
+
+        const style: CSSProperties = {
+            opacity: isDragging ? 0.8 : 1,
+            position: 'relative',
+            transform: CSS.Translate.toString(transform),
+            transition: 'width transform 0.2s ease-in-out',
+            width: cell.column.getSize(),
+            zIndex: isDragging ? 1 : 0,
+        };
+
+        const { row } = cell.getContext();
+
+        return (
+            <td
+                ref={setNodeRef}
+                style={style}
+                {...{
+                    key: cell.id,
+                    style: {
+                        background: cell.getIsGrouped()
+                            ? '#0aff0082'
+                            : cell.getIsAggregated()
+                                ? '#ffa50078'
+                                : cell.getIsPlaceholder()
+                                    ? '#ff000042'
+                                    : 'white',
+                    },
+                }}
+            >
+                {cell.getIsGrouped() ? (
+                    // If it's a grouped cell, add an expander and row count
+                    <>
+                        <button
+                            {...{
+                                onClick: row.getToggleExpandedHandler(),
+                                style: {
+                                    cursor: row.getCanExpand() ? 'pointer' : 'normal',
+                                },
+                            }}
+                        >
+                            {row.getIsExpanded() ? '👇' : '👉'}{' '}
+                            {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                            )}{' '}
+                            ({row.subRows.length})
+                        </button>
+                    </>
+                ) : cell.getIsAggregated() ? (
+                    // If the cell is aggregated, use the Aggregated renderer for cell
+                    flexRender(
+                        cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
+                        cell.getContext()
+                    )
+                ) : cell.getIsPlaceholder() ? null : (
+                    // For cells with repeated values, render null
+                    // Otherwise, just render the regular cell
+                    flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                    )
+                )}
+            </td>
+        );
+    };
+
+
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;

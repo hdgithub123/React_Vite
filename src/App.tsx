@@ -17,7 +17,7 @@ import ReactTableEx from './components/ReactTable/ReactTableEx';
 import GeneralTableEX from './components/ReactTable/GeneralTable/GeneralTableEX';
 import GeneralTableTanStack from './components/TanStackTable/GeneralTableTanStack/GeneralTableTanStack';
 import FiltersFaceted from './components/TanStackTable/FiltersFaceted/FiltersFaceted';
-import TotalTableTanStackEx from './components/TanStackTable/TotalTableTanStack/TotalTableTanStackEx';
+
 import DndTableRectFull from './components/TableReactFull/DndTable/DndTableRectFull';
 import DndAndGroupTable from './components/TableReactFull/DndAndGroupTable/DndAndGroupTable';
 
@@ -37,7 +37,7 @@ function App() {
       <DndTableRectFull></DndTableRectFull>
       <p> DndAndGroupTable</p>
       <DndAndGroupTable></DndAndGroupTable>
-      {/* <TotalTableTanStackEx></TotalTableTanStackEx> */}
+     
       {/* <GeneralTableEX></GeneralTableEX> */}
 
       {/* <GeneralTableTanStack></GeneralTableTanStack>
