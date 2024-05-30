@@ -259,18 +259,7 @@ function DndAndGroupTable() {
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
     );
-    const [grouping, setGrouping] = useState<GroupingState>([])
-
-
-    const rerender = () => {
-        console.log("columnOrder:", columnOrder)
-        console.log("columnFilters:", columnFilters)
-        console.log("getCoreRowModel():", getCoreRowModel())
-        console.log("getFilteredRowModel():", table.getFilteredRowModel())
-        console.log("table:", table)
-
-
-    };
+    const [grouping, setGrouping] = useState<GroupingState>([]) 
 
     const table = useReactTable({
         data,
@@ -278,15 +267,24 @@ function DndAndGroupTable() {
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-        state: { columnOrder, columnFilters, grouping, },
+        state: { columnOrder, columnFilters, grouping, expanded},
         onColumnFiltersChange: setColumnFilters,
         onColumnOrderChange: setColumnOrder,
-
         onGroupingChange: setGrouping,
         getExpandedRowModel: getExpandedRowModel(),
         getGroupedRowModel: getGroupedRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
+       
     });
+
+    const rerender = () => {
+        console.log("columnOrder:", columnOrder)
+        console.log("columnFilters:", columnFilters)
+        console.log("getCoreRowModel():", getCoreRowModel())
+        console.log("getFilteredRowModel():", table.getFilteredRowModel())
+        console.log("table:", table);
+
+    };
 
     const DraggableTableHeader = ({ header }: { header: Header<any, unknown> }) => {
         const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
