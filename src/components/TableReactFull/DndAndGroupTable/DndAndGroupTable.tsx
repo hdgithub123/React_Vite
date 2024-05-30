@@ -127,135 +127,138 @@ const makeData = [
 function DndAndGroupTable() {
     const [columnFilters, setColumnFilters] = useState([]);
     // const FilterT = {filterFn: "includesStringSensitive", accessorKey: 'firstName',}
-    
-    
+
+
+    // const columns = useMemo<ColumnDef<Person>[]>(
+    //     () => [
+    //         {
+    //             accessorKey: 'firstName',
+    //             id: 'firstName',
+    //             header: 'First Name',
+
+    //             cell: info => info.getValue(),
+    //         },
+    //         {
+    //             accessorFn: row => row.lastName,
+    //             id: 'lastName',
+    //             header: () => <span>Last Name</span>,
+    //             cell: info => info.getValue(),
+    //         },
+    //         {
+    //             accessorKey: 'age',
+    //             id: 'age',
+
+    //             header: () => 'Age',
+    //             aggregatedCell: ({ getValue }) =>
+    //                 Math.round(getValue<number>() * 100) / 100,
+    //             aggregationFn: 'median',
+    //         },
+    //         {
+    //             accessorKey: 'visits',
+    //             id: 'visits',
+    //             header: () => <span>Visits</span>,
+    //             aggregationFn: 'sum',
+    //             aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
+    //         },
+    //         {
+    //             accessorKey: 'status',
+    //             id: 'status',
+    //             size: 150,
+    //             header: 'Status',
+    //         },
+    //         {
+    //             accessorKey: 'progress',
+    //             id: 'progress',
+    //             header: 'Profile Progress',
+    //             cell: ({ getValue }) =>
+    //                 Math.round(getValue<number>() * 100) / 100 + '%',
+    //             aggregationFn: 'mean',
+    //             aggregatedCell: ({ getValue }) =>
+    //                 Math.round(getValue<number>() * 100) / 100 + '%',
+    //         },
+
+
+    //     ],
+    //     []
+    // )
+
     const columns = useMemo<ColumnDef<Person>[]>(
         () => [
             {
-                accessorKey: 'firstName',
-                id: 'firstName',
-                header: 'First Name',
-                
-                cell: info => info.getValue(),
-            },
-            {
-                accessorFn: row => row.lastName,
-                id: 'lastName',
-                header: () => <span>Last Name</span>,
-                cell: info => info.getValue(),
-            },
-            {
-                accessorKey: 'age',
-                id: 'age',
-                
-                header: () => 'Age',
-                aggregatedCell: ({ getValue }) =>
-                    Math.round(getValue<number>() * 100) / 100,
-                aggregationFn: 'median',
-            },
-            {
-                accessorKey: 'visits',
-                id: 'visits',
-                header: () => <span>Visits</span>,
-                aggregationFn: 'sum',
-                aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
-            },
-            {
-                accessorKey: 'status',
-                id: 'status',
-                size: 150,
-                header: 'Status',
-            },
-            {
-                accessorKey: 'progress',
-                id: 'progress',
-                header: 'Profile Progress',
-                cell: ({ getValue }) =>
-                    Math.round(getValue<number>() * 100) / 100 + '%',
-                aggregationFn: 'mean',
-                aggregatedCell: ({ getValue }) =>
-                    Math.round(getValue<number>() * 100) / 100 + '%',
-            },
+                header: 'Name',
 
+                columns: [
+                    {
+                        accessorKey: 'firstName',
+                        header: 'First Name',
+                        id: 'firstName',
+                        cell: (info) => info.getValue(),
+                        /**
+                         * override the value used for row grouping
+                         * (otherwise, defaults to the value derived from accessorKey / accessorFn)
+                         */
+                        getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
+                    },
+                    {
+                        accessorFn: (row) => row.lastName,
+                        id: 'lastName',
+                        header: () => <span>Last Name</span>,
+                        cell: (info) => info.getValue(),
+                    },
+                ],
+            },
+            {
+                header: 'Info',
 
+                columns: [
+                    {
+                        accessorKey: 'age',
+                        id: 'age',
+                        header: () => 'Age',
+                        aggregatedCell: ({ getValue }) =>
+                            Math.round(getValue<number>() * 100) / 100,
+                        aggregationFn: 'median',
+                    },
+                    {
+                        header: 'More Info',
+
+                        columns: [
+                            {
+                                accessorKey: 'visits',
+                                id: 'visits',
+                                header: () => <span>Visits</span>,
+                                aggregationFn: 'sum',
+                                aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
+                            },
+                            {
+                                accessorKey: 'status',
+                                id: 'status',
+                                header: 'Status',
+                            },
+                            {
+                                accessorKey: 'progress',
+                                id: 'progress',
+                                header: 'Profile Progress',
+                                cell: ({ getValue }) =>
+                                    Math.round(getValue<number>() * 100) / 100 + '%',
+                                aggregationFn: 'mean',
+                                aggregatedCell: ({ getValue }) =>
+                                    Math.round(getValue<number>() * 100) / 100 + '%',
+                            },
+                        ],
+                    },
+                ],
+            },
         ],
         []
     )
-    
-    // const columns = useMemo<ColumnDef<Person>[]>(
-    //     () => [
-    //       {
-    //         header: 'Name',
-           
-    //         columns: [
-    //           {
-    //             accessorKey: 'firstName',
-    //             header: 'First Name',
-    //             id: 'firstName',
-    //             cell: (info) => info.getValue(),
-    //             /**
-    //              * override the value used for row grouping
-    //              * (otherwise, defaults to the value derived from accessorKey / accessorFn)
-    //              */
-    //             getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
-    //           },
-    //           {
-    //             accessorFn: (row) => row.lastName,
-    //             id: 'lastName',
-    //             header: () => <span>Last Name</span>,
-    //             cell: (info) => info.getValue(),
-    //           },
-    //         ],
-    //       },
-    //       {
-    //         header: 'Info',
-            
-    //         columns: [
-    //           {
-    //             accessorKey: 'age',
-    //             id: 'age',
-    //             header: () => 'Age',
-    //             aggregatedCell: ({ getValue }) =>
-    //               Math.round(getValue<number>() * 100) / 100,
-    //             aggregationFn: 'median',
-    //           },
-    //           {
-    //             header: 'More Info',
-               
-    //             columns: [
-    //               {
-    //                 accessorKey: 'visits',
-    //                 id: 'visits',
-    //                 header: () => <span>Visits</span>,
-    //                 aggregationFn: 'sum',
-    //                 aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
-    //               },
-    //               {
-    //                 accessorKey: 'status',
-    //                 id: 'status',
-    //                 header: 'Status',
-    //               },
-    //               {
-    //                 accessorKey: 'progress',
-    //                 id: 'progress',
-    //                 header: 'Profile Progress',
-    //                 cell: ({ getValue }) =>
-    //                   Math.round(getValue<number>() * 100) / 100 + '%',
-    //                 aggregationFn: 'mean',
-    //                 aggregatedCell: ({ getValue }) =>
-    //                   Math.round(getValue<number>() * 100) / 100 + '%',
-    //               },
-    //             ],
-    //           },
-    //         ],
-    //       },
-    //     ],
-    //     []
-    //   )
 
 
     const [data, setData] = useState(makeData);
-    const [columnOrder, setColumnOrder] = useState<string[]>(() => columns.map(c => c.id!));
+    // const [columnOrder, setColumnOrder] = useState<string[]>(() => columns.map(c => c.id!));
+    const [columnOrder, setColumnOrder] = useState<string[]>(() =>
+        columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
+    );
     const [grouping, setGrouping] = useState<GroupingState>([])
 
 
@@ -289,10 +292,6 @@ function DndAndGroupTable() {
         const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
             id: header.column.id,
         });
-
-
-        const isLeafColumn = (column) => !column.columns || column.columns.length === 0;
-        
         const style: CSSProperties = {
             opacity: isDragging ? 0.8 : 1,
             position: 'relative',
@@ -319,8 +318,8 @@ function DndAndGroupTable() {
                                     }}
                                 >
                                     {header.column.getIsGrouped()
-                                        ? `🛑(${header.column.getGroupedIndex() }) `
-                                        : `👊` }
+                                        ? `🛑(${header.column.getGroupedIndex()}) `
+                                        : `👊`}
                                 </button>
                             ) : null}{' '}
                             {flexRender(
@@ -330,13 +329,16 @@ function DndAndGroupTable() {
                         </div>
 
                         {/* Colum DND Begin*/}
-                        {header.column.getIsGrouped() || !isLeafColumn(header.column.columnDef)
-                                        ? ''
-                                        : <button {...attributes} {...listeners}> 🟰 </button> }
-                                        {/* : isLeafColumn(header.column.columnDef) ? <button {...attributes} {...listeners}> 🟰 </button> : ''} */}
-                         {/* Colum DND End*/}
+                        {header.column.getIsGrouped()
+                            ? ''
+                            : <button {...attributes} {...listeners}>
+                                🟰
+                            </button>}
 
-                        
+
+                        {/* Colum DND End*/}
+
+
 
                         {/* Colum Resize Begin*/}
                         <div
@@ -354,6 +356,17 @@ function DndAndGroupTable() {
             </th>
         );
     };
+
+    const StaticTableHeader = ({ header }: { header: Header<Person, unknown> }) => {
+        return (
+            <th colSpan={header.colSpan}>
+                {header.isPlaceholder
+                    ? null
+                    : flexRender(header.column.columnDef.header, header.getContext())}
+            </th>
+        );
+    };
+
 
     const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
         const { isDragging, setNodeRef, transform } = useSortable({
@@ -425,7 +438,7 @@ function DndAndGroupTable() {
         );
     };
 
-
+    const isLeafColumn = (header: Header<Person, unknown>) => !header.subHeaders || header.subHeaders.length === 0;
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -434,7 +447,7 @@ function DndAndGroupTable() {
                 const oldIndex = columnOrder.indexOf(active.id as string);
                 const newIndex = columnOrder.indexOf(over.id as string);
                 return arrayMove(columnOrder, oldIndex, newIndex);
-                
+
             });
         }
     };
@@ -465,9 +478,13 @@ function DndAndGroupTable() {
                         {table.getHeaderGroups().map(headerGroup => (
                             <tr key={headerGroup.id}>
                                 <SortableContext items={columnOrder} strategy={horizontalListSortingStrategy}>
-                                    {headerGroup.headers.map(header => (
-                                        <DraggableTableHeader key={header.id} header={header} />
-                                    ))}
+                                    {headerGroup.headers.map((header) =>
+                                        isLeafColumn(header) ? (
+                                            <DraggableTableHeader key={header.id} header={header} />
+                                        ) : (
+                                            <StaticTableHeader key={header.id} header={header} />
+                                        )
+                                    )}
                                 </SortableContext>
                             </tr>
                         ))}
