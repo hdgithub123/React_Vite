@@ -267,7 +267,7 @@ function DndAndGroupTable() {
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-        state: { columnOrder, columnFilters, grouping, expanded},
+        state: { columnOrder, columnFilters, grouping,},
         onColumnFiltersChange: setColumnFilters,
         onColumnOrderChange: setColumnOrder,
         onGroupingChange: setGrouping,
