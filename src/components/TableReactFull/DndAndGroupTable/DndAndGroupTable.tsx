@@ -259,7 +259,7 @@ function DndAndGroupTable() {
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
     );
-    const [grouping, setGrouping] = useState<GroupingState>([]) 
+    const [grouping, setGrouping] = useState<GroupingState>([])
 
     const table = useReactTable({
         data,
@@ -267,14 +267,14 @@ function DndAndGroupTable() {
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-        state: { columnOrder, columnFilters, grouping,},
+        state: { columnOrder, columnFilters, grouping, },
         onColumnFiltersChange: setColumnFilters,
         onColumnOrderChange: setColumnOrder,
         onGroupingChange: setGrouping,
         getExpandedRowModel: getExpandedRowModel(),
         getGroupedRowModel: getGroupedRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-       
+
     });
 
     const rerender = () => {
@@ -468,6 +468,9 @@ function DndAndGroupTable() {
                 <div className="flex flex-wrap gap-2">
                     <button onClick={rerender} className="border p-1">
                         Regenerate
+                    </button>
+                    <button onClick={table.getToggleAllRowsExpandedHandler()} className="border p-1">
+                        Expand/Collapse all
                     </button>
                 </div>
                 <div className="h-4" />
