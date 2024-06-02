@@ -20,22 +20,49 @@ import {
 
 import {
     DndContext,
+    useDroppable,
     KeyboardSensor,
     MouseSensor,
     TouchSensor,
     closestCenter,
+    closestCorners,
     DragEndEvent,
     useSensor,
     useSensors,
+
+    CancelDrop,
+
+    pointerWithin,
+    rectIntersection,
+    CollisionDetection,
+
+    DragOverlay,
+    DropAnimation,
+    getFirstCollision,
+
+    Modifiers,
+
+    UniqueIdentifier,
+
+    MeasuringStrategy,
+    KeyboardCoordinateGetter,
+    defaultDropAnimationSideEffects,
+    Active,
+    ClientRect,
+    DroppableContainer,
+
+
 } from '@dnd-kit/core';
-import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
+import { restrictToHorizontalAxis, restrictToParentElement, restrictToWindowEdges, } from '@dnd-kit/modifiers';
 import {
+    useSortable,
     arrayMove,
     SortableContext,
     horizontalListSortingStrategy,
+    rectSortingStrategy,
+    verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
-import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 const makeData = [
@@ -253,9 +280,7 @@ function DndAndGroupTable() {
         []
     )
 
-
     const [data, setData] = useState(makeData);
-    // const [columnOrder, setColumnOrder] = useState<string[]>(() => columns.map(c => c.id!));
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
     );
@@ -283,6 +308,8 @@ function DndAndGroupTable() {
         console.log("getCoreRowModel():", getCoreRowModel())
         console.log("getFilteredRowModel():", table.getFilteredRowModel())
         console.log("table:", table);
+        console.log("grouping:", grouping);
+
 
     };
 
@@ -290,7 +317,7 @@ function DndAndGroupTable() {
         const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
             id: header.column.id,
         });
-        const style: CSSProperties = {
+        const style1: CSSProperties = {
             opacity: isDragging ? 0.8 : 1,
             position: 'relative',
             transform: CSS.Translate.toString(transform),
@@ -301,7 +328,7 @@ function DndAndGroupTable() {
         };
 
         return (
-            <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
+            <th colSpan={header.colSpan} ref={setNodeRef} style={style1}>
                 {header.isPlaceholder ? null : (
                     <>
                         <div>
@@ -326,19 +353,12 @@ function DndAndGroupTable() {
                             )}
                         </div>
 
-                        {/* Colum DND Begin*/}
-                        {header.column.getIsGrouped()
-                            ? ''
-                            : <button {...attributes} {...listeners}>
-                                🟰
-                            </button>}
-
-
-                        {/* Colum DND End*/}
-
-
-
-                        {/* Colum Resize Begin*/}
+                     {/* Colum DND Begin*/}
+                        <button {...attributes} {...listeners}>
+                            🟰
+                        </button>
+                    {/* Colum DND End*/}
+                    {/* Colum Resize Begin*/}
                         <div
                             {...{
                                 onMouseDown: header.getResizeHandler(),
@@ -348,7 +368,7 @@ function DndAndGroupTable() {
                                     }`,
                             }}
                         />
-                        {/* Colum Resize end*/}
+                    {/* Colum Resize end*/}
                     </>
                 )}
             </th>
@@ -365,7 +385,7 @@ function DndAndGroupTable() {
         );
     };
 
-
+    // các cell được render
     const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
         const { isDragging, setNodeRef, transform } = useSortable({
             id: cell.column.id,
@@ -385,10 +405,10 @@ function DndAndGroupTable() {
         return (
             <td
                 ref={setNodeRef}
-                style={style}
                 {...{
                     key: cell.id,
                     style: {
+                        style,
                         background: cell.getIsGrouped()
                             ? '#0aff0082'
                             : cell.getIsAggregated()
@@ -436,49 +456,157 @@ function DndAndGroupTable() {
         );
     };
 
+
     const isLeafColumn = (header: Header<Person, unknown>) => !header.subHeaders || header.subHeaders.length === 0;
+
+    const sensors = useSensors(
+        useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+        useSensor(TouchSensor, { activationConstraint: { distance: 5 } }),
+        useSensor(KeyboardSensor, {})
+    );
+    // Tạo chỗ kéo thả group
+    const DropableContainerGroup = ({ children }) => {
+        const { isOver, setNodeRef } = useDroppable({
+            id: `DropableContainerGroupID`,
+
+        });
+
+        const style3 = {
+            border: isOver ? '0.1px dashed blue' : '0.1px dashed gray',
+            padding: '1px',
+            marginBottom: '1px',
+            background: isOver ? 'yellow' : 'white',
+            width: '700px', // Set your desired width here
+            height: '80px', // Set your desired height here
+
+            justifyContent: 'center',
+            alignItems: 'center',
+            display: 'block', // Sử dụng display block
+
+
+        };
+
+        return (
+            <div ref={setNodeRef} style={style3}>
+                {children}
+            </div>
+        );
+    };
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
-        if (active && over && active.id !== over.id) {
-            setColumnOrder(columnOrder => {
-                const oldIndex = columnOrder.indexOf(active.id as string);
-                const newIndex = columnOrder.indexOf(over.id as string);
-                return arrayMove(columnOrder, oldIndex, newIndex);
 
-            });
+        console.log("active.id", active.id)
+        console.log("over.id", over.id)
+        console.log("over.id", over.id)
+        if (over.id !== "DropableContainerGroupID") {
+            if (active && over && active.id !== over.id) {
+                setColumnOrder(columnOrder => {
+                    const oldIndex = columnOrder.indexOf(active.id as string);
+                    const newIndex = columnOrder.indexOf(over.id as string);
+                    return arrayMove(columnOrder, oldIndex, newIndex);
+
+                });
+            }
+        } else {
+
+            if (active && !grouping.includes(active.id)) {
+                setGrouping([...grouping, active.id]);
+            }
+
+
         }
+
     };
 
-    const sensors = useSensors(
-        useSensor(MouseSensor, {}),
-        useSensor(TouchSensor, {}),
-        useSensor(KeyboardSensor, {})
-    );
+
+    // tu lam va cham
+    function customCollisionDetection({
+        active,
+        collisionRect,
+        droppableRects,
+        droppableContainers,
+        pointerCoordinates,
+    }: {
+        active: Active;
+        collisionRect: ClientRect;
+        droppableRects: RectMap;
+        droppableContainers: DroppableContainer[];
+        pointerCoordinates: Coordinates | null;
+    }) {
+
+        // Lọc ra các container droppable không phải là sortable
+        const otherContainers = droppableContainers.filter(({ id }) => id === 'DropableContainerGroupID');
+
+        // Sử dụng thuật toán closestCorners để tính toán va chạm với các container khác
+
+
+        // Sử dụng thuật toán rectIntersection để kiểm tra va chạm với các container sortable
+        const rectIntersectionCollisions = pointerWithin({
+            active,
+            collisionRect,
+            droppableRects,
+            droppableContainers: otherContainers,
+            pointerCoordinates,
+        });
+
+        // Nếu có va chạm với các container sortable, trả về các va chạm đó
+        if (rectIntersectionCollisions.length > 0) {
+            return rectIntersectionCollisions;
+        }
+
+
+        // Lọc ra các container droppable có id bắt đầu là 'sortable'
+        const sortableContainers = droppableContainers.filter(({ id }) => id !== 'DropableContainerGroupID');
+
+        // Sử dụng thuật toán rectIntersection để kiểm tra va chạm với các container sortable   
+        return closestCorners({
+            active,
+            collisionRect,
+            droppableRects,
+            droppableContainers: sortableContainers,
+            pointerCoordinates,
+        });
+
+
+
+
+
+
+
+    };
 
     return (
-        <DndContext
-            collisionDetection={closestCenter}
-            //  modifiers={[restrictToHorizontalAxis]}
-            onDragEnd={handleDragEnd}
-            sensors={sensors}
-        >
-            <div className="p-2">
-                <div className="h-4" />
-                <div className="flex flex-wrap gap-2">
-                    <button onClick={rerender} className="border p-1">
-                        Regenerate
-                    </button>
-                    <button onClick={table.getToggleAllRowsExpandedHandler()} className="border p-1">
-                        Expand/Collapse all
-                    </button>
-                </div>
-                <div className="h-4" />
+
+        <div>
+
+            <div>
+                <button onClick={rerender}>
+                    Regenerate
+                </button>
+                <button onClick={table.getToggleAllRowsExpandedHandler()}>
+                    Expand/Collapse all
+                </button>
+            </div>
+
+            {/* Tạo Drop Group Area */}
+
+            <DndContext
+                collisionDetection={customCollisionDetection}
+                onDragEnd={handleDragEnd}
+                sensors={sensors}
+            >
+                <DropableContainerGroup >
+                    {/* <h1>Thả vào đây</h1> */}
+                    <p>Thả vào đây</p>
+                </DropableContainerGroup>
+
+                {/* Bắt đầu render table */}
                 <table>
                     <thead>
                         {table.getHeaderGroups().map(headerGroup => (
                             <tr key={headerGroup.id}>
-                                <SortableContext items={columnOrder} strategy={horizontalListSortingStrategy}>
+                                <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
                                     {headerGroup.headers.map((header) =>
                                         isLeafColumn(header) ? (
                                             <DraggableTableHeader key={header.id} header={header} />
@@ -490,19 +618,20 @@ function DndAndGroupTable() {
                             </tr>
                         ))}
                     </thead>
+
                     <tbody>
                         {table.getRowModel().rows.map(row => (
                             <tr key={row.id}>
                                 {row.getVisibleCells().map(cell => (
-                                    <DragAlongCell key={cell.id} cell={cell} row={row} />
+                                    <DragAlongCell key={cell.id} cell={cell} />
                                 ))}
                             </tr>
                         ))}
                     </tbody>
                 </table>
-            </div>
-        </DndContext>
+            </DndContext>
+        </div>
+
     );
 }
-
 export default DndAndGroupTable;
