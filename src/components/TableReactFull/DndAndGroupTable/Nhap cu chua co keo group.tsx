@@ -20,6 +20,7 @@ import {
 
 import {
     DndContext,
+    useDroppable,
     KeyboardSensor,
     MouseSensor,
     TouchSensor,
@@ -27,15 +28,36 @@ import {
     DragEndEvent,
     useSensor,
     useSensors,
+
+    CancelDrop,
+
+  pointerWithin,
+  rectIntersection,
+  CollisionDetection,
+
+  DragOverlay,
+  DropAnimation,
+  getFirstCollision,
+
+  Modifiers,
+
+  UniqueIdentifier,
+ 
+  MeasuringStrategy,
+  KeyboardCoordinateGetter,
+  defaultDropAnimationSideEffects,
+
 } from '@dnd-kit/core';
-import { restrictToHorizontalAxis } from '@dnd-kit/modifiers';
+import { restrictToHorizontalAxis, restrictToParentElement, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import {
+    useSortable,
     arrayMove,
     SortableContext,
     horizontalListSortingStrategy,
+    rectSortingStrategy,
+    verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
-import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 const makeData = [
@@ -254,6 +276,8 @@ function DndAndGroupTable() {
     )
 
 
+
+
     const [data, setData] = useState(makeData);
     // const [columnOrder, setColumnOrder] = useState<string[]>(() => columns.map(c => c.id!));
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -283,8 +307,22 @@ function DndAndGroupTable() {
         console.log("getCoreRowModel():", getCoreRowModel())
         console.log("getFilteredRowModel():", table.getFilteredRowModel())
         console.log("table:", table);
+        console.log("grouping:", grouping);
+
 
     };
+
+  
+
+
+
+
+
+
+
+
+    
+
 
     const DraggableTableHeader = ({ header }: { header: Header<any, unknown> }) => {
         const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
@@ -327,11 +365,9 @@ function DndAndGroupTable() {
                         </div>
 
                         {/* Colum DND Begin*/}
-                        {header.column.getIsGrouped()
-                            ? ''
-                            : <button {...attributes} {...listeners}>
-                                🟰
-                            </button>}
+                        <button {...attributes} {...listeners}>
+                            🟰
+                        </button>
 
 
                         {/* Colum DND End*/}
@@ -436,72 +472,141 @@ function DndAndGroupTable() {
         );
     };
 
+  
+
     const isLeafColumn = (header: Header<Person, unknown>) => !header.subHeaders || header.subHeaders.length === 0;
 
-    const handleDragEnd = (event: DragEndEvent) => {
-        const { active, over } = event;
-        if (active && over && active.id !== over.id) {
-            setColumnOrder(columnOrder => {
-                const oldIndex = columnOrder.indexOf(active.id as string);
-                const newIndex = columnOrder.indexOf(over.id as string);
-                return arrayMove(columnOrder, oldIndex, newIndex);
-
-            });
-        }
-    };
+   
 
     const sensors = useSensors(
         useSensor(MouseSensor, {}),
-        useSensor(TouchSensor, {}),
+        useSensor(TouchSensor, { activationConstraint: { distance: 5 } }),
         useSensor(KeyboardSensor, {})
     );
 
-    return (
-        <DndContext
-            collisionDetection={closestCenter}
-            //  modifiers={[restrictToHorizontalAxis]}
-            onDragEnd={handleDragEnd}
-            sensors={sensors}
-        >
-            <div className="p-2">
-                <div className="h-4" />
-                <div className="flex flex-wrap gap-2">
-                    <button onClick={rerender} className="border p-1">
-                        Regenerate
-                    </button>
-                    <button onClick={table.getToggleAllRowsExpandedHandler()} className="border p-1">
-                        Expand/Collapse all
-                    </button>
-                </div>
-                <div className="h-4" />
-                <table>
-                    <thead>
-                        {table.getHeaderGroups().map(headerGroup => (
-                            <tr key={headerGroup.id}>
-                                <SortableContext items={columnOrder} strategy={horizontalListSortingStrategy}>
-                                    {headerGroup.headers.map((header) =>
-                                        isLeafColumn(header) ? (
-                                            <DraggableTableHeader key={header.id} header={header} />
-                                        ) : (
-                                            <StaticTableHeader key={header.id} header={header} />
-                                        )
-                                    )}
-                                </SortableContext>
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody>
-                        {table.getRowModel().rows.map(row => (
-                            <tr key={row.id}>
-                                {row.getVisibleCells().map(cell => (
-                                    <DragAlongCell key={cell.id} cell={cell} row={row} />
-                                ))}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+    const DropableContainerGroup = ({  children }) => {
+        const { isOver, setNodeRef } = useDroppable({
+            id: `DropableContainerGroupID`,
+        });
+
+        const style = {
+            border: isOver ? '2px dashed blue' : '2px dashed gray',
+            padding: '1rem',
+            marginBottom: '1rem',
+            background: isOver ? 'yellow' : 'white',
+        };
+
+        return (
+            <div ref={setNodeRef} style={style}>
+                {children}
             </div>
-        </DndContext>
+        );
+    };
+    const DropableContainerTable = ({  children }) => {
+        const { isOver, setNodeRef } = useDroppable({
+            id: `DropableContainerTableID`,
+        });
+
+        const style = {
+             border: isOver ? '2px dashed blue' : '2px dashed gray',
+            padding: '1rem',
+            marginBottom: '1rem',
+            background: isOver ? 'yellow' : 'white',
+        };
+
+        return (
+            <div ref={setNodeRef} style={style}>
+          
+                {children}
+            </div>
+        );
+    };
+
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
+
+        console.log("active.id", active.id)
+        console.log("over.id", over.id)
+        console.log("over.id", over.id)
+        if (over.id !== "DropableContainerTableID") {
+            if (active && over && active.id !== over.id) {
+                setColumnOrder(columnOrder => {
+                    const oldIndex = columnOrder.indexOf(active.id as string);
+                    const newIndex = columnOrder.indexOf(over.id as string);
+                    return arrayMove(columnOrder, oldIndex, newIndex);
+    
+                });
+            }
+        } else {
+
+            if (active && !grouping.includes(active.id)) {
+                setGrouping([...grouping, active.id]);
+              }
+           
+
+        }
+        
+    };
+
+
+    return (
+
+        <div className="p-2">
+            <div className="h-4" />
+            <div className="flex flex-wrap gap-2">
+                <button onClick={rerender} className="border p-1">
+                    Regenerate
+                </button>
+                <button onClick={table.getToggleAllRowsExpandedHandler()} className="border p-1">
+                    Expand/Collapse all
+                </button>
+            </div>
+            <div className="h-4" />
+            {/* Tạo Drop Group Area */}
+
+            <DndContext
+
+                collisionDetection={closestCenter}
+                //  modifiers={[restrictToHorizontalAxis]}
+                onDragEnd={handleDragEnd}
+                sensors={sensors}
+            >
+                <DropableContainerGroup id={1}>
+                    <h1>Thả vào đây</h1>
+                </DropableContainerGroup>
+
+                {/* Bắt đầu render table */}
+                <DropableContainerTable id={2}>
+                    <table>
+                        <thead>
+                            {table.getHeaderGroups().map(headerGroup => (
+                                <tr key={headerGroup.id}>
+                                    <SortableContext items={columnOrder} strategy={horizontalListSortingStrategy}>
+                                        {headerGroup.headers.map((header) =>
+                                            isLeafColumn(header) ? (
+                                                <DraggableTableHeader key={header.id} header={header} />
+                                            ) : (
+                                                <StaticTableHeader key={header.id} header={header} />
+                                            )
+                                        )}
+                                    </SortableContext>
+                                </tr>
+                            ))}
+                        </thead>
+                        <tbody>
+                            {table.getRowModel().rows.map(row => (
+                                <tr key={row.id}>
+                                    {row.getVisibleCells().map(cell => (
+                                        <DragAlongCell key={cell.id} cell={cell} row={row} />
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </DropableContainerTable>
+            </DndContext>
+        </div>
+
     );
 }
 
