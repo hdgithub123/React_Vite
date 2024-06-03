@@ -298,7 +298,7 @@ function DndAndGroupTable() {
         onGroupingChange: setGrouping,
         getExpandedRowModel: getExpandedRowModel(),
         getGroupedRowModel: getGroupedRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
+        // getPaginationRowModel: getPaginationRowModel(),
 
     });
 
@@ -476,8 +476,8 @@ function DndAndGroupTable() {
             padding: '1px',
             marginBottom: '1px',
             background: isOver ? 'yellow' : 'white',
-            width: '100%', // Set your desired width here
-            height: '80px', // Set your desired height here
+            width: '90%', // Set your desired width here
+            height: '40px', // Set your desired height here
             justifyContent: 'left',
             alignItems: 'center',
             display: 'flex',
@@ -528,14 +528,10 @@ function DndAndGroupTable() {
         droppableContainers: DroppableContainer[];
         pointerCoordinates: Coordinates | null;
     }) {
-
-        // Lọc ra các container droppable không phải là sortable
+        // Lọc ra các container droppable là DropableContainerGroupID
         const otherContainers = droppableContainers.filter(({ id }) => id === 'DropableContainerGroupID');
 
-        // Sử dụng thuật toán closestCorners để tính toán va chạm với các container khác
-
-
-        // Sử dụng thuật toán rectIntersection để kiểm tra va chạm với các container sortable
+        // Sử dụng thuật toán pointerWithin để kiểm tra va chạm với các container sortable
         const rectIntersectionCollisions = pointerWithin({
             active,
             collisionRect,
@@ -549,7 +545,6 @@ function DndAndGroupTable() {
             return rectIntersectionCollisions;
         }
 
-
         // Lọc ra các container droppable có id bắt đầu là 'sortable'
         const sortableContainers = droppableContainers.filter(({ id }) => id !== 'DropableContainerGroupID');
 
@@ -561,13 +556,6 @@ function DndAndGroupTable() {
             droppableContainers: sortableContainers,
             pointerCoordinates,
         });
-
-
-
-
-
-
-
     };
     // dau vao là columID render ra header
     const RenderHeaderByID = ({ columnID, columns }) => {
@@ -605,7 +593,7 @@ function DndAndGroupTable() {
     };
 
 
-
+    // bắt đầu render chính
     return (
         <div>
             <div>
@@ -625,14 +613,10 @@ function DndAndGroupTable() {
                     sensors={sensors}
                 >
                     <DropableContainerGroup >
-                        {/* <h1>Thả vào đây</h1> */}
-                        <SortableContext id="sortable-DropableContainerGroup" items={grouping} strategy={horizontalListSortingStrategy}>
+                        {/* <h1>Thả vào đây</h1> */}       
                             {grouping.map((id) => (
                                 <RenderHeaderByID key={id} columnID={id} columns={columns}></RenderHeaderByID>
                             ))}
-
-                        </SortableContext>
-
                     </DropableContainerGroup>
 
                     {/* Bắt đầu render table */}
