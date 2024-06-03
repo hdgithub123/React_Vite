@@ -24,6 +24,8 @@
 import DndAndGroupTable from './components/TableReactFull/DndAndGroupTable/DndAndGroupTable';
 
 import GroupTable from './components/TableReactFull/GroupTable/GroupTable';
+
+import MutipleContainers from './components/TableReactFull/Nhap/MutipleContainers';
 function App() {
 
 
@@ -39,7 +41,7 @@ function App() {
       {/* <DndTableRectFull></DndTableRectFull> */}
       <p> DndAndGroupTable</p>
       <DndAndGroupTable></DndAndGroupTable>
-     
+     <MutipleContainers></MutipleContainers>
       {/* <GeneralTableEX></GeneralTableEX> */}
 
       {/* <GeneralTableTanStack></GeneralTableTanStack>
