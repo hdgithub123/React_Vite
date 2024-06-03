@@ -319,6 +319,7 @@ function DndAndGroupTable() {
         });
         const style: CSSProperties = {
             opacity: isDragging ? 0.8 : 1,
+            cursor: isDragging ? 'move':'default',
             position: 'relative',
             transform: CSS.Translate.toString(transform),
             transition: 'width transform 0.2s ease-in-out',
@@ -331,33 +332,18 @@ function DndAndGroupTable() {
             <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
                 {header.isPlaceholder ? null : (
                     <>
-                        <div>
-                            {header.column.getCanGroup() ? (
-                                // If the header can be grouped, let's add a toggle
-                                <button
-                                    {...{
-                                        onClick: header.column.getToggleGroupingHandler(),
-                                        style: {
-                                            cursor: 'pointer',
-                                        },
-                                    }}
-                                >
-                                    {header.column.getIsGrouped()
-                                        ? `🛑(${header.column.getGroupedIndex()}) `
-                                        : `👊`}
-                                </button>
-                            ) : null}{' '}
+                        <div  {...attributes} {...listeners}>
+                            
+                            {header.column.getIsGrouped()
+                                        ? `🛑`
+                                        : ``}
+                            
                             {flexRender(
                                 header.column.columnDef.header,
                                 header.getContext(),
                             )}
                         </div>
 
-                        {/* Colum DND Begin*/}
-                        <button {...attributes} {...listeners}>
-                            🟰
-                        </button>
-                        {/* Colum DND End*/}
                         {/* Colum Resize Begin*/}
                         <div
                             {...{
