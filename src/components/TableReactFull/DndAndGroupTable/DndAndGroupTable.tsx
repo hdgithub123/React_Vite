@@ -66,87 +66,27 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 
 const makeData = [
-    {
-        firstName: 'Alice',
-        lastName: 'Smith',
-        age: 28,
-        visits: 120,
-        progress: 75,
-        status: 'relationship',
-    },
-    {
-        firstName: 'Alice',
-        lastName: 'Johnson',
-        age: 35,
-        visits: 80,
-        progress: 60,
-        status: 'single',
-    },
-    {
-        firstName: 'Alice',
-        lastName: 'Smith',
-        age: 42,
-        visits: 50,
-        progress: 90,
-        status: 'complicated',
-    },
-    {
-        firstName: 'David',
-        lastName: 'Lee',
-        age: 22,
-        visits: 200,
-        progress: 40,
-        status: 'relationship',
-    },
-    {
-        firstName: 'Eva',
-        lastName: 'Garcia',
-        age: 30,
-        visits: 150,
-        progress: 70,
-        status: 'single',
-    },
-    {
-        firstName: 'Frank',
-        lastName: 'Wang',
-        age: 50,
-        visits: 30,
-        progress: 85,
-        status: 'relationship',
-    },
-    {
-        firstName: 'Grace',
-        lastName: 'Miller',
-        age: 25,
-        visits: 100,
-        progress: 55,
-        status: 'single',
-    },
-    {
-        firstName: 'Henry',
-        lastName: 'Clark',
-        age: 38,
-        visits: 70,
-        progress: 78,
-        status: 'complicated',
-    },
-    {
-        firstName: 'Isabella',
-        lastName: 'Martinez',
-        age: 27,
-        visits: 180,
-        progress: 65,
-        status: 'relationship',
-    },
-    {
-        firstName: 'Jack',
-        lastName: 'Taylor',
-        age: 33,
-        visits: 90,
-        progress: 50,
-        status: 'single',
-    },
+    { firstName: 'Alice', lastName: 'Smith', age: 28, visits: 120, progress: 75, status: 'relationship' },
+    { firstName: 'Alice', lastName: 'Johnson', age: 35, visits: 80, progress: 60, status: 'single' },
+    { firstName: 'Alice', lastName: 'Smith', age: 42, visits: 50, progress: 90, status: 'complicated' },
+    { firstName: 'David', lastName: 'Lee', age: 22, visits: 200, progress: 40, status: 'relationship' },
+    { firstName: 'Eva', lastName: 'Garcia', age: 30, visits: 150, progress: 70, status: 'single' },
+    { firstName: 'Frank', lastName: 'Wang', age: 50, visits: 30, progress: 85, status: 'relationship' },
+    { firstName: 'Grace', lastName: 'Miller', age: 25, visits: 100, progress: 55, status: 'single' },
+    { firstName: 'Henry', lastName: 'Clark', age: 38, visits: 70, progress: 78, status: 'complicated' },
+    { firstName: 'Isabella', lastName: 'Martinez', age: 27, visits: 180, progress: 65, status: 'relationship' },
+    { firstName: 'Jack', lastName: 'Taylor', age: 33, visits: 90, progress: 50, status: 'single' },
+    { firstName: 'John', lastName: 'Doe', age: 26, visits: 130, progress: 80, status: 'relationship' },
+    { firstName: 'Jane', lastName: 'Doe', age: 29, visits: 75, progress: 55, status: 'complicated' },
+    { firstName: 'Sarah', lastName: 'Connor', age: 32, visits: 105, progress: 60, status: 'single' },
+    { firstName: 'Tom', lastName: 'Hanks', age: 45, visits: 95, progress: 70, status: 'relationship' },
+    { firstName: 'Emma', lastName: 'Stone', age: 27, visits: 150, progress: 85, status: 'single' },
+    { firstName: 'Olivia', lastName: 'Brown', age: 31, visits: 160, progress: 75, status: 'relationship' },
+    { firstName: 'Liam', lastName: 'Wilson', age: 24, visits: 170, progress: 90, status: 'complicated' },
+    { firstName: 'Noah', lastName: 'Moore', age: 40, visits: 60, progress: 50, status: 'single' },
+    { firstName: 'William', lastName: 'Taylor', age: 36, visits: 110, progress: 65, status: 'relationship' },
 ];
+
 
 
 
@@ -319,7 +259,7 @@ function DndAndGroupTable() {
         });
         const style: CSSProperties = {
             opacity: isDragging ? 0.8 : 1,
-            cursor: isDragging ? 'move':'default',
+            cursor: isDragging ? 'move' : 'default',
             position: 'relative',
             transform: CSS.Translate.toString(transform),
             transition: 'width transform 0.2s ease-in-out',
@@ -333,11 +273,11 @@ function DndAndGroupTable() {
                 {header.isPlaceholder ? null : (
                     <>
                         <div  {...attributes} {...listeners}>
-                            
+
                             {header.column.getIsGrouped()
-                                        ? `🛑`
-                                        : ``}
-                            
+                                ? `🛑`
+                                : ``}
+
                             {flexRender(
                                 header.column.columnDef.header,
                                 header.getContext(),
@@ -582,6 +522,39 @@ function DndAndGroupTable() {
     // bắt đầu render chính
     return (
         <div>
+            {/* Chọn Column hiển thị */}
+            <div className="inline-block border border-black shadow rounded">
+                <div className="px-1 border-b border-black">
+                    <label>
+                        <input
+                            {...{
+                                type: 'checkbox',
+                                checked: table.getIsAllColumnsVisible(),
+                                onChange: table.getToggleAllColumnsVisibilityHandler(),
+                            }}
+                        />{' '}
+                        Toggle All
+                    </label>
+                </div>
+                {table.getAllLeafColumns().map(column => {
+                    return (
+                        <div key={column.id} className="px-1">
+                            <label>
+                                <input
+                                    {...{
+                                        type: 'checkbox',
+                                        checked: column.getIsVisible(),
+                                        onChange: column.getToggleVisibilityHandler(),
+                                    }}
+                                />{' '}
+                                {flexRender(column.columnDef.header, {})}
+                            </label>
+                        </div>
+                    )
+                })}
+            </div>
+
+            {/* Render các nút điều khiển */}
             <div>
                 <button onClick={rerender}>
                     Regenerate
@@ -597,12 +570,13 @@ function DndAndGroupTable() {
                     collisionDetection={customCollisionDetection}
                     onDragEnd={handleDragEnd}
                     sensors={sensors}
-                >
+                > 
+                {/* Phần thả group column */}
                     <DropableContainerGroup >
-                        {/* <h1>Thả vào đây</h1> */}       
-                            {grouping.map((id) => (
-                                <RenderHeaderByID key={id} columnID={id} columns={columns}></RenderHeaderByID>
-                            ))}
+                        {/* <h1>Thả vào đây</h1> */}
+                        {grouping.map((id) => (
+                            <RenderHeaderByID key={id} columnID={id} columns={columns}></RenderHeaderByID>
+                        ))}
                     </DropableContainerGroup>
 
                     {/* Bắt đầu render table */}
