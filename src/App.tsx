@@ -41,7 +41,7 @@ function App() {
       {/* <DndTableRectFull></DndTableRectFull> */}
       <p> DndAndGroupTable</p>
       <DndAndGroupTable></DndAndGroupTable>
-     <MutipleContainers></MutipleContainers>
+     {/* <MutipleContainers></MutipleContainers> */}
       {/* <GeneralTableEX></GeneralTableEX> */}
 
       {/* <GeneralTableTanStack></GeneralTableTanStack>
