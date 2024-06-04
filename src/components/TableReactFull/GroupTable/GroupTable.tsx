@@ -120,7 +120,7 @@ function GroupTable() {
           {
             accessorKey: 'firstName',
             header: 'First Name',
-            filterT : <FirstNameFilter column={'firstName'}></FirstNameFilter>,
+            filterT : 'fn',
             cell: info => info.getValue(),
             /**
              * override the value used for row grouping
@@ -237,10 +237,11 @@ function GroupTable() {
                           header.column.columnDef.header,
                           header.getContext()
                         )}
-                        {flexRender(
+                        {/* {flexRender(
                           header.column.columnDef.filterT,
                           header.getContext()
-                        )}
+                        )} */}
+                        <FirstNameFilter column={header.column} filterT={header.column.columnDef.filterT}></FirstNameFilter>
                       </div>
                     )}
                   </th>
@@ -390,7 +391,7 @@ function GroupTable() {
 export default GroupTable;
 
 
-function FirstNameFilter({ column }) {
+function FirstNameFilter({ column , filterT }) {
   const { setFilter, filterValue } = column
 
   // Định nghĩa hàm filterFn
@@ -405,7 +406,7 @@ function FirstNameFilter({ column }) {
       type="text"
       value={filterValue || ''}
       onChange={e => setFilter(e.target.value, filterFn)}
-      placeholder="Search..."
+      placeholder= {filterT}
     />
   )
 }

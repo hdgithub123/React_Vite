@@ -251,6 +251,7 @@ function DndAndGroupTable() {
         console.log("getFilteredRowModel():", table.getFilteredRowModel())
         console.log("table:", table);
         console.log("grouping:", grouping);
+        console.log("table grouping:", table.getHeaderGroups());
 
 
     };
