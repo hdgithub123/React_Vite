@@ -160,6 +160,7 @@ function DndAndGroupTable() {
                         accessorKey: 'firstName',
                         header: 'First Name',
                         id: 'firstName',
+                        filterT : 'abcd', // dùng được
                         cell: (info) => info.getValue(),
                         /**
                          * override the value used for row grouping
@@ -268,7 +269,7 @@ function DndAndGroupTable() {
             width: header.column.getSize(),
             zIndex: isDragging ? 1 : 0,
         };
-
+        console.log("header:", header);
         return (
             <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
                 {header.isPlaceholder ? null : (
@@ -502,6 +503,7 @@ function DndAndGroupTable() {
         };
 
         const columnDef = findHeader(columns, columnID);
+        console.log("columnDef:", columnDef);
         if (columnDef) {
             return <div>{flexRender(columnDef.header, {})} <button
                 {...{

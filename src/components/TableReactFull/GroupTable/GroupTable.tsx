@@ -120,6 +120,7 @@ function GroupTable() {
           {
             accessorKey: 'firstName',
             header: 'First Name',
+            filterT : <FirstNameFilter column={'firstName'}></FirstNameFilter>,
             cell: info => info.getValue(),
             /**
              * override the value used for row grouping
@@ -130,6 +131,7 @@ function GroupTable() {
           {
             accessorFn: row => row.lastName,
             id: 'lastName',
+            filterT : 'abcd',
             header: () => <span>Last Name</span>,
             cell: info => info.getValue(),
           },
@@ -141,6 +143,7 @@ function GroupTable() {
           {
             accessorKey: 'age',
             header: () => 'Age',
+            filterT : 'abcd',
             aggregatedCell: ({ getValue }) =>
               Math.round(getValue<number>() * 100) / 100,
             aggregationFn: 'median',
@@ -150,17 +153,20 @@ function GroupTable() {
             columns: [
               {
                 accessorKey: 'visits',
+                filterT : <h1> hello visit</h1>,
                 header: () => <span>Visits</span>,
                 aggregationFn: 'sum',
                 // aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
               },
               {
                 accessorKey: 'status',
+                filterT : 'abcd',
                 header: 'Status',
               },
               {
                 accessorKey: 'progress',
                 header: 'Profile Progress',
+                filterT : 'abcd',
                 cell: ({ getValue }) =>
                   Math.round(getValue<number>() * 100) / 100 + '%',
                 aggregationFn: 'mean',
@@ -229,6 +235,10 @@ function GroupTable() {
                         ) : null}{' '}
                         {flexRender(
                           header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {flexRender(
+                          header.column.columnDef.filterT,
                           header.getContext()
                         )}
                       </div>
@@ -378,3 +388,24 @@ function GroupTable() {
 }
 
 export default GroupTable;
+
+
+function FirstNameFilter({ column }) {
+  const { setFilter, filterValue } = column
+
+  // Định nghĩa hàm filterFn
+  const filterFn = (row, filterValue) => {
+    const firstName = row.original.firstName.toLowerCase()
+    const filterText = filterValue.toLowerCase()
+    return firstName.includes(filterText)
+  }
+
+  return (
+    <input
+      type="text"
+      value={filterValue || ''}
+      onChange={e => setFilter(e.target.value, filterFn)}
+      placeholder="Search..."
+    />
+  )
+}
