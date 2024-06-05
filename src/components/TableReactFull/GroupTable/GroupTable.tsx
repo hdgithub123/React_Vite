@@ -184,20 +184,22 @@ function GroupTable() {
   const [data, setData] = React.useState(() => makeData)
   const refreshData = () => {
     console.log("grouping",grouping)
-    setGrouping(["age","visits"]);
-
+    // setGrouping(["age","visits"]);
+    console.log("columnFilters",columnFilters)
 
   }
 
   const [grouping, setGrouping] = React.useState<GroupingState>([])
-
+  const [columnFilters, setColumnFilters] = React.useState([]);
   const table = useReactTable({
     data,
     columns,
     state: {
       grouping,
+      columnFilters,
     },
     onGroupingChange: setGrouping,
+    onColumnFiltersChange: setColumnFilters,
     getExpandedRowModel: getExpandedRowModel(),
     getGroupedRowModel: getGroupedRowModel(),
     getCoreRowModel: getCoreRowModel(),
@@ -241,7 +243,7 @@ function GroupTable() {
                           header.column.columnDef.filterT,
                           header.getContext()
                         )} */}
-                        <FirstNameFilter column={header.column} filterT={header.column.columnDef.filterT}></FirstNameFilter>
+                        <Filter column={header.column} filterT={header.column.columnDef.filterT}></Filter>
                       </div>
                     )}
                   </th>
@@ -391,21 +393,26 @@ function GroupTable() {
 export default GroupTable;
 
 
-function FirstNameFilter({ column , filterT }) {
-  const { setFilter, filterValue } = column
+function Filter({ column , filterT }) {
+  
+  const columnFilterValue = column.getFilterValue()
+  
 
-  // Định nghĩa hàm filterFn
-  const filterFn = (row, filterValue) => {
-    const firstName = row.original.firstName.toLowerCase()
-    const filterText = filterValue.toLowerCase()
-    return firstName.includes(filterText)
+  const [filterV, setfilterV] = React.useState()
+  function handelOnChange(e) {
+    // column.setFilterValue([{id: column.id, value: filterV}]) không cần id vì đã có column rồi
+    column.setFilterValue(e.target.value) //ok đưa giá trị vào ô filter value
+    column.columnDef.filterFn = 'includesStringSensitive' // ok để chỉ định filterFn
+    setfilterV(e.target.value)
+    console.log("column",column)
+    console.log("filterT",filterT)
+    console.log("columnFilterValue",columnFilterValue)
   }
-
   return (
     <input
       type="text"
-      value={filterValue || ''}
-      onChange={e => setFilter(e.target.value, filterFn)}
+      value={filterV || ''}
+      onChange= {handelOnChange}
       placeholder= {filterT}
     />
   )
