@@ -243,7 +243,7 @@ function GroupTable() {
                           header.column.columnDef.filterT,
                           header.getContext()
                         )} */}
-                        <Filter column={header.column} filterT={header.column.columnDef.filterT}></Filter>
+                        <Filter column={header.column}></Filter>
                       </div>
                     )}
                   </th>
@@ -393,10 +393,11 @@ function GroupTable() {
 export default GroupTable;
 
 
-function Filter({ column , filterT }) {
-  
+function Filter({ column }) {
+  // column.columnDef.filterT --> lấy được giá trị của filterT: trên colums
   const columnFilterValue = column.getFilterValue()
-  
+
+
 
   const [filterV, setfilterV] = React.useState()
   function handelOnChange(e) {
@@ -404,8 +405,9 @@ function Filter({ column , filterT }) {
     column.setFilterValue(e.target.value) //ok đưa giá trị vào ô filter value
     column.columnDef.filterFn = 'includesStringSensitive' // ok để chỉ định filterFn
     setfilterV(e.target.value)
+    
     console.log("column",column)
-    console.log("filterT",filterT)
+    console.log("filterT",column.columnDef.filterT)
     console.log("columnFilterValue",columnFilterValue)
   }
   return (
@@ -413,7 +415,7 @@ function Filter({ column , filterT }) {
       type="text"
       value={filterV || ''}
       onChange= {handelOnChange}
-      placeholder= {filterT}
+      placeholder= {column.columnDef.filterT}
     />
   )
 }
