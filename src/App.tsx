@@ -21,7 +21,7 @@
 // import DndTableRectFull from './components/TableReactFull/DndTable/DndTableRectFull';
 
 
-import DndAndGroupTable from './components/TableReactFull/DndAndGroupTable/DndAndGroupTable';
+import DndAndGroupTableEX from './components/TableReactFull/DndAndGroupTable/DndAndGroupTableEX';
 
 import GroupTable from './components/TableReactFull/GroupTable/GroupTable';
 
@@ -36,11 +36,11 @@ function App() {
       {/* <SearchTableDropdownEx></SearchTableDropdownEx>
       <p> end seach table</p> */}
 
-      <GroupTable></GroupTable>
+      {/* <GroupTable></GroupTable> */}
 
       {/* <DndTableRectFull></DndTableRectFull> */}
       <p> DndAndGroupTable</p>
-      <DndAndGroupTable></DndAndGroupTable>
+      <DndAndGroupTableEX></DndAndGroupTableEX>
      {/* <MutipleContainers></MutipleContainers> */}
       {/* <GeneralTableEX></GeneralTableEX> */}
 

@@ -214,7 +214,6 @@ function GroupTable() {
 
   return (
     <div className="p-2">
-      {console.log("rerender cha")}
       <div className="h-2" />
       <table>
         <thead>
@@ -398,6 +397,28 @@ function GroupTable() {
 export default GroupTable;
 
 
+// function Filter({ column }) {
+//   const filterType =  column.columnDef.filterType
+
+
+//   const [textfilter, setTextfilter] = React.useState()
+//   function handelOnChange(e) {
+//     column.setFilterValue(e.target.value) //ok đưa giá trị vào ô filter value
+//     column.columnDef.filterFn = filterType // ok để chỉ định filterFn
+//     setTextfilter(e.target.value)
+//   }
+//   return (
+//      <input
+//       type="text"
+//       value={textfilter || ''}
+//       onChange= {handelOnChange}
+//       placeholder= 'Search...'
+//     />
+
+    
+//   )
+// }
+
 function Filter({ column }) {
   const filterType =  column.columnDef.filterType
 
@@ -407,18 +428,15 @@ function Filter({ column }) {
     column.setFilterValue(e.target.value) //ok đưa giá trị vào ô filter value
     column.columnDef.filterFn = filterType // ok để chỉ định filterFn
     setTextfilter(e.target.value)
-    console.log("column",column)
   }
   return (
-    <>
-     {console.log("rerender filter")}
      <input
       type="text"
       value={textfilter || ''}
       onChange= {handelOnChange}
       placeholder= 'Search...'
     />
-    </>
+
     
   )
 }
