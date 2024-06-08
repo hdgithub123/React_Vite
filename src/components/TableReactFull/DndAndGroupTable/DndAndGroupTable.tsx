@@ -1,4 +1,5 @@
-import { useState, useMemo, CSSProperties } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo, CSSProperties } from 'react';
+import React from 'react'
 import './DndAndGroupTable.css';
 import {
 
@@ -94,7 +95,6 @@ const makeData = [
 
 function DndAndGroupTable() {
     const [columnFilters, setColumnFilters] = useState([]);
-    // const FilterT = {filterFn: "includesStringSensitive", accessorKey: 'firstName',}
 
 
     // const columns = useMemo<ColumnDef<Person>[]>(
@@ -160,7 +160,7 @@ function DndAndGroupTable() {
                         accessorKey: 'firstName',
                         header: 'First Name',
                         id: 'firstName',
-                        filterT : 'abcd', // dùng được
+                        filterType: 'includesStringSensitive',
                         cell: (info) => info.getValue(),
                         /**
                          * override the value used for row grouping
@@ -172,6 +172,7 @@ function DndAndGroupTable() {
                         accessorFn: (row) => row.lastName,
                         id: 'lastName',
                         header: () => <span>Last Name</span>,
+                        filterType: 'includesStringSensitive',
                         cell: (info) => info.getValue(),
                     },
                 ],
@@ -184,6 +185,7 @@ function DndAndGroupTable() {
                         accessorKey: 'age',
                         id: 'age',
                         header: () => 'Age',
+                        filterType: 'includesString',
                         aggregatedCell: ({ getValue }) =>
                             Math.round(getValue<number>() * 100) / 100,
                         aggregationFn: 'median',
@@ -196,6 +198,7 @@ function DndAndGroupTable() {
                                 accessorKey: 'visits',
                                 id: 'visits',
                                 header: () => <span>Visits</span>,
+                                filterType: 'includesStringSensitive',
                                 aggregationFn: 'sum',
                                 aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
                             },
@@ -203,11 +206,13 @@ function DndAndGroupTable() {
                                 accessorKey: 'status',
                                 id: 'status',
                                 header: 'Status',
+                                filterType: 'includesStringSensitive',
                             },
                             {
                                 accessorKey: 'progress',
                                 id: 'progress',
                                 header: 'Profile Progress',
+                                filterType: 'includesStringSensitive',
                                 cell: ({ getValue }) =>
                                     Math.round(getValue<number>() * 100) / 100 + '%',
                                 aggregationFn: 'mean',
@@ -256,134 +261,9 @@ function DndAndGroupTable() {
 
     };
 
-    const DraggableTableHeader = ({ header }: { header: Header<any, unknown> }) => {
-        const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
-            id: header.column.id,
-        });
-        const style: CSSProperties = {
-            opacity: isDragging ? 0.8 : 1,
-            cursor: isDragging ? 'move' : 'default',
-            position: 'relative',
-            transform: CSS.Translate.toString(transform),
-            transition: 'width transform 0.2s ease-in-out',
-            whiteSpace: 'nowrap',
-            width: header.column.getSize(),
-            zIndex: isDragging ? 1 : 0,
-        };
-        console.log("header:", header);
-        return (
-            <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
-                {header.isPlaceholder ? null : (
-                    <>
-                        <div  {...attributes} {...listeners}>
-
-                            {header.column.getIsGrouped()
-                                ? `🛑`
-                                : ``}
-
-                            {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                            )}
-                        </div>
-
-                        {/* Colum Resize Begin*/}
-                        <div
-                            {...{
-                                onMouseDown: header.getResizeHandler(),
-                                onTouchStart: header.getResizeHandler(),
-                                className: `resizer ${table.options.columnResizeDirection
-                                    } ${header.column.getIsResizing() ? 'isResizing' : ''
-                                    }`,
-                            }}
-                        />
-                        {/* Colum Resize end*/}
-                    </>
-                )}
-            </th>
-        );
-    };
-
-    const StaticTableHeader = ({ header }: { header: Header<Person, unknown> }) => {
-        return (
-            <th colSpan={header.colSpan}>
-                {header.isPlaceholder
-                    ? null
-                    : flexRender(header.column.columnDef.header, header.getContext())}
-            </th>
-        );
-    };
 
     // các cell được render
-    const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
-        const { isDragging, setNodeRef, transform } = useSortable({
-            id: cell.column.id,
-        });
 
-        const style: CSSProperties = {
-            opacity: isDragging ? 0.8 : 1,
-            position: 'relative',
-            transform: CSS.Translate.toString(transform),
-            transition: 'width transform 0.2s ease-in-out',
-            width: cell.column.getSize(),
-            zIndex: isDragging ? 1 : 0,
-        };
-
-        const { row } = cell.getContext();
-
-        return (
-            <td
-                ref={setNodeRef}
-                {...{
-                    key: cell.id,
-                    style: {
-                        style,
-                        background: cell.getIsGrouped()
-                            ? '#0aff0082'
-                            : cell.getIsAggregated()
-                                ? '#ffa50078'
-                                : cell.getIsPlaceholder()
-                                    ? '#ff000042'
-                                    : 'white',
-                    },
-                }}
-            >
-                {cell.getIsGrouped() ? (
-                    // If it's a grouped cell, add an expander and row count
-                    <>
-                        <button
-                            {...{
-                                onClick: row.getToggleExpandedHandler(),
-                                style: {
-                                    cursor: row.getCanExpand() ? 'pointer' : 'normal',
-                                },
-                            }}
-                        >
-                            {row.getIsExpanded() ? '👇' : '👉'}{' '}
-                            {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
-                            )}{' '}
-                            ({row.subRows.length})
-                        </button>
-                    </>
-                ) : cell.getIsAggregated() ? (
-                    // If the cell is aggregated, use the Aggregated renderer for cell
-                    flexRender(
-                        cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
-                        cell.getContext()
-                    )
-                ) : cell.getIsPlaceholder() ? null : (
-                    // For cells with repeated values, render null
-                    // Otherwise, just render the regular cell
-                    flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                    )
-                )}
-            </td>
-        );
-    };
 
 
     const isLeafColumn = (header: Header<Person, unknown>) => !header.subHeaders || header.subHeaders.length === 0;
@@ -393,32 +273,7 @@ function DndAndGroupTable() {
         useSensor(TouchSensor, { activationConstraint: { distance: 5 } }),
         useSensor(KeyboardSensor, {})
     );
-    // Tạo chỗ kéo thả group
-    const DropableContainerGroup = ({ children }) => {
-        const { isOver, setNodeRef } = useDroppable({
-            id: `DropableContainerGroupID`,
 
-        });
-
-        const style = {
-            border: isOver ? '0.1px dashed blue' : '0.1px dashed gray',
-            padding: '1px',
-            marginBottom: '1px',
-            background: isOver ? 'yellow' : 'white',
-            width: '90%', // Set your desired width here
-            height: '40px', // Set your desired height here
-            justifyContent: 'left',
-            alignItems: 'center',
-            display: 'flex',
-
-        };
-
-        return (
-            <div ref={setNodeRef} style={style}>
-                {children}
-            </div>
-        );
-    };
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -441,87 +296,6 @@ function DndAndGroupTable() {
         }
 
     };
-
-
-    // tu lam va cham
-    function customCollisionDetection({
-        active,
-        collisionRect,
-        droppableRects,
-        droppableContainers,
-        pointerCoordinates,
-    }: {
-        active: Active;
-        collisionRect: ClientRect;
-        droppableRects: RectMap;
-        droppableContainers: DroppableContainer[];
-        pointerCoordinates: Coordinates | null;
-    }) {
-        // Lọc ra các container droppable là DropableContainerGroupID
-        const otherContainers = droppableContainers.filter(({ id }) => id === 'DropableContainerGroupID');
-
-        // Sử dụng thuật toán pointerWithin để kiểm tra va chạm với các container sortable
-        const rectIntersectionCollisions = pointerWithin({
-            active,
-            collisionRect,
-            droppableRects,
-            droppableContainers: otherContainers,
-            pointerCoordinates,
-        });
-
-        // Nếu có va chạm với các container sortable, trả về các va chạm đó
-        if (rectIntersectionCollisions.length > 0) {
-            return rectIntersectionCollisions;
-        }
-
-        // Lọc ra các container droppable có id bắt đầu là 'sortable'
-        const sortableContainers = droppableContainers.filter(({ id }) => id !== 'DropableContainerGroupID');
-
-        // Sử dụng thuật toán rectIntersection để kiểm tra va chạm với các container sortable   
-        return closestCorners({
-            active,
-            collisionRect,
-            droppableRects,
-            droppableContainers: sortableContainers,
-            pointerCoordinates,
-        });
-    };
-    // dau vao là columID render ra header
-    const RenderHeaderByID = ({ columnID, columns }) => {
-        const findHeader = (columns: ColumnDef<Person>[], id: string): ColumnDef<Person> | undefined => {
-            for (const column of columns) {
-                if (column.id === id) {
-                    return column;
-                }
-                if (column.columns) {
-                    const found = findHeader(column.columns, id);
-                    if (found) {
-                        return found;
-                    }
-                }
-            }
-            return undefined;
-        };
-
-        const columnDef = findHeader(columns, columnID);
-        console.log("columnDef:", columnDef);
-        if (columnDef) {
-            return <div>{flexRender(columnDef.header, {})} <button
-                {...{
-                    onClick: () => setGrouping(grouping.filter(item => item !== columnID)),
-                    style: {
-                        cursor: 'pointer',
-                    },
-                }}
-            >
-                X
-            </button>
-            </div>;
-        }
-
-        return <div>Header not found</div>;
-    };
-
 
     // bắt đầu render chính
     return (
@@ -574,8 +348,8 @@ function DndAndGroupTable() {
                     collisionDetection={customCollisionDetection}
                     onDragEnd={handleDragEnd}
                     sensors={sensors}
-                > 
-                {/* Phần thả group column */}
+                >
+                    {/* Phần thả group column */}
                     <DropableContainerGroup >
                         {/* <h1>Thả vào đây</h1> */}
                         {grouping.map((id) => (
@@ -591,7 +365,9 @@ function DndAndGroupTable() {
                                     <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
                                         {headerGroup.headers.map((header) =>
                                             isLeafColumn(header) ? (
-                                                <DraggableTableHeader key={header.id} header={header} />
+
+                                                <DraggableTableHeader header={header} />
+
                                             ) : (
                                                 <StaticTableHeader key={header.id} header={header} />
                                             )
@@ -618,3 +394,281 @@ function DndAndGroupTable() {
     );
 }
 export default DndAndGroupTable;
+
+
+
+
+// DraggableTableHeader
+const DraggableTableHeader = React.memo(
+    ({ header }: { header: Header<any, unknown> }) => {
+        const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
+            id: header.column.id,
+        });
+
+
+        const style: CSSProperties = {
+            opacity: isDragging ? 0.8 : 1,
+            cursor: isDragging ? 'move' : 'default',
+            position: 'relative',
+            transform: CSS.Translate.toString(transform),
+            transition: 'width transform 0.2s ease-in-out',
+            whiteSpace: 'nowrap',
+            width: header.column.getSize(),
+            zIndex: isDragging ? 1 : 0,
+        };
+        return (
+            <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
+                {header.isPlaceholder ? null : (
+                    <>
+                        <div  {...attributes} {...listeners}>
+
+                            {header.column.getIsGrouped()
+                                ? `🛑`
+                                : ``}
+
+                            {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                            )}
+
+                        </div>
+                        {/* Filter colum*/}
+                        <Filter column={header.column}></Filter>
+
+
+                        {/* Colum Resize Begin*/}
+                        <div
+                            {...{
+                                onMouseDown: header.getResizeHandler(),
+                                onTouchStart: header.getResizeHandler(),
+                                className: `resizer 
+                                    } ${header.column.getIsResizing() ? 'isResizing' : ''
+                                    }`,
+                            }}
+                        />
+                        {/* Colum Resize end*/}
+                        {console.log("rerender cha")}
+                    </>
+                )}
+            </th>
+        );
+    }
+
+)
+
+
+const StaticTableHeader = ({ header }: { header: Header<Person, unknown> }) => {
+    return (
+        <th colSpan={header.colSpan}>
+            {header.isPlaceholder
+                ? null
+                : flexRender(header.column.columnDef.header, header.getContext())}
+        </th>
+    );
+};
+
+
+// các cell được render
+const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
+    const { isDragging, setNodeRef, transform } = useSortable({
+        id: cell.column.id,
+    });
+
+    const style: CSSProperties = {
+        opacity: isDragging ? 0.8 : 1,
+        position: 'relative',
+        transform: CSS.Translate.toString(transform),
+        transition: 'width transform 0.2s ease-in-out',
+        width: cell.column.getSize(),
+        zIndex: isDragging ? 1 : 0,
+    };
+
+    const { row } = cell.getContext();
+
+    return (
+        <td
+            ref={setNodeRef}
+            {...{
+                key: cell.id,
+                style: {
+                    style,
+                    background: cell.getIsGrouped()
+                        ? '#0aff0082'
+                        : cell.getIsAggregated()
+                            ? '#ffa50078'
+                            : cell.getIsPlaceholder()
+                                ? '#ff000042'
+                                : 'white',
+                },
+            }}
+        >
+            {cell.getIsGrouped() ? (
+                // If it's a grouped cell, add an expander and row count
+                <>
+                    <button
+                        {...{
+                            onClick: row.getToggleExpandedHandler(),
+                            style: {
+                                cursor: row.getCanExpand() ? 'pointer' : 'normal',
+                            },
+                        }}
+                    >
+                        {row.getIsExpanded() ? '👇' : '👉'}{' '}
+                        {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                        )}{' '}
+                        ({row.subRows.length})
+                    </button>
+                </>
+            ) : cell.getIsAggregated() ? (
+                // If the cell is aggregated, use the Aggregated renderer for cell
+                flexRender(
+                    cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
+                    cell.getContext()
+                )
+            ) : cell.getIsPlaceholder() ? null : (
+                // For cells with repeated values, render null
+                // Otherwise, just render the regular cell
+                flexRender(
+                    cell.column.columnDef.cell,
+                    cell.getContext()
+                )
+            )}
+        </td>
+    );
+};
+
+
+
+
+// dau vao là columID render ra header
+const RenderHeaderByID = ({ columnID, columns }) => {
+    const findHeader = (columns: ColumnDef<Person>[], id: string): ColumnDef<Person> | undefined => {
+        for (const column of columns) {
+            if (column.id === id) {
+                return column;
+            }
+            if (column.columns) {
+                const found = findHeader(column.columns, id);
+                if (found) {
+                    return found;
+                }
+            }
+        }
+        return undefined;
+    };
+
+    const columnDef = findHeader(columns, columnID);
+    if (columnDef) {
+        return <div>{flexRender(columnDef.header, {})} <button
+            {...{
+                onClick: () => setGrouping(grouping.filter(item => item !== columnID)),
+                style: {
+                    cursor: 'pointer',
+                },
+            }}
+        >
+            X
+        </button>
+        </div>;
+    }
+
+    return <div>Header not found</div>;
+};
+
+
+
+// tu lam va cham
+function customCollisionDetection({
+    active,
+    collisionRect,
+    droppableRects,
+    droppableContainers,
+    pointerCoordinates,
+}: {
+    active: Active;
+    collisionRect: ClientRect;
+    droppableRects: RectMap;
+    droppableContainers: DroppableContainer[];
+    pointerCoordinates: Coordinates | null;
+}) {
+    // Lọc ra các container droppable là DropableContainerGroupID
+    const otherContainers = droppableContainers.filter(({ id }) => id === 'DropableContainerGroupID');
+
+    // Sử dụng thuật toán pointerWithin để kiểm tra va chạm với các container sortable
+    const rectIntersectionCollisions = pointerWithin({
+        active,
+        collisionRect,
+        droppableRects,
+        droppableContainers: otherContainers,
+        pointerCoordinates,
+    });
+
+    // Nếu có va chạm với các container sortable, trả về các va chạm đó
+    if (rectIntersectionCollisions.length > 0) {
+        return rectIntersectionCollisions;
+    }
+
+    // Lọc ra các container droppable có id bắt đầu là 'sortable'
+    const sortableContainers = droppableContainers.filter(({ id }) => id !== 'DropableContainerGroupID');
+
+    // Sử dụng thuật toán rectIntersection để kiểm tra va chạm với các container sortable   
+    return closestCorners({
+        active,
+        collisionRect,
+        droppableRects,
+        droppableContainers: sortableContainers,
+        pointerCoordinates,
+    });
+};
+
+
+
+// Tạo chỗ kéo thả group
+const DropableContainerGroup = ({ children }) => {
+    const { isOver, setNodeRef } = useDroppable({
+        id: `DropableContainerGroupID`,
+
+    });
+
+    const style = {
+        border: isOver ? '0.1px dashed blue' : '0.1px dashed gray',
+        padding: '1px',
+        marginBottom: '1px',
+        background: isOver ? 'yellow' : 'white',
+        width: '90%', // Set your desired width here
+        height: '40px', // Set your desired height here
+        justifyContent: 'left',
+        alignItems: 'center',
+        display: 'flex',
+
+    };
+
+    return (
+        <div ref={setNodeRef} style={style}>
+            {children}
+        </div>
+    );
+};
+
+
+// ví dụ filter
+function Filter({ column }) {
+    const filterType = column.columnDef.filterType
+
+    function handelOnChange(e) {
+        column.setFilterValue(e.target.value) //ok đưa giá trị vào ô filter value
+        column.columnDef.filterFn = filterType // ok để chỉ định filterFn
+
+        console.log("e.target.value", e.target.value)
+    }
+    return (
+        <input
+            type="text"
+            value={column.getFilterValue() || ''}
+            onChange={handelOnChange}
+            placeholder='Search...'
+        />
+    )
+}

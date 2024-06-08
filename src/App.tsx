@@ -39,8 +39,8 @@ function App() {
       <GroupTable></GroupTable>
 
       {/* <DndTableRectFull></DndTableRectFull> */}
-      {/* <p> DndAndGroupTable</p>
-      <DndAndGroupTable></DndAndGroupTable> */}
+      <p> DndAndGroupTable</p>
+      <DndAndGroupTable></DndAndGroupTable>
      {/* <MutipleContainers></MutipleContainers> */}
       {/* <GeneralTableEX></GeneralTableEX> */}
 

@@ -120,7 +120,7 @@ function GroupTable() {
           {
             accessorKey: 'firstName',
             header: 'First Name',
-            filterT : 'fn',
+            filterType : 'includesStringSensitive',
             cell: info => info.getValue(),
             /**
              * override the value used for row grouping
@@ -131,7 +131,7 @@ function GroupTable() {
           {
             accessorFn: row => row.lastName,
             id: 'lastName',
-            filterT : 'abcd',
+            filterType : 'includesString',
             header: () => <span>Last Name</span>,
             cell: info => info.getValue(),
           },
@@ -181,6 +181,10 @@ function GroupTable() {
     []
   )
 
+
+
+
+
   const [data, setData] = React.useState(() => makeData)
   const refreshData = () => {
     console.log("grouping",grouping)
@@ -210,6 +214,7 @@ function GroupTable() {
 
   return (
     <div className="p-2">
+      {console.log("rerender cha")}
       <div className="h-2" />
       <table>
         <thead>
@@ -394,28 +399,26 @@ export default GroupTable;
 
 
 function Filter({ column }) {
-  // column.columnDef.filterT --> lấy được giá trị của filterT: trên colums
-  const columnFilterValue = column.getFilterValue()
+  const filterType =  column.columnDef.filterType
 
 
-
-  const [filterV, setfilterV] = React.useState()
+  const [textfilter, setTextfilter] = React.useState()
   function handelOnChange(e) {
-    // column.setFilterValue([{id: column.id, value: filterV}]) không cần id vì đã có column rồi
     column.setFilterValue(e.target.value) //ok đưa giá trị vào ô filter value
-    column.columnDef.filterFn = 'includesStringSensitive' // ok để chỉ định filterFn
-    setfilterV(e.target.value)
-    
+    column.columnDef.filterFn = filterType // ok để chỉ định filterFn
+    setTextfilter(e.target.value)
     console.log("column",column)
-    console.log("filterT",column.columnDef.filterT)
-    console.log("columnFilterValue",columnFilterValue)
   }
   return (
-    <input
+    <>
+     {console.log("rerender filter")}
+     <input
       type="text"
-      value={filterV || ''}
+      value={textfilter || ''}
       onChange= {handelOnChange}
-      placeholder= {column.columnDef.filterT}
+      placeholder= 'Search...'
     />
+    </>
+    
   )
 }
