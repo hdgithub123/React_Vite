@@ -203,6 +203,9 @@ function GroupTable() {
       columnFilters,
     },
     onGroupingChange: setGrouping,
+    manualExpanding: false, // set bàng false thì có thể tự expanding
+    autoResetExpanded: false, // set bang false thì tất cả các row được expanding
+    // enableExpanding: false,
     onColumnFiltersChange: setColumnFilters,
     getExpandedRowModel: getExpandedRowModel(),
     getGroupedRowModel: getGroupedRowModel(),
@@ -212,8 +215,21 @@ function GroupTable() {
   
   })
 
+
+
+  const logAndSetExpanded = () => {
+    table.setExpanded(true);
+    console.log("effect render");
+  }
+
+  React.useEffect(() => {
+    logAndSetExpanded();
+  }, [grouping, columnFilters]);
+
+
   return (
     <div className="p-2">
+      { console.log("main render")}
       <div className="h-2" />
       <table>
         <thead>
@@ -247,7 +263,7 @@ function GroupTable() {
                           header.column.columnDef.filterT,
                           header.getContext()
                         )} */}
-                        <Filter column={header.column}></Filter>
+                        <Filter column={header.column} table={table}></Filter>
                       </div>
                     )}
                   </th>
@@ -419,7 +435,7 @@ export default GroupTable;
 //   )
 // }
 
-function Filter({ column }) {
+function Filter({ column , table }) {
   const filterType =  column.columnDef.filterType
 
 
@@ -428,6 +444,7 @@ function Filter({ column }) {
     column.setFilterValue(e.target.value) //ok đưa giá trị vào ô filter value
     column.columnDef.filterFn = filterType // ok để chỉ định filterFn
     setTextfilter(e.target.value)
+    table.setExpanded(true);
   }
   return (
      <input

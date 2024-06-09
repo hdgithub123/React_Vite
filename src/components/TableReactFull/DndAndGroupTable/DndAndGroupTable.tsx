@@ -88,6 +88,8 @@ function DndAndGroupTable({data, columns}) {
         onGroupingChange: setGrouping,
         getExpandedRowModel: getExpandedRowModel(),
         getGroupedRowModel: getGroupedRowModel(),
+        manualExpanding: false, // set bàng false thì có thể tự expanding
+        autoResetExpanded: false, // set bang false thì tất cả các row được expanding
         // getPaginationRowModel: getPaginationRowModel(),
 
     });
@@ -100,13 +102,13 @@ function DndAndGroupTable({data, columns}) {
         console.log("table:", table);
         console.log("grouping:", grouping);
         console.log("table grouping:", table.getHeaderGroups());
-
+       table.setExpanded(true) // Mở tất cả các cột
+        //table.setExpanded({}) // đóng tất cả các cột
 
     };
 
 
     // các cell được render
-
 // các cell được render đang phải để bên trong hàm thì mới kéo thả trơn tru được vì nó cần phải được render lại cell
 const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
     const { isDragging, setNodeRef, transform } = useSortable({
@@ -153,12 +155,12 @@ const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
                         }}
                     >
                         {row.getIsExpanded() ? '👇' : '👉'}{' '}
-                        {flexRender(
+                    </button>
+                    {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
                         )}{' '}
                         ({row.subRows.length})
-                    </button>
                 </>
             ) : cell.getIsAggregated() ? (
                 // If the cell is aggregated, use the Aggregated renderer for cell
@@ -177,37 +179,6 @@ const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
         </td>
     );
 };
-
-    const isLeafColumn = (header: Header<Person, unknown>) => !header.subHeaders || header.subHeaders.length === 0;
-
-    const sensors = useSensors(
-        useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
-        useSensor(TouchSensor, { activationConstraint: { distance: 5 } }),
-        useSensor(KeyboardSensor, {})
-    );
-
-
-    const handleDragEnd = (event: DragEndEvent) => {
-        const { active, over } = event;
-        if (over.id !== "DropableContainerGroupID") {
-            if (active && over && active.id !== over.id) {
-                setColumnOrder(columnOrder => {
-                    const oldIndex = columnOrder.indexOf(active.id as string);
-                    const newIndex = columnOrder.indexOf(over.id as string);
-                    return arrayMove(columnOrder, oldIndex, newIndex);
-
-                });
-            }
-        } else {
-
-            if (active && !grouping.includes(active.id)) {
-                setGrouping([...grouping, active.id]);
-            }
-
-
-        }
-
-    };
 
     // dau vao là columID render ra header
     const RenderHeaderByID = ({ columnID, columns }) => {
@@ -243,6 +214,44 @@ const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
 
         return <div>Header not found</div>;
     };
+    const isLeafColumn = (header: Header<Person, unknown>) => !header.subHeaders || header.subHeaders.length === 0;
+
+    const sensors = useSensors(
+        useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+        useSensor(TouchSensor, { activationConstraint: { distance: 5 } }),
+        useSensor(KeyboardSensor, {})
+    );
+
+
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
+        if (over.id !== "DropableContainerGroupID") {
+            if (active && over && active.id !== over.id) {
+                setColumnOrder(columnOrder => {
+                    const oldIndex = columnOrder.indexOf(active.id as string);
+                    const newIndex = columnOrder.indexOf(over.id as string);
+                    return arrayMove(columnOrder, oldIndex, newIndex);
+
+                });
+            }
+        } else {
+
+            if (active && !grouping.includes(active.id)) {
+                setGrouping([...grouping, active.id]);       
+            }
+        }
+
+    };
+
+
+
+
+    useEffect(() => {
+        table.setExpanded(true);
+        console.log("effect render")
+    }, [ grouping, columnFilters]);
+
+
 
     // bắt đầu render chính
     return (
@@ -259,6 +268,7 @@ const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
                             }}
                         />{' '}
                         Toggle All
+                        { console.log("main render")}
                     </label>
                 </div>
                 {table.getAllLeafColumns().map(column => {
@@ -321,16 +331,25 @@ const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
                                 </tr>
                             ))}
                         </thead>
-
-                        <tbody>
+                        {table.getRowModel().rows.length > 0 ? (
+                            <tbody>
                             {table.getRowModel().rows.map(row => (
-                                <tr key={row.id}>
-                                    {row.getVisibleCells().map(cell => (
-                                        <DragAlongCell key={cell.id} cell={cell} />
-                                    ))}
-                                </tr>
+                            <tr key={row.id}>
+                            {row.getVisibleCells().map(cell => (
+                                <DragAlongCell key={cell.id} cell={cell} />
+                            ))}
+                            </tr>
                             ))}
                         </tbody>
+                        ) : (
+                            <tbody>
+                            <tr>
+                                <td colSpan={columns.length} style={{ textAlign: 'center' }}>
+                                    No data available
+                                </td>
+                            </tr>
+                            </tbody>
+                        )}
                     </table>
                 </DndContext>
             </div>
@@ -377,8 +396,12 @@ const DraggableTableHeader =({ header }: { header: Header<any, unknown> }) => {
 
                         </div>
                         {/* Filter colum*/}
-                        <Filter column={header.column}></Filter>
-
+                        
+                        {header.column.getCanFilter() ? (
+                          <div>
+                           <Filter column={header.column}></Filter>
+                          </div>
+                        ) : null}
 
                         {/* Colum Resize Begin*/}
                         <div
@@ -495,8 +518,6 @@ function Filter({ column }) {
     function handelOnChange(e) {
         column.setFilterValue(e.target.value) //ok đưa giá trị vào ô filter value
         column.columnDef.filterFn = filterType // ok để chỉ định filterFn
-
-        console.log("e.target.value", e.target.value)
     }
     return (
         <input
@@ -510,11 +531,14 @@ function Filter({ column }) {
 
 // function Filter({ column }) {
 //     const filterType = column.columnDef.filterType
-//     const [textfilter, setTextfilter] = React.useState()
+//     const [textfilter, setTextfilter] = React.useState(column.getFilterValue())
 //     function handelOnChange(e) {
-//         column.setFilterValue(e.target.value) //ok đưa giá trị vào ô filter value
+        
+//         column.setFilterValue(textfilter) //ok đưa giá trị vào ô filter value
 //         column.columnDef.filterFn = filterType // ok để chỉ định filterFn
 //         setTextfilter(e.target.value)
+//         console.log("columnf",column.getFilterValue())
+//         console.log("column",column)
 //     }
 //     return (
 //         <input

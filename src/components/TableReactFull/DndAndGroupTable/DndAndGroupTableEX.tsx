@@ -89,131 +89,134 @@ const makeData = [
     { firstName: 'William', lastName: 'Taylor', age: 36, visits: 110, progress: 65, status: 'relationship' },
 ];
 
-// const columns = useMemo<ColumnDef<Person>[]>(
-//     () => [
-//         {
-//             accessorKey: 'firstName',
-//             id: 'firstName',
-//             header: 'First Name',
+const columns = 
+ [
+        {
+            accessorKey: 'firstName',
+            id: 'firstName',
+            header: 'First Name',
+            filterType: 'includesStringSensitive',
+            cell: info => info.getValue(),
+        },
+        {
+            accessorFn: row => row.lastName,
+            id: 'lastName',
+            filterType: 'includesStringSensitive',
+            header: () => <span>Last Name</span>,
+            cell: info => info.getValue(),
+        },
+        {
+            accessorKey: 'age',
+            id: 'age',
+            filterType: 'includesStringSensitive',
+            header: () => 'Age',
+            aggregatedCell: ({ getValue }) =>
+                Math.round(getValue<number>() * 100) / 100,
+            aggregationFn: 'median',
+        },
+        {
+            accessorKey: 'visits',
+            id: 'visits',
+            filterType: 'includesStringSensitive',
+            header: () => <span>Visits</span>,
+            aggregationFn: 'sum',
+            aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
+        },
+        {
+            accessorKey: 'status',
+            id: 'status',
+            filterType: 'includesStringSensitive',
+            size: 150,
+            header: 'Status',
+        },
+        {
+            accessorKey: 'progress',
+            id: 'progress',
+            filterType: 'includesStringSensitive',
+            header: 'Profile Progress',
+            cell: ({ getValue }) =>
+                Math.round(getValue<number>() * 100) / 100 + '%',
+            aggregationFn: 'mean',
+            aggregatedCell: ({ getValue }) =>
+                Math.round(getValue<number>() * 100) / 100 + '%',
+        },
 
-//             cell: info => info.getValue(),
-//         },
-//         {
-//             accessorFn: row => row.lastName,
-//             id: 'lastName',
-//             header: () => <span>Last Name</span>,
-//             cell: info => info.getValue(),
-//         },
-//         {
-//             accessorKey: 'age',
-//             id: 'age',
 
-//             header: () => 'Age',
-//             aggregatedCell: ({ getValue }) =>
-//                 Math.round(getValue<number>() * 100) / 100,
-//             aggregationFn: 'median',
-//         },
-//         {
-//             accessorKey: 'visits',
-//             id: 'visits',
-//             header: () => <span>Visits</span>,
-//             aggregationFn: 'sum',
-//             aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
-//         },
-//         {
-//             accessorKey: 'status',
-//             id: 'status',
-//             size: 150,
-//             header: 'Status',
-//         },
-//         {
-//             accessorKey: 'progress',
-//             id: 'progress',
-//             header: 'Profile Progress',
-//             cell: ({ getValue }) =>
-//                 Math.round(getValue<number>() * 100) / 100 + '%',
-//             aggregationFn: 'mean',
-//             aggregatedCell: ({ getValue }) =>
-//                 Math.round(getValue<number>() * 100) / 100 + '%',
-//         },
+    ]
 
 
-//     ],
-//     []
-// )
+// const columns = [
+//     {
+//         header: 'Name',
+//         columns: [
+//             {
+//                 accessorKey: 'firstName',
+//                 header: 'First Name',
+//                 id: 'firstName',
+//                 filterType: 'includesStringSensitive',
+//                 cell: (info) => info.getValue(),
+//                 /**
+//                  * override the value used for row grouping
+//                  * (otherwise, defaults to the value derived from accessorKey / accessorFn)
+//                  */
+//                 getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
+//             },
+//             {
+//                 accessorFn: (row) => row.lastName,
+//                 id: 'lastName',
+//                 header: () => <span>Last Name</span>,
+//                 filterType: 'includesStringSensitive',
+//                 cell: (info) => info.getValue(),
+//             },
+//         ],
+//     },
+//     {
+//         header: 'Info',
 
-const columns = [
-    {
-        header: 'Name',
-        columns: [
-            {
-                accessorKey: 'firstName',
-                header: 'First Name',
-                id: 'firstName',
-                filterType: 'includesStringSensitive',
-                cell: (info) => info.getValue(),
-                /**
-                 * override the value used for row grouping
-                 * (otherwise, defaults to the value derived from accessorKey / accessorFn)
-                 */
-                getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
-            },
-            {
-                accessorFn: (row) => row.lastName,
-                id: 'lastName',
-                header: () => <span>Last Name</span>,
-                filterType: 'includesStringSensitive',
-                cell: (info) => info.getValue(),
-            },
-        ],
-    },
-    {
-        header: 'Info',
+//         columns: [
+//             {
+//                 accessorKey: 'age',
+//                 id: 'age',
+//                 header: () => 'Age',
+//                 filterType: 'includesString',
+//                 aggregatedCell: ({ getValue }) =>
+//                     Math.round(getValue<number>() * 100) / 100,
+//                 aggregationFn: 'median',
+//             },
+//             {
+//                 header: 'More Info',
 
-        columns: [
-            {
-                accessorKey: 'age',
-                id: 'age',
-                header: () => 'Age',
-                filterType: 'includesString',
-                aggregatedCell: ({ getValue }) =>
-                    Math.round(getValue<number>() * 100) / 100,
-                aggregationFn: 'median',
-            },
-            {
-                header: 'More Info',
-
-                columns: [
-                    {
-                        accessorKey: 'visits',
-                        id: 'visits',
-                        header: () => <span>Visits</span>,
-                        filterType: 'includesStringSensitive',
-                        aggregationFn: 'sum',
-                        aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
-                    },
-                    {
-                        accessorKey: 'status',
-                        id: 'status',
-                        header: 'Status',
-                        filterType: 'includesStringSensitive',
-                    },
-                    {
-                        accessorKey: 'progress',
-                        id: 'progress',
-                        header: 'Profile Progress',
-                        filterType: 'includesStringSensitive',
-                        cell: ({ getValue }) =>
-                            Math.round(getValue<number>() * 100) / 100 + '%',
-                        aggregationFn: 'mean',
-                        aggregatedCell: ({ getValue }) =>
-                            Math.round(getValue<number>() * 100) / 100 + '%',
-                    },
-                ],
-            },
-        ],
-    },
-]
+//                 columns: [
+//                     {
+//                         accessorKey: 'visits',
+//                         id: 'visits',
+//                         header: () => <span>Visits</span>,
+//                         filterType: 'includesStringSensitive',
+//                         aggregationFn: 'sum',
+//                         aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
+//                     },
+//                     {
+//                         accessorKey: 'status',
+//                         id: 'status',
+//                         header: 'Status',
+//                         filterType: 'includesStringSensitive',
+//                     },
+//                     {
+//                         accessorKey: 'progress',
+//                         id: 'progress',
+//                         header: 'Profile Progress',
+//                         filterType: 'includesStringSensitive',
+//                         cell: ({ getValue }) =>
+//                             Math.round(getValue<number>() * 100) / 100 + '%',
+//                         aggregationFn: 'mean',
+//                         aggregatedCell: ({ getValue }) =>
+//                             Math.round(getValue<number>() * 100) / 100 + '%',
+//                     },
+//                 ],
+//             },
+//         ],
+//     },
+// ]
 
 import DndAndGroupTable from './DndAndGroupTable';
 
