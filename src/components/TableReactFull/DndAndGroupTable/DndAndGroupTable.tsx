@@ -252,7 +252,6 @@ const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
     // sử dụng để expanded all
     useEffect(() => {
         table.setExpanded(true);
-        console.log("effect render")
     }, [ grouping, columnFilters]);
     
     // bắt đầu render chính
@@ -270,7 +269,6 @@ const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
                             }}
                         />{' '}
                         Toggle All
-                        { console.log("main render")}
                     </label>
                 </div>
                 {table.getAllLeafColumns().map(column => {
