@@ -69,7 +69,7 @@ import { CSS } from '@dnd-kit/utilities';
 
 import arrow_drop_down from './source/images/arrows/pointer-down-svgrepo-com.svg';
 import arrow_right from './source/images/arrows/pointer-right-svgrepo-com.svg';
-
+import Filter from './components/filters/Filter';
 
 
 function DndAndGroupTable({data, columns}) {
@@ -517,43 +517,4 @@ const DropableContainerGroup = ({ children }) => {
 };
 
 
-// ví dụ filter
-function Filter({ column }) {
-    const filterType = column.columnDef.filterType
 
-    function handelOnChange(e) {
-        column.setFilterValue(e.target.value) //ok đưa giá trị vào ô filter value
-        column.columnDef.filterFn = filterType // ok để chỉ định filterFn
-    }
-    return (
-        <input
-            type="text"
-            value={column.getFilterValue() || ''}
-            onChange={handelOnChange}
-            placeholder='Search...'
-        />
-    )
-}
-
-// function Filter({ column }) {
-//     const filterType = column.columnDef.filterType
-//     const [textfilter, setTextfilter] = React.useState(column.getFilterValue())
-//     function handelOnChange(e) {
-        
-//         column.setFilterValue(textfilter) //ok đưa giá trị vào ô filter value
-//         column.columnDef.filterFn = filterType // ok để chỉ định filterFn
-//         setTextfilter(e.target.value)
-//         console.log("columnf",column.getFilterValue())
-//         console.log("column",column)
-//     }
-//     return (
-//         <input
-//             type="text"
-//             value={textfilter || ''}
-//             onChange={handelOnChange}
-//             placeholder='Search...'
-//         />
-
-
-//     )
-// }

@@ -36,7 +36,7 @@ function App() {
       {/* <SearchTableDropdownEx></SearchTableDropdownEx>
       <p> end seach table</p> */}
 
-      <GroupTable></GroupTable>
+      {/* <GroupTable></GroupTable> */}
 
       {/* <DndTableRectFull></DndTableRectFull> */}
       <p> DndAndGroupTable</p>
