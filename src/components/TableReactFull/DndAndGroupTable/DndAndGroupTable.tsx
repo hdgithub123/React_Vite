@@ -91,8 +91,8 @@ function DndAndGroupTable({data, columns}) {
         onGroupingChange: setGrouping,
         getExpandedRowModel: getExpandedRowModel(),
         getGroupedRowModel: getGroupedRowModel(),
-        manualExpanding: false, // set bàng false thì có thể tự expanding bằng true thì không tự expand được
-        autoResetExpanded: false, // set bang false thì tất cả các row được expanding bằng true thì không
+        manualExpanding: false, // set bàng false thì có thể sử dụng cả useEffect để expanded
+        autoResetExpanded: false, // set bang false thì tất cả các row được expanding bằng true thì không sử dụng cả useEffect
         // getPaginationRowModel: getPaginationRowModel(),
 
     });
@@ -249,14 +249,12 @@ const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
 
 
 
-
+    // sử dụng để expanded all
     useEffect(() => {
         table.setExpanded(true);
         console.log("effect render")
     }, [ grouping, columnFilters]);
-
-
-
+    
     // bắt đầu render chính
     return (
         <div>
