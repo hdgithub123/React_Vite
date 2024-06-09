@@ -67,6 +67,9 @@ import {
 
 import { CSS } from '@dnd-kit/utilities';
 
+import arrow_drop_down from './source/images/arrows/pointer-down-svgrepo-com.svg';
+import arrow_right from './source/images/arrows/pointer-right-svgrepo-com.svg';
+
 
 
 function DndAndGroupTable({data, columns}) {
@@ -88,8 +91,8 @@ function DndAndGroupTable({data, columns}) {
         onGroupingChange: setGrouping,
         getExpandedRowModel: getExpandedRowModel(),
         getGroupedRowModel: getGroupedRowModel(),
-        manualExpanding: false, // set bàng false thì có thể tự expanding
-        autoResetExpanded: false, // set bang false thì tất cả các row được expanding
+        manualExpanding: false, // set bàng false thì có thể tự expanding bằng true thì không tự expand được
+        autoResetExpanded: false, // set bang false thì tất cả các row được expanding bằng true thì không
         // getPaginationRowModel: getPaginationRowModel(),
 
     });
@@ -154,7 +157,8 @@ const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
                             },
                         }}
                     >
-                        {row.getIsExpanded() ? '👇' : '👉'}{' '}
+                        {/* {row.getIsExpanded() ? '👇' : '👉'}{' '} */}
+                        {row.getIsExpanded() ? <img src={arrow_drop_down} style={{ width: '10px', height: '10px' }}/> : <img src={arrow_right} style={{ width: '10px', height: '10px' }}/>}{' '}
                     </button>
                     {flexRender(
                             cell.column.columnDef.cell,
@@ -309,9 +313,15 @@ const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
                     {/* Phần thả group column */}
                     <DropableContainerGroup >
                         {/* <h1>Thả vào đây</h1> */}
-                        {grouping.map((id) => (
-                            <RenderHeaderByID key={id} columnID={id} columns={columns}></RenderHeaderByID>
-                        ))}
+                        {grouping.length > 0 ? (
+                        grouping.map((id) => (
+                            <RenderHeaderByID key={id} columnID={id} columns={columns} />
+                        ))
+                        ) : (
+                        <div style={{ padding: '10px', fontSize: '14px', color: '#999' }}>
+                            Drag header to group
+                        </div>
+                        )}
                     </DropableContainerGroup>
 
                     {/* Bắt đầu render table */}

@@ -95,7 +95,7 @@ const columns =
             accessorKey: 'firstName',
             id: 'firstName',
             header: 'First Name',
-            filterType: 'includesStringSensitive',
+            filterType: 'includesString',
             cell: info => info.getValue(),
         },
         {
