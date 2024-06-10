@@ -108,7 +108,7 @@ const columns =
         {
             accessorKey: 'age',
             id: 'age',
-            filterType: 'includesStringSensitive',
+            filterType: 'text',
             header: () => 'Age',
             aggregatedCell: ({ getValue }) =>
                 Math.round(getValue<number>() * 100) / 100,
@@ -117,7 +117,7 @@ const columns =
         {
             accessorKey: 'visits',
             id: 'visits',
-            filterType: 'includesStringSensitive',
+            filterType: 'text',
             header: () => <span>Visits</span>,
             aggregationFn: 'sum',
             aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
@@ -125,14 +125,14 @@ const columns =
         {
             accessorKey: 'status',
             id: 'status',
-            filterType: 'includesStringSensitive',
+            filterType: 'text',
             size: 150,
             header: 'Status',
         },
         {
             accessorKey: 'progress',
             id: 'progress',
-            filterType: 'includesStringSensitive',
+            filterType: 'text',
             header: 'Profile Progress',
             cell: ({ getValue }) =>
                 Math.round(getValue<number>() * 100) / 100 + '%',
