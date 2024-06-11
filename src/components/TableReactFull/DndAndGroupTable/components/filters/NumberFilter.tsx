@@ -1,4 +1,4 @@
-import { useState, useRef,useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 function NumberFilter({ column }) {
     const [filterFn, setFilterFn] = useState('');
@@ -27,6 +27,9 @@ function NumberFilter({ column }) {
             case 'GreaterNumber':
                 column.columnDef.filterFn = GreaterNumber;
                 break;
+            case 'DifferentNumber':
+                column.columnDef.filterFn = DifferentNumber;
+                break;
             default:
                 column.columnDef.filterFn = e.target.value;
         }
@@ -52,10 +55,11 @@ function NumberFilter({ column }) {
             />
             <select value={filterFn} onChange={handleFilterChange}>
                 <option value="EqualsNumber">=</option>
-                <option value="weakEqualsNumber">{'<='}</option>
+                <option value="weakEqualsNumber">{'≤'}</option>
                 <option value="weakNumber">{'<'}</option>
-                <option value="GreaterEqualsNumber">{'>='}</option>
+                <option value="GreaterEqualsNumber">{'≥'}</option>
                 <option value="GreaterNumber">{'>'}</option>
+                <option value="DifferentNumber">{'≠'}</option>
             </select>
         </>
 
@@ -117,6 +121,17 @@ const GreaterNumber = (row, columnId, value) => {
 
     if (!isNaN(cellValue) && !isNaN(numericValue)) {
         return cellValue > numericValue;
+    }
+
+    return false;
+};
+
+const DifferentNumber = (row, columnId, value) => {
+    const cellValue = row.getValue(columnId);
+    const numericValue = Number(value);
+
+    if (!isNaN(cellValue) && !isNaN(numericValue)) {
+        return cellValue != numericValue;
     }
 
     return false;

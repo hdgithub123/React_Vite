@@ -7,6 +7,9 @@ function TextFilter({ column }) {
         setFilterFn(e.target.value);
 
         switch (e.target.value) {
+            case 'NotIncludesString':
+                column.columnDef.filterFn = NotIncludesString;
+                break;
             case 'startWithString':
                 column.columnDef.filterFn = startWithString;
                 break;
@@ -37,11 +40,12 @@ function TextFilter({ column }) {
                 placeholder='Search...'
             />
             <select value={filterFn} onChange={handleFilterChange}>
-                <option value="includesString">Include</option>
-                <option value="includesStringSensitive">Include Sensitive</option>
-                <option value="equalsString">Equals String</option>
-                <option value="startWithString" >Start with</option>
-                <option value="endWithString" >End with</option>
+                <option value="includesString">∈</option>
+                <option value="NotIncludesString">∉</option>
+                {/* <option value="includesStringSensitive">∈S</option> */}
+                <option value="equalsString">=</option>
+                <option value="startWithString" >S</option>
+                <option value="endWithString" >E</option>
             </select>
         </>
 
@@ -52,6 +56,17 @@ function TextFilter({ column }) {
 export default TextFilter;
 
 // Các hàm FilterFn
+
+const NotIncludesString = (row, columnId, value) => {
+    const cellValue = row.getValue(columnId);
+    
+    // Convert the cell value and the filter value to strings for comparison
+    const cellValueStr = cellValue.toString().toLowerCase();
+    const filterValueStr = value.toString().toLowerCase();
+    
+    return !cellValueStr.includes(filterValueStr);
+  };
+  
 
 const startWithString = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);

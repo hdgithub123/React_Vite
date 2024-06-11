@@ -149,7 +149,7 @@ const columns =
         {
             accessorKey: 'status',
             id: 'status',
-            filterType: 'text',
+            filterType: 'range',
             size: 150,
             header: 'Status',
         },

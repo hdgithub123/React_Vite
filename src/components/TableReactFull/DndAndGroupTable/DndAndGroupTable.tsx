@@ -17,6 +17,10 @@ import {
     getCoreRowModel,
     useReactTable,
     getFilteredRowModel,
+
+    getFacetedMinMaxValues,
+    getFacetedRowModel,
+    getFacetedUniqueValues,
 } from '@tanstack/react-table';
 
 import {
@@ -72,7 +76,7 @@ import arrow_right from './source/images/arrows/pointer-right-svgrepo-com.svg';
 import Filter from './components/filters/Filter';
 
 
-function DndAndGroupTable({data, columns}) {
+function DndAndGroupTable({ data, columns }) {
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
@@ -91,6 +95,8 @@ function DndAndGroupTable({data, columns}) {
         onGroupingChange: setGrouping,
         getExpandedRowModel: getExpandedRowModel(),
         getGroupedRowModel: getGroupedRowModel(),
+        getFacetedRowModel: getFacetedRowModel(),
+        getFacetedUniqueValues: getFacetedUniqueValues(),
         manualExpanding: false, // set bàng false thì có thể sử dụng cả useEffect để expanded
         autoResetExpanded: false, // set bang false thì tất cả các row được expanding bằng true thì không sử dụng cả useEffect
         // getPaginationRowModel: getPaginationRowModel(),
@@ -105,84 +111,84 @@ function DndAndGroupTable({data, columns}) {
         console.log("table:", table);
         console.log("grouping:", grouping);
         console.log("table grouping:", table.getHeaderGroups());
-       table.setExpanded(true) // Mở tất cả các cột
+        table.setExpanded(true) // Mở tất cả các cột
         //table.setExpanded({}) // đóng tất cả các cột
 
     };
 
 
     // các cell được render
-// các cell được render đang phải để bên trong hàm thì mới kéo thả trơn tru được vì nó cần phải được render lại cell
-const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
-    const { isDragging, setNodeRef, transform } = useSortable({
-        id: cell.column.id,
-    });
+    // các cell được render đang phải để bên trong hàm thì mới kéo thả trơn tru được vì nó cần phải được render lại cell
+    const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
+        const { isDragging, setNodeRef, transform } = useSortable({
+            id: cell.column.id,
+        });
 
-    const style: CSSProperties = {
-        opacity: isDragging ? 0.8 : 1,
-        position: 'relative',
-        transform: CSS.Translate.toString(transform),
-        transition: 'width transform 0.2s ease-in-out',
-        width: cell.column.getSize(),
-        zIndex: isDragging ? 1 : 0,
-    };
+        const style: CSSProperties = {
+            opacity: isDragging ? 0.8 : 1,
+            position: 'relative',
+            transform: CSS.Translate.toString(transform),
+            transition: 'width transform 0.2s ease-in-out',
+            width: cell.column.getSize(),
+            zIndex: isDragging ? 1 : 0,
+        };
 
-    const { row } = cell.getContext();
+        const { row } = cell.getContext();
 
-    return (
-        <td
-            ref={setNodeRef}
-            {...{
-                key: cell.id,
-                style: {
-                    style,
-                    background: cell.getIsGrouped()
-                        ? '#0aff0082'
-                        : cell.getIsAggregated()
-                            ? '#ffa50078'
-                            : cell.getIsPlaceholder()
-                                ? '#ff000042'
-                                : 'white',
-                },
-            }}
-        >
-            {cell.getIsGrouped() ? (
-                // If it's a grouped cell, add an expander and row count
-                <>
-                    <button
-                        {...{
-                            onClick: row.getToggleExpandedHandler(),
-                            style: {
-                                cursor: row.getCanExpand() ? 'pointer' : 'normal',
-                            },
-                        }}
-                    >
-                        {/* {row.getIsExpanded() ? '👇' : '👉'}{' '} */}
-                        {row.getIsExpanded() ? <img src={arrow_drop_down} style={{ width: '10px', height: '10px' }}/> : <img src={arrow_right} style={{ width: '10px', height: '10px' }}/>}{' '}
-                    </button>
-                    {flexRender(
+        return (
+            <td
+                ref={setNodeRef}
+                {...{
+                    key: cell.id,
+                    style: {
+                        style,
+                        background: cell.getIsGrouped()
+                            ? '#0aff0082'
+                            : cell.getIsAggregated()
+                                ? '#ffa50078'
+                                : cell.getIsPlaceholder()
+                                    ? '#ff000042'
+                                    : 'white',
+                    },
+                }}
+            >
+                {cell.getIsGrouped() ? (
+                    // If it's a grouped cell, add an expander and row count
+                    <>
+                        <button
+                            {...{
+                                onClick: row.getToggleExpandedHandler(),
+                                style: {
+                                    cursor: row.getCanExpand() ? 'pointer' : 'normal',
+                                },
+                            }}
+                        >
+                            {/* {row.getIsExpanded() ? '👇' : '👉'}{' '} */}
+                            {row.getIsExpanded() ? <img src={arrow_drop_down} style={{ width: '10px', height: '10px' }} /> : <img src={arrow_right} style={{ width: '10px', height: '10px' }} />}{' '}
+                        </button>
+                        {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
                         )}{' '}
                         ({row.subRows.length})
-                </>
-            ) : cell.getIsAggregated() ? (
-                // If the cell is aggregated, use the Aggregated renderer for cell
-                flexRender(
-                    cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
-                    cell.getContext()
-                )
-            ) : cell.getIsPlaceholder() ? null : (
-                // For cells with repeated values, render null
-                // Otherwise, just render the regular cell
-                flexRender(
-                    cell.column.columnDef.cell,
-                    cell.getContext()
-                )
-            )}
-        </td>
-    );
-};
+                    </>
+                ) : cell.getIsAggregated() ? (
+                    // If the cell is aggregated, use the Aggregated renderer for cell
+                    flexRender(
+                        cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
+                        cell.getContext()
+                    )
+                ) : cell.getIsPlaceholder() ? null : (
+                    // For cells with repeated values, render null
+                    // Otherwise, just render the regular cell
+                    flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                    )
+                )}
+            </td>
+        );
+    };
 
     // dau vao là columID render ra header
     const RenderHeaderByID = ({ columnID, columns }) => {
@@ -241,7 +247,7 @@ const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
         } else {
 
             if (active && !grouping.includes(active.id)) {
-                setGrouping([...grouping, active.id]);       
+                setGrouping([...grouping, active.id]);
             }
         }
 
@@ -252,8 +258,8 @@ const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
     // sử dụng để expanded all
     useEffect(() => {
         table.setExpanded(true);
-    }, [ grouping, columnFilters]);
-    
+    }, [grouping, columnFilters]);
+
     // bắt đầu render chính
     return (
         <div>
@@ -310,13 +316,13 @@ const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
                     <DropableContainerGroup >
                         {/* <h1>Thả vào đây</h1> */}
                         {grouping.length > 0 ? (
-                        grouping.map((id) => (
-                            <RenderHeaderByID key={id} columnID={id} columns={columns} />
-                        ))
+                            grouping.map((id) => (
+                                <RenderHeaderByID key={id} columnID={id} columns={columns} />
+                            ))
                         ) : (
-                        <div style={{ padding: '10px', fontSize: '14px', color: '#999' }}>
-                            Drag header to group
-                        </div>
+                            <div style={{ padding: '10px', fontSize: '14px', color: '#999' }}>
+                                Drag header to group
+                            </div>
                         )}
                     </DropableContainerGroup>
 
@@ -339,21 +345,21 @@ const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
                         </thead>
                         {table.getRowModel().rows.length > 0 ? (
                             <tbody>
-                            {table.getRowModel().rows.map(row => (
-                            <tr key={row.id}>
-                            {row.getVisibleCells().map(cell => (
-                                <DragAlongCell key={cell.id} cell={cell} />
-                            ))}
-                            </tr>
-                            ))}
-                        </tbody>
+                                {table.getRowModel().rows.map(row => (
+                                    <tr key={row.id}>
+                                        {row.getVisibleCells().map(cell => (
+                                            <DragAlongCell key={cell.id} cell={cell} />
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
                         ) : (
                             <tbody>
-                            <tr>
-                                <td colSpan={columns.length} style={{ textAlign: 'center' }}>
-                                    No data available
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td colSpan={columns.length} style={{ textAlign: 'center' }}>
+                                        No data available
+                                    </td>
+                                </tr>
                             </tbody>
                         )}
                     </table>
@@ -369,62 +375,62 @@ export default DndAndGroupTable;
 
 
 // DraggableTableHeader
-const DraggableTableHeader =({ header }: { header: Header<any, unknown> }) => {
-        const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
-            id: header.column.id,
-        });
+const DraggableTableHeader = ({ header }: { header: Header<any, unknown> }) => {
+    const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
+        id: header.column.id,
+    });
 
 
-        const style: CSSProperties = {
-            opacity: isDragging ? 0.8 : 1,
-            cursor: isDragging ? 'move' : 'default',
-            position: 'relative',
-            transform: CSS.Translate.toString(transform),
-            transition: 'width transform 0.2s ease-in-out',
-            whiteSpace: 'nowrap',
-            width: header.column.getSize(),
-            zIndex: isDragging ? 1 : 0,
-        };
-        return (
-            <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
-                {header.isPlaceholder ? null : (
-                    <>
-                        <div  {...attributes} {...listeners}>
+    const style: CSSProperties = {
+        opacity: isDragging ? 0.8 : 1,
+        cursor: isDragging ? 'move' : 'default',
+        position: 'relative',
+        transform: CSS.Translate.toString(transform),
+        transition: 'width transform 0.2s ease-in-out',
+        whiteSpace: 'nowrap',
+        width: header.column.getSize(),
+        zIndex: isDragging ? 1 : 0,
+    };
+    return (
+        <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
+            {header.isPlaceholder ? null : (
+                <>
+                    <div  {...attributes} {...listeners}>
 
-                            {header.column.getIsGrouped()
-                                ? `🛑`
-                                : ``}
+                        {header.column.getIsGrouped()
+                            ? `🛑`
+                            : ``}
 
-                            {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                            )}
+                        {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                        )}
 
+                    </div>
+                    {/* Filter colum*/}
+
+                    {header.column.getCanFilter() ? (
+                        <div>
+                            <Filter column={header.column}></Filter>
                         </div>
-                        {/* Filter colum*/}
-                        
-                        {header.column.getCanFilter() ? (
-                          <div>
-                           <Filter column={header.column}></Filter>
-                          </div>
-                        ) : null}
+                    ) : null}
 
-                        {/* Colum Resize Begin*/}
-                        <div
-                            {...{
-                                onMouseDown: header.getResizeHandler(),
-                                onTouchStart: header.getResizeHandler(),
-                                className: `resizer 
+                    {/* Colum Resize Begin*/}
+                    <div
+                        {...{
+                            onMouseDown: header.getResizeHandler(),
+                            onTouchStart: header.getResizeHandler(),
+                            className: `resizer 
                                     } ${header.column.getIsResizing() ? 'isResizing' : ''
-                                    }`,
-                            }}
-                        />
-                        {/* Colum Resize end*/}
-                    </>
-                )}
-            </th>
-        );
-    }
+                                }`,
+                        }}
+                    />
+                    {/* Colum Resize end*/}
+                </>
+            )}
+        </th>
+    );
+}
 
 
 

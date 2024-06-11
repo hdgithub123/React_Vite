@@ -1,4 +1,4 @@
-import { useState, useRef,useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 function DateFilter({ column }) {
     const [filterFn, setFilterFn] = useState('');
@@ -26,6 +26,9 @@ function DateFilter({ column }) {
             case 'GreaterDate':
                 column.columnDef.filterFn = GreaterDate;
                 break;
+            case 'DifferentDate':
+                column.columnDef.filterFn = DifferentDate;
+                break;
             default:
                 column.columnDef.filterFn = e.target.value;
         }
@@ -51,10 +54,11 @@ function DateFilter({ column }) {
             />
             <select value={filterFn} onChange={handleFilterChange}>
                 <option value="EqualsDate">=</option>
-                <option value="weakEqualsDate">{'<='}</option>
+                <option value="weakEqualsDate">{'≤'}</option>
                 <option value="weakDate">{'<'}</option>
-                <option value="GreaterEqualsDate">{'>='}</option>
+                <option value="GreaterEqualsDate">{'≥'}</option>
                 <option value="GreaterDate">{'>'}</option>
+                <option value="DifferentDate">{'≠'}</option>
             </select>
         </>
 
@@ -117,6 +121,18 @@ const GreaterDate = (row, columnId, value) => {
 
     if (!isNaN(cellValue.getTime()) && !isNaN(dateValue.getTime())) {
         return cellValue.getTime() > dateValue.getTime();
+    }
+
+    return false;
+};
+
+
+const DifferentDate = (row, columnId, value) => {
+    const cellValue = new Date(row.getValue(columnId));
+    const dateValue = new Date(value);
+
+    if (!isNaN(cellValue.getTime()) && !isNaN(dateValue.getTime())) {
+        return cellValue.getTime() != dateValue.getTime();
     }
 
     return false;
