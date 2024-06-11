@@ -11,6 +11,15 @@ const calculateColumnSum = (column, table) => {
   }, 0);
 };
 
+// tính tổng trên từng cột thêm  chữ Sum ở trước
+const calculateColumnSum = (column, table) => {
+  const sum = table.getFilteredRowModel().rows.reduce((sum, row) => {
+    const cellValue = row.getValue(column.id);
+    return typeof cellValue === 'number' ? sum + cellValue : sum;
+  }, 0);
+  return `Sum: ${sum}`;
+};
+
 
 footer: (info) => calculateColumnSum(info.column, info.table),
 
