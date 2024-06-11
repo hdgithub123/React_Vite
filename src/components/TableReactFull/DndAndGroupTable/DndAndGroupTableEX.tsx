@@ -156,7 +156,7 @@ const columns =
         {
             accessorKey: 'progress',
             id: 'progress',
-            filterType: 'text',
+            filterType: 'number',
             header: 'Profile Progress',
             cell: ({ getValue }) =>
                 Math.round(getValue<number>() * 100) / 100 + '%',
