@@ -13,3 +13,24 @@ const calculateColumnSum = ( column, table) => {
   
   
   footer: (info) => calculateColumnSum(info.column, info.table),
+
+
+  // tìm leafHeaderGroupIndex
+  const leafHeaderGroupIndex = table.getHeaderGroups().length - 1;
+// render tfoot ở mức leaf
+  <tfoot>
+          <tr>
+            {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
+              <td key={header.id} colSpan={header.colSpan}>
+                {header.isPlaceholder ? null : (
+                  <div>
+                    {header.column.columnDef.footer && flexRender(
+                      header.column.columnDef.footer,
+                      header.getContext()
+                    )}
+                  </div>
+                )}
+              </td>
+            ))}
+          </tr>
+        </tfoot>
