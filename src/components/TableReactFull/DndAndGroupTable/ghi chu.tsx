@@ -20,6 +20,10 @@ const calculateColumnSum = (column, table) => {
   return `Sum: ${sum}`;
 };
 
+// hoặc dùng cách này thêm Sum trên cùng
+footer: (info) =>`Sum: ${calculateColumnSum(info.column, info.table)}`,
+
+
 
 footer: (info) => calculateColumnSum(info.column, info.table),
 
