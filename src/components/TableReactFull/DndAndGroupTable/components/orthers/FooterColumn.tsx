@@ -20,8 +20,6 @@ export const calculateColumnAverage = (column, table) => {
   };
   
 
-  
   export const calculateRowCount = (table) => {
     return table.getFilteredRowModel().rows.length;
   };
-  

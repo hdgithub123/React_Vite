@@ -228,6 +228,16 @@ function DndAndGroupTable({ data, columns }) {
     const leafHeaderGroupIndex = table.getHeaderGroups().length - 1;
     const leafHeaderGroup = table.getHeaderGroups()[leafHeaderGroupIndex];
     const shouldRenderFooter = leafHeaderGroup.headers.some(header => header.column.columnDef.footer);
+    const countLeafColumns = (columns) => {
+        return columns.reduce((count, column) => {
+          if (column.columns) {
+            return count + countLeafColumns(column.columns);
+          }
+          return count + 1;
+        }, 0);
+      };
+
+
     const sensors = useSensors(
         useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
         useSensor(TouchSensor, { activationConstraint: { distance: 5 } }),
@@ -358,7 +368,7 @@ function DndAndGroupTable({ data, columns }) {
                         ) : (
                             <tbody>
                                 <tr>
-                                    <td colSpan={columns.length} style={{ textAlign: 'center' }}>
+                                    <td colSpan={countLeafColumns(columns)} style={{ textAlign: 'center' }}>
                                         No data available
                                     </td>
                                 </tr>

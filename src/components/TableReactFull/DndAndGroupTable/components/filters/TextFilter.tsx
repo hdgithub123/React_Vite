@@ -44,8 +44,8 @@ function TextFilter({ column }) {
                 <option value="NotIncludesString">∉</option>
                 {/* <option value="includesStringSensitive">∈S</option> */}
                 <option value="equalsString">=</option>
-                <option value="startWithString" >S</option>
-                <option value="endWithString" >E</option>
+                <option value="startWithString" >⭲</option>
+                <option value="endWithString" >⭰</option>
             </select>
         </>
 
