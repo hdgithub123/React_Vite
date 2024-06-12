@@ -38,10 +38,17 @@ td,
   height: 30px;
 } */
 
+.container{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+
 .resizer {
   position: absolute;
   top: 0;
-  right: -0.3rem;
+  right: -0.1rem;
   /* căn chỉnh hiện thanh resize */
   height: 100%;
   width: 3px;

@@ -224,18 +224,19 @@ function DndAndGroupTable({ data, columns }) {
 
         return <div>Header not found</div>;
     };
-    const isLeafColumn = (header: Header<Person, unknown>) => !header.subHeaders || header.subHeaders.length === 0;
+
+    const isLeafColumn = (header) => !header.subHeaders || header.subHeaders.length === 0;
     const leafHeaderGroupIndex = table.getHeaderGroups().length - 1;
     const leafHeaderGroup = table.getHeaderGroups()[leafHeaderGroupIndex];
     const shouldRenderFooter = leafHeaderGroup.headers.some(header => header.column.columnDef.footer);
     const countLeafColumns = (columns) => {
         return columns.reduce((count, column) => {
-          if (column.columns) {
-            return count + countLeafColumns(column.columns);
-          }
-          return count + 1;
+            if (column.columns) {
+                return count + countLeafColumns(column.columns);
+            }
+            return count + 1;
         }, 0);
-      };
+    };
 
 
     const sensors = useSensors(
@@ -274,41 +275,11 @@ function DndAndGroupTable({ data, columns }) {
 
     // bắt đầu render chính
     return (
-        <div>
-            {/* Chọn Column hiển thị */}
-            <div className="inline-block border border-black shadow rounded">
-                <div className="px-1 border-b border-black">
-                    <label>
-                        <input
-                            {...{
-                                type: 'checkbox',
-                                checked: table.getIsAllColumnsVisible(),
-                                onChange: table.getToggleAllColumnsVisibilityHandler(),
-                            }}
-                        />{' '}
-                        Toggle All
-                    </label>
-                </div>
-                {table.getAllLeafColumns().map(column => {
-                    return (
-                        <div key={column.id} className="px-1">
-                            <label>
-                                <input
-                                    {...{
-                                        type: 'checkbox',
-                                        checked: column.getIsVisible(),
-                                        onChange: column.getToggleVisibilityHandler(),
-                                    }}
-                                />{' '}
-                                {flexRender(column.columnDef.header, {})}
-                            </label>
-                        </div>
-                    )
-                })}
-            </div>
-
+        <div>         
             {/* Render các nút điều khiển */}
-            <div>
+            <div style={{ display: 'flex' }}>
+                 {/* Chọn Column hiển thị */}
+                <ColumnVisibilityToggle table={table}></ColumnVisibilityToggle>
                 <button onClick={rerender}>
                     Regenerate
                 </button>
@@ -317,7 +288,7 @@ function DndAndGroupTable({ data, columns }) {
                 </button>
             </div>
 
-            <div>
+            <div className='container'>
                 {/* Tạo Drop Group Area */}
                 <DndContext
                     collisionDetection={customCollisionDetection}
@@ -374,7 +345,7 @@ function DndAndGroupTable({ data, columns }) {
                                 </tr>
                             </tbody>
                         )}
-                         {shouldRenderFooter &&<tfoot>
+                        {shouldRenderFooter && <tfoot>
                             <tr>
                                 {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
                                     <DraggableTablefooter key={header.id} header={header} />
@@ -563,11 +534,13 @@ const DropableContainerGroup = ({ children }) => {
         padding: '1px',
         marginBottom: '1px',
         background: isOver ? 'yellow' : 'white',
-        width: '90%', // Set your desired width here
+        width: 'calc(100% - 2px)',
+        
         height: '40px', // Set your desired height here
         justifyContent: 'left',
         alignItems: 'center',
         display: 'flex',
+        borderRadius: '4px', // Đặt bán kính bo góc
 
     };
 
@@ -580,3 +553,78 @@ const DropableContainerGroup = ({ children }) => {
 
 
 
+// hien thi column order
+const ColumnVisibilityToggle = ({ table }) => {
+    const [showToggle, setShowToggle] = useState(false);
+    const modalRef = useRef(null); // Tạo một ref cho hộp thoại modal
+    const modalStyle = {
+        position: 'absolute', // Đặt vị trí tương đối với nút
+        zIndex: 1, // Đặt z-index để nó nằm trên các phần tử khác
+        left: 0, // Đặt vị trí trái ngay dưới nút
+        top: '100%', // Đặt vị trí trên ngay dưới nút
+        backgroundColor: '#fff', // Đặt màu nền
+        padding: '2px', // Đặt padding
+        border: '1px solid #000', // Đặt viền
+        borderRadius: '4px', // Đặt bán kính bo góc
+        width: '150%', // Đặt chiều rộng
+    };
+    // Hàm xử lý sự kiện onMouseDown
+    const handleMouseDown = (event) => {
+        // Kiểm tra xem phần tử được nhấp có nằm trong hộp thoại modal hay không
+        if (modalRef.current && !modalRef.current.contains(event.target)) {
+            // Nếu không, ẩn hộp thoại modal
+            setShowToggle(false);
+        }
+    };
+
+    // Thêm sự kiện onMouseDown vào document.body khi hộp thoại modal được hiển thị
+    useEffect(() => {
+        if (showToggle) {
+            document.body.addEventListener('mousedown', handleMouseDown);
+        }
+
+        // Loại bỏ sự kiện onMouseDown khỏi document.body khi hộp thoại modal bị ẩn hoặc khi component bị unmount
+        return () => {
+            document.body.removeEventListener('mousedown', handleMouseDown);
+        };
+    }, [showToggle]); // Chạy lại effect này mỗi khi giá trị của showToggle thay đổi
+
+    return (
+        <div style={{ position: 'relative' }}> {/* Đặt vị trí tương đối cho div cha */}
+            <button onClick={() => setShowToggle(!showToggle)}>
+                Show Column
+            </button>
+            {showToggle && 
+            <div ref={modalRef} style={modalStyle}> {/* Thêm ref vào div chứa hộp thoại modal */}
+                <div className="px-1 border-b border-black">
+                    <label>
+                        <input
+                            {...{
+                                type: 'checkbox',
+                                checked: table.getIsAllColumnsVisible(),
+                                onChange: table.getToggleAllColumnsVisibilityHandler(),
+                            }}
+                        />{' '}
+                        Toggle All
+                    </label>
+                </div>
+                {table.getAllLeafColumns().map(column => {
+                    return (
+                        <div key={column.id} className="px-1">
+                            <label>
+                                <input
+                                    {...{
+                                        type: 'checkbox',
+                                        checked: column.getIsVisible(),
+                                        onChange: column.getToggleVisibilityHandler(),
+                                    }}
+                                />{' '}
+                                {flexRender(column.columnDef.header, {})}
+                            </label>
+                        </div>
+                    )
+                })}
+            </div>}
+        </div>
+    );
+}
