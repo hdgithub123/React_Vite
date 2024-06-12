@@ -247,6 +247,80 @@ const columns = [
     },
 ]
 
+// khong co footer
+// const columns = [
+//     {
+//         header: 'Name',
+//         columns: [
+//             {
+//                 accessorKey: 'firstName',
+//                 header: 'First Name',
+//                 id: 'firstName',
+//                 filterType: 'text',
+//                 cell: (info) => info.getValue(),
+//                 /**
+//                  * override the value used for row grouping
+//                  * (otherwise, defaults to the value derived from accessorKey / accessorFn)
+//                  */
+//                 getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
+//             },
+//             {
+//                 accessorFn: (row) => row.lastName,
+//                 id: 'lastName',
+//                 header: () => <span>Last Name</span>,
+//                 filterType: 'text',
+//                 cell: (info) => info.getValue(),
+//             },
+//         ],
+//     },
+//     {
+//         header: 'Info',
+
+//         columns: [
+//             {
+//                 accessorKey: 'age',
+//                 id: 'age',
+//                 header: () => 'Age',
+//                 filterType: 'number',
+//                 aggregatedCell: ({ getValue }) =>
+//                     Math.round(getValue<number>() * 100) / 100,
+//                 aggregationFn: 'median',
+//             },
+//             {
+//                 header: 'More Info',
+
+//                 columns: [
+//                     {
+//                         accessorKey: 'visits',
+//                         id: 'visits',
+//                         header: () => <span>Visits</span>,
+//                         filterType: 'date',
+//                         aggregationFn: 'sum',
+//                         aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
+//                     },
+//                     {
+//                         accessorKey: 'status',
+//                         id: 'status',
+//                         header: 'Status',
+//                         filterType: 'range',
+//                     },
+//                     {
+//                         accessorKey: 'progress',
+//                         id: 'progress',
+//                         header: 'Profile Progress',
+//                         filterType: 'number',
+//                         cell: ({ getValue }) =>
+//                             Math.round(getValue<number>() * 100) / 100 + '%',
+//                         aggregationFn: 'mean',
+//                         aggregatedCell: ({ getValue }) =>
+//                             Math.round(getValue<number>() * 100) / 100 + '%',
+//                     },
+//                 ],
+//             },
+//         ],
+//     },
+// ]
+
 import DndAndGroupTable from './DndAndGroupTable';
 
 function DndAndGroupTableEX(){

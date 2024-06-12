@@ -119,7 +119,7 @@ function DndAndGroupTable({ data, columns }) {
 
     // các cell được render
     // các cell được render đang phải để bên trong hàm thì mới kéo thả trơn tru được vì nó cần phải được render lại cell
-    const DragAlongCell = ({ cell }: { cell: Cell<any, unknown> }) => {
+    const DragAlongCell = ({ cell }) => {
         const { isDragging, setNodeRef, transform } = useSortable({
             id: cell.column.id,
         });
@@ -394,7 +394,7 @@ export default DndAndGroupTable;
 
 
 // DraggableTableHeader
-const DraggableTableHeader = ({ header }: { header: Header<any, unknown> }) => {
+const DraggableTableHeader = ({ header }) => {
     const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
         id: header.column.id,
     });
@@ -454,7 +454,7 @@ const DraggableTableHeader = ({ header }: { header: Header<any, unknown> }) => {
 
 
 
-const StaticTableHeader = ({ header }: { header: Header<Person, unknown> }) => {
+const StaticTableHeader = ({ header }) => {
     return (
         <th colSpan={header.colSpan}>
             {header.isPlaceholder
@@ -466,7 +466,7 @@ const StaticTableHeader = ({ header }: { header: Header<Person, unknown> }) => {
 
 
 // DraggableTablefooter
-const DraggableTablefooter = ({ header }: { header: Header<any, unknown> }) => {
+const DraggableTablefooter = ({ header }) => {
     const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
         id: header.column.id,
     });
