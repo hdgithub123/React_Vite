@@ -67,6 +67,7 @@ import {
 
 import { CSS } from '@dnd-kit/utilities';
 
+import {calculateColumnSum} from './components/orthers/FooterColumn'
 // const makeData = [
 //     { firstName: 'Alice', lastName: 'Smith', age: 28, visits: 120, progress: 75, status: 'relationship' },
 //     { firstName: 'Alice', lastName: 'Johnson', age: 35, visits: 80, progress: 60, status: 'single' },
@@ -119,6 +120,7 @@ const columns =
             accessorKey: 'firstName',
             id: 'firstName',
             header: 'First Name',
+            footer: info => info.column.id,
             filterType: 'text',
             cell: info => info.getValue(),
         },
@@ -134,6 +136,7 @@ const columns =
             id: 'age',
             filterType: 'number',
             header: () => 'Age',
+            footer: (info) =>`Sum: ${calculateColumnSum(info.column, info.table)}`,
             aggregatedCell: ({ getValue }) =>
                 Math.round(getValue<number>() * 100) / 100,
             aggregationFn: 'median',

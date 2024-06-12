@@ -225,7 +225,9 @@ function DndAndGroupTable({ data, columns }) {
         return <div>Header not found</div>;
     };
     const isLeafColumn = (header: Header<Person, unknown>) => !header.subHeaders || header.subHeaders.length === 0;
-
+    const leafHeaderGroupIndex = table.getHeaderGroups().length - 1;
+    const leafHeaderGroup = table.getHeaderGroups()[leafHeaderGroupIndex];
+    const shouldRenderFooter = leafHeaderGroup.headers.some(header => header.column.columnDef.footer);
     const sensors = useSensors(
         useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
         useSensor(TouchSensor, { activationConstraint: { distance: 5 } }),
@@ -362,6 +364,13 @@ function DndAndGroupTable({ data, columns }) {
                                 </tr>
                             </tbody>
                         )}
+                         {shouldRenderFooter &&<tfoot>
+                            <tr>
+                                {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
+                                    <DraggableTablefooter key={header.id} header={header} />
+                                ))}
+                            </tr>
+                        </tfoot>}
                     </table>
                 </DndContext>
             </div>
@@ -446,7 +455,44 @@ const StaticTableHeader = ({ header }: { header: Header<Person, unknown> }) => {
 };
 
 
+// DraggableTablefooter
+const DraggableTablefooter = ({ header }: { header: Header<any, unknown> }) => {
+    const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
+        id: header.column.id,
+    });
 
+
+    const style: CSSProperties = {
+        borderTop: '2px solid gray',
+        borderBottom: '2px solid gray',
+        fontWeight: 'bold',
+        opacity: isDragging ? 0.8 : 1,
+        cursor: isDragging ? 'move' : 'default',
+        position: 'relative',
+        transform: CSS.Translate.toString(transform),
+        transition: 'width transform 0.2s ease-in-out',
+        whiteSpace: 'nowrap',
+        width: header.column.getSize(),
+        zIndex: isDragging ? 1 : 0,
+    };
+    return (
+        <td colSpan={header.colSpan} ref={setNodeRef} style={style}>
+            {header.isPlaceholder ? null : (
+                <>
+                    <div  {...attributes} {...listeners}>
+
+                        {flexRender(
+                            header.column.columnDef.footer,
+                            header.getContext(),
+                        )}
+
+                    </div>
+
+                </>
+            )}
+        </td>
+    );
+}
 
 
 // tu lam va cham
