@@ -59,12 +59,18 @@
 }
 
 .container tbody {
-  border-bottom: 1px solid lightgray;
+  /* border-bottom: 1px solid lightgray; */
+  border: 1px solid rgb(239, 10, 10);
+}
+ tr {
+  /* border-bottom: 1px solid lightgray; */
+  border: 1px solid rgb(203, 16, 16);
 }
 
 .container th {
   border-bottom: 1px solid lightgray;
   border-right: 1px solid lightgray;
+  /* border: 1px solid lightgray; */
   padding: 2px 4px;
 }
 
