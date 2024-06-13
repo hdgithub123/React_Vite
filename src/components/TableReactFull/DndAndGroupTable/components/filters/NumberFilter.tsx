@@ -49,12 +49,12 @@ function NumberFilter({ column }) {
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
             <input
                 type="text"
-                style={{ width: 'calc(100% - 32px)', marginRight: '2px'}}
+                style={{ width: 'calc(100% - 35px)', marginRight: '2px'}}
                 value={column.getFilterValue() || ''}
                 onChange={handelOnChange}
                 placeholder='Search...'
             />
-            <select style={{ width: '30px' }} value={filterFn} onChange={handleFilterChange}>
+            <select style={{ width: '33px' }} value={filterFn} onChange={handleFilterChange}>
                 <option value="EqualsNumber" title="Equals">=</option>
                 <option value="weakEqualsNumber" title="Weak Equals">{'≤'}</option>
                 <option value="weakNumber" title="Weak">{'<'}</option>

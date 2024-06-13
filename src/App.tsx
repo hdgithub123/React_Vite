@@ -12,7 +12,7 @@
 // import SearchTableDropdownEx from './components/SearchTableDropdown/SearchTableDropdownEx'
 // import ReactTableEx from './components/ReactTable/ReactTableEx';
 // //import FilteringTable from './components/ReactTable/FilteringTable/FilteringTable';
-// // import RowSelection from './components/ReactTable/RowSelection/RowSelection';
+//import RowSelection from './components/ReactTable/RowSelection/RowSelection';
 // // import SortingTable from './components/ReactTable/SortingTable/SortingTable';
 // import GeneralTableEX from './components/ReactTable/GeneralTable/GeneralTableEX';
 // import GeneralTableTanStack from './components/TanStackTable/GeneralTableTanStack/GeneralTableTanStack';
@@ -23,9 +23,9 @@
 
 import DndAndGroupTableEX from './components/TableReactFull/DndAndGroupTable/DndAndGroupTableEX';
 
-import GroupTable from './components/TableReactFull/GroupTable/GroupTable';
+//import GroupTable from './components/TableReactFull/GroupTable/GroupTable';
 
-import MutipleContainers from './components/TableReactFull/Nhap/MutipleContainers';
+//import MutipleContainers from './components/TableReactFull/Nhap/MutipleContainers';
 function App() {
 
 
@@ -59,13 +59,12 @@ function App() {
       <RouterComponent></RouterComponent> */}
       {/* <TableComponent></TableComponent> */}
       {/* <TableComponentNoSelect></TableComponentNoSelect> */}
-      {/* <PopupComponent></PopupComponent>
+      {/* <PopupComponent></PopupComponent> */}
 
-    <DropdownComponent></DropdownComponent>
+    {/* <DropdownComponent></DropdownComponent> */}
 
    
-      <h1>ket thuc dong cuoi</h1>
-      <p> seach table</p> */}
+
 
       </>
 

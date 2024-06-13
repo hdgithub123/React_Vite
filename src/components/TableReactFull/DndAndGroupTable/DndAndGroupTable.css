@@ -92,3 +92,6 @@ th {
   padding: 2px 4px;
 }
 
+.dragcell:hover {
+  background-color:aqua;
+}

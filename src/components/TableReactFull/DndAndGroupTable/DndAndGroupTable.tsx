@@ -143,12 +143,12 @@ function DndAndGroupTable({ data, columns }) {
                     style: {
                         style,
                         background: cell.getIsGrouped()
-                            ? 'lightgray'
+                            ? '#ddd'
                             : cell.getIsAggregated()
-                                ? 'lightgray'
+                                ? '#ddd'
                                 : cell.getIsPlaceholder()
                                     ? 'white'
-                                    : 'white',
+                                    : null,
 
                         // background: cell.getIsGrouped()
                         //     ? '#0aff0082'
@@ -344,7 +344,7 @@ function DndAndGroupTable({ data, columns }) {
                         {table.getRowModel().rows.length > 0 ? (
                             <tbody>
                                 {table.getRowModel().rows.map(row => (
-                                    <tr key={row.id}>
+                                    <tr className={'dragcell'} key={row.id}>
                                         {row.getVisibleCells().map(cell => (
                                             <DragAlongCell key={cell.id} cell={cell} />
                                         ))}
