@@ -325,8 +325,29 @@ const columns = [
 import DndAndGroupTable from './DndAndGroupTable';
 
 function DndAndGroupTableEX(){
+    const [selectedData, setSelectedData] = useState(null); // State to store the selected data from the table
+
+  // Event handler when selecting a row in the table
+  const handleRowSelect = (rowData) => {
+    setSelectedData(rowData); // Update state with the selected row data
+  };
+
         return(
-            <DndAndGroupTable data={makeData} columns ={columns}></DndAndGroupTable>
+            <div>
+                <DndAndGroupTable data={makeData} columns ={columns} onRowSelect={handleRowSelect}></DndAndGroupTable>
+                {selectedData && (
+                <div>
+                <h2>Selected Data</h2>
+                <p>ID: {selectedData.firstName}</p>
+                <p>Name: {selectedData.lastName}</p>
+                <p>Age: {selectedData.age}</p>
+                <p>visits: {selectedData.visits}</p>
+                <p>progress: {selectedData.progress}</p>
+                <p>status: {selectedData.status}</p>
+                </div>
+      )}
+            </div>
+            
         )
 
 }

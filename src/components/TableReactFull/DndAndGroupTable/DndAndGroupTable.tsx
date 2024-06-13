@@ -76,7 +76,7 @@ import arrow_right from './source/images/arrows/pointer-right-svgrepo-com.svg';
 import Filter from './components/filters/Filter';
 
 
-function DndAndGroupTable({ data, columns }) {
+function DndAndGroupTable({ data, columns, onRowSelect }) {
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
@@ -160,9 +160,9 @@ function DndAndGroupTable({ data, columns }) {
 
                         fontWeight: cell.getIsGrouped()
                             ? 'bold'
-                                : cell.getIsAggregated()
-                                    ? 'bold'
-                                    : 'normal',
+                            : cell.getIsAggregated()
+                                ? 'bold'
+                                : 'normal',
 
                     },
                 }}
@@ -175,11 +175,13 @@ function DndAndGroupTable({ data, columns }) {
                                 onClick: row.getToggleExpandedHandler(),
                                 style: {
                                     cursor: row.getCanExpand() ? 'pointer' : 'normal',
+                                    border: 'none',
+                                    background: 'none',
                                 },
                             }}
                         >
-                            {/* {row.getIsExpanded() ? '👇' : '👉'}{' '} */}
-                            {row.getIsExpanded() ? <img src={arrow_drop_down} style={{ width: '10px', height: '10px' }} /> : <img src={arrow_right} style={{ width: '10px', height: '10px' }} />}{' '}
+                            {row.getIsExpanded() ? '⮛' : '⮚'}{' '}
+                            {/* {row.getIsExpanded() ? <img src={arrow_drop_down} style={{ width: '10px', height: '10px' }} /> : <img src={arrow_right} style={{ width: '10px', height: '10px' }} />}{' '} */}
                         </button>
                         {flexRender(
                             cell.column.columnDef.cell,
@@ -288,12 +290,35 @@ function DndAndGroupTable({ data, columns }) {
         table.setExpanded(true);
     }, [grouping, columnFilters]);
 
+    const handleRowClick = (rowData) => {
+        if (onRowSelect) {
+            onRowSelect(rowData);
+        }
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setSelectedIndex(prevIndex => Math.min(prevIndex + 1, rows.length - 1));
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (selectedIndex !== -1) {
+                const selectedRow = rows[selectedIndex];
+                onRowSelect(selectedRow.original);
+            }
+        }
+    };
+
+
     // bắt đầu render chính
     return (
-        <div>         
+        <div>
             {/* Render các nút điều khiển */}
             <div style={{ display: 'flex' }}>
-                 {/* Chọn Column hiển thị */}
+                {/* Chọn Column hiển thị */}
                 <ColumnVisibilityToggle table={table}></ColumnVisibilityToggle>
                 <button onClick={rerender}>
                     Regenerate
@@ -325,10 +350,10 @@ function DndAndGroupTable({ data, columns }) {
                     </DropableContainerGroup>
 
                     {/* Bắt đầu render table */}
-                    <table>
-                        <thead>
+                    <table className='table_container' onKeyDown={handleKeyDown}>
+                        <thead className='table_head'>
                             {table.getHeaderGroups().map(headerGroup => (
-                                <tr key={headerGroup.id}>
+                                <tr className='table_head' key={headerGroup.id}>
                                     <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
                                         {headerGroup.headers.map((header) =>
                                             isLeafColumn(header) ? (
@@ -342,9 +367,9 @@ function DndAndGroupTable({ data, columns }) {
                             ))}
                         </thead>
                         {table.getRowModel().rows.length > 0 ? (
-                            <tbody>
+                            <tbody className='body_container'>
                                 {table.getRowModel().rows.map(row => (
-                                    <tr className={'dragcell'} key={row.id}>
+                                    <tr onDoubleClick={() => handleRowClick(row.original)} className={'dragcell'} key={row.id}>
                                         {row.getVisibleCells().map(cell => (
                                             <DragAlongCell key={cell.id} cell={cell} />
                                         ))}
@@ -368,6 +393,8 @@ function DndAndGroupTable({ data, columns }) {
                             </tr>
                         </tfoot>}
                     </table>
+
+
                 </DndContext>
             </div>
         </div>
@@ -550,7 +577,7 @@ const DropableContainerGroup = ({ children }) => {
         marginBottom: '1px',
         background: isOver ? 'yellow' : 'white',
         width: 'calc(100% - 2px)',
-        
+
         height: '40px', // Set your desired height here
         justifyContent: 'left',
         alignItems: 'center',
@@ -609,37 +636,37 @@ const ColumnVisibilityToggle = ({ table }) => {
             <button onClick={() => setShowToggle(!showToggle)}>
                 Show Column
             </button>
-            {showToggle && 
-            <div ref={modalRef} style={modalStyle}> {/* Thêm ref vào div chứa hộp thoại modal */}
-                <div className="px-1 border-b border-black">
-                    <label>
-                        <input
-                            {...{
-                                type: 'checkbox',
-                                checked: table.getIsAllColumnsVisible(),
-                                onChange: table.getToggleAllColumnsVisibilityHandler(),
-                            }}
-                        />{' '}
-                        Toggle All
-                    </label>
-                </div>
-                {table.getAllLeafColumns().map(column => {
-                    return (
-                        <div key={column.id} className="px-1">
-                            <label>
-                                <input
-                                    {...{
-                                        type: 'checkbox',
-                                        checked: column.getIsVisible(),
-                                        onChange: column.getToggleVisibilityHandler(),
-                                    }}
-                                />{' '}
-                                {flexRender(column.columnDef.header, {})}
-                            </label>
-                        </div>
-                    )
-                })}
-            </div>}
+            {showToggle &&
+                <div ref={modalRef} style={modalStyle}> {/* Thêm ref vào div chứa hộp thoại modal */}
+                    <div className="px-1 border-b border-black">
+                        <label>
+                            <input
+                                {...{
+                                    type: 'checkbox',
+                                    checked: table.getIsAllColumnsVisible(),
+                                    onChange: table.getToggleAllColumnsVisibilityHandler(),
+                                }}
+                            />{' '}
+                            Toggle All
+                        </label>
+                    </div>
+                    {table.getAllLeafColumns().map(column => {
+                        return (
+                            <div key={column.id} className="px-1">
+                                <label>
+                                    <input
+                                        {...{
+                                            type: 'checkbox',
+                                            checked: column.getIsVisible(),
+                                            onChange: column.getToggleVisibilityHandler(),
+                                        }}
+                                    />{' '}
+                                    {flexRender(column.columnDef.header, {})}
+                                </label>
+                            </div>
+                        )
+                    })}
+                </div>}
         </div>
     );
 }

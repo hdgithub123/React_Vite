@@ -10,7 +10,7 @@
 
 // import CheckSearchBox from './components/SeachboxComponent/CheckSearchBox';
 // import SearchTableDropdownEx from './components/SearchTableDropdown/SearchTableDropdownEx'
-// import ReactTableEx from './components/ReactTable/ReactTableEx';
+ import ReactTableEx from './components/ReactTable/ReactTableEx';
 // //import FilteringTable from './components/ReactTable/FilteringTable/FilteringTable';
 //import RowSelection from './components/ReactTable/RowSelection/RowSelection';
 // // import SortingTable from './components/ReactTable/SortingTable/SortingTable';
@@ -48,9 +48,9 @@ function App() {
       <FiltersFaceted></FiltersFaceted> */}
       {/* <RowSelection></RowSelection> */}
       {/* <SortingTable></SortingTable> */}
-{/* 
+
      <ReactTableEx></ReactTableEx>
-      <p> end seach table</p> */}
+      <p> end seach table</p>
   
       {/* <FilteringTable></FilteringTable>
       <p> end seach FilteringTable</p> */}
