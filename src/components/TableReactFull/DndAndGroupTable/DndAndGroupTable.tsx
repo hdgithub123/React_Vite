@@ -143,12 +143,27 @@ function DndAndGroupTable({ data, columns }) {
                     style: {
                         style,
                         background: cell.getIsGrouped()
-                            ? '#0aff0082'
+                            ? 'lightgray'
                             : cell.getIsAggregated()
-                                ? '#ffa50078'
+                                ? 'lightgray'
                                 : cell.getIsPlaceholder()
-                                    ? '#ff000042'
+                                    ? 'white'
                                     : 'white',
+
+                        // background: cell.getIsGrouped()
+                        //     ? '#0aff0082'
+                        //     : cell.getIsAggregated()
+                        //         ? '#ffa50078'
+                        //         : cell.getIsPlaceholder()
+                        //             ? '#ff000042'
+                        //             : 'white',
+
+                        fontWeight: cell.getIsGrouped()
+                            ? 'bold'
+                                : cell.getIsAggregated()
+                                    ? 'bold'
+                                    : 'normal',
+
                     },
                 }}
             >

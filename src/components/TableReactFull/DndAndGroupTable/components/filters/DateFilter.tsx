@@ -54,12 +54,12 @@ function DateFilter({ column }) {
                 placeholder='Search...'
             />
             <select style={{ width: '30px' }} value={filterFn} onChange={handleFilterChange}>
-                <option value="EqualsDate">=</option>
-                <option value="weakEqualsDate">{'≤'}</option>
-                <option value="weakDate">{'<'}</option>
-                <option value="GreaterEqualsDate">{'≥'}</option>
-                <option value="GreaterDate">{'>'}</option>
-                <option value="DifferentDate">{'≠'}</option>
+                <option value="EqualsDate" title="Equal">=</option>
+                <option value="weakEqualsDate" title="Weak Equal">{'≤'}</option>
+                <option value="weakDate" title="Weak">{'<'}</option>
+                <option value="GreaterEqualsDate" title="Greater Equal">{'≥'}</option>
+                <option value="GreaterDate" title="Greater">{'>'}</option>
+                <option value="DifferentDate" title="Different">{'≠'}</option>
             </select>
         </div>
 

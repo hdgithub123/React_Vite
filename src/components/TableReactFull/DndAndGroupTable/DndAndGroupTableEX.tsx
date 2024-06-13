@@ -67,7 +67,7 @@ import {
 
 import { CSS } from '@dnd-kit/utilities';
 
-import {calculateColumnSum, calculateColumnAverage, calculateRowCount} from './components/orthers/FooterColumn'
+import {SumFooter, AverageFooter, CountFooter} from './components/orthers/FooterColumn'
 // const makeData = [
 //     { firstName: 'Alice', lastName: 'Smith', age: 28, visits: 120, progress: 75, status: 'relationship' },
 //     { firstName: 'Alice', lastName: 'Johnson', age: 35, visits: 80, progress: 60, status: 'single' },
@@ -181,7 +181,7 @@ const columns = [
                 header: 'First Name',
                 id: 'firstName',
                 filterType: 'text',
-                footer: info => `Count: ${calculateRowCount(info.table)}`,
+                footer: info => `Count: ${CountFooter(info.table)}`,
                 cell: (info) => info.getValue(),
                 /**
                  * override the value used for row grouping
@@ -206,7 +206,7 @@ const columns = [
                 accessorKey: 'age',
                 id: 'age',
                 header: () => 'Age',
-                footer: (info) =>`Average: ${calculateColumnAverage(info.column, info.table)}`,
+                footer: (info) =>`Sum: ${SumFooter(info.column, info.table)}`,
                 filterType: 'number',
                 aggregatedCell: ({ getValue }) =>
                     Math.round(getValue<number>() * 100) / 100,
@@ -235,6 +235,7 @@ const columns = [
                         id: 'progress',
                         header: 'Profile Progress',
                         filterType: 'number',
+                        footer: (info) =>`Average: ${AverageFooter(info.column, info.table)}`,
                         cell: ({ getValue }) =>
                             Math.round(getValue<number>() * 100) / 100 + '%',
                         aggregationFn: 'mean',

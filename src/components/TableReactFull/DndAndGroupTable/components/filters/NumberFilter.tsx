@@ -55,12 +55,12 @@ function NumberFilter({ column }) {
                 placeholder='Search...'
             />
             <select style={{ width: '30px' }} value={filterFn} onChange={handleFilterChange}>
-                <option value="EqualsNumber">=</option>
-                <option value="weakEqualsNumber">{'≤'}</option>
-                <option value="weakNumber">{'<'}</option>
-                <option value="GreaterEqualsNumber">{'≥'}</option>
-                <option value="GreaterNumber">{'>'}</option>
-                <option value="DifferentNumber">{'≠'}</option>
+                <option value="EqualsNumber" title="Equals">=</option>
+                <option value="weakEqualsNumber" title="Weak Equals">{'≤'}</option>
+                <option value="weakNumber" title="Weak">{'<'}</option>
+                <option value="GreaterEqualsNumber" title="Greater Equals" >{'≥'}</option>
+                <option value="GreaterNumber" title="Greater" >{'>'}</option>
+                <option value="DifferentNumber" title="Different" >{'≠'}</option>
             </select>
         </div>
 

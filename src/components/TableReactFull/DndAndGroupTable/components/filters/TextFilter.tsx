@@ -35,18 +35,18 @@ function TextFilter({ column }) {
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <input
                 type="text"
-                style={{ width: 'calc(100% - 32px)', marginRight: '2px'}}
+                style={{ width: 'calc(100% - 32px)', marginRight: '2px' }}
                 value={column.getFilterValue() || ''}
                 onChange={handelOnChange}
                 placeholder='Search...'
             />
             <select style={{ width: '30px' }} value={filterFn} onChange={handleFilterChange}>
-                <option value="includesString">∈</option>
-                <option value="NotIncludesString">∉</option>
-                {/* <option value="includesStringSensitive">∈S</option> */}
-                <option value="equalsString">=</option>
-                <option value="startWithString" >⭲</option>
-                <option value="endWithString" >⭰</option>
+                <option value="includesString" title="Includes String">∈</option>
+                <option value="NotIncludesString" title="Does Not Include String">∉</option>
+                {/* <option value="includesStringSensitive" title="Includes String Case Sensitive">∈S</option> */}
+                <option value="equalsString" title="Equals String">=</option>
+                <option value="startWithString" title="Starts With String">⭲</option>
+                <option value="endWithString" title="Ends With String">⭰</option>
             </select>
         </div>
 
@@ -60,14 +60,14 @@ export default TextFilter;
 
 const NotIncludesString = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
-    
+
     // Convert the cell value and the filter value to strings for comparison
     const cellValueStr = cellValue.toString().toLowerCase();
     const filterValueStr = value.toString().toLowerCase();
-    
+
     return !cellValueStr.includes(filterValueStr);
-  };
-  
+};
+
 
 const startWithString = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
