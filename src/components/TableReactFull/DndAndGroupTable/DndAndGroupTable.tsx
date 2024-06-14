@@ -353,7 +353,7 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
                     <table className='table_container' onKeyDown={handleKeyDown}>
                         <thead className='table_head'>
                             {table.getHeaderGroups().map(headerGroup => (
-                                <tr className='table_head' key={headerGroup.id}>
+                                <tr className='table_head_tr' key={headerGroup.id}>
                                     <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
                                         {headerGroup.headers.map((header) =>
                                             isLeafColumn(header) ? (
@@ -369,7 +369,7 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
                         {table.getRowModel().rows.length > 0 ? (
                             <tbody className='body_container'>
                                 {table.getRowModel().rows.map(row => (
-                                    <tr onDoubleClick={() => handleRowClick(row.original)} className={'dragcell'} key={row.id}>
+                                    <tr onDoubleClick={() => handleRowClick(row.original)} className={'body_container_tr'} key={row.id}>
                                         {row.getVisibleCells().map(cell => (
                                             <DragAlongCell key={cell.id} cell={cell} />
                                         ))}
@@ -378,14 +378,14 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
                             </tbody>
                         ) : (
                             <tbody>
-                                <tr>
+                                <tr className='body_container'>
                                     <td colSpan={countLeafColumns(columns)} style={{ textAlign: 'center' }}>
                                         No data available
                                     </td>
                                 </tr>
                             </tbody>
                         )}
-                        {shouldRenderFooter && <tfoot>
+                        {shouldRenderFooter && <tfoot className='foot_container'>
                             <tr>
                                 {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
                                     <DraggableTablefooter key={header.id} header={header} />
@@ -422,6 +422,7 @@ const DraggableTableHeader = ({ header }) => {
         whiteSpace: 'nowrap',
         width: header.column.getSize(),
         zIndex: isDragging ? 1 : 0,
+     
     };
     return (
         <th colSpan={header.colSpan} ref={setNodeRef} style={style}>

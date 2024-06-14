@@ -50,31 +50,73 @@
 
 
 
-.container table {
-  max-height: 50px; /* Thiết lập chiều cao tối đa cho bảng */
-  overflow-y: auto; 
+.table_container table {
+  max-height: 150px; /* Thiết lập chiều cao tối đa cho bảng */
+  overflow-y: auto ; 
   border: 1px solid lightgray;
   width: auto;
   height: auto;
 }
 
-.container tbody {
-  /* border-bottom: 1px solid lightgray; */
-  border: 1px solid rgb(239, 10, 10);
-}
- tr {
-  /* border-bottom: 1px solid lightgray; */
-  border: 1px solid rgb(203, 16, 16);
+.table_container thead{
+  /* background-color: #f1f1f1;   */
+  position:relative;
+  display: block;
+  width:100%;
+  /* overflow-y: scroll; */
+  
 }
 
-.container th {
+
+
+.table_container tbody{
+  /* Position */
+  display: block; position:relative;
+  width:100%; overflow-y:auto;
+  /* Decoration */
+  border-top: 1px solid rgba(0,0,0,0.2);
+}
+
+
+
+
+.table_container tr {
+  /* border-bottom: 1px solid lightgray; */
+  width: 100%;
+  display:flex;
+}
+
+
+/* header table */
+.table_container th {
   border-bottom: 1px solid lightgray;
   border-right: 1px solid lightgray;
   /* border: 1px solid lightgray; */
   padding: 2px 4px;
+
+  width: 100%;
+ 
+  flex-basis:100%;
 }
 
-.dragcell:hover {
+/* body table row */
+.table_container td{
+  border-bottom: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+  /* border: 1px solid lightgray; */
+  padding: 2px 4px;
+
+  width: 100%;
+  display:flex;
+  flex-basis:100%;
+}
+
+.body_container{
+  max-height: 50vh;
+}
+
+
+.body_container_tr:hover {
   background-color:aqua;
 }
 
@@ -105,5 +147,3 @@
   background: rgb(160, 160, 204);
   opacity: 1;
 }
-
-
