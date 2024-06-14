@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo, CSSProperties } from 'react';
 import React from 'react'
-import './DndAndGroupTable.css';
+
+import styles from './DndAndGroupTable.module.css';
 import {
 
 
@@ -328,13 +329,17 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
                 </button>
             </div>
 
-            <div className='container'>
+            <div className={styles.container}>
                 {/* Tạo Drop Group Area */}
+                
+
+               
                 <DndContext
                     collisionDetection={customCollisionDetection}
                     onDragEnd={handleDragEnd}
                     sensors={sensors}
                 >
+                    <div className={styles.Dropable_Container_Group}>
                     {/* Phần thả group column */}
                     <DropableContainerGroup >
                         {/* <h1>Thả vào đây</h1> */}
@@ -348,12 +353,14 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
                             </div>
                         )}
                     </DropableContainerGroup>
-
-                    {/* Bắt đầu render table */}
-                    <table className='table_container' onKeyDown={handleKeyDown}>
-                        <thead className='table_head'>
+                    </div>
+                    
+                    <div className={styles.div_table_container}>
+                            {/* Bắt đầu render table */}
+                    <table className={styles.table_container} onKeyDown={handleKeyDown}>
+                        <thead className={styles.table_head}>
                             {table.getHeaderGroups().map(headerGroup => (
-                                <tr className='table_head_tr' key={headerGroup.id}>
+                                <tr className={styles.table_head_tr} key={headerGroup.id}>
                                     <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
                                         {headerGroup.headers.map((header) =>
                                             isLeafColumn(header) ? (
@@ -367,9 +374,9 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
                             ))}
                         </thead>
                         {table.getRowModel().rows.length > 0 ? (
-                            <tbody className='body_container'>
+                            <tbody className={styles.body_container}>
                                 {table.getRowModel().rows.map(row => (
-                                    <tr onDoubleClick={() => handleRowClick(row.original)} className={'body_container_tr'} key={row.id}>
+                                    <tr onDoubleClick={() => handleRowClick(row.original)} className={styles.body_container_tr} key={row.id}>
                                         {row.getVisibleCells().map(cell => (
                                             <DragAlongCell key={cell.id} cell={cell} />
                                         ))}
@@ -378,14 +385,14 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
                             </tbody>
                         ) : (
                             <tbody>
-                                <tr className='body_container'>
+                                <tr className={styles.body_container}>
                                     <td colSpan={countLeafColumns(columns)} style={{ textAlign: 'center' }}>
                                         No data available
                                     </td>
                                 </tr>
                             </tbody>
                         )}
-                        {shouldRenderFooter && <tfoot className='foot_container'>
+                        {shouldRenderFooter && <tfoot className={styles.foot_container}>
                             <tr>
                                 {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
                                     <DraggableTablefooter key={header.id} header={header} />
@@ -393,6 +400,8 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
                             </tr>
                         </tfoot>}
                     </table>
+                    </div>
+                    
 
 
                 </DndContext>
@@ -413,6 +422,7 @@ const DraggableTableHeader = ({ header }) => {
     });
 
 
+
     const style: CSSProperties = {
         opacity: isDragging ? 0.8 : 1,
         cursor: isDragging ? 'move' : 'default',
@@ -422,6 +432,7 @@ const DraggableTableHeader = ({ header }) => {
         whiteSpace: 'nowrap',
         width: header.column.getSize(),
         zIndex: isDragging ? 1 : 0,
+        boxSizing: 'border-box',
      
     };
     return (
@@ -453,8 +464,8 @@ const DraggableTableHeader = ({ header }) => {
                         {...{
                             onMouseDown: header.getResizeHandler(),
                             onTouchStart: header.getResizeHandler(),
-                            className: `resizer 
-                                    } ${header.column.getIsResizing() ? 'isResizing' : ''
+                            className: `${styles.resizer} 
+                                    } ${header.column.getIsResizing() ? styles.isResizing : ''
                                 }`,
                         }}
                     />
@@ -499,6 +510,7 @@ const DraggableTablefooter = ({ header }) => {
         whiteSpace: 'nowrap',
         width: header.column.getSize(),
         zIndex: isDragging ? 1 : 0,
+        boxSizing: 'border-box',
     };
     return (
         <td colSpan={header.colSpan} ref={setNodeRef} style={style}>
