@@ -469,6 +469,7 @@ const DraggableTableHeader = ({ header }) => {
 
 
 const StaticTableHeader = ({ header }) => {
+
     return (
         <th colSpan={header.colSpan}>
             {header.isPlaceholder

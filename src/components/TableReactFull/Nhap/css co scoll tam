@@ -58,7 +58,6 @@
 .table_container tr {
   /* border-bottom: 1px solid lightgray; */
   width: 100%;
-  /* cai nay lam thay doi header sai */
   display:flex;
 
 }

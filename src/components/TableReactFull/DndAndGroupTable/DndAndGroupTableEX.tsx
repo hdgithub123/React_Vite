@@ -200,7 +200,6 @@ const columns = [
     },
     {
         header: 'Info',
-
         columns: [
             {
                 accessorKey: 'age',
