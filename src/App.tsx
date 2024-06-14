@@ -49,8 +49,8 @@ function App() {
       {/* <RowSelection></RowSelection> */}
       {/* <SortingTable></SortingTable> */}
 
-     {/* <ReactTableEx></ReactTableEx>
-      <p> end seach table</p> */}
+     <ReactTableEx></ReactTableEx>
+      <p> end seach table</p>
   
       {/* <FilteringTable></FilteringTable>
       <p> end seach FilteringTable</p> */}

@@ -11,13 +11,17 @@
 
 
 .div_table_container {
+  width: 100%;
   max-width: 100%;
   overflow-y: auto;
   height: 400px;
   background-color: white;
 }
 
-
+.div_table_container table {
+  width: 100%;
+  /* border-collapse: collapse; */
+}
 
 .table_head {
   position: sticky; /* make the table heads sticky */
@@ -42,14 +46,14 @@
   /* border-bottom: 1px solid lightgray;
   border-right: 1px solid lightgray; */
   border: 1px solid lightgray;
-  padding: 0;
+  padding: 8px;
 }
 
 .table_head td{
   /* border-bottom: 1px solid lightgray;
   border-right: 1px solid lightgray; */
   border: 1px solid lightgray;
-  padding: 0;
+  padding: 8px;
 }
 
 
