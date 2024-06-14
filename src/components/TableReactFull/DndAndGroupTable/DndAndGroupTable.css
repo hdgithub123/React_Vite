@@ -1,4 +1,46 @@
 
+/* .container{
+  min-width: 100%;
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.div_table_container{
+  max-height: 200px;
+  overflow-x:hidden;
+  overflow-y: auto;
+
+}  */
+
+
+
+/* 
+.div_table_container thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+} */
+ 
+/* .div_table_container table {
+  max-height: 50px; 
+  overflow-y: auto; 
+  border: 1px solid lightgray;
+  width: auto;
+  height: auto;
+} */
+/* .div_table_container tbody {
+  border-bottom: 1px solid lightgray;
+}  */
+
+/* .div_table_container th {
+  border-bottom: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+  padding: 2px 4px;
+}  */
+
+
+
 
 .container{
   min-width: 100%;
@@ -8,108 +50,27 @@
 
 
 
-
-
-.table_container thead{
-  /* background-color: #f1f1f1;   */
-  display: block;
-  width:100%;
-  flex-basis: 100%;
-  /* overflow-y: scroll; */
-  
+.container table {
+  max-height: 50px; /* Thiết lập chiều cao tối đa cho bảng */
+  overflow-y: auto; 
+  border: 1px solid lightgray;
+  width: auto;
+  height: auto;
 }
 
-/* header table */
-.table_container th {
+.container tbody {
+  border-bottom: 1px solid lightgray;
+}
+
+.container th {
   border-bottom: 1px solid lightgray;
   border-right: 1px solid lightgray;
-  /* border: 1px solid lightgray; */
   padding: 2px 4px;
-  width: 100%;
-  flex-basis:100%;
 }
 
-
-.table_container tbody{
-  /* Position */
-  display: block; position:relative;
-  width:100%; overflow-y:auto;
-  /* Decoration */
-  border-top: 1px solid rgba(0,0,0,0.2);
-}
-
-.body_container{
-  max-height: 50vh;
-  
-}
-
-/* body table row */
-.table_container td{
-  border-bottom: 1px solid lightgray;
-  border-right: 1px solid lightgray;
-  /* border: 1px solid lightgray; */
-  padding: 2px 4px;
-
-  width: 100%;
-  display:flex;
-  flex-basis:100%;
-}
-
-.table_container tr {
-  /* border-bottom: 1px solid lightgray; */
-  width: 100%;
-  /* cai nay lam thay doi header sai */
-  display:flex;
-
-}
-
-
-
-/* dang lam them */
 .body_container_tr:hover {
   background-color:aqua;
 }
-
-
-tbody::-webkit-scrollbar {
-  width: 2px;
-}
-
-tbody::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 6px;
-}
-
-.table_container body::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(0, 0, 0, 0.8);
-}
-
-.table_container tbody::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* Hide scrollbar by default */
-.table_container tbody {
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: transparent transparent; /* Firefox */
-}
-
-.table_container tbody:hover {
-  scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.1); /* Firefox */
-}
-
-.table_container tbody::-webkit-scrollbar {
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.table_container tbody:hover::-webkit-scrollbar {
-  opacity: 1;
-}
-
-
-
-
 
 
 .resizer {
@@ -126,13 +87,13 @@ tbody::-webkit-scrollbar-thumb {
   touch-action: none;
  }
 
-/* .resizer.ltr {
+.resizer.ltr {
   right: 0;
 }
 
 .resizer.rtl {
   left: 0.1;
-} */
+}
 
  .resizer.isResizing {
   background: rgb(160, 160, 204);
