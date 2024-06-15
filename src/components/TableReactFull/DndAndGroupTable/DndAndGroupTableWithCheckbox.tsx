@@ -332,21 +332,26 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect }) {
                         {/* Bắt đầu render table */}
                         <table className={styles.table_container}>
                             <thead className={styles.table_head}>
-                                {table.getHeaderGroups().map(headerGroup => (
+                                {table.getHeaderGroups().map((headerGroup, rowIndex) => (
                                     <tr className={styles.table_head_tr} key={headerGroup.id}>
-                                       
-                                       headerGroup ===leafHeaderGroup?(
-                                            <th>
-                                            <IndeterminateCheckbox
-                                                {...{
-                                                    checked: table.getIsAllRowsSelected(),
-                                                    indeterminate: table.getIsSomeRowsSelected(),
-                                                    onChange: table.getToggleAllRowsSelectedHandler(),
-                                                }}
-                                            />
-                                        </th>
-                                        ): null,
-                                       
+
+                                        {rowIndex === leafHeaderGroupIndex
+                                            ?
+                                            (<th className={styles.table_head_tr_th_checkbox}>
+                                                <IndeterminateCheckbox
+                                                    {...{
+                                                        checked: table.getIsAllRowsSelected(),
+                                                        indeterminate: table.getIsSomeRowsSelected(),
+                                                        onChange: table.getToggleAllRowsSelectedHandler(),
+                                                    }}
+                                                />
+                                                <TriStateCheckbox></TriStateCheckbox>
+                                            </th>) : (
+                                                <th></th>
+                                            )
+                                        }
+
+
 
                                         <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
                                             {headerGroup.headers.map((header) =>
@@ -363,22 +368,22 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect }) {
                             {table.getRowModel().rows.length > 0 ? (
                                 <tbody className={styles.body_container}>
                                     {table.getRowModel().rows.map(row => (
-                                         
-                                        
-                                        
+
+
+
                                         <tr onDoubleClick={() => handleRowClick(row.original)} className={styles.body_container_tr} key={row.id}>
-                                           <td>
-                                         <IndeterminateCheckbox
-                                           {...{
-                                             checked: row.getIsSelected(),
-                                             disabled: !row.getCanSelect(),
-                                             indeterminate: row.getIsSomeSelected(),
-                                             onChange: row.getToggleSelectedHandler(),
-                                           }}
-                                         />
-                                       </td>
-                                           
-                                           
+                                            <td>
+                                                <IndeterminateCheckbox
+                                                    {...{
+                                                        checked: row.getIsSelected(),
+                                                        disabled: !row.getCanSelect(),
+                                                        indeterminate: row.getIsSomeSelected(),
+                                                        onChange: row.getToggleSelectedHandler(),
+                                                    }}
+                                                />
+                                            </td>
+
+
                                             {row.getVisibleCells().map(cell => (
                                                 <DragAlongCell key={cell.id} cell={cell} />
                                             ))}
@@ -397,7 +402,7 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect }) {
                             )}
                             {shouldRenderFooter && <tfoot className={styles.foot_container}>
                                 <tr>
-                                <td></td>
+                                    <td className={styles.footer_checkbox}></td>
                                     {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
                                         <DraggableTablefooter key={header.id} header={header} />
                                     ))}
@@ -735,3 +740,46 @@ function IndeterminateCheckbox({
         />
     );
 }
+
+
+function TriStateCheckbox({ onChange }) {
+    const [state, setState] = useState('unchecked'); // 'unchecked', 'checked', or 'indeterminate'
+    const inputRef = useRef(null);
+  
+    useEffect(() => {
+      const checkbox = inputRef.current;
+      if (checkbox) {
+        checkbox.indeterminate = state === 'indeterminate';
+      }
+    }, [state]);
+  
+    useEffect(() => {
+      onChange(state);
+    }, [state, onChange]);
+  
+    const handleClick = () => {
+      setState(prevState => {
+        switch (prevState) {
+          case 'unchecked':
+            return 'checked';
+          case 'checked':
+            return 'indeterminate';
+          case 'indeterminate':
+            return 'unchecked';
+          default:
+            return prevState;
+        }
+      });
+    };
+  
+    return (
+      <input
+        type="checkbox"
+        ref={inputRef}
+        checked={state === 'checked'}
+        onClick={handleClick}
+        readOnly
+      />
+    );
+  }
+  
