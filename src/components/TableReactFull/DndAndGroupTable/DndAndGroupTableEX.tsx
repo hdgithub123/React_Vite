@@ -322,6 +322,7 @@ const columns = [
 // ]
 
 import DndAndGroupTable from './DndAndGroupTable';
+import DndAndGroupTableWithCheckbox from './DndAndGroupTableWithCheckbox';
 
 function DndAndGroupTableEX(){
     const [selectedData, setSelectedData] = useState(null); // State to store the selected data from the table
@@ -333,7 +334,8 @@ function DndAndGroupTableEX(){
         return(
             <div>
                 <div style={{height: '500px',}}>
-                <DndAndGroupTable data={makeData} columns ={columns} onRowSelect={handleRowSelect}></DndAndGroupTable>
+                {/* <DndAndGroupTable data={makeData} columns ={columns} onRowSelect={handleRowSelect}></DndAndGroupTable> */}
+                <DndAndGroupTableWithCheckbox data={makeData} columns ={columns} onRowSelect={handleRowSelect}></DndAndGroupTableWithCheckbox>
                 </div>
            
                 {selectedData && (
