@@ -22,6 +22,7 @@ import {
     getFacetedMinMaxValues,
     getFacetedRowModel,
     getFacetedUniqueValues,
+    getSortedRowModel,
 } from '@tanstack/react-table';
 
 import {
@@ -89,6 +90,7 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
         columns,
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         state: { columnOrder, columnFilters, grouping, },
         onColumnFiltersChange: setColumnFilters,
@@ -311,68 +313,68 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
                     sensors={sensors}
                 >
                     <div className={styles.Dropable_Container_Group}>
-                    {/* Phần thả group column */}
-                    <DropableContainerGroup >
-                        {/* <h1>Thả vào đây</h1> */}
-                        {grouping.length > 0 ? (
-                            grouping.map((id) => (
-                                <RenderHeaderByID key={id} columnID={id} columns={columns} />
-                            ))
-                        ) : (
-                            <div style={{ padding: '10px', fontSize: '14px', color: '#999' }}>
-                                Drag header to group
-                            </div>
-                        )}
-                    </DropableContainerGroup>
+                        {/* Phần thả group column */}
+                        <DropableContainerGroup >
+                            {/* <h1>Thả vào đây</h1> */}
+                            {grouping.length > 0 ? (
+                                grouping.map((id) => (
+                                    <RenderHeaderByID key={id} columnID={id} columns={columns} />
+                                ))
+                            ) : (
+                                <div style={{ padding: '10px', fontSize: '14px', color: '#999' }}>
+                                    Drag header to group
+                                </div>
+                            )}
+                        </DropableContainerGroup>
                     </div>
-                    
+
                     <div className={styles.div_table_container}>
-                            {/* Bắt đầu render table */}
-                    <table className={styles.table_container}>
-                        <thead className={styles.table_head}>
-                            {table.getHeaderGroups().map(headerGroup => (
-                                <tr className={styles.table_head_tr} key={headerGroup.id}>
-                                    <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
-                                        {headerGroup.headers.map((header) =>
-                                            isLeafColumn(header) ? (
-                                                <DraggableTableHeader key={header.id} header={header} />
-                                            ) : (
-                                                <StaticTableHeader key={header.id} header={header} />
-                                            )
-                                        )}
-                                    </SortableContext>
-                                </tr>
-                            ))}
-                        </thead>
-                        {table.getRowModel().rows.length > 0 ? (
-                            <tbody className={styles.body_container}>
-                                {table.getRowModel().rows.map(row => (
-                                    <tr onDoubleClick={() => handleRowClick(row.original)} className={styles.body_container_tr} key={row.id}>
-                                        {row.getVisibleCells().map(cell => (
-                                            <DragAlongCell key={cell.id} cell={cell} />
-                                        ))}
+                        {/* Bắt đầu render table */}
+                        <table className={styles.table_container}>
+                            <thead className={styles.table_head}>
+                                {table.getHeaderGroups().map(headerGroup => (
+                                    <tr className={styles.table_head_tr} key={headerGroup.id}>
+                                        <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
+                                            {headerGroup.headers.map((header) =>
+                                                isLeafColumn(header) ? (
+                                                    <DraggableTableHeader key={header.id} header={header} />
+                                                ) : (
+                                                    <StaticTableHeader key={header.id} header={header} />
+                                                )
+                                            )}
+                                        </SortableContext>
                                     </tr>
                                 ))}
-                            </tbody>
-                        ) : (
-                            <tbody>
-                                <tr className={styles.body_container}>
-                                    <td colSpan={countLeafColumns(columns)} style={{ textAlign: 'center' }}>
-                                        No data available
-                                    </td>
+                            </thead>
+                            {table.getRowModel().rows.length > 0 ? (
+                                <tbody className={styles.body_container}>
+                                    {table.getRowModel().rows.map(row => (
+                                        <tr onDoubleClick={() => handleRowClick(row.original)} className={styles.body_container_tr} key={row.id}>
+                                            {row.getVisibleCells().map(cell => (
+                                                <DragAlongCell key={cell.id} cell={cell} />
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            ) : (
+                                <tbody>
+                                    <tr className={styles.body_container}>
+                                        <td colSpan={countLeafColumns(columns)} style={{ textAlign: 'center' }}>
+                                            No data available
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            )}
+                            {shouldRenderFooter && <tfoot className={styles.foot_container}>
+                                <tr>
+                                    {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
+                                        <DraggableTablefooter key={header.id} header={header} />
+                                    ))}
                                 </tr>
-                            </tbody>
-                        )}
-                        {shouldRenderFooter && <tfoot className={styles.foot_container}>
-                            <tr>
-                                {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
-                                    <DraggableTablefooter key={header.id} header={header} />
-                                ))}
-                            </tr>
-                        </tfoot>}
-                    </table>
+                            </tfoot>}
+                        </table>
                     </div>
-                    
+
 
 
                 </DndContext>
@@ -404,23 +406,42 @@ const DraggableTableHeader = ({ header }) => {
         width: header.column.getSize(),
         zIndex: isDragging ? 1 : 0,
         boxSizing: 'border-box',
-     
+
     };
     return (
         <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
             {header.isPlaceholder ? null : (
                 <>
                     <div  {...attributes} {...listeners}>
-
-                        {header.column.getIsGrouped()
-                            ? `🛑`
-                            : ``}
-
-                        {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                        )}
-
+                        <div
+                            className={
+                                header.column.getCanSort()
+                                    ? 'cursor-pointer select-none'
+                                    : ''
+                            }
+                            onClick={header.column.getToggleSortingHandler()}
+                            title={
+                                header.column.getCanSort()
+                                    ? header.column.getNextSortingOrder() === 'asc'
+                                        ? 'Sort ascending'
+                                        : header.column.getNextSortingOrder() === 'desc'
+                                            ? 'Sort descending'
+                                            : 'Clear sort'
+                                    : undefined
+                            }
+                        >
+                            {header.column.getIsGrouped()
+                                ? `!`
+                                : ``}
+                            {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                            )}
+                            {{
+                                asc: ' 🠹',
+                                desc: ' 🠻',
+                            }[header.column.getIsSorted() as string] ?? null}
+                        </div>
                     </div>
                     {/* Filter colum*/}
 
