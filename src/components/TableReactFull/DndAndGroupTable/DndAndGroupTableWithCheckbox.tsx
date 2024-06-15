@@ -290,6 +290,24 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect }) {
         }
     };
 
+
+    const handleHeaderCheckboxChange = (status) => {
+        console.log("status", status)
+        switch (status) {
+            case 'check':
+              console.log('Checkbox is checked');
+              break;
+            case 'uncheck':
+              console.log('Checkbox is unchecked');
+              break;
+            case 'indeterminate':
+              console.log('Checkbox is indeterminate');
+              break;
+            default:
+              console.log('Unknown status');
+          }
+      };
+
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
@@ -345,7 +363,7 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect }) {
                                                         onChange: table.getToggleAllRowsSelectedHandler(),
                                                     }}
                                                 />
-                                                <TriStateCheckbox></TriStateCheckbox>
+                                                <TriStateCheckbox onChange={handleHeaderCheckboxChange}></TriStateCheckbox>
                                             </th>) : (
                                                 <th></th>
                                             )
