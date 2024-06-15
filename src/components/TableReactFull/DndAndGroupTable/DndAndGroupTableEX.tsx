@@ -330,12 +330,14 @@ function DndAndGroupTableEX(){
   const handleRowSelect = (rowData) => {
     setSelectedData(rowData); // Update state with the selected row data
   };
-
         return(
             <div>
+                <div style={{height: '500px',}}>
                 <DndAndGroupTable data={makeData} columns ={columns} onRowSelect={handleRowSelect}></DndAndGroupTable>
+                </div>
+           
                 {selectedData && (
-                <div>
+                <div style={{display: 'flex',}}>
                 <h2>Selected Data</h2>
                 <p>ID: {selectedData.firstName}</p>
                 <p>Name: {selectedData.lastName}</p>

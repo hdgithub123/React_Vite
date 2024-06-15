@@ -1,7 +1,16 @@
+.general_table{
+  height: 100%;
+}
+
 .container {
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.botton_container{
+  display: flex;
 }
 
 .Dropable_Container_Group {

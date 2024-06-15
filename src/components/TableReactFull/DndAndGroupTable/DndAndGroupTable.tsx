@@ -316,9 +316,9 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
 
     // bắt đầu render chính
     return (
-        <div>
+        <div className={styles.general_table}>
             {/* Render các nút điều khiển */}
-            <div style={{ display: 'flex' }}>
+            <div className={styles.botton_container}>
                 {/* Chọn Column hiển thị */}
                 <ColumnVisibilityToggle table={table}></ColumnVisibilityToggle>
                 <button onClick={rerender}>
@@ -331,9 +331,6 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
 
             <div className={styles.container}>
                 {/* Tạo Drop Group Area */}
-                
-
-               
                 <DndContext
                     collisionDetection={customCollisionDetection}
                     onDragEnd={handleDragEnd}
@@ -591,7 +588,6 @@ const DropableContainerGroup = ({ children }) => {
         marginBottom: '1px',
         background: isOver ? 'yellow' : 'white',
         width: 'calc(100% - 2px)',
-
         height: '40px', // Set your desired height here
         justifyContent: 'left',
         alignItems: 'center',
