@@ -44,12 +44,12 @@
 
 .table_head th{
   outline: 1px solid lightgray;
-  padding: 8px;
+  padding: 2px;
 }
 
 .table_head td{
   outline: 1px solid lightgray;
-  padding: 8px;
+  /* padding: 8px; */
 }
 
 
