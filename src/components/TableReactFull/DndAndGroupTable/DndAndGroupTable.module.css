@@ -82,6 +82,12 @@
   opacity: 1;
 }
 
+.enter_highlight{
+  background: aqua;
+  opacity: 1;
+
+}
+
 
 /* Custom Scrollbar for tbody */
 .div_table_container::-webkit-scrollbar {

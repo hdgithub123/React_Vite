@@ -117,7 +117,6 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
 
     };
 
-
     // các cell được render
     // các cell được render đang phải để bên trong hàm thì mới kéo thả trơn tru được vì nó cần phải được render lại cell
     const DragAlongCell = ({ cell }) => {
@@ -297,23 +296,6 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
         }
     };
 
-    const handleKeyDown = (e) => {
-        if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            setSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
-        } else if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            setSelectedIndex(prevIndex => Math.min(prevIndex + 1, rows.length - 1));
-        } else if (e.key === 'Enter') {
-            e.preventDefault();
-            if (selectedIndex !== -1) {
-                const selectedRow = rows[selectedIndex];
-                onRowSelect(selectedRow.original);
-            }
-        }
-    };
-
-
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
@@ -354,7 +336,7 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
                     
                     <div className={styles.div_table_container}>
                             {/* Bắt đầu render table */}
-                    <table className={styles.table_container} onKeyDown={handleKeyDown}>
+                    <table className={styles.table_container}>
                         <thead className={styles.table_head}>
                             {table.getHeaderGroups().map(headerGroup => (
                                 <tr className={styles.table_head_tr} key={headerGroup.id}>
