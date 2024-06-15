@@ -150,14 +150,6 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
                                     ? 'white'
                                     : null,
 
-                        // background: cell.getIsGrouped()
-                        //     ? '#0aff0082'
-                        //     : cell.getIsAggregated()
-                        //         ? '#ffa50078'
-                        //         : cell.getIsPlaceholder()
-                        //             ? '#ff000042'
-                        //             : 'white',
-
                         fontWeight: cell.getIsGrouped()
                             ? 'bold'
                             : cell.getIsAggregated()
