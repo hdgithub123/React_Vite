@@ -4,18 +4,16 @@
   flex-direction: column;
 }
 
-
 .Dropable_Container_Group {
   width: 100%;
 }
-
 
 .div_table_container {
   width: 100%;
   max-width: 100%;
   overflow-y: auto;
   overflow-x: auto;
-  height: 400px;
+  height: 100%;
   background-color: white;
 }
 
@@ -31,29 +29,16 @@
 }
 
 .table_head tr{
-  /* border-bottom: 1px solid lightgray; */
-  /* border-right: 1px solid lightgray; */
   width: 100%;
-  /* border: 1px solid lightgray;
-  
-  padding: 0; */
-  /* padding: 2px 4px; */
   box-sizing: border-box;
 }
 
-
 .table_head th{
-  /* border-bottom: 1px solid lightgray;
-  border-right: 1px solid lightgray; */
-  /* border: 1px solid lightgray; */
   outline: 1px solid lightgray;
   padding: 8px;
 }
 
 .table_head td{
-  /* border-bottom: 1px solid lightgray;
-  border-right: 1px solid lightgray; */
-  /* border: 1px solid lightgray; */
   outline: 1px solid lightgray;
   padding: 8px;
 }
@@ -66,41 +51,27 @@
 }
 
 
-
-
-
 .body_container_tr:hover {
   background-color: aqua;
 }
 
-
+/* căn chỉnh hiện thanh resize */
 .resizer {
   position: absolute;
   top: 0;
   right: -0.1rem;
-  /* căn chỉnh hiện thanh resize */
   height: 100%;
   width: 3px;
-  /* background: rgba(0, 0, 0, 0.5); */
   background: transparent;
   cursor: col-resize;
   user-select: none;
   touch-action: none;
 }
 
-.resizer.ltr {
-  right: 0;
-}
-
-.resizer.rtl {
-  left: 0.1;
-}
-
 .resizer.isResizing {
   background: rgb(160, 160, 204);
   opacity: 1;
 }
-
 
 
 /* Custom Scrollbar for tbody */
