@@ -67,7 +67,7 @@ import {
 
 import { CSS } from '@dnd-kit/utilities';
 
-import {SumFooter, AverageFooter, CountFooter} from './components/orthers/FooterColumn'
+import { SumFooter, AverageFooter, CountFooter } from './components/orthers/FooterColumn'
 // const makeData = [
 //     { firstName: 'Alice', lastName: 'Smith', age: 28, visits: 120, progress: 75, status: 'relationship' },
 //     { firstName: 'Alice', lastName: 'Johnson', age: 35, visits: 80, progress: 60, status: 'single' },
@@ -111,8 +111,8 @@ const makeData = [
     { firstName: 'Noah', lastName: 'Thompson', age: 34, visits: "2025-06-01", progress: 85, status: 'complicated' },
     { firstName: 'William', lastName: 'White', age: 43, visits: "2025-07-01", progress: 90, status: 'relationship' },
     { firstName: 'Sophia', lastName: 'Harris', age: 47, visits: "2025-08-01", progress: 70, status: 'single' },
-  ];
-  
+];
+
 
 // const columns = 
 //  [
@@ -205,7 +205,7 @@ const columns = [
                 accessorKey: 'age',
                 id: 'age',
                 header: () => 'Age',
-                footer: (info) =>`Sum: ${SumFooter(info.column, info.table)}`,
+                footer: (info) => `Sum: ${SumFooter(info.column, info.table)}`,
                 filterType: 'number',
                 aggregatedCell: ({ getValue }) =>
                     Math.round(getValue<number>() * 100) / 100,
@@ -234,7 +234,7 @@ const columns = [
                         id: 'progress',
                         header: 'Profile Progress',
                         filterType: 'number',
-                        footer: (info) =>`Average: ${AverageFooter(info.column, info.table)}`,
+                        footer: (info) => `Average: ${AverageFooter(info.column, info.table)}`,
                         cell: ({ getValue }) =>
                             Math.round(getValue<number>() * 100) / 100 + '%',
                         aggregationFn: 'mean',
@@ -324,34 +324,34 @@ const columns = [
 import DndAndGroupTable from './DndAndGroupTable';
 import DndAndGroupTableWithCheckbox from './DndAndGroupTableWithCheckbox';
 
-function DndAndGroupTableEX(){
+function DndAndGroupTableEX() {
     const [selectedData, setSelectedData] = useState(null); // State to store the selected data from the table
 
-  // Event handler when selecting a row in the table
-  const handleRowSelect = (rowData) => {
-    setSelectedData(rowData); // Update state with the selected row data
-  };
-        return(
-            <div>
-                <div style={{height: '500px',}}>
+    // Event handler when selecting a row in the table
+    const handleRowSelect = (rowData) => {
+        setSelectedData(rowData); // Update state with the selected row data
+    };
+    return (
+        <div>
+            <div style={{ height: '500px', }}>
                 {/* <DndAndGroupTable data={makeData} columns ={columns} onRowSelect={handleRowSelect}></DndAndGroupTable> */}
-                <DndAndGroupTableWithCheckbox data={makeData} columns ={columns} onRowSelect={handleRowSelect}></DndAndGroupTableWithCheckbox>
-                </div>
-           
-                {selectedData && (
-                <div style={{display: 'flex',}}>
-                <h2>Selected Data</h2>
-                <p>ID: {selectedData.firstName}</p>
-                <p>Name: {selectedData.lastName}</p>
-                <p>Age: {selectedData.age}</p>
-                <p>visits: {selectedData.visits}</p>
-                <p>progress: {selectedData.progress}</p>
-                <p>status: {selectedData.status}</p>
-                </div>
-      )}
+                <DndAndGroupTableWithCheckbox data={makeData} columns={columns} onRowSelect={handleRowSelect}></DndAndGroupTableWithCheckbox>
             </div>
-            
-        )
+
+            {selectedData && (
+                <div style={{ display: 'flex', }}>
+                    <h2>Selected Data</h2>
+                    <p>ID: {selectedData.firstName}</p>
+                    <p>Name: {selectedData.lastName}</p>
+                    <p>Age: {selectedData.age}</p>
+                    <p>visits: {selectedData.visits}</p>
+                    <p>progress: {selectedData.progress}</p>
+                    <p>status: {selectedData.status}</p>
+                </div>
+            )}
+        </div>
+
+    )
 
 }
 

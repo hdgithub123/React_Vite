@@ -79,6 +79,39 @@ import Filter from './components/filters/Filter';
 
 
 function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect }) {
+   
+
+    const columnCheckbox = {
+        accessorKey: 'select',
+        id: 'select',
+        filterType: 'checkbox',
+        enableSorting: false,
+        header: ({ table }) => (
+            <IndeterminateCheckbox
+              {...{
+                checked: table.getIsAllRowsSelected(),
+                indeterminate: table.getIsSomeRowsSelected(),
+                onChange: table.getToggleAllRowsSelectedHandler(),
+              }}
+            />
+          ),
+        cell: ({ row }) => (
+            <div className="px-1">
+                <IndeterminateCheckbox
+                    {...{
+                        checked: row.getIsSelected(),
+                        disabled: !row.getCanSelect(),
+                        indeterminate: row.getIsSomeSelected(),
+                        onChange: row.getToggleSelectedHandler(),
+                    }}
+                />
+            </div>
+        ),
+    }
+
+
+    const columnsTemp = [columnCheckbox, ...columns];
+
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
@@ -87,7 +120,7 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect }) {
 
     const table = useReactTable({
         data,
-        columns,
+        columns: columnsTemp,
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
@@ -114,6 +147,10 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect }) {
         console.log("table:", table);
         console.log("grouping:", grouping);
         console.log("table grouping:", table.getHeaderGroups());
+        console.log("tbl:", table.getRowModel().rowsById[4].getVisibleCells);
+        table.getRowModel().rowsById[4].getVisibleCells
+        hideRowRowModel(table,1);
+        table.getRowModel().rows[4]
         table.setExpanded(true) // Mở tất cả các cột
         //table.setExpanded({}) // đóng tất cả các cột
 
@@ -291,23 +328,25 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect }) {
     };
 
 
-    const handleHeaderCheckboxChange = (status) => {
-        console.log("status", status)
-        switch (status) {
-            case 'check':
-              console.log('Checkbox is checked');
-              break;
-            case 'uncheck':
-              console.log('Checkbox is unchecked');
-              break;
-            case 'indeterminate':
-              console.log('Checkbox is indeterminate');
-              break;
-            default:
-              console.log('Unknown status');
-          }
-      };
 
+    const hideRowRowModel = (table, rowIndex) => {
+        // Get the current row model
+        const rowModel = table.getRowModel();
+    
+        // Check if the row index is within bounds
+        if (rowIndex >= 0 && rowIndex < rowModel.rows.length) {
+            // Hide the row by setting its hidden property
+            rowModel.rows[rowIndex].hidden = true;
+    
+            // Alternatively, if your table model uses a different method to hide rows, 
+            // you can use that method here.
+        } else {
+            console.error(`Row index ${rowIndex} is out of bounds.`);
+        }
+    
+        // Refresh or re-render the table if necessary
+        //table.update(); // Replace this with the actual method your table uses to refresh
+    };
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
@@ -350,27 +389,8 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect }) {
                         {/* Bắt đầu render table */}
                         <table className={styles.table_container}>
                             <thead className={styles.table_head}>
-                                {table.getHeaderGroups().map((headerGroup, rowIndex) => (
+                                {table.getHeaderGroups().map(headerGroup => (
                                     <tr className={styles.table_head_tr} key={headerGroup.id}>
-
-                                        {rowIndex === leafHeaderGroupIndex
-                                            ?
-                                            (<th className={styles.table_head_tr_th_checkbox}>
-                                                <IndeterminateCheckbox
-                                                    {...{
-                                                        checked: table.getIsAllRowsSelected(),
-                                                        indeterminate: table.getIsSomeRowsSelected(),
-                                                        onChange: table.getToggleAllRowsSelectedHandler(),
-                                                    }}
-                                                />
-                                                <TriStateCheckbox onChange={handleHeaderCheckboxChange}></TriStateCheckbox>
-                                            </th>) : (
-                                                <th></th>
-                                            )
-                                        }
-
-
-
                                         <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
                                             {headerGroup.headers.map((header) =>
                                                 isLeafColumn(header) ? (
@@ -386,22 +406,7 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect }) {
                             {table.getRowModel().rows.length > 0 ? (
                                 <tbody className={styles.body_container}>
                                     {table.getRowModel().rows.map(row => (
-
-
-
                                         <tr onDoubleClick={() => handleRowClick(row.original)} className={styles.body_container_tr} key={row.id}>
-                                            <td>
-                                                <IndeterminateCheckbox
-                                                    {...{
-                                                        checked: row.getIsSelected(),
-                                                        disabled: !row.getCanSelect(),
-                                                        indeterminate: row.getIsSomeSelected(),
-                                                        onChange: row.getToggleSelectedHandler(),
-                                                    }}
-                                                />
-                                            </td>
-
-
                                             {row.getVisibleCells().map(cell => (
                                                 <DragAlongCell key={cell.id} cell={cell} />
                                             ))}
@@ -411,7 +416,6 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect }) {
                             ) : (
                                 <tbody>
                                     <tr className={styles.body_container}>
-                                        <td></td>
                                         <td colSpan={countLeafColumns(columns)} style={{ textAlign: 'center' }}>
                                             No data available
                                         </td>
@@ -420,7 +424,6 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect }) {
                             )}
                             {shouldRenderFooter && <tfoot className={styles.foot_container}>
                                 <tr>
-                                    <td className={styles.footer_checkbox}></td>
                                     {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
                                         <DraggableTablefooter key={header.id} header={header} />
                                     ))}
@@ -463,67 +466,62 @@ const DraggableTableHeader = ({ header }) => {
 
     };
     return (
-        <>
-
-            <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
-                {header.isPlaceholder ? null : (
-                    <>
-                        <div  {...attributes} {...listeners}>
-                            <div
-                                className={
-                                    header.column.getCanSort()
-                                        ? 'cursor-pointer select-none'
-                                        : ''
-                                }
-                                onClick={header.column.getToggleSortingHandler()}
-                                title={
-                                    header.column.getCanSort()
-                                        ? header.column.getNextSortingOrder() === 'asc'
-                                            ? 'Sort ascending'
-                                            : header.column.getNextSortingOrder() === 'desc'
-                                                ? 'Sort descending'
-                                                : 'Clear sort'
-                                        : undefined
-                                }
-                            >
-                                {header.column.getIsGrouped()
-                                    ? `!`
-                                    : ``}
-                                {flexRender(
-                                    header.column.columnDef.header,
-                                    header.getContext()
-                                )}
-                                {{
-                                    asc: ' 🠹',
-                                    desc: ' 🠻',
-                                }[header.column.getIsSorted() as string] ?? null}
-                            </div>
-                        </div>
-                        {/* Filter colum*/}
-
-                        {header.column.getCanFilter() ? (
-                            <div>
-                                <Filter column={header.column}></Filter>
-                            </div>
-                        ) : null}
-
-                        {/* Colum Resize Begin*/}
+        <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
+            {header.isPlaceholder ? null : (
+                <>
+                    <div  {...attributes} {...listeners}>
                         <div
-                            {...{
-                                onMouseDown: header.getResizeHandler(),
-                                onTouchStart: header.getResizeHandler(),
-                                className: `${styles.resizer} 
+                            className={
+                                header.column.getCanSort()
+                                    ? 'cursor-pointer select-none'
+                                    : ''
+                            }
+                            onClick={header.column.getToggleSortingHandler()}
+                            title={
+                                header.column.getCanSort()
+                                    ? header.column.getNextSortingOrder() === 'asc'
+                                        ? 'Sort ascending'
+                                        : header.column.getNextSortingOrder() === 'desc'
+                                            ? 'Sort descending'
+                                            : 'Clear sort'
+                                    : undefined
+                            }
+                        >
+                            {header.column.getIsGrouped()
+                                ? `!`
+                                : ``}
+                            {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                            )}
+                            {{
+                                asc: ' 🠹',
+                                desc: ' 🠻',
+                            }[header.column.getIsSorted() as string] ?? null}
+                        </div>
+                    </div>
+                    {/* Filter colum*/}
+
+                    {header.column.getCanFilter() ? (
+                        <div>
+                            <Filter column={header.column}></Filter>
+                        </div>
+                    ) : null}
+
+                    {/* Colum Resize Begin*/}
+                    <div
+                        {...{
+                            onMouseDown: header.getResizeHandler(),
+                            onTouchStart: header.getResizeHandler(),
+                            className: `${styles.resizer} 
                                     } ${header.column.getIsResizing() ? styles.isResizing : ''
-                                    }`,
-                            }}
-                        />
-                        {/* Colum Resize end*/}
-                    </>
-                )}
-            </th>
-        </>
-
-
+                                }`,
+                        }}
+                    />
+                    {/* Colum Resize end*/}
+                </>
+            )}
+        </th>
     );
 }
 
@@ -741,13 +739,13 @@ function IndeterminateCheckbox({
     className = '',
     ...rest
 }: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
-    const ref = React.useRef<HTMLInputElement>(null!);
+    const ref = React.useRef<HTMLInputElement>(null!)
 
     React.useEffect(() => {
         if (typeof indeterminate === 'boolean') {
-            ref.current.indeterminate = !rest.checked && indeterminate;
+            ref.current.indeterminate = !rest.checked && indeterminate
         }
-    }, [ref, indeterminate]);
+    }, [ref, indeterminate])
 
     return (
         <input
@@ -756,48 +754,7 @@ function IndeterminateCheckbox({
             className={className + ' cursor-pointer'}
             {...rest}
         />
-    );
+    )
 }
 
 
-function TriStateCheckbox({ onChange }) {
-    const [state, setState] = useState('unchecked'); // 'unchecked', 'checked', or 'indeterminate'
-    const inputRef = useRef(null);
-  
-    useEffect(() => {
-      const checkbox = inputRef.current;
-      if (checkbox) {
-        checkbox.indeterminate = state === 'indeterminate';
-      }
-    }, [state]);
-  
-    useEffect(() => {
-      onChange(state);
-    }, [state, onChange]);
-  
-    const handleClick = () => {
-      setState(prevState => {
-        switch (prevState) {
-          case 'unchecked':
-            return 'checked';
-          case 'checked':
-            return 'indeterminate';
-          case 'indeterminate':
-            return 'unchecked';
-          default:
-            return prevState;
-        }
-      });
-    };
-  
-    return (
-      <input
-        type="checkbox"
-        ref={inputRef}
-        checked={state === 'checked'}
-        onClick={handleClick}
-        readOnly
-      />
-    );
-  }
-  
