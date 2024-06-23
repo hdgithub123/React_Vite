@@ -326,16 +326,21 @@ import DndAndGroupTableWithCheckbox from './DndAndGroupTableWithCheckbox';
 
 function DndAndGroupTableEX() {
     const [selectedData, setSelectedData] = useState(null); // State to store the selected data from the table
-
+    const [selectedMoreData, setSelectedMoreData] = useState(null); // State to store the selected data from the table
     // Event handler when selecting a row in the table
     const handleRowSelect = (rowData) => {
         setSelectedData(rowData); // Update state with the selected row data
     };
+
+    const handleRowsSelect = (rowData) => {
+        setSelectedMoreData(rowData); // Update state with the selected row data
+    };
+    console.log("selectedMoreData",selectedMoreData)
     return (
         <div>
             <div style={{ height: '500px', }}>
                 {/* <DndAndGroupTable data={makeData} columns ={columns} onRowSelect={handleRowSelect}></DndAndGroupTable> */}
-                <DndAndGroupTableWithCheckbox data={makeData} columns={columns} onRowSelect={handleRowSelect}></DndAndGroupTableWithCheckbox>
+                <DndAndGroupTableWithCheckbox data={makeData} columns={columns} onRowSelect={handleRowSelect} onRowsSelect={handleRowsSelect}></DndAndGroupTableWithCheckbox>
             </div>
 
             {selectedData && (

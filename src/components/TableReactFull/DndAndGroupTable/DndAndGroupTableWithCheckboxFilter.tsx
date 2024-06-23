@@ -78,7 +78,7 @@ import arrow_right from './source/images/arrows/pointer-right-svgrepo-com.svg';
 import Filter from './components/filters/Filter';
 
 
-function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect ,  onRowsSelect}) {
+function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect }) {
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
@@ -277,15 +277,7 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect ,  onRowsSele
     };
 
 
-    useEffect(() => {
-        const selectedRowIndices = Object.keys(table.getState().rowSelection).map(Number);
-        const selectedData = selectedRowIndices.map(index => data[index]);
-        if (onRowsSelect) {
-          onRowsSelect(selectedData);
-        }
-      }, [table.getState().rowSelection]);
-    
-      
+
     // sử dụng để expanded all
     useEffect(() => {
         table.setExpanded(true);
@@ -296,6 +288,26 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect ,  onRowsSele
             onRowSelect(rowData);
         }
     };
+
+    const [checkFilter, setCheckFilter] = useState("");
+
+    const handleHeaderCheckboxChange = (status) => {
+        console.log("status", status)
+        switch (status) {
+            case 'checked':
+                setCheckFilter('checked')
+              console.log('checkFilter',checkFilter);
+              break;
+            case 'unchecked':
+              console.log('Checkbox is unchecked');
+              break;
+            case 'indeterminate':
+              console.log('Checkbox is indeterminate');
+              break;
+            default:
+              console.log('Unknown status');
+          }
+      };
 
     // bắt đầu render chính
     return (
@@ -352,6 +364,7 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect ,  onRowsSele
                                                         onChange: table.getToggleAllRowsSelectedHandler(),
                                                     }}
                                                 />
+                                                <TriStateCheckbox onChange={handleHeaderCheckboxChange}></TriStateCheckbox>
                                             </th>) : (
                                                 <th></th>
                                             )
@@ -374,6 +387,9 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect ,  onRowsSele
                             {table.getRowModel().rows.length > 0 ? (
                                 <tbody className={styles.body_container}>
                                     {table.getRowModel().rows.map(row => (
+
+
+
                                         <tr onDoubleClick={() => handleRowClick(row.original)} className={styles.body_container_tr} key={row.id}>
                                             <td>
                                                 <IndeterminateCheckbox
@@ -745,4 +761,44 @@ function IndeterminateCheckbox({
 }
 
 
+function TriStateCheckbox({ onChange }) {
+    const [state, setState] = useState('unchecked'); // 'unchecked', 'checked', or 'indeterminate'
+    const inputRef = useRef(null);
+  
+    useEffect(() => {
+      const checkbox = inputRef.current;
+      if (checkbox) {
+        checkbox.indeterminate = state === 'indeterminate';
+      }
+    }, [state]);
+  
+    useEffect(() => {
+      onChange(state);
+    }, [state, onChange]);
+  
+    const handleClick = () => {
+      setState(prevState => {
+        switch (prevState) {
+          case 'unchecked':
+            return 'checked';
+          case 'checked':
+            return 'indeterminate';
+          case 'indeterminate':
+            return 'unchecked';
+          default:
+            return prevState;
+        }
+      });
+    };
+  
+    return (
+      <input
+        type="checkbox"
+        ref={inputRef}
+        checked={state === 'checked'}
+        onClick={handleClick}
+        readOnly
+      />
+    );
+  }
   

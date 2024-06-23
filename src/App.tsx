@@ -43,7 +43,7 @@ function App() {
       <p> DndAndGroupTable</p>
       <DndAndGroupTableEX></DndAndGroupTableEX>
 
-      <TableComponent></TableComponent>
+      {/* <TableComponent></TableComponent> */}
      {/* <MutipleContainers></MutipleContainers> */}
       {/* <GeneralTableEX></GeneralTableEX> */}
 

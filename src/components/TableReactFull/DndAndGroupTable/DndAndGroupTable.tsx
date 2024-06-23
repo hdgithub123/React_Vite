@@ -89,6 +89,7 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
         data,
         columns,
         columnResizeMode: 'onChange',
+        
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
