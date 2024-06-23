@@ -659,7 +659,6 @@ const ColumnVisibilityToggle = ({ table }) => {
             {showToggle &&
                 <div ref={modalRef} style={modalStyle}> {/* Thêm ref vào div chứa hộp thoại modal */}
                     <div className="px-1 border-b border-black">
-                        <label>
                             <input
                                 {...{
                                     type: 'checkbox',
@@ -668,12 +667,10 @@ const ColumnVisibilityToggle = ({ table }) => {
                                 }}
                             />{' '}
                             Toggle All
-                        </label>
                     </div>
                     {table.getAllLeafColumns().map(column => {
                         return (
                             <div key={column.id} className="px-1">
-                                <label>
                                     <input
                                         {...{
                                             type: 'checkbox',
@@ -682,7 +679,6 @@ const ColumnVisibilityToggle = ({ table }) => {
                                         }}
                                     />{' '}
                                     {flexRender(column.columnDef.header, {})}
-                                </label>
                             </div>
                         )
                     })}
