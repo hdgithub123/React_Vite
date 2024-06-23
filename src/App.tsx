@@ -23,6 +23,9 @@
 
 import TableComponent from './components/TableReactFull/TableUI/TableComponent';
 import DndAndGroupTableEX from './components/TableReactFull/DndAndGroupTable/DndAndGroupTableEX';
+import DndAndGroupTableWithCheckboxFilter from './components/TableReactFull/DndAndGroupTable/DndAndGroupTableWithCheckboxFilter';
+
+
 
 //import GroupTable from './components/TableReactFull/GroupTable/GroupTable';
 
@@ -41,7 +44,8 @@ function App() {
 
       {/* <DndTableRectFull></DndTableRectFull> */}
       <p> DndAndGroupTable</p>
-      <DndAndGroupTableEX></DndAndGroupTableEX>
+      {/* <DndAndGroupTableEX></DndAndGroupTableEX> */}
+      <DndAndGroupTableWithCheckboxFilter></DndAndGroupTableWithCheckboxFilter>
 
       {/* <TableComponent></TableComponent> */}
      {/* <MutipleContainers></MutipleContainers> */}

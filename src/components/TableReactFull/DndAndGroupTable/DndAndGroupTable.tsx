@@ -79,6 +79,7 @@ import Filter from './components/filters/Filter';
 
 
 function DndAndGroupTable({ data, columns, onRowSelect }) {
+    const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
@@ -86,7 +87,7 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
     const [grouping, setGrouping] = useState<GroupingState>([])
 
     const table = useReactTable({
-        data,
+        data: dataDef,
         columns,
         columnResizeMode: 'onChange',
         
@@ -104,6 +105,19 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
         manualExpanding: false, // set bàng false thì có thể sử dụng cả useEffect để expanded
         autoResetExpanded: false, // set bang false thì tất cả các row được expanding bằng true thì không sử dụng cả useEffect
         // getPaginationRowModel: getPaginationRowModel(),
+        meta: {
+            updateData: (rowIndex, columnId, value) =>
+            setDataDef((prev) =>
+                prev.map((row, index) =>
+                  index === rowIndex
+                    ? {
+                        ...prev[rowIndex],
+                        [columnId]: value,
+                      }
+                    : row
+                )
+              ),
+          },
 
     });
 

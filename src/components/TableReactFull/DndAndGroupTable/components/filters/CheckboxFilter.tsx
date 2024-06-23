@@ -3,19 +3,12 @@ import { useState, useRef, useEffect } from 'react';
 function CheckboxFilter({ column }) {
 
     const handleHeaderCheckboxChange = (status) => {
-        switch (status) {
-            case 'check':
-                column.columnDef.filterFn = CheckFn;
-              break;
-            case 'uncheck':
-                column.columnDef.filterFn = UnCheckFn;
-              break;
-            case 'indeterminate':
-                column.columnDef.filterFn = indeterminateFn;
-              break;
-            default:
-              console.log('Unknown Fn');
-          }
+ 
+            column.setFilterValue(status);
+            column.columnDef.filterFn = CheckFn;
+
+        
+        
       };
 
     return (
@@ -30,8 +23,9 @@ function CheckboxFilter({ column }) {
 export default CheckboxFilter;
 
 
+
 function TriStateCheckbox({ onChange }) {
-    const [state, setState] = useState('unchecked'); // 'unchecked', 'checked', or 'indeterminate'
+    const [state, setState] = useState('indeterminate'); // 'unchecked', 'checked', or 'indeterminate'
     const inputRef = useRef(null);
 
     useEffect(() => {
@@ -42,8 +36,22 @@ function TriStateCheckbox({ onChange }) {
     }, [state]);
 
     useEffect(() => {
-        onChange(state);
-    }, [state, onChange]);
+        let value;
+        switch (state) {
+            case 'checked':
+                value = true;
+                break;
+            case 'unchecked':
+                value = false;
+                break;
+            case 'indeterminate':
+                value = '';
+                break;
+            default:
+                value = true;
+        }
+        onChange(value);
+    }, [state]);
 
     const handleClick = () => {
         setState(prevState => {
@@ -74,29 +82,21 @@ function TriStateCheckbox({ onChange }) {
 
 const CheckFn = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
-    const cellValueStr = String(cellValue).toLowerCase();
-    const valueStr = String(value).toLowerCase();
 
-    if (valueStr === "check") {
-        return cellValueStr === "check";
-    } else {
-        return false;
+    switch (value) {
+        case true:
+            if (cellValue === value) {
+                return true;
+            }
+            return false;
+            break;
+        case false:
+            if (cellValue === value) {
+                return true;
+            }
+            return false;
+            break;
+        default:
+            return true;
     }
-};
-
-
-const UnCheckFn = (row, columnId, value) => {
-    const cellValue = row.getValue(columnId);
-    const cellValueStr = String(cellValue).toLowerCase();
-    const valueStr = String(value).toLowerCase();
-
-    if (valueStr === "uncheck") {
-        return cellValueStr === "uncheck";
-    } else {
-        return false;
-    }
-};
-
-const indeterminateFn = (row, columnId, value) => {
-    return true;
 };
