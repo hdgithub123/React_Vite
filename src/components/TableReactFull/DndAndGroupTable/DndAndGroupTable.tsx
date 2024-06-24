@@ -130,6 +130,7 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
         console.log("grouping:", grouping);
         console.log("table grouping:", table.getHeaderGroups());
         table.setExpanded(true) // Mở tất cả các cột
+        console.log("table.getState().rowSelection",table.getState().rowSelection)
         //table.setExpanded({}) // đóng tất cả các cột
 
     };

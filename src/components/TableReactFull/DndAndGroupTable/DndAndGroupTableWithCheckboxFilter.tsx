@@ -432,6 +432,7 @@ const EditableCell = ({ getValue, row, column, table }) => {
     const handleSelectChange = (value) => {
         if (value === true || value === false){
             updateAllRowsSelect(table,value)
+            table.toggleAllRowsSelected()
         }
     };
   
