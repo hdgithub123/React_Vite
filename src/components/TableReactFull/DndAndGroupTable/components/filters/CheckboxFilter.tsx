@@ -12,7 +12,7 @@ function CheckboxFilter({ column }) {
       };
 
     return (
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+        <div title="Filter Select" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <TriStateCheckbox onChange={handleHeaderCheckboxChange}></TriStateCheckbox>
         </div>
 
