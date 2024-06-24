@@ -436,7 +436,7 @@ const EditableCell = ({ getValue, row, column, table }) => {
     };
   
     return (
-    <div title="Select/ Unselect">
+    <div title="Select All/ Unselect All">
         <TriStateCheckbox
         onChange={handleSelectChange}
       />
