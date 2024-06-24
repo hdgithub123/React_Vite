@@ -78,7 +78,7 @@ import arrow_right from './source/images/arrows/pointer-right-svgrepo-com.svg';
 import Filter from './components/filters/Filter';
 
 
-function DndAndGroupTable({ data, columns, onRowSelect }) {
+function DndAndGroupTable({ data, columns, onRowSelect, onRowsSelect }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -305,6 +305,14 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
             onRowSelect(rowData);
         }
     };
+
+    useEffect(() => {
+        const selectedRowIndices = Object.keys(table.getState().rowSelection).map(Number);
+        const selectedData = selectedRowIndices.map(index => data[index]);
+        if (onRowsSelect) {
+          onRowsSelect(selectedData);
+        }
+      }, [table.getState().rowSelection]);
 
     // bắt đầu render chính
     return (

@@ -203,7 +203,7 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect ,  onRowsSele
 
     // dau vao là columID render ra header
     const RenderHeaderByID = ({ columnID, columns }) => {
-        const findHeader = (columns: ColumnDef<Person>[], id: string): ColumnDef<Person> | undefined => {
+        const findHeader = (columns, id) => {
             for (const column of columns) {
                 if (column.id === id) {
                     return column;

@@ -67,28 +67,9 @@ import {
 
 import { CSS } from '@dnd-kit/utilities';
 
+import EditableCell from './components/cells/EditableCell'
 import { SumFooter, AverageFooter, CountFooter } from './components/orthers/FooterColumn'
-// const makeData = [
-//     { firstName: 'Alice', lastName: 'Smith', age: 28, visits: 120, progress: 75, status: 'relationship' },
-//     { firstName: 'Alice', lastName: 'Johnson', age: 35, visits: 80, progress: 60, status: 'single' },
-//     { firstName: 'Alice', lastName: 'Smith', age: 42, visits: 50, progress: 90, status: 'complicated' },
-//     { firstName: 'David', lastName: 'Lee', age: 22, visits: 200, progress: 40, status: 'relationship' },
-//     { firstName: 'Eva', lastName: 'Garcia', age: 30, visits: 150, progress: 70, status: 'single' },
-//     { firstName: 'Frank', lastName: 'Wang', age: 50, visits: 30, progress: 85, status: 'relationship' },
-//     { firstName: 'Grace', lastName: 'Miller', age: 25, visits: 100, progress: 55, status: 'single' },
-//     { firstName: 'Henry', lastName: 'Clark', age: 38, visits: 70, progress: 78, status: 'complicated' },
-//     { firstName: 'Isabella', lastName: 'Martinez', age: 27, visits: 180, progress: 65, status: 'relationship' },
-//     { firstName: 'Jack', lastName: 'Taylor', age: 33, visits: 90, progress: 50, status: 'single' },
-//     { firstName: 'John', lastName: 'Doe', age: 26, visits: 130, progress: 80, status: 'relationship' },
-//     { firstName: 'Jane', lastName: 'Doe', age: 29, visits: 75, progress: 55, status: 'complicated' },
-//     { firstName: 'Sarah', lastName: 'Connor', age: 32, visits: 105, progress: 60, status: 'single' },
-//     { firstName: 'Tom', lastName: 'Hanks', age: 45, visits: 95, progress: 70, status: 'relationship' },
-//     { firstName: 'Emma', lastName: 'Stone', age: 27, visits: 150, progress: 85, status: 'single' },
-//     { firstName: 'Olivia', lastName: 'Brown', age: 31, visits: 160, progress: 75, status: 'relationship' },
-//     { firstName: 'Liam', lastName: 'Wilson', age: 24, visits: 170, progress: 90, status: 'complicated' },
-//     { firstName: 'Noah', lastName: 'Moore', age: 40, visits: 60, progress: 50, status: 'single' },
-//     { firstName: 'William', lastName: 'Taylor', age: 36, visits: 110, progress: 65, status: 'relationship' },
-// ]
+
 
 const makeData = [
     { firstName: 'Alice', lastName: 'Smith', age: 28, visits: "2024-01-01", progress: 75, status: 'relationship' },
@@ -182,7 +163,7 @@ const columns = [
                 id: 'firstName',
                 filterType: 'text',
                 footer: info => `Count: ${CountFooter(info.table)}`,
-                cell: (info) => info.getValue(),
+                cell: EditableCell,
                 /**
                  * override the value used for row grouping
                  * (otherwise, defaults to the value derived from accessorKey / accessorFn)
@@ -323,6 +304,7 @@ const columns = [
 
 import DndAndGroupTable from './DndAndGroupTable';
 import DndAndGroupTableWithCheckbox from './DndAndGroupTableWithCheckbox';
+import DndAndGroupTableWithCheckboxFilter from './DndAndGroupTableWithCheckboxFilter';
 
 function DndAndGroupTableEX() {
     const [selectedData, setSelectedData] = useState(null); // State to store the selected data from the table
@@ -340,7 +322,8 @@ function DndAndGroupTableEX() {
         <div>
             <div style={{ height: '500px', }}>
                 {/* <DndAndGroupTable data={makeData} columns ={columns} onRowSelect={handleRowSelect}></DndAndGroupTable> */}
-                <DndAndGroupTableWithCheckbox data={makeData} columns={columns} onRowSelect={handleRowSelect} onRowsSelect={handleRowsSelect}></DndAndGroupTableWithCheckbox>
+                {/* <DndAndGroupTableWithCheckbox data={makeData} columns={columns} onRowSelect={handleRowSelect} onRowsSelect={handleRowsSelect}></DndAndGroupTableWithCheckbox> */}
+                <DndAndGroupTableWithCheckboxFilter data={makeData} columns={columns} ></DndAndGroupTableWithCheckboxFilter>
             </div>
 
             {selectedData && (
