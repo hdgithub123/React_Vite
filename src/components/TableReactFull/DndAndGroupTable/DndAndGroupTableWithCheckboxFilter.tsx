@@ -351,7 +351,6 @@ const EditableCell = ({ getValue, row, column, table }) => {
         const newValue = e.target.checked;
         setValue(newValue);
         table.options.meta?.updateData(row.index, column.id, newValue);
-    //   console.log("row.getIsSelected()",row.getIsSelected())
     };
   
     // If the initialValue is changed externally, sync it up with our state
