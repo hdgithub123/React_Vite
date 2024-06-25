@@ -317,13 +317,13 @@ function DndAndGroupTableEX() {
     const handleRowsSelect = (rowData) => {
         setSelectedMoreData(rowData); // Update state with the selected row data
     };
-    console.log("selectedMoreData",selectedMoreData)
+    // console.log("selectedMoreData",selectedMoreData)
     return (
         <div>
             <div style={{ height: '500px', }}>
                 {/* <DndAndGroupTable data={makeData} columns ={columns} onRowSelect={handleRowSelect}></DndAndGroupTable> */}
-                {/* <DndAndGroupTableWithCheckbox data={makeData} columns={columns} onRowSelect={handleRowSelect} onRowsSelect={handleRowsSelect}></DndAndGroupTableWithCheckbox> */}
-                <DndAndGroupTableWithCheckboxFilter data={makeData} columns={columns} ></DndAndGroupTableWithCheckboxFilter>
+                <DndAndGroupTableWithCheckbox data={makeData} columns={columns} onRowSelect={handleRowSelect} onRowsSelect={handleRowsSelect}></DndAndGroupTableWithCheckbox>
+                {/* <DndAndGroupTableWithCheckboxFilter data={makeData} columns={columns} ></DndAndGroupTableWithCheckboxFilter> */}
             </div>
 
             {selectedData && (

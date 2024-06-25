@@ -6,6 +6,10 @@ import {
 
 
 
+    ColumnFiltersState,
+    FilterFn,
+    SortingFn,
+
     GroupingState,
     getPaginationRowModel,
     getGroupedRowModel,
@@ -78,12 +82,34 @@ import arrow_right from './source/images/arrows/pointer-right-svgrepo-com.svg';
 import Filter from './components/filters/Filter';
 
 
+
 function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect ,  onRowsSelect}) {
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
     );
     const [grouping, setGrouping] = useState<GroupingState>([])
+
+const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
+    // Get the selected row IDs from the table state
+      const selectedRowIds = table.getState().rowSelection;
+    // If filterValue is true, return selected rows
+    if (filterValue === 'checked') {
+        if(selectedRowIds[rows.id] === true){
+            return true;
+        } else {
+            return false;
+        }
+    } else if (filterValue === 'unchecked'){
+        if(selectedRowIds[rows.id] !== true){
+            return true;
+        }
+        return false;
+    } else {
+        return true;
+    }
+
+  };
 
     const table = useReactTable({
         data,
@@ -92,6 +118,9 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect ,  onRowsSele
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
+        filterFns: {
+            selectedFilter, // Register the custom filter function
+        },
         state: { columnOrder, columnFilters, grouping, },
         onColumnFiltersChange: setColumnFilters,
         onColumnOrderChange: setColumnOrder,
@@ -100,11 +129,15 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect ,  onRowsSele
         getGroupedRowModel: getGroupedRowModel(),
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues(),
+        globalFilterFn: 'selectedFilter',
         manualExpanding: false, // set bàng false thì có thể sử dụng cả useEffect để expanded
         autoResetExpanded: false, // set bang false thì tất cả các row được expanding bằng true thì không sử dụng cả useEffect
         // getPaginationRowModel: getPaginationRowModel(),
 
     });
+
+  
+
 
     const rerender = () => {
         console.log("columnOrder:", columnOrder)
@@ -297,6 +330,16 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect ,  onRowsSele
         }
     };
 
+    const handleTriStateCheckboxSelectChange = (value) => {
+        if (value === true){
+            table.setGlobalFilter('checked')
+        } else if (value === false){
+            table.setGlobalFilter('unchecked')
+        } else {
+            table.setGlobalFilter('none')
+        }
+
+    };
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
@@ -352,6 +395,7 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect ,  onRowsSele
                                                         onChange: table.getToggleAllRowsSelectedHandler(),
                                                     }}
                                                 />
+                                                <TriStateCheckbox onChange={handleTriStateCheckboxSelectChange}></TriStateCheckbox>
                                             </th>) : (
                                                 <th></th>
                                             )
@@ -745,4 +789,60 @@ function IndeterminateCheckbox({
 }
 
 
+
   
+
+  function TriStateCheckbox({ onChange }) {
+    const [state, setState] = useState('indeterminate'); // 'unchecked', 'checked', or 'indeterminate'
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        const checkbox = inputRef.current;
+        if (checkbox) {
+            checkbox.indeterminate = state === 'indeterminate';
+        }
+    }, [state]);
+
+    useEffect(() => {
+        let value;
+        switch (state) {
+            case 'checked':
+                value = true;
+                break;
+            case 'unchecked':
+                value = false;
+                break;
+            case 'indeterminate':
+                value = '';
+                break;
+            default:
+                value = true;
+        }
+        onChange(value);
+    }, [state]);
+
+    const handleClick = () => {
+        setState(prevState => {
+            switch (prevState) {
+                case 'unchecked':
+                    return 'checked';
+                case 'checked':
+                    return 'indeterminate';
+                case 'indeterminate':
+                    return 'unchecked';
+                default:
+                    return prevState;
+            }
+        });
+    };
+
+    return (
+        <input
+            type="checkbox"
+            ref={inputRef}
+            checked={state === 'checked'}
+            onClick={handleClick}
+            readOnly
+        />
+    );
+}
