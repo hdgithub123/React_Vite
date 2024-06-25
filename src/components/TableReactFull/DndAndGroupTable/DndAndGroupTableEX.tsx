@@ -321,7 +321,7 @@ function DndAndGroupTableEX() {
     return (
         <div>
             <div style={{ height: '500px', }}>
-                {/* <DndAndGroupTable data={makeData} columns ={columns} onRowSelect={handleRowSelect}></DndAndGroupTable> */}
+                {/* <DndAndGroupTable data={makeData} columns ={columns}></DndAndGroupTable> */}
                 <DndAndGroupTableWithCheckbox data={makeData} columns={columns} onRowSelect={handleRowSelect} onRowsSelect={handleRowsSelect}></DndAndGroupTableWithCheckbox>
                 {/* <DndAndGroupTableWithCheckboxFilter data={makeData} columns={columns} ></DndAndGroupTableWithCheckboxFilter> */}
             </div>
