@@ -338,7 +338,6 @@ const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
         } else {
             table.setGlobalFilter('none')
         }
-
     };
     // bắt đầu render chính
     return (
