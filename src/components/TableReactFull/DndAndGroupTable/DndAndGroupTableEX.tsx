@@ -92,6 +92,27 @@ const makeData = [
     { firstName: 'Noah', lastName: 'Thompson', age: 34, visits: "2025-06-01", progress: 85, status: 'complicated' },
     { firstName: 'William', lastName: 'White', age: 43, visits: "2025-07-01", progress: 90, status: 'relationship' },
     { firstName: 'Sophia', lastName: 'Harris', age: 47, visits: "2025-08-01", progress: 70, status: 'single' },
+    { firstName: 'Alice', lastName: 'Smith', age: 28, visits: "2024-01-01", progress: 75, status: 'relationship' },
+    { firstName: 'Bob', lastName: 'Johnson', age: 32, visits: "2024-02-01", progress: 80, status: 'single' },
+    { firstName: 'Charlie', lastName: 'Williams', age: 45, visits: "2024-03-01", progress: 85, status: 'complicated' },
+    { firstName: 'David', lastName: 'Brown', age: 23, visits: "2024-04-01", progress: 90, status: 'relationship' },
+    { firstName: 'Eva', lastName: 'Jones', age: 36, visits: "2024-05-01", progress: 70, status: 'single' },
+    { firstName: 'Frank', lastName: 'Miller', age: 40, visits: "2024-06-01", progress: 75, status: 'complicated' },
+    { firstName: 'Grace', lastName: 'Davis', age: 50, visits: "2024-07-01", progress: 80, status: 'relationship' },
+    { firstName: 'Henry', lastName: 'Garcia', age: 29, visits: "2024-08-01", progress: 85, status: 'single' },
+    { firstName: 'Isabella', lastName: 'Martinez', age: 35, visits: "2024-09-01", progress: 90, status: 'complicated' },
+    { firstName: 'Jack', lastName: 'Rodriguez', age: 39, visits: "2024-10-01", progress: 70, status: 'relationship' },
+    { firstName: 'John', lastName: 'Wilson', age: 42, visits: "2024-11-01", progress: 75, status: 'single' },
+    { firstName: 'Jane', lastName: 'Anderson', age: 38, visits: "2024-12-01", progress: 80, status: 'complicated' },
+    { firstName: 'Sarah', lastName: 'Thomas', age: 33, visits: "2025-01-01", progress: 85, status: 'relationship' },
+    { firstName: 'Tom', lastName: 'Taylor', age: 37, visits: "2025-02-01", progress: 90, status: 'single' },
+    { firstName: 'Emma', lastName: 'Moore', age: 41, visits: "2025-03-01", progress: 70, status: 'complicated' },
+    { firstName: 'Olivia', lastName: 'Martin', age: 46, visits: "2025-04-01", progress: 75, status: 'relationship' },
+    { firstName: 'Liam', lastName: 'Jackson', age: 31, visits: "2025-05-01", progress: 80, status: 'single' },
+    { firstName: 'Noah', lastName: 'Thompson', age: 34, visits: "2025-06-01", progress: 85, status: 'complicated' },
+    { firstName: 'William', lastName: 'White', age: 43, visits: "2025-07-01", progress: 90, status: 'relationship' },
+    { firstName: 'Sophia', lastName: 'Harris', age: 47, visits: "2025-08-01", progress: 70, status: 'single' },
+
 ];
 
 
@@ -321,8 +342,8 @@ function DndAndGroupTableEX() {
     return (
         <div>
             <div style={{ height: '500px', }}>
-                {/* <DndAndGroupTable data={makeData} columns ={columns}></DndAndGroupTable> */}
-                <DndAndGroupTableWithCheckbox data={makeData} columns={columns} onRowSelect={handleRowSelect} onRowsSelect={handleRowsSelect}></DndAndGroupTableWithCheckbox>
+                <DndAndGroupTable data={makeData} columns ={columns}></DndAndGroupTable>
+                {/* <DndAndGroupTableWithCheckbox data={makeData} columns={columns} onRowSelect={handleRowSelect} onRowsSelect={handleRowsSelect}></DndAndGroupTableWithCheckbox> */}
                 {/* <DndAndGroupTableWithCheckboxFilter data={makeData} columns={columns} ></DndAndGroupTableWithCheckboxFilter> */}
             </div>
 
