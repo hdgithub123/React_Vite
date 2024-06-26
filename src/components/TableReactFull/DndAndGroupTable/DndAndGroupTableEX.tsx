@@ -68,7 +68,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 
 import EditableCell from './components/cells/EditableCell'
-import { SumFooter, AverageFooter, CountFooter } from './components/orthers/FooterColumn'
+import { SumFooter, AverageFooter, CountFooter } from './components/Footer/FooterColumn'
 
 
 const makeData = [
