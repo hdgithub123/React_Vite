@@ -83,36 +83,37 @@ import Filter from './components/filters/Filter';
 
 
 
-function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect ,  onRowsSelect}) {
+function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect }) {
+    const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
     );
     const [grouping, setGrouping] = useState<GroupingState>([])
 
-const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
-    // Get the selected row IDs from the table state
-      const selectedRowIds = table.getState().rowSelection;
-    // If filterValue is true, return selected rows
-    if (filterValue === 'checked') {
-        if(selectedRowIds[rows.id] === true){
-            return true;
-        } else {
+    const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
+        // Get the selected row IDs from the table state
+        const selectedRowIds = table.getState().rowSelection;
+        // If filterValue is true, return selected rows
+        if (filterValue === 'checked') {
+            if (selectedRowIds[rows.id] === true) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (filterValue === 'unchecked') {
+            if (selectedRowIds[rows.id] !== true) {
+                return true;
+            }
             return false;
-        }
-    } else if (filterValue === 'unchecked'){
-        if(selectedRowIds[rows.id] !== true){
+        } else {
             return true;
         }
-        return false;
-    } else {
-        return true;
-    }
 
-  };
+    };
 
     const table = useReactTable({
-        data,
+        data: dataDef,
         columns,
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
@@ -133,10 +134,23 @@ const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
         manualExpanding: false, // set bàng false thì có thể sử dụng cả useEffect để expanded
         autoResetExpanded: false, // set bang false thì tất cả các row được expanding bằng true thì không sử dụng cả useEffect
         // getPaginationRowModel: getPaginationRowModel(),
+        meta: {
+            updateData: (rowIndex, columnId, value) =>
+                setDataDef((prev) =>
+                    prev.map((row, index) =>
+                        index === rowIndex
+                            ? {
+                                ...prev[rowIndex],
+                                [columnId]: value,
+                            }
+                            : row
+                    )
+                ),
+        },
 
     });
 
-  
+
 
 
     const rerender = () => {
@@ -314,11 +328,11 @@ const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
         const selectedRowIndices = Object.keys(table.getState().rowSelection).map(Number);
         const selectedData = selectedRowIndices.map(index => data[index]);
         if (onRowsSelect) {
-          onRowsSelect(selectedData);
+            onRowsSelect(selectedData);
         }
-      }, [table.getState().rowSelection]);
-    
-      
+    }, [table.getState().rowSelection]);
+
+
     // sử dụng để expanded all
     useEffect(() => {
         table.setExpanded(true);
@@ -331,9 +345,9 @@ const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
     };
 
     const handleTriStateCheckboxSelectChange = (value) => {
-        if (value === true){
+        if (value === true) {
             table.setGlobalFilter('checked')
-        } else if (value === false){
+        } else if (value === false) {
             table.setGlobalFilter('unchecked')
         } else {
             table.setGlobalFilter('none')
@@ -383,25 +397,25 @@ const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
                             <thead className={styles.table_head}>
                                 {table.getHeaderGroups().map((headerGroup, rowIndex) => (
                                     <tr className={styles.table_head_tr} key={headerGroup.id}>
-
                                         {rowIndex === leafHeaderGroupIndex
                                             ?
                                             (<th className={styles.table_head_tr_th_checkbox}>
-                                                <IndeterminateCheckbox
-                                                    {...{
-                                                        checked: table.getIsAllRowsSelected(),
-                                                        indeterminate: table.getIsSomeRowsSelected(),
-                                                        onChange: table.getToggleAllRowsSelectedHandler(),
-                                                    }}
-                                                />
-                                                <TriStateCheckbox onChange={handleTriStateCheckboxSelectChange}></TriStateCheckbox>
+                                                <div title="Select All/ Unselect All">
+                                                    <IndeterminateCheckbox
+                                                        {...{
+                                                            checked: table.getIsAllRowsSelected(),
+                                                            indeterminate: table.getIsSomeRowsSelected(),
+                                                            onChange: table.getToggleAllRowsSelectedHandler(),
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div title="Filter Select">
+                                                    <TriStateCheckbox onChange={handleTriStateCheckboxSelectChange}></TriStateCheckbox>
+                                                </div>
                                             </th>) : (
                                                 <th></th>
                                             )
                                         }
-
-
-
                                         <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
                                             {headerGroup.headers.map((header) =>
                                                 isLeafColumn(header) ? (
@@ -428,8 +442,6 @@ const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
                                                     }}
                                                 />
                                             </td>
-
-
                                             {row.getVisibleCells().map(cell => (
                                                 <DragAlongCell key={cell.id} cell={cell} />
                                             ))}
@@ -475,8 +487,6 @@ const DraggableTableHeader = ({ header }) => {
     const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
         id: header.column.id,
     });
-
-
 
     const style: CSSProperties = {
         opacity: isDragging ? 0.8 : 1,
@@ -550,8 +560,6 @@ const DraggableTableHeader = ({ header }) => {
                 )}
             </th>
         </>
-
-
     );
 }
 
@@ -559,7 +567,6 @@ const DraggableTableHeader = ({ header }) => {
 
 
 const StaticTableHeader = ({ header }) => {
-
     return (
         <th colSpan={header.colSpan}>
             {header.isPlaceholder
@@ -575,8 +582,6 @@ const DraggableTablefooter = ({ header }) => {
     const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
         id: header.column.id,
     });
-
-
     const style: CSSProperties = {
         borderTop: '2px solid gray',
         borderBottom: '2px solid gray',
@@ -654,7 +659,6 @@ function customCollisionDetection({
         pointerCoordinates,
     });
 };
-
 
 
 // Tạo chỗ kéo thả group
@@ -789,9 +793,7 @@ function IndeterminateCheckbox({
 
 
 
-  
-
-  function TriStateCheckbox({ onChange }) {
+function TriStateCheckbox({ onChange }) {
     const [state, setState] = useState('indeterminate'); // 'unchecked', 'checked', or 'indeterminate'
     const inputRef = useRef(null);
 
