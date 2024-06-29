@@ -326,6 +326,7 @@ const columns = [
 import DndAndGroupTable from './DndAndGroupTable';
 import DndAndGroupTableWithCheckbox from './DndAndGroupTableWithCheckbox';
 import DndAndGroupTableWithCheckboxFilter from './DndAndGroupTableWithCheckboxFilter';
+import DndAndGroupTableWithCheckboxVirtual from './DndAndGroupTableWithCheckboxVirtual';
 
 function DndAndGroupTableEX() {
     const [selectedData, setSelectedData] = useState(null); // State to store the selected data from the table
@@ -342,9 +343,10 @@ function DndAndGroupTableEX() {
     return (
         <div>
             <div style={{ height: '500px', }}>
-                <DndAndGroupTable data={makeData} columns ={columns}></DndAndGroupTable>
+                {/* <DndAndGroupTable data={makeData} columns ={columns}></DndAndGroupTable> */}
                 {/* <DndAndGroupTableWithCheckbox data={makeData} columns={columns} onRowSelect={handleRowSelect} onRowsSelect={handleRowsSelect}></DndAndGroupTableWithCheckbox> */}
                 {/* <DndAndGroupTableWithCheckboxFilter data={makeData} columns={columns} ></DndAndGroupTableWithCheckboxFilter> */}
+                <DndAndGroupTableWithCheckboxVirtual data={makeData} columns={columns} onRowSelect={handleRowSelect} onRowsSelect={handleRowsSelect}></DndAndGroupTableWithCheckboxVirtual>
             </div>
 
             {selectedData && (
