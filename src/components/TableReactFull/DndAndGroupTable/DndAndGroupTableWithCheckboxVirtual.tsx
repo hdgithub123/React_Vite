@@ -335,26 +335,13 @@ function DndAndGroupTableWithCheckboxVirtual({ data, columns, onRowSelect, onRow
                     <div >
                         <div
                             className={styles.div_table_container}
-                            // className="container"
                             ref={tableContainerRef}
-                            style={{
-                            
-                                position: 'relative', //needed for sticky header
-                                height: '300px', //should be a fixed height
-                            }}
                         >
                             {/* Bắt đầu render table */}
                             <table
-                            style={{ display: 'grid' }}
+                            style={{ display: 'grid', width: '100%' }}
                             className={styles.table_container}>
                                 <thead
-                                    style={{
-                                        position: 'sticky',
-                                        background: 'white',
-                                        zIndex: 1
-
-
-                                      }}
                                     className={styles.table_head}
                                 >
                                     {table.getHeaderGroups().map((headerGroup, rowIndex) => (
@@ -381,7 +368,7 @@ function DndAndGroupTableWithCheckboxVirtual({ data, columns, onRowSelect, onRow
                                             <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
                                                 {headerGroup.headers.map((header) =>
                                                     isLeafColumn(header) ? (
-                                                        <DraggableTableHeader key={header.id} header={header} />
+                                                            <DraggableTableHeader key={header.id} header={header} />
                                                     ) : (
                                                         <StaticTableHeader key={header.id} header={header} />
                                                     )
@@ -404,14 +391,17 @@ function DndAndGroupTableWithCheckboxVirtual({ data, columns, onRowSelect, onRow
                                             console.log("row2", row)
                                             return (
                                                 <tr 
+                                                style={{ 
+                                                    transform: `translateY(${virtualRow.start}px)`, 
+                                                    display: 'flex' }}
                                                 onDoubleClick={() => handleRowClick(row.original)} 
                                                 className={styles.body_container_tr} 
                                                 key={row.id}
 
-                                                style={{
-                                                    width : '100%',
-                                                  transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scroll
-                                                  }}
+                                                // style={{
+                                                //     width : '100%',
+                                                //   transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scroll
+                                                //   }}
 
                                                 
                                                 >
@@ -427,7 +417,10 @@ function DndAndGroupTableWithCheckboxVirtual({ data, columns, onRowSelect, onRow
                                                         />
                                                     </td>
                                                     {row.getVisibleCells().map(cell => (
-                                                        <DragAlongCell key={cell.id} cell={cell} />
+                                                        <div style={{ width: `${cell.column.getSize()}px` }}>
+                                                            <DragAlongCell key={cell.id} cell={cell} />
+                                                        </div>
+                                                        
                                                     ))}
                                                 </tr>
                                             )
@@ -849,7 +842,7 @@ const DragAlongCell = ({ cell }) => {
         position: 'relative',
         transform: CSS.Translate.toString(transform),
         transition: 'width transform 0.2s ease-in-out',
-        width: cell.column.getSize(),
+        width: cell.column.getSize()& 'px',
         zIndex: isDragging ? 1 : 0,
     };
 
