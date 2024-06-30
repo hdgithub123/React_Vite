@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo, CSSProperties } from 'react';
 import React from 'react'
 
-import styles from './DndAndGroupTable.module.css';
+import styles from './DndAndGroupTableVirtual.module.css';
 import {
 
 
@@ -75,15 +75,18 @@ import {
     rectSwappingStrategy,
 } from '@dnd-kit/sortable';
 
+import { useVirtualizer } from '@tanstack/react-virtual'
+
 import { CSS } from '@dnd-kit/utilities';
 
 import arrow_drop_down from './source/images/arrows/pointer-down-svgrepo-com.svg';
 import arrow_right from './source/images/arrows/pointer-right-svgrepo-com.svg';
 import Filter from './components/filters/Filter';
+import './index.css';
 
 
 
-function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect }) {
+function DndAndGroupTableWithCheckboxVirtual({ data, columns, onRowSelect, onRowsSelect }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -163,90 +166,12 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect
         console.log("table grouping:", table.getHeaderGroups());
         table.setExpanded(true) // Mở tất cả các cột
         //table.setExpanded({}) // đóng tất cả các cột
+        console.log("tableContainerRef.current:", tableContainerRef.current);
+
 
     };
 
-    // các cell được render
-    // các cell được render đang phải để bên trong hàm thì mới kéo thả trơn tru được vì nó cần phải được render lại cell
-    const DragAlongCell = ({ cell }) => {
-        const { isDragging, setNodeRef, transform } = useSortable({
-            id: cell.column.id,
-        });
 
-        const style: CSSProperties = {
-            opacity: isDragging ? 0.8 : 1,
-            position: 'relative',
-            transform: CSS.Translate.toString(transform),
-            transition: 'width transform 0.2s ease-in-out',
-            width: cell.column.getSize(),
-            zIndex: isDragging ? 1 : 0,
-        };
-
-        const { row } = cell.getContext();
-
-        return (
-            <td
-                ref={setNodeRef}
-                {...{
-                    key: cell.id,
-                    style: {
-                        style,
-                        background: cell.getIsGrouped()
-                            ? '#ddd'
-                            : cell.getIsAggregated()
-                                ? '#ddd'
-                                : cell.getIsPlaceholder()
-                                    ? 'white'
-                                    : null,
-
-                        fontWeight: cell.getIsGrouped()
-                            ? 'bold'
-                            : cell.getIsAggregated()
-                                ? 'bold'
-                                : 'normal',
-
-                    },
-                }}
-            >
-                {cell.getIsGrouped() ? (
-                    // If it's a grouped cell, add an expander and row count
-                    <>
-                        <button
-                            {...{
-                                onClick: row.getToggleExpandedHandler(),
-                                style: {
-                                    cursor: row.getCanExpand() ? 'pointer' : 'normal',
-                                    border: 'none',
-                                    background: 'none',
-                                },
-                            }}
-                        >
-                            {row.getIsExpanded() ? '⮛' : '⮚'}{' '}
-                            {/* {row.getIsExpanded() ? <img src={arrow_drop_down} style={{ width: '10px', height: '10px' }} /> : <img src={arrow_right} style={{ width: '10px', height: '10px' }} />}{' '} */}
-                        </button>
-                        {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                        )}{' '}
-                        ({row.subRows.length})
-                    </>
-                ) : cell.getIsAggregated() ? (
-                    // If the cell is aggregated, use the Aggregated renderer for cell
-                    flexRender(
-                        cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
-                        cell.getContext()
-                    )
-                ) : cell.getIsPlaceholder() ? null : (
-                    // For cells with repeated values, render null
-                    // Otherwise, just render the regular cell
-                    flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                    )
-                )}
-            </td>
-        );
-    };
 
     // dau vao là columID render ra header
     const RenderHeaderByID = ({ columnID, columns }) => {
@@ -353,6 +278,23 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect
             table.setGlobalFilter('none')
         }
     };
+
+
+    const { rows } = table.getRowModel();
+
+    //The virtualizer needs to know the scrollable container element
+    const tableContainerRef = React.useRef<HTMLDivElement>(null);
+
+    const rowVirtualizer = useVirtualizer({
+        count: rows.length,
+        estimateSize: () => 33, //estimate row height for accurate scrollbar dragging
+        getScrollElement: () => tableContainerRef.current,
+        //measure dynamic row height, except in firefox because it measures table border height incorrectly
+
+        overscan: 5,
+    });
+
+
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
@@ -390,84 +332,129 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect
                             )}
                         </DropableContainerGroup>
                     </div>
+                    <div >
+                        <div
+                            className={styles.div_table_container}
+                            // className="container"
+                            ref={tableContainerRef}
+                            style={{
+                            
+                                position: 'relative', //needed for sticky header
+                                height: '300px', //should be a fixed height
+                            }}
+                        >
+                            {/* Bắt đầu render table */}
+                            <table
+                            style={{ display: 'grid' }}
+                            className={styles.table_container}>
+                                <thead
+                                    style={{
+                                        position: 'sticky',
+                                        background: 'white',
+                                        zIndex: 1
 
-                    <div className={styles.div_table_container}>
-                        {/* Bắt đầu render table */}
-                        <table className={styles.table_container}>
-                            <thead className={styles.table_head}>
-                                {table.getHeaderGroups().map((headerGroup, rowIndex) => (
-                                    <tr className={styles.table_head_tr} key={headerGroup.id}>
-                                        {rowIndex === leafHeaderGroupIndex
-                                            ?
-                                            (<th className={styles.table_head_tr_th_checkbox}>
-                                                <div title="Select All/ Unselect All">
-                                                    <IndeterminateCheckbox
-                                                        {...{
-                                                            checked: table.getIsAllRowsSelected(),
-                                                            indeterminate: table.getIsSomeRowsSelected(),
-                                                            onChange: table.getToggleAllRowsSelectedHandler(),
-                                                        }}
-                                                    />
-                                                </div>
-                                                <div title="Filter Select">
-                                                    <TriStateCheckbox onChange={handleTriStateCheckboxSelectChange}></TriStateCheckbox>
-                                                </div>
-                                            </th>) : (
-                                                <th></th>
-                                            )
-                                        }
-                                        <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
-                                            {headerGroup.headers.map((header) =>
-                                                isLeafColumn(header) ? (
-                                                    <DraggableTableHeader key={header.id} header={header} />
-                                                ) : (
-                                                    <StaticTableHeader key={header.id} header={header} />
+
+                                      }}
+                                    className={styles.table_head}
+                                >
+                                    {table.getHeaderGroups().map((headerGroup, rowIndex) => (
+                                        <tr className={styles.table_head_tr} key={headerGroup.id}>
+                                            {rowIndex === leafHeaderGroupIndex
+                                                ?
+                                                (<th className={styles.table_head_tr_th_checkbox}>
+                                                    <div title="Select All/ Unselect All">
+                                                        <IndeterminateCheckbox
+                                                            {...{
+                                                                checked: table.getIsAllRowsSelected(),
+                                                                indeterminate: table.getIsSomeRowsSelected(),
+                                                                onChange: table.getToggleAllRowsSelectedHandler(),
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div title="Filter Select">
+                                                        <TriStateCheckbox onChange={handleTriStateCheckboxSelectChange}></TriStateCheckbox>
+                                                    </div>
+                                                </th>) : (
+                                                    <th></th>
                                                 )
-                                            )}
-                                        </SortableContext>
-                                    </tr>
-                                ))}
-                            </thead>
-                            {table.getRowModel().rows.length > 0 ? (
-                                <tbody className={styles.body_container}>
-                                    {table.getRowModel().rows.map(row => (
-                                        <tr onDoubleClick={() => handleRowClick(row.original)} className={styles.body_container_tr} key={row.id}>
-                                            <td>
-                                                <IndeterminateCheckbox
-                                                    {...{
-                                                        checked: row.getIsSelected(),
-                                                        disabled: !row.getCanSelect(),
-                                                        indeterminate: row.getIsSomeSelected(),
-                                                        onChange: row.getToggleSelectedHandler(),
-                                                    }}
-                                                />
-                                            </td>
-                                            {row.getVisibleCells().map(cell => (
-                                                <DragAlongCell key={cell.id} cell={cell} />
-                                            ))}
+                                            }
+                                            <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
+                                                {headerGroup.headers.map((header) =>
+                                                    isLeafColumn(header) ? (
+                                                        <DraggableTableHeader key={header.id} header={header} />
+                                                    ) : (
+                                                        <StaticTableHeader key={header.id} header={header} />
+                                                    )
+                                                )}
+                                            </SortableContext>
                                         </tr>
                                     ))}
-                                </tbody>
-                            ) : (
-                                <tbody>
-                                    <tr className={styles.body_container}>
-                                        <td></td>
-                                        <td colSpan={countLeafColumns(columns)} style={{ textAlign: 'center' }}>
-                                            No data available
-                                        </td>
+                                </thead>
+                                {table.getRowModel().rows.length > 0 ? (
+                                    <tbody 
+                                    style={{
+                                        width: '100%',
+                                        display: 'grid',
+                                        height: `${rowVirtualizer.getTotalSize()}px`, //tells scrollbar how big the table is
+                                       // position: 'relative', //needed for absolute positioning of rows
+                                      }}
+                                    >
+                                        {rowVirtualizer.getVirtualItems().map((virtualRow, index) => {
+                                            const row = rows[virtualRow.index]
+                                            console.log("row2", row)
+                                            return (
+                                                <tr 
+                                                onDoubleClick={() => handleRowClick(row.original)} 
+                                                className={styles.body_container_tr} 
+                                                key={row.id}
+
+                                                style={{
+                                                    width : '100%',
+                                                  transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scroll
+                                                  }}
+
+                                                
+                                                >
+                                                    <td>
+                                                    {console.log("virtualRow.start",virtualRow.start)}
+                                                        <IndeterminateCheckbox
+                                                            {...{
+                                                                checked: row.getIsSelected(),
+                                                                disabled: !row.getCanSelect(),
+                                                                indeterminate: row.getIsSomeSelected(),
+                                                                onChange: row.getToggleSelectedHandler(),
+                                                            }}
+                                                        />
+                                                    </td>
+                                                    {row.getVisibleCells().map(cell => (
+                                                        <DragAlongCell key={cell.id} cell={cell} />
+                                                    ))}
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                ) : (
+                                    <tbody>
+                                        <tr className={styles.body_container}>
+                                            <td></td>
+                                            <td colSpan={countLeafColumns(columns)} style={{ textAlign: 'center' }}>
+                                                No data available
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                )}
+                                {shouldRenderFooter && <tfoot className={styles.foot_container}>
+                                    <tr>
+                                        <td className={styles.footer_checkbox}></td>
+                                        {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
+                                            <DraggableTablefooter key={header.id} header={header} />
+                                        ))}
                                     </tr>
-                                </tbody>
-                            )}
-                            {shouldRenderFooter && <tfoot className={styles.foot_container}>
-                                <tr>
-                                    <td className={styles.footer_checkbox}></td>
-                                    {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
-                                        <DraggableTablefooter key={header.id} header={header} />
-                                    ))}
-                                </tr>
-                            </tfoot>}
-                        </table>
+                                </tfoot>}
+                            </table>
+                        </div>
                     </div>
+
 
 
 
@@ -477,7 +464,7 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect
 
     );
 }
-export default DndAndGroupTableWithCheckbox;
+export default DndAndGroupTableWithCheckboxVirtual;
 
 
 
@@ -847,3 +834,87 @@ function TriStateCheckbox({ onChange }) {
         />
     );
 }
+
+
+
+// các cell được render
+// các cell được render đang phải để bên trong hàm thì mới kéo thả trơn tru được vì nó cần phải được render lại cell
+const DragAlongCell = ({ cell }) => {
+    const { isDragging, setNodeRef, transform } = useSortable({
+        id: cell.column.id,
+    });
+
+    const style: CSSProperties = {
+        opacity: isDragging ? 0.8 : 1,
+        position: 'relative',
+        transform: CSS.Translate.toString(transform),
+        transition: 'width transform 0.2s ease-in-out',
+        width: cell.column.getSize(),
+        zIndex: isDragging ? 1 : 0,
+    };
+
+    const { row } = cell.getContext();
+
+    return (
+        <td
+            ref={setNodeRef}
+            {...{
+                key: cell.id,
+                style: {
+                    style,
+                    background: cell.getIsGrouped()
+                        ? '#ddd'
+                        : cell.getIsAggregated()
+                            ? '#ddd'
+                            : cell.getIsPlaceholder()
+                                ? 'white'
+                                : null,
+
+                    fontWeight: cell.getIsGrouped()
+                        ? 'bold'
+                        : cell.getIsAggregated()
+                            ? 'bold'
+                            : 'normal',
+
+                },
+            }}
+        >
+            {cell.getIsGrouped() ? (
+                // If it's a grouped cell, add an expander and row count
+                <>
+                    <button
+                        {...{
+                            onClick: row.getToggleExpandedHandler(),
+                            style: {
+                                cursor: row.getCanExpand() ? 'pointer' : 'normal',
+                                border: 'none',
+                                background: 'none',
+                            },
+                        }}
+                    >
+                        {row.getIsExpanded() ? '⮛' : '⮚'}{' '}
+                        {/* {row.getIsExpanded() ? <img src={arrow_drop_down} style={{ width: '10px', height: '10px' }} /> : <img src={arrow_right} style={{ width: '10px', height: '10px' }} />}{' '} */}
+                    </button>
+                    {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                    )}{' '}
+                    ({row.subRows.length})
+                </>
+            ) : cell.getIsAggregated() ? (
+                // If the cell is aggregated, use the Aggregated renderer for cell
+                flexRender(
+                    cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
+                    cell.getContext()
+                )
+            ) : cell.getIsPlaceholder() ? null : (
+                // For cells with repeated values, render null
+                // Otherwise, just render the regular cell
+                flexRender(
+                    cell.column.columnDef.cell,
+                    cell.getContext()
+                )
+            )}
+        </td>
+    );
+};
