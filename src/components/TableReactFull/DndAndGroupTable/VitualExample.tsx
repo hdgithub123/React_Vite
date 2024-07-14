@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRoot } from 'react-dom/client';
+
 
 import { useVirtualizer } from '@tanstack/react-virtual';
 import {
@@ -11,22 +11,12 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
-import {makeData} from './makeData';
-
-export type Person = {
-    id: number
-    firstName: string
-    lastName: string
-    age: number
-    visits: number
-    progress: number
-    status: 'relationship' | 'complicated' | 'single'
-    createdAt: Date
-  }
-
+import { makeData, Person } from './makeData';
 import './index.css';
 
 function VitualExample() {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
       {
@@ -63,16 +53,20 @@ function VitualExample() {
         header: 'Profile Progress',
         size: 80,
       },
-     
+
     ],
     []
   );
 
-  const [data, _setData] = React.useState(makeData);
+  const [data, setData] = React.useState(makeData);
 
   const table = useReactTable({
     data,
     columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
@@ -80,112 +74,73 @@ function VitualExample() {
 
   const { rows } = table.getRowModel();
 
-  //The virtualizer needs to know the scrollable container element
-  const tableContainerRef = React.useRef<HTMLDivElement>(null);
+  const parentRef = React.useRef<HTMLDivElement>(null);
 
-  const rowVirtualizer = useVirtualizer({
+  const virtualizer = useVirtualizer({
     count: rows.length,
-    estimateSize: () => 80, //estimate row height for accurate scrollbar dragging
-    getScrollElement: () => tableContainerRef.current,
-    //measure dynamic row height, except in firefox because it measures table border height incorrectly
-    // measureElement:
-    //   typeof window !== 'undefined' &&
-    //   navigator.userAgent.indexOf('Firefox') === -1
-    //     ? (element) => element?.getBoundingClientRect().height
-    //     : undefined,
-    // overscan: 5,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 34,
+    overscan: 15,
   });
 
-  //All important CSS styles are included as inline styles for this example. This is not recommended for your code.
   return (
-    <div className="app">
-    
-      <div
-        className="container"
-        ref={tableContainerRef}
-        style={{
-          overflow: 'auto', //our scrollable table container
-          position: 'relative', //needed for sticky header
-          height: '200px', //should be a fixed height
-        }}
-      >
-        {/* Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights */}
-        <table style={{ display: 'grid' }}>
-          <thead
-            style={{
-              display: 'grid',
-              position: 'sticky',
-              top: 0,
-              zIndex: 1,
-            }}
-          >
+    <div ref={parentRef} className="container">
+      <div style={{ 
+        //height: `${virtualizer.getTotalSize()}px` 
+        height: '200px' 
+    }}>
+        <table>
+          <thead>
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr
-                key={headerGroup.id}
-                style={{ display: 'flex', width: '100%' }}
-              >
+              <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
                     <th
                       key={header.id}
-                      style={{
-                        display: 'flex',
-                        width: header.getSize(),
-                      }}
+                      colSpan={header.colSpan}
+                      style={{ width: header.getSize() }}
                     >
-                      <div
-                        {...{
-                          className: header.column.getCanSort()
-                            ? 'cursor-pointer select-none'
-                            : '',
-                          onClick: header.column.getToggleSortingHandler(),
-                        }}
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                        {{
-                          asc: ' 🔼',
-                          desc: ' 🔽',
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </div>
+                      {header.isPlaceholder ? null : (
+                        <div
+                          {...{
+                            className: header.column.getCanSort()
+                              ? 'cursor-pointer select-none'
+                              : '',
+                            onClick: header.column.getToggleSortingHandler(),
+                          }}
+                        >
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                          {{
+                            asc: ' 🔼',
+                            desc: ' 🔽',
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </div>
+                      )}
                     </th>
                   );
                 })}
               </tr>
             ))}
           </thead>
-          <tbody
-            style={{
-              display: 'grid',
-              height: `${rowVirtualizer.getTotalSize()}px`, //tells scrollbar how big the table is
-              position: 'relative', //needed for absolute positioning of rows
-            }}
-          >
-            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+          <tbody>
+            {virtualizer.getVirtualItems().map((virtualRow, index) => {
               const row = rows[virtualRow.index] as Row<Person>;
               return (
                 <tr
-                  // data-index={virtualRow.index} //needed for dynamic row height measurement
-                  // ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
                   key={row.id}
                   style={{
-                    display: 'flex',
-                    position: 'absolute',
-                    transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scroll
-                    width: '100%',
+                    height: `${virtualRow.size}px`,
+                    transform: `translateY(${
+                      virtualRow.start - index * virtualRow.size
+                    }px)`,
                   }}
                 >
                   {row.getVisibleCells().map((cell) => {
                     return (
-                      <td
-                        key={cell.id}
-                        style={{
-                          display: 'flex',
-                          width: cell.column.getSize(),
-                        }}
-                      >
+                      <td key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()

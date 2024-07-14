@@ -1,0 +1,486 @@
+import { useState, useEffect, useCallback, useRef, useMemo, CSSProperties } from 'react';
+import React from 'react'
+
+import styles from './DndAndGroupTableVirtual.module.css';
+//import './index.css';
+import {
+
+
+
+    ColumnFiltersState,
+    FilterFn,
+    SortingFn,
+
+    GroupingState,
+    getPaginationRowModel,
+    getGroupedRowModel,
+    getExpandedRowModel,
+
+    Cell,
+    ColumnDef,
+    Header,
+    flexRender,
+    getCoreRowModel,
+    useReactTable,
+    getFilteredRowModel,
+
+    getFacetedMinMaxValues,
+    getFacetedRowModel,
+    getFacetedUniqueValues,
+    getSortedRowModel,
+} from '@tanstack/react-table';
+
+import {
+    DndContext,
+    useDroppable,
+    KeyboardSensor,
+    MouseSensor,
+    TouchSensor,
+    closestCenter,
+    closestCorners,
+    DragEndEvent,
+    useSensor,
+    useSensors,
+
+    CancelDrop,
+
+    pointerWithin,
+    rectIntersection,
+    CollisionDetection,
+
+    DragOverlay,
+    DropAnimation,
+    getFirstCollision,
+
+    Modifiers,
+
+    UniqueIdentifier,
+
+    MeasuringStrategy,
+    KeyboardCoordinateGetter,
+    defaultDropAnimationSideEffects,
+    Active,
+    ClientRect,
+    DroppableContainer,
+
+
+} from '@dnd-kit/core';
+import { restrictToHorizontalAxis, restrictToParentElement, restrictToWindowEdges, } from '@dnd-kit/modifiers';
+import {
+    useSortable,
+    arrayMove,
+    SortableContext,
+    horizontalListSortingStrategy,
+    rectSortingStrategy,
+    verticalListSortingStrategy,
+    rectSwappingStrategy,
+} from '@dnd-kit/sortable';
+
+import { CSS } from '@dnd-kit/utilities';
+import { useVirtualizer } from '@tanstack/react-virtual'
+
+import arrow_drop_down from './source/images/arrows/pointer-down-svgrepo-com.svg';
+import arrow_right from './source/images/arrows/pointer-right-svgrepo-com.svg';
+import Filter from './components/filters/Filter';
+
+
+
+function DndAndGroupTableWithCheckboxVirtual({ data, columns, onRowSelect, onRowsSelect }) {
+    const [dataDef, setDataDef] = useState(data);
+    const [columnFilters, setColumnFilters] = useState([]);
+    const [columnOrder, setColumnOrder] = useState<string[]>(() =>
+        columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
+    );
+    const [grouping, setGrouping] = useState<GroupingState>([])
+
+    const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
+        // Get the selected row IDs from the table state
+        const selectedRowIds = table.getState().rowSelection;
+        // If filterValue is true, return selected rows
+        if (filterValue === 'checked') {
+            if (selectedRowIds[rows.id] === true) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (filterValue === 'unchecked') {
+            if (selectedRowIds[rows.id] !== true) {
+                return true;
+            }
+            return false;
+        } else {
+            return true;
+        }
+
+    };
+
+    const table = useReactTable({
+        data: dataDef,
+        columns,
+        columnResizeMode: 'onChange',
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        filterFns: {
+            selectedFilter, // Register the custom filter function
+        },
+        state: { columnOrder, columnFilters, grouping, },
+        onColumnFiltersChange: setColumnFilters,
+        onColumnOrderChange: setColumnOrder,
+        onGroupingChange: setGrouping,
+        getExpandedRowModel: getExpandedRowModel(),
+        getGroupedRowModel: getGroupedRowModel(),
+        getFacetedRowModel: getFacetedRowModel(),
+        getFacetedUniqueValues: getFacetedUniqueValues(),
+        globalFilterFn: 'selectedFilter',
+        manualExpanding: false, // set bàng false thì có thể sử dụng cả useEffect để expanded
+        autoResetExpanded: false, // set bang false thì tất cả các row được expanding bằng true thì không sử dụng cả useEffect
+        // getPaginationRowModel: getPaginationRowModel(),
+        meta: {
+            updateData: (rowIndex, columnId, value) =>
+                setDataDef((prev) =>
+                    prev.map((row, index) =>
+                        index === rowIndex
+                            ? {
+                                ...prev[rowIndex],
+                                [columnId]: value,
+                            }
+                            : row
+                    )
+                ),
+        },
+
+    });
+
+
+
+
+    const rerender = () => {
+        console.log("columnOrder:", columnOrder)
+        console.log("columnFilters:", columnFilters)
+        console.log("getCoreRowModel():", getCoreRowModel())
+        console.log("getFilteredRowModel():", table.getFilteredRowModel())
+        console.log("table:", table);
+        console.log("grouping:", grouping);
+        console.log("table grouping:", table.getHeaderGroups());
+        table.setExpanded(true) // Mở tất cả các cột
+        //table.setExpanded({}) // đóng tất cả các cột
+
+    };
+
+    // các cell được render
+
+
+
+
+
+    const isLeafColumn = (header) => !header.subHeaders || header.subHeaders.length === 0;
+    const leafHeaderGroupIndex = table.getHeaderGroups().length - 1;
+    const leafHeaderGroup = table.getHeaderGroups()[leafHeaderGroupIndex];
+    const shouldRenderFooter = leafHeaderGroup.headers.some(header => header.column.columnDef.footer);
+    const countLeafColumns = (columns) => {
+        return columns.reduce((count, column) => {
+            if (column.columns) {
+                return count + countLeafColumns(column.columns);
+            }
+            return count + 1;
+        }, 0);
+    };
+
+
+
+
+
+
+
+    useEffect(() => {
+        const selectedRowIndices = Object.keys(table.getState().rowSelection).map(Number);
+        const selectedData = selectedRowIndices.map(index => data[index]);
+        if (onRowsSelect) {
+            onRowsSelect(selectedData);
+        }
+    }, [table.getState().rowSelection]);
+
+
+    // sử dụng để expanded all
+    useEffect(() => {
+        table.setExpanded(true);
+    }, [grouping, columnFilters]);
+
+    const handleRowClick = (rowData) => {
+        if (onRowSelect) {
+            onRowSelect(rowData);
+        }
+    };
+
+
+    // bắt đầu render chính
+
+    const { rows } = table.getRowModel()
+
+    const parentRef = React.useRef<HTMLDivElement>(null)
+
+    const virtualizer = useVirtualizer({
+        count: rows.length,
+        getScrollElement: () => parentRef.current,
+        estimateSize: () => 34,
+        overscan: 5,
+
+    })
+
+
+    return (
+        <div>
+        <div ref={parentRef} className={styles.tbcontainer}>
+            <div className={styles.tb2container} style={{
+
+                //height: `${virtualizer.getTotalSize()}px` 
+                //height: '200px'
+            }}>
+                <table>
+                    <thead>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <tr key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => {
+                                    return (
+                                        <th
+                                            key={header.id}
+                                            colSpan={header.colSpan}
+                                            style={{ width: header.getSize() }}
+                                        >
+                                            {header.isPlaceholder ? null : (
+                                                <div
+                                                    {...{
+                                                        className: header.column.getCanSort()
+                                                            ? 'cursor-pointer select-none'
+                                                            : '',
+                                                        onClick: header.column.getToggleSortingHandler(),
+                                                    }}
+                                                >
+                                                    {flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext()
+                                                    )}
+                                                    {{
+                                                        asc: ' 🔼',
+                                                        desc: ' 🔽',
+                                                    }[header.column.getIsSorted() as string] ?? null}
+                                                </div>
+                                            )}
+                                        </th>
+                                    );
+                                })}
+                            </tr>
+                        ))}
+                    </thead>
+                    <tbody>
+                        {virtualizer.getVirtualItems().map((virtualRow, index) => {
+                            const row = rows[virtualRow.index]
+                            return (
+                                <tr
+                                    key={row.id}
+                                    onDoubleClick={() => handleRowClick(row.original)}
+                                    style={{
+                                        height: `${virtualRow.size}px`,
+                                        transform: `translateY(${virtualRow.start - index * virtualRow.size
+                                            }px)`,
+                                    }}
+                                >
+                                    <td>
+                                        <IndeterminateCheckbox
+                                            {...{
+                                                checked: row.getIsSelected(),
+                                                disabled: !row.getCanSelect(),
+                                                indeterminate: row.getIsSomeSelected(),
+                                                onChange: row.getToggleSelectedHandler(),
+                                            }}
+                                        />
+                                    </td>
+                                    {row.getVisibleCells().map((cell) => {
+                                        return (
+                                            <td key={cell.id}>
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext()
+                                                )}
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
+
+    );
+    // return (
+    //     <div >
+    //         {/* Render các nút điều khiển */}
+
+    //         <div >
+    //             {/* Tạo Drop Group Area */}
+    //             {/* <DndContext
+    //                 collisionDetection={customCollisionDetection}
+    //                 onDragEnd={handleDragEnd}
+    //                 sensors={sensors}
+    //             > */}
+    //                 <div >
+    //                     {/* Phần thả group column */}
+
+    //                 </div>
+    //                 <div ref={parentRef} >
+    //                     <div style={{
+    //                         // height: `${virtualizer.getTotalSize()}px` 
+    //                         height: '300px'
+    //                     }}
+
+    //                         //className={styles.div_table_container}
+    //                         className="container"
+
+
+    //                     >
+    //                         {/* Bắt đầu render table */}
+    //                         <table >
+
+
+
+    //                                 <tbody>
+    //                                     {virtualizer.getVirtualItems().map((virtualRow, index) => {
+    //                                         const row = rows[virtualRow.index]
+    //                                         return (
+    //                                             <tr
+    //                                                 key={row.id}
+    //                                                 onDoubleClick={() => handleRowClick(row.original)} 
+    //                                                 style={{
+    //                                                     height: `${virtualRow.size}px`,
+    //                                                     transform: `translateY(${virtualRow.start - index * virtualRow.size
+    //                                                         }px)`,
+    //                                                 }}
+    //                                             >
+    //                                                 <td>
+    //                                                     <IndeterminateCheckbox
+    //                                                         {...{
+    //                                                             checked: row.getIsSelected(),
+    //                                                             disabled: !row.getCanSelect(),
+    //                                                             indeterminate: row.getIsSomeSelected(),
+    //                                                             onChange: row.getToggleSelectedHandler(),
+    //                                                         }}
+    //                                                     />
+    //                                                 </td>
+    //                                                 {row.getVisibleCells().map((cell) => {
+    //                                                     return (
+    //                                                         <td key={cell.id}>
+    //                                                             {flexRender(
+    //                                                                 cell.column.columnDef.cell,
+    //                                                                 cell.getContext()
+    //                                                             )}
+    //                                                         </td>
+    //                                                     );
+    //                                                 })}
+    //                                             </tr>
+    //                                         )
+    //                                     })}
+    //                                 </tbody>
+
+
+    //                         </table>
+    //                     </div>
+    //                 </div>
+    //             {/* </DndContext> */}
+    //         </div>
+    //     </div>
+
+    // );
+}
+export default DndAndGroupTableWithCheckboxVirtual;
+
+
+
+
+
+
+
+
+
+function IndeterminateCheckbox({
+    indeterminate,
+    className = '',
+    ...rest
+}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
+    const ref = React.useRef<HTMLInputElement>(null!);
+
+    React.useEffect(() => {
+        if (typeof indeterminate === 'boolean') {
+            ref.current.indeterminate = !rest.checked && indeterminate;
+        }
+    }, [ref, indeterminate]);
+
+    return (
+        <input
+            type="checkbox"
+            ref={ref}
+            className={className + ' cursor-pointer'}
+            {...rest}
+        />
+    );
+}
+
+
+
+function TriStateCheckbox({ onChange }) {
+    const [state, setState] = useState('indeterminate'); // 'unchecked', 'checked', or 'indeterminate'
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        const checkbox = inputRef.current;
+        if (checkbox) {
+            checkbox.indeterminate = state === 'indeterminate';
+        }
+    }, [state]);
+
+    useEffect(() => {
+        let value;
+        switch (state) {
+            case 'checked':
+                value = true;
+                break;
+            case 'unchecked':
+                value = false;
+                break;
+            case 'indeterminate':
+                value = '';
+                break;
+            default:
+                value = true;
+        }
+        onChange(value);
+    }, [state]);
+
+    const handleClick = () => {
+        setState(prevState => {
+            switch (prevState) {
+                case 'unchecked':
+                    return 'checked';
+                case 'checked':
+                    return 'indeterminate';
+                case 'indeterminate':
+                    return 'unchecked';
+                default:
+                    return prevState;
+            }
+        });
+    };
+
+    return (
+        <input
+            type="checkbox"
+            ref={inputRef}
+            checked={state === 'checked'}
+            onClick={handleClick}
+            readOnly
+        />
+    );
+}
