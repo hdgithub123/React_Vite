@@ -59,83 +59,6 @@ import { SumFooter, AverageFooter, CountFooter } from './components/Footer/Foote
 // ]
 
 
-// const columns = [
-//     {
-//         header: 'Name',
-//         columns: [
-//             {
-//                 accessorKey: 'firstName',
-//                 header: 'First Name',
-//                 id: 'firstName',
-//                 filterType: 'text',
-//                 footer: info => `Count: ${CountFooter(info.table)}`,
-//                 // cell: EditableCell,
-//                 cell: (info) => info.getValue(),
-//                 /**
-//                  * override the value used for row grouping
-//                  * (otherwise, defaults to the value derived from accessorKey / accessorFn)
-//                  */
-//                 getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
-//             },
-//             {
-//                 accessorFn: (row) => row.lastName,
-//                 id: 'lastName',
-//                 header: () => <span>Last Name</span>,
-//                 filterType: 'text',
-//                 cell: (info) => info.getValue(),
-//             },
-//         ],
-//     },
-//     {
-//         header: 'Info',
-//         columns: [
-//             {
-//                 accessorKey: 'age',
-//                 id: 'age',
-//                 header: () => 'Age',
-//                 footer: (info) => `Sum: ${SumFooter(info.column, info.table)}`,
-//                 filterType: 'number',
-//                 aggregatedCell: ({ getValue }) =>
-//                     Math.round(getValue<number>() * 100) / 100,
-//                 aggregationFn: 'median',
-//             },
-//             {
-//                 header: 'More Info',
-
-//                 columns: [
-//                     {
-//                         accessorKey: 'visits',
-//                         id: 'visits',
-//                         header: () => <span>Visits</span>,
-//                         filterType: 'date',
-//                         aggregationFn: 'sum',
-//                         aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
-//                     },
-//                     {
-//                         accessorKey: 'status',
-//                         id: 'status',
-//                         header: 'Status',
-//                         filterType: 'range',
-//                     },
-//                     {
-//                         accessorKey: 'progress',
-//                         id: 'progress',
-//                         header: 'Profile Progress',
-//                         filterType: 'number',
-//                         footer: (info) => `Average: ${AverageFooter(info.column, info.table)}`,
-//                         cell: ({ getValue }) =>
-//                             Math.round(getValue<number>() * 100) / 100 + '%',
-//                         aggregationFn: 'mean',
-//                         aggregatedCell: ({ getValue }) =>
-//                             Math.round(getValue<number>() * 100) / 100 + '%',
-//                     },
-//                 ],
-//             },
-//         ],
-//     },
-// ]
-
-// khong co footer
 const columns = [
     {
         header: 'Name',
@@ -145,6 +68,8 @@ const columns = [
                 header: 'First Name',
                 id: 'firstName',
                 filterType: 'text',
+                footer: info => `Count: ${CountFooter(info.table)}`,
+                // cell: EditableCell,
                 cell: (info) => info.getValue(),
                 /**
                  * override the value used for row grouping
@@ -163,12 +88,12 @@ const columns = [
     },
     {
         header: 'Info',
-
         columns: [
             {
                 accessorKey: 'age',
                 id: 'age',
                 header: () => 'Age',
+                footer: (info) => `Sum: ${SumFooter(info.column, info.table)}`,
                 filterType: 'number',
                 aggregatedCell: ({ getValue }) =>
                     Math.round(getValue<number>() * 100) / 100,
@@ -197,6 +122,7 @@ const columns = [
                         id: 'progress',
                         header: 'Profile Progress',
                         filterType: 'number',
+                        footer: (info) => `Average: ${AverageFooter(info.column, info.table)}`,
                         cell: ({ getValue }) =>
                             Math.round(getValue<number>() * 100) / 100 + '%',
                         aggregationFn: 'mean',
@@ -208,6 +134,80 @@ const columns = [
         ],
     },
 ]
+
+// khong co footer
+// const columns = [
+//     {
+//         header: 'Name',
+//         columns: [
+//             {
+//                 accessorKey: 'firstName',
+//                 header: 'First Name',
+//                 id: 'firstName',
+//                 filterType: 'text',
+//                 cell: (info) => info.getValue(),
+//                 /**
+//                  * override the value used for row grouping
+//                  * (otherwise, defaults to the value derived from accessorKey / accessorFn)
+//                  */
+//                 getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
+//             },
+//             {
+//                 accessorFn: (row) => row.lastName,
+//                 id: 'lastName',
+//                 header: () => <span>Last Name</span>,
+//                 filterType: 'text',
+//                 cell: (info) => info.getValue(),
+//             },
+//         ],
+//     },
+//     {
+//         header: 'Info',
+
+//         columns: [
+//             {
+//                 accessorKey: 'age',
+//                 id: 'age',
+//                 header: () => 'Age',
+//                 filterType: 'number',
+//                 aggregatedCell: ({ getValue }) =>
+//                     Math.round(getValue<number>() * 100) / 100,
+//                 aggregationFn: 'median',
+//             },
+//             {
+//                 header: 'More Info',
+
+//                 columns: [
+//                     {
+//                         accessorKey: 'visits',
+//                         id: 'visits',
+//                         header: () => <span>Visits</span>,
+//                         filterType: 'date',
+//                         aggregationFn: 'sum',
+//                         aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
+//                     },
+//                     {
+//                         accessorKey: 'status',
+//                         id: 'status',
+//                         header: 'Status',
+//                         filterType: 'range',
+//                     },
+//                     {
+//                         accessorKey: 'progress',
+//                         id: 'progress',
+//                         header: 'Profile Progress',
+//                         filterType: 'number',
+//                         cell: ({ getValue }) =>
+//                             Math.round(getValue<number>() * 100) / 100 + '%',
+//                         aggregationFn: 'mean',
+//                         aggregatedCell: ({ getValue }) =>
+//                             Math.round(getValue<number>() * 100) / 100 + '%',
+//                     },
+//                 ],
+//             },
+//         ],
+//     },
+// ]
 
 
 export default columns;

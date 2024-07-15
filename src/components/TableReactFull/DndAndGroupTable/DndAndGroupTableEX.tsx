@@ -94,7 +94,7 @@ function DndAndGroupTableEX() {
     // console.log("selectedMoreData",selectedMoreData)
     return (
         <div>
-            <div style={{ height: '300px', }}>
+            <div style={{ height: '500px', }}>
                 <VitualExample></VitualExample>
                 {/* <DndAndGroupTable data={makeData} columns ={columns}></DndAndGroupTable> */}
                 {/* <DndAndGroupTableWithCheckbox data={makeData} 
