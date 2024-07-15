@@ -338,7 +338,13 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect
                             )}
                         </DropableContainerGroup>
                     </div>
-                    <div ref={parentRef} className={styles.div_table_container} style={{ overflow: "auto", height: 300, overflowAnchor: "none" }}>
+                    <div ref={parentRef} className={styles.div_table_container} 
+                    // style={{ 
+                    //     overflow: "auto", 
+                    //     height: 300, 
+                    //     // overflowAnchor: "none"
+                    //  }}
+                    >
 
                         {/* Bắt đầu render table */}
                         <table className={styles.table_container}>
@@ -387,11 +393,12 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect
                                         const row = rows[virtualRow.index]
                                         return (
                                             <tr
+                                            className={styles.table_body_tr}
                                                 key={row.id}
                                                 onDoubleClick={() => handleRowClick(row.original)}
                                                 // style={{
-                                                //     //  height: `${virtualRow.size}px`,
-                                                //     height: 30,
+                                                //       height: `${virtualRow.size}px`,
+                                                //     height: 10,
                                                 //     transform: `translateY(${virtualRow.start - index * virtualRow.size
                                                 //         }px)`,
                                                 // }}

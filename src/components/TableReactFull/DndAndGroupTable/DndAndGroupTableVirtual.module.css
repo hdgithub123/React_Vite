@@ -4,7 +4,8 @@
 
 .container {
   width: 100%;
-  height: 100%;
+  /* ngon */
+  max-height: 100%; 
   display: flex;
   flex-direction: column;
 }
@@ -29,6 +30,9 @@
   /* border-collapse: collapse; */
 }
 
+/* .table_body_tr{
+  height: 10px;
+} */
 .div_table_container thead {
   position: sticky; /* make the table heads sticky */
   top: 0px; /* table head will be placed from the top of the table and sticks to it */
