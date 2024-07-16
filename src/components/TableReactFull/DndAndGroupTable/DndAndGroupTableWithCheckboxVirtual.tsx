@@ -167,87 +167,7 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect
 
     };
 
-// các cell được render
-// các cell được render đang phải để bên trong hàm thì mới kéo thả trơn tru được vì nó cần phải được render lại cell
-const DragAlongCell = ({ cell }) => {
-    const { isDragging, setNodeRef, transform } = useSortable({
-        id: cell.column.id,
-    });
-
-    const style: CSSProperties = {
-        opacity: isDragging ? 0.8 : 1,
-        position: 'relative',
-        transform: CSS.Translate.toString(transform),
-        transition: 'width transform 0.2s ease-in-out',
-        width: cell.column.getSize(),
-        zIndex: isDragging ? 1 : 0,
-    };
-
-    const { row } = cell.getContext();
-
-    return (
-        <td
-            ref={setNodeRef}
-            {...{
-                key: cell.id,
-                style: {
-                    style,
-                    background: cell.getIsGrouped()
-                        ? '#ddd'
-                        : cell.getIsAggregated()
-                            ? '#ddd'
-                            : cell.getIsPlaceholder()
-                                ? 'white'
-                                : null,
-
-                    fontWeight: cell.getIsGrouped()
-                        ? 'bold'
-                        : cell.getIsAggregated()
-                            ? 'bold'
-                            : 'normal',
-
-                },
-            }}
-        >
-            {cell.getIsGrouped() ? (
-                // If it's a grouped cell, add an expander and row count
-                <>
-                    <button
-                        {...{
-                            onClick: row.getToggleExpandedHandler(),
-                            style: {
-                                cursor: row.getCanExpand() ? 'pointer' : 'normal',
-                                border: 'none',
-                                background: 'none',
-                            },
-                        }}
-                    >
-                        {row.getIsExpanded() ? '⮛' : '⮚'}{' '}
-                        {/* {row.getIsExpanded() ? <img src={arrow_drop_down} style={{ width: '10px', height: '10px' }} /> : <img src={arrow_right} style={{ width: '10px', height: '10px' }} />}{' '} */}
-                    </button>
-                    {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                    )}{' '}
-                    ({row.subRows.length})
-                </>
-            ) : cell.getIsAggregated() ? (
-                // If the cell is aggregated, use the Aggregated renderer for cell
-                flexRender(
-                    cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
-                    cell.getContext()
-                )
-            ) : cell.getIsPlaceholder() ? null : (
-                // For cells with repeated values, render null
-                // Otherwise, just render the regular cell
-                flexRender(
-                    cell.column.columnDef.cell,
-                    cell.getContext()
-                )
-            )}
-        </td>
-    );
-};
+   
 
     // dau vao là columID render ra header
     const RenderHeaderByID = ({ columnID, columns }) => {
@@ -418,12 +338,9 @@ const DragAlongCell = ({ cell }) => {
                             )}
                         </DropableContainerGroup>
                     </div>
-                    <div ref={parentRef} className={styles.div_table_container}
-                    // style={{ 
-                    //     overflow: "auto", 
-                    //     height: 300, 
-                    //     // overflowAnchor: "none"
-                    //  }}
+                    <div
+                        ref={parentRef}
+                        className={styles.div_table_container}
                     >
 
                         {/* Bắt đầu render table */}
@@ -463,9 +380,9 @@ const DragAlongCell = ({ cell }) => {
                                 ))}
                             </thead>
                             {table.getRowModel().rows.length > 0 ? (
-                                <tbody>
+                                <tbody className={styles.body_container}>
                                     {before > 0 && (
-                                        <tr>
+                                        <tr className={styles.table_body_tr}>
                                             <td style={{ height: `${before}px` }}></td>
                                         </tr>
                                     )}
@@ -476,12 +393,6 @@ const DragAlongCell = ({ cell }) => {
                                                 className={styles.table_body_tr}
                                                 key={row.id}
                                                 onDoubleClick={() => handleRowClick(row.original)}
-                                            // style={{
-                                            //       height: `${virtualRow.size}px`,
-                                            //     height: 10,
-                                            //     transform: `translateY(${virtualRow.start - index * virtualRow.size
-                                            //         }px)`,
-                                            // }}
                                             >
                                                 <td>
                                                     <IndeterminateCheckbox
@@ -497,46 +408,17 @@ const DragAlongCell = ({ cell }) => {
                                                     return (
                                                         <DragAlongCell key={cell.id} cell={cell} />
                                                     )
-
-                                                    // return (
-                                                    //     <td key={cell.id}>
-                                                    //         {flexRender(
-                                                    //             cell.column.columnDef.cell,
-                                                    //             cell.getContext()
-                                                    //         )}
-                                                    //     </td>
-                                                    // );
                                                 })}
                                             </tr>
                                         )
                                     })}
 
                                     {after > 0 && (
-                                        <tr>
+                                        <tr className={styles.table_body_tr}>
                                             <td style={{ height: `${after}px` }}></td>
                                         </tr>
                                     )}
                                 </tbody>
-
-                                // <tbody className={styles.body_container}>
-                                //     {table.getRowModel().rows.map(row => (
-                                //         <tr onDoubleClick={() => handleRowClick(row.original)} className={styles.body_container_tr} key={row.id}>
-                                //             <td>
-                                //                 <IndeterminateCheckbox
-                                //                     {...{
-                                //                         checked: row.getIsSelected(),
-                                //                         disabled: !row.getCanSelect(),
-                                //                         indeterminate: row.getIsSomeSelected(),
-                                //                         onChange: row.getToggleSelectedHandler(),
-                                //                     }}
-                                //                 />
-                                //             </td>
-                                //             {row.getVisibleCells().map(cell => (
-                                //                 <DragAlongCell key={cell.id} cell={cell} />
-                                //             ))}
-                                //         </tr>
-                                //     ))}
-                                // </tbody>
                             ) : (
                                 <tbody>
                                     <tr className={styles.body_container}>
@@ -558,10 +440,6 @@ const DragAlongCell = ({ cell }) => {
                         </table>
 
                     </div>
-
-
-
-
                 </DndContext>
             </div>
         </div>
@@ -591,10 +469,14 @@ const DraggableTableHeader = ({ header }) => {
         boxSizing: 'border-box',
 
     };
+    const handleMouseDown = (event: React.MouseEvent) => {
+        // Prevent the default behavior of the mouse event to avoid scrolling
+        event.preventDefault();
+    };
     return (
         <>
 
-            <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
+            <th colSpan={header.colSpan} ref={setNodeRef} style={style} onMouseDown={handleMouseDown}>
                 {header.isPlaceholder ? null : (
                     <>
                         <div  {...attributes} {...listeners}>
@@ -667,6 +549,88 @@ const StaticTableHeader = ({ header }) => {
     );
 };
 
+
+ // các cell được render
+    // các cell được render đang phải để bên trong hàm thì mới kéo thả trơn tru được vì nó cần phải được render lại cell
+    const DragAlongCell = ({ cell }) => {
+        const { isDragging, setNodeRef, transform } = useSortable({
+            id: cell.column.id,
+        });
+
+        const style: CSSProperties = {
+            opacity: isDragging ? 0.8 : 1,
+            position: 'relative',
+            transform: CSS.Translate.toString(transform),
+            transition: 'width transform 0.2s ease-in-out',
+            width: cell.column.getSize(),
+            zIndex: isDragging ? 1 : 0,
+        };
+
+        const { row } = cell.getContext();
+
+        return (
+            <td
+                ref={setNodeRef}
+                {...{
+                    key: cell.id,
+                    style: {
+                        style,
+                        background: cell.getIsGrouped()
+                            ? '#ddd'
+                            : cell.getIsAggregated()
+                                ? '#ddd'
+                                : cell.getIsPlaceholder()
+                                    ? 'white'
+                                    : null,
+
+                        fontWeight: cell.getIsGrouped()
+                            ? 'bold'
+                            : cell.getIsAggregated()
+                                ? 'bold'
+                                : 'normal',
+
+                    },
+                }}
+            >
+                {cell.getIsGrouped() ? (
+                    // If it's a grouped cell, add an expander and row count
+                    <>
+                        <button
+                            {...{
+                                onClick: row.getToggleExpandedHandler(),
+                                style: {
+                                    cursor: row.getCanExpand() ? 'pointer' : 'normal',
+                                    border: 'none',
+                                    background: 'none',
+                                },
+                            }}
+                        >
+                            {row.getIsExpanded() ? '⮛' : '⮚'}{' '}
+                            {/* {row.getIsExpanded() ? <img src={arrow_drop_down} style={{ width: '10px', height: '10px' }} /> : <img src={arrow_right} style={{ width: '10px', height: '10px' }} />}{' '} */}
+                        </button>
+                        {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                        )}{' '}
+                        ({row.subRows.length})
+                    </>
+                ) : cell.getIsAggregated() ? (
+                    // If the cell is aggregated, use the Aggregated renderer for cell
+                    flexRender(
+                        cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
+                        cell.getContext()
+                    )
+                ) : cell.getIsPlaceholder() ? null : (
+                    // For cells with repeated values, render null
+                    // Otherwise, just render the regular cell
+                    flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                    )
+                )}
+            </td>
+        );
+    };
 
 // DraggableTablefooter
 const DraggableTablefooter = ({ header }) => {
@@ -938,3 +902,5 @@ function TriStateCheckbox({ onChange }) {
         />
     );
 }
+
+
