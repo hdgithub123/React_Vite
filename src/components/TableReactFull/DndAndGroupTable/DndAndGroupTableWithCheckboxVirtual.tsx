@@ -461,7 +461,7 @@ const DragAlongCell = ({ cell }) => {
                                 ))}
                             </thead>
                             {table.getRowModel().rows.length > 0 ? (
-                                <tbody className={styles.body_container}>
+                                <tbody className={styles.table_body}>
                                     {before > 0 && (
                                         <tr className={styles.table_body_tr}>
                                             <td style={{ height: `${before}px` }}></td>

@@ -52,6 +52,9 @@
   /* padding: 8px; */
 }
 
+.table_body tr:hover {
+  background-color: aqua;
+}
 
 .foot_container{
   position: sticky; /* make the table heads sticky */
@@ -60,9 +63,6 @@
 }
 
 
-.body_container_tr:hover {
-  background-color: aqua;
-}
 
 /* căn chỉnh hiện thanh resize */
 .resizer {
