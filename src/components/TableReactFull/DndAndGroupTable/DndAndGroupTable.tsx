@@ -327,6 +327,7 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
                 <DndContext
                     collisionDetection={customCollisionDetection}
                     onDragEnd={handleDragEnd}
+                    autoScroll = {false}
                     sensors={sensors}
                 >
                     <div className={styles.Dropable_Container_Group}>
