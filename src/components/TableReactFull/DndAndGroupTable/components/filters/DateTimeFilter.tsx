@@ -29,15 +29,21 @@ function DateTimeFilter({ column }) {
             case 'DifferentDateTime':
                 column.columnDef.filterFn = DifferentDateTime;
                 break;
+            case 'EmptyDateTime':
+                column.columnDef.filterFn = EmptyDateTime;
+                break;
             default:
                 column.columnDef.filterFn = e.target.value;
         }
 
-        if (FilterValue.current) {
+        if (e.target.value === "EmptyDateTime") {
+            column.setFilterValue("0001-01-01 00:00")
+        } else if (FilterValue.current) {
             column.setFilterValue(FilterValue.current);
         } else {
             column.setFilterValue(undefined); // or handle the empty case as needed
         }
+        
     };
 
     function handelOnChange(e) {
@@ -45,21 +51,22 @@ function DateTimeFilter({ column }) {
         FilterValue.current = e.target.value
     }
     return (
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <input
                 type="datetime-local"
-                style={{ width: 'calc(100% - 35px)', marginRight: '2px'}}
+                style={{ width: 'calc(100% - 35px)', marginRight: '2px' }}
                 value={column.getFilterValue() || ''}
                 onChange={handelOnChange}
                 placeholder='Search...'
             />
             <select style={{ width: '33px' }} value={filterFn} onChange={handleFilterChange}>
-                <option value="EqualsDateTime">=</option>
-                <option value="weakEqualsDateTime">{'≤'}</option>
-                <option value="weakDateTime">{'<'}</option>
-                <option value="GreaterEqualsDateTime">{'≥'}</option>
-                <option value="GreaterDateTime">{'>'}</option>
-                <option value="DifferentDateTime">{'≠'}</option>
+                <option value="EqualsDateTime" title="Equal">=</option>
+                <option value="weakEqualsDateTime" title="Weak Equal">{'≤'}</option>
+                <option value="weakDateTime" title="Weak">{'<'}</option>
+                <option value="GreaterEqualsDateTime" title="Greater Equal">{'≥'}</option>
+                <option value="GreaterDateTime" title="Greater">{'>'}</option>
+                <option value="DifferentDateTime" title="Different">{'≠'}</option>
+                <option value="EmptyDateTime" title="Empty">∅</option>
             </select>
         </div>
 
@@ -69,6 +76,13 @@ function DateTimeFilter({ column }) {
 
 export default DateTimeFilter;
 
+const EmptyDateTime = (row, columnId, value) => {
+    const cellValue = row.getValue(columnId);
+
+    // Return true if the cell value is null or an empty string, otherwise return false
+    return cellValue === null || cellValue === '';
+
+}
 
 const EqualsDateTime = (row, columnId, value) => {
     const cellValue = new Date(row.getValue(columnId));

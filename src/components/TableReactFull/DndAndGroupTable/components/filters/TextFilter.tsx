@@ -16,11 +16,16 @@ function TextFilter({ column }) {
             case 'endWithString':
                 column.columnDef.filterFn = endWithString;
                 break;
+            case 'EmptyString':
+                column.columnDef.filterFn = EmptyString;
+                break;
             default:
                 column.columnDef.filterFn = e.target.value;
         }
 
-        if (FilterValue.current) {
+        if  (e.target.value ==="EmptyString"){
+            column.setFilterValue("Empty")
+        } else if (FilterValue.current) {
             column.setFilterValue(FilterValue.current);
         } else {
             column.setFilterValue(undefined); // or handle the empty case as needed
@@ -40,13 +45,14 @@ function TextFilter({ column }) {
                 onChange={handelOnChange}
                 placeholder='Search...'
             />
-            <select style={{ width: '33px'}} value={filterFn} onChange={handleFilterChange}>
+            <select style={{ width: '33px' }} value={filterFn} onChange={handleFilterChange}>
                 <option value="includesString" title="Includes String">∈</option>
                 <option value="NotIncludesString" title="Does Not Include String">∉</option>
                 {/* <option value="includesStringSensitive" title="Includes String Case Sensitive">∈S</option> */}
                 <option value="equalsString" title="Equals String">=</option>
                 <option value="startWithString" title="Starts With String">⭲</option>
                 <option value="endWithString" title="Ends With String">⭰</option>
+                <option value="EmptyString" title="Empty">∅</option>
             </select>
         </div>
 
@@ -57,6 +63,15 @@ function TextFilter({ column }) {
 export default TextFilter;
 
 // Các hàm FilterFn
+
+const EmptyString = (row, columnId, value) => {
+    const cellValue = row.getValue(columnId);
+
+    // Return true if the cell value is null or an empty string, otherwise return false
+    return cellValue === null || cellValue === '';
+
+}
+
 
 const NotIncludesString = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);

@@ -29,15 +29,22 @@ function DateFilter({ column }) {
             case 'DifferentDate':
                 column.columnDef.filterFn = DifferentDate;
                 break;
+            case 'EmptyDate':
+                column.columnDef.filterFn = EmptyDate;
+                break;
             default:
                 column.columnDef.filterFn = e.target.value;
         }
 
-        if (FilterValue.current) {
+
+        if (e.target.value === "EmptyDate") {
+            column.setFilterValue("0001-01-01")
+        } else if (FilterValue.current) {
             column.setFilterValue(FilterValue.current);
         } else {
             column.setFilterValue(undefined); // or handle the empty case as needed
         }
+
     };
 
     function handelOnChange(e) {
@@ -45,10 +52,10 @@ function DateFilter({ column }) {
         FilterValue.current = e.target.value
     }
     return (
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <input
                 type="date"
-                style={{ width: 'calc(100% - 35px)', marginRight: '2px'}}
+                style={{ width: 'calc(100% - 35px)', marginRight: '2px' }}
                 value={column.getFilterValue() || ''}
                 onChange={handelOnChange}
                 placeholder='Search...'
@@ -60,6 +67,7 @@ function DateFilter({ column }) {
                 <option value="GreaterEqualsDate" title="Greater Equal">{'≥'}</option>
                 <option value="GreaterDate" title="Greater">{'>'}</option>
                 <option value="DifferentDate" title="Different">{'≠'}</option>
+                <option value="EmptyDate" title="Empty">∅</option>
             </select>
         </div>
 
@@ -69,6 +77,13 @@ function DateFilter({ column }) {
 
 export default DateFilter;
 
+const EmptyDate = (row, columnId, value) => {
+    const cellValue = row.getValue(columnId);
+
+    // Return true if the cell value is null or an empty string, otherwise return false
+    return cellValue === null || cellValue === '';
+
+}
 
 const EqualsDate = (row, columnId, value) => {
     const cellValue = new Date(row.getValue(columnId));

@@ -30,15 +30,21 @@ function NumberFilter({ column }) {
             case 'DifferentNumber':
                 column.columnDef.filterFn = DifferentNumber;
                 break;
+            case 'EmptyNumber':
+                column.columnDef.filterFn = EmptyNumber;
+                break;
             default:
                 column.columnDef.filterFn = e.target.value;
         }
 
-        if (FilterValue.current) {
+        if  (e.target.value ==="EmptyNumber"){
+            column.setFilterValue("Empty")
+        } else if (FilterValue.current) {
             column.setFilterValue(FilterValue.current);
         } else {
             column.setFilterValue(undefined); // or handle the empty case as needed
         }
+        
     };
 
     function handelOnChange(e) {
@@ -46,10 +52,10 @@ function NumberFilter({ column }) {
         FilterValue.current = e.target.value
     }
     return (
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <input
                 type="text"
-                style={{ width: 'calc(100% - 35px)', marginRight: '2px'}}
+                style={{ width: 'calc(100% - 35px)', marginRight: '2px' }}
                 value={column.getFilterValue() || ''}
                 onChange={handelOnChange}
                 placeholder='Search...'
@@ -61,6 +67,7 @@ function NumberFilter({ column }) {
                 <option value="GreaterEqualsNumber" title="Greater Equals" >{'≥'}</option>
                 <option value="GreaterNumber" title="Greater" >{'>'}</option>
                 <option value="DifferentNumber" title="Different" >{'≠'}</option>
+                <option value="EmptyNumber" title="Empty">∅</option>
             </select>
         </div>
 
@@ -70,6 +77,13 @@ function NumberFilter({ column }) {
 
 export default NumberFilter;
 
+const EmptyNumber = (row, columnId, value) => {
+    const cellValue = row.getValue(columnId);
+
+    // Return true if the cell value is null or an empty string, otherwise return false
+    return cellValue === null || cellValue === '';
+
+}
 
 const EqualsNumber = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
