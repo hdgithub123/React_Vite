@@ -192,13 +192,13 @@ const DragAlongCell = ({ cell }) => {
                 key: cell.id,
                 style: {
                     style,
-                    background: cell.getIsGrouped()
-                        ? '#ddd'
-                        : cell.getIsAggregated()
-                            ? '#ddd'
-                            : cell.getIsPlaceholder()
-                                ? 'white'
-                                : null,
+                    // background: cell.getIsGrouped()
+                    //     ? '#ddd'
+                    //     : cell.getIsAggregated()
+                    //         ? '#ddd'
+                    //         : cell.getIsPlaceholder()
+                    //             ? 'white'
+                    //             : null,
 
                     fontWeight: cell.getIsGrouped()
                         ? 'bold'
