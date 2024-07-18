@@ -549,14 +549,10 @@ const DraggableTableHeader = ({ header }) => {
         boxSizing: 'border-box',
 
     };
-    const handleMouseDown = (event: React.MouseEvent) => {
-        // Prevent the default behavior of the mouse event to avoid scrolling
-        event.preventDefault();
-    };
     return (
         <>
 
-            <th colSpan={header.colSpan} ref={setNodeRef} style={style} onMouseDown={handleMouseDown}>
+            <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
                 {header.isPlaceholder ? null : (
                     <>
                         <div  {...attributes} {...listeners}>
