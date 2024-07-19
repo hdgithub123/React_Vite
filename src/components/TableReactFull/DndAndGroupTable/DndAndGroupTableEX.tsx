@@ -77,7 +77,7 @@ import columns from './columns';
 import DndAndGroupTable from './DndAndGroupTable';
 import DndAndGroupTableWithCheckbox from './DndAndGroupTableWithCheckbox';
 import DndAndGroupTableWithCheckboxFilter from './DndAndGroupTableWithCheckboxFilter';
-import DndAndGroupTableWithCheckboxVirtual from './DndAndGroupTableWithCheckboxVirtual';
+import ReactTableFull from './Tables/ReactTableFull/ReactTableFull';
 import VitualExample from './VitualExample';
 
 function DndAndGroupTableEX() {
@@ -113,12 +113,12 @@ function DndAndGroupTableEX() {
                 
                 
                  */}
-                <DndAndGroupTableWithCheckboxVirtual 
+                <ReactTableFull 
                 data={makeData} 
                 columns={columns} 
                 onRowSelect={handleRowSelect} 
                 onRowsSelect={handleRowsSelect}>
-                </DndAndGroupTableWithCheckboxVirtual>
+                </ReactTableFull>
             </div>
 
             {selectedData && (

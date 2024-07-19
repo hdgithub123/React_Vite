@@ -1,4 +1,4 @@
-import { SumFooter, AverageFooter, CountFooter } from './components/Footer/FooterColumn'
+import { SumFooter, AverageFooter, CountFooter } from './components/footer/FooterColumn'
 
 
 // const columns = 
