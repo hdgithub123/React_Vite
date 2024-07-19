@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, useMemo, CSSProperties } from 'react';
+import { useState, useEffect, CSSProperties } from 'react';
 import React from 'react'
 
 import styles from './ReactTableFull.module.css';
@@ -7,6 +7,7 @@ import {
     GroupingState,
     getGroupedRowModel,
     getExpandedRowModel,
+    flexRender,
     getCoreRowModel,
     useReactTable,
     getFilteredRowModel,
@@ -25,20 +26,20 @@ import {
     useSensors,
 } from '@dnd-kit/core';
 import {
+    useSortable,
     arrayMove,
     SortableContext,
     horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
+import { CSS } from '@dnd-kit/utilities';
 
 import { useVirtualizer, notUndefined } from "@tanstack/react-virtual";
 import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
-import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
 import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
 import { customCollisionDetection } from '../../components/MainComponent/Others/customCollisionDetection';
 import { DropableContainerGroup } from '../../components/MainComponent/Others/DropableContainerGroup';
 import { ColumnVisibilityToggle } from '../../components/MainComponent/Others/ColumnVisibilityToggle';
-import { RenderHeaderByID } from '../../components/MainComponent/Others/RenderHeaderByID';
 import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 
@@ -122,6 +123,122 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
             return count + 1;
         }, 0);
     };
+
+
+    const DragAlongCell = ({ cell }) => {
+        const { isDragging, setNodeRef, transform } = useSortable({
+            id: cell.column.id,
+        });
+    
+        const style: CSSProperties = {
+            opacity: isDragging ? 0.8 : 1,
+            position: 'relative',
+            transform: CSS.Translate.toString(transform),
+            transition: 'width transform 0.2s ease-in-out',
+            width: cell.column.getSize(),
+            zIndex: isDragging ? 1 : 0,
+        };
+    
+        const { row } = cell.getContext();
+    
+        return (
+            <td
+                ref={setNodeRef}
+                {...{
+                    key: cell.id,
+                    style: {
+                        style,
+                        // background: cell.getIsGrouped()
+                        //     ? '#ddd'
+                        //     : cell.getIsAggregated()
+                        //         ? '#ddd'
+                        //         : cell.getIsPlaceholder()
+                        //             ? 'white'
+                        //             : null,
+    
+                        fontWeight: cell.getIsGrouped()
+                            ? 'bold'
+                            : cell.getIsAggregated()
+                                ? 'bold'
+                                : 'normal',
+    
+                    },
+                }}
+            >
+                {cell.getIsGrouped() ? (
+                    // If it's a grouped cell, add an expander and row count
+                    <>
+                        <button
+                            {...{
+                                onClick: row.getToggleExpandedHandler(),
+                                style: {
+                                    cursor: row.getCanExpand() ? 'pointer' : 'normal',
+                                    border: 'none',
+                                    background: 'none',
+                                },
+                            }}
+                        >
+                            {row.getIsExpanded() ? '⮛' : '⮚'}{' '}
+                            {/* {row.getIsExpanded() ? <img src={arrow_drop_down} style={{ width: '10px', height: '10px' }} /> : <img src={arrow_right} style={{ width: '10px', height: '10px' }} />}{' '} */}
+                        </button>
+                        {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                        )}{' '}
+                        ({row.subRows.length})
+                    </>
+                ) : cell.getIsAggregated() ? (
+                    // If the cell is aggregated, use the Aggregated renderer for cell
+                    flexRender(
+                        cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
+                        cell.getContext()
+                    )
+                ) : cell.getIsPlaceholder() ? null : (
+                    // For cells with repeated values, render null
+                    // Otherwise, just render the regular cell
+                    flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                    )
+                )}
+            </td>
+        );
+    };
+
+
+    const RenderHeaderByID = ({ columnID, columns }) => {
+        const findHeader = (columns, id) => {
+            for (const column of columns) {
+                if (column.id === id) {
+                    return column;
+                }
+                if (column.columns) {
+                    const found = findHeader(column.columns, id);
+                    if (found) {
+                        return found;
+                    }
+                }
+            }
+            return undefined;
+        };
+    
+        const columnDef = findHeader(columns, columnID);
+        if (columnDef) {
+            return <div>{flexRender(columnDef.header, {})} <button
+                {...{
+                    onClick: () => setGrouping(grouping.filter(item => item !== columnID)),
+                    style: {
+                        cursor: 'pointer',
+                    },
+                }}
+            >
+                X
+            </button>
+            </div>;
+        }
+    
+        return <div>Header not found</div>;
+    }
 
     const sensors = useSensors(
         useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
