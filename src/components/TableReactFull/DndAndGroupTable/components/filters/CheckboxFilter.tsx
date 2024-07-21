@@ -6,9 +6,6 @@ function CheckboxFilter({ column }) {
  
             column.setFilterValue(status);
             column.columnDef.filterFn = CheckFn;
-
-        
-        
       };
 
     return (

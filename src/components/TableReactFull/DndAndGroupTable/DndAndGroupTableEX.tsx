@@ -97,10 +97,10 @@ function DndAndGroupTableEX() {
             <div style={{ height: '500px', }}>
                 {/* <VitualExample></VitualExample> */}
                 {/* <DndAndGroupTable data={makeData} columns ={columns}></DndAndGroupTable> */}
-                <DndAndGroupTableWithCheckbox data={makeData} 
+                {/* <DndAndGroupTableWithCheckbox data={makeData} 
                 columns={columns} onRowSelect={handleRowSelect} 
                 onRowsSelect={handleRowsSelect}>
-                </DndAndGroupTableWithCheckbox>
+                </DndAndGroupTableWithCheckbox> */}
                 {/* <DndAndGroupTableWithCheckboxFilter data={makeData} columns={columns} ></DndAndGroupTableWithCheckboxFilter> */}
                 {/* <h1>ds</h1>
                 <h1>ds</h1>

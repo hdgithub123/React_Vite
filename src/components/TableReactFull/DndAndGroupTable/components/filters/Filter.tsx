@@ -24,10 +24,4 @@ function Filter({ column }) {
             return null;
     }
 }
-
-
-
-
-
-
 export default Filter;
