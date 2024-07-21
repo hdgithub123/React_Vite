@@ -306,7 +306,7 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
         count: rows.length,
         getScrollElement: () => parentRef.current,
         estimateSize: () => 20,
-        overscan: 10,
+        overscan: 20,
 
     })
 
