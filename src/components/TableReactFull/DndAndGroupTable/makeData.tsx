@@ -75,8 +75,8 @@ export const makeData = [
     { firstName: '74Tom', lastName: 'Taylor', age: 37, visits: "2025-02-01", progress: 90, status: 'single' },
     { firstName: '75Emma', lastName: 'Moore', age: 41, visits: "2025-03-01", progress: 70, status: 'complicated' },
     { firstName: '76Olivia', lastName: 'Martin', age: 46, visits: "2025-04-01", progress: 75, status: 'relationship' },
-    { firstName: '77Liam', lastName: 'Jackson', age: 31, visits: "2025-05-01", progress: 80, status: 'single' },
-    { firstName: '78Noah', lastName: 'Thompson', age: 34, visits: "2025-06-01", progress: 85, status: 'complicated' },
+    { firstName: '77Liam', lastName: 'Jackson', age: 311123.439876, visits: "2025-05-01", progress: 80, status: 'single' },
+    { firstName: '78Noah', lastName: 'Thompson', age: 34, visits: "2025-062-01", progress: 85, status: 'complicated' },
     { firstName: '', lastName: 'White', age: '', visits: '', progress: 90, status: 'relationship' },
     { firstName: '80Sophia', lastName: 'Harris', age: '', visits: "2025-08-01", progress: 70, status: 'single' },
 

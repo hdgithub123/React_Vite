@@ -1,6 +1,9 @@
 import { SumFooter, AverageFooter, CountFooter } from './components/footer/FooterColumn'
-
-
+import { TextCell } from './components/cells/orinal/TextCell';
+import { NumberUsCell, NumberVnCell, NumberCell } from './components/cells/orinal/NumberCell';
+import { DateVnCell,DateUsCell, DateCell } from './components/cells/orinal/DateCell';
+import { DateTimeCell,DateTimeVnCell } from './components/cells/orinal/DateTimeCell';
+import EditableCell from './components/cells/edit/EditableCell';
 // const columns = 
 //  [
 //         {
@@ -69,8 +72,8 @@ const columns = [
                 id: 'firstName',
                 filterType: 'text',
                 footer: info => `Count: ${CountFooter(info.table)}`,
-                // cell: EditableCell,
-                cell: (info) => info.getValue(),
+                cell: TextCell,
+                //cell: (info) => info.getValue(),
                 /**
                  * override the value used for row grouping
                  * (otherwise, defaults to the value derived from accessorKey / accessorFn)
@@ -95,9 +98,25 @@ const columns = [
                 header: () => 'Age',
                 footer: (info) => `Sum: ${SumFooter(info.column, info.table)}`,
                 filterType: 'number',
-                aggregatedCell: ({ getValue }) =>
-                    Math.round(getValue<number>() * 100) / 100,
-                aggregationFn: 'median',
+                cell: ({ cell }) => (
+                    <NumberCell
+                        initialValue={cell.getValue()}
+                        minFractionDigits={0}
+                        maxFractionDigits={4}
+                    />),
+
+                
+                aggregatedCell: ({ cell }) => (
+                    <NumberCell
+                        initialValue={cell.getValue()}
+                        minFractionDigits={0}
+                        maxFractionDigits={4}
+                    />),
+
+
+                // aggregatedCell: ({ getValue }) =>
+                //     Math.round(getValue<number>() * 100) / 100,
+                aggregationFn: 'mean',
             },
             {
                 header: 'More Info',
@@ -107,14 +126,23 @@ const columns = [
                         accessorKey: 'visits',
                         id: 'visits',
                         header: () => <span>Visits</span>,
+                        cell: DateCell,
                         filterType: 'date',
-                        aggregationFn: 'sum',
-                        aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
+                        // aggregationFn: 'sum',
+                        aggregationFn: 'count',
+                       aggregatedCell: ({ cell }) => (
+                        <NumberCell
+                            initialValue={cell.getValue()}
+                            minFractionDigits={0}
+                            maxFractionDigits={4}
+                        />),
+                        //aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
                     },
                     {
                         accessorKey: 'status',
                         id: 'status',
                         header: 'Status',
+                        cell: TextCell,
                         filterType: 'range',
                     },
                     {
