@@ -167,7 +167,7 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
             >
                 {cell.getIsGrouped() ? (
                     // If it's a grouped cell, add an expander and row count
-                    <>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
                         <button
                             {...{
                                 onClick: row.getToggleExpandedHandler(),
@@ -179,14 +179,13 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
                             }}
                         >
                             {row.getIsExpanded() ? '⮛' : '⮚'}{' '}
-                            {/* {row.getIsExpanded() ? <img src={arrow_drop_down} style={{ width: '10px', height: '10px' }} /> : <img src={arrow_right} style={{ width: '10px', height: '10px' }} />}{' '} */}
                         </button>
                         {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
                         )}{' '}
                         ({row.subRows.length})
-                    </>
+                    </div>
                 ) : cell.getIsAggregated() ? (
                     // If the cell is aggregated, use the Aggregated renderer for cell
                     flexRender(

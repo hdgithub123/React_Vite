@@ -179,7 +179,7 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
             >
                 {cell.getIsGrouped() ? (
                     // If it's a grouped cell, add an expander and row count
-                    <>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
                         <button
                             {...{
                                 onClick: row.getToggleExpandedHandler(),
@@ -198,7 +198,7 @@ function DndAndGroupTable({ data, columns, onRowSelect }) {
                             cell.getContext()
                         )}{' '}
                         ({row.subRows.length})
-                    </>
+                    </div>
                 ) : cell.getIsAggregated() ? (
                     // If the cell is aggregated, use the Aggregated renderer for cell
                     flexRender(
