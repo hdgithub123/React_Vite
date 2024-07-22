@@ -2,7 +2,9 @@ export const TextCell = ({ getValue, row, column, table }) => {
     return <div style={{ 
         textAlign: 'Left',
         // whiteSpace: 'nowrap',
-        // maxWidth: '50px',
+        // display: 'block',
+        // maxWidth: '100px',
+        // overflow: 'hidden',
         // textOverflow: 'ellipsis',
     }}>{getValue()}</div>;
 };
