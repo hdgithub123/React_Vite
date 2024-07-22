@@ -52,12 +52,9 @@
   /* padding: 8px; */
 }
 
-.table_body tr{
-  /* display: inline-block; */
- white-space: nowrap;
- 
-  text-overflow: ellipsis;
-}
+/* .table_body tr{
+  background-color: white;
+} */
 
 .table_body tr:hover {
   background-color: aqua;
