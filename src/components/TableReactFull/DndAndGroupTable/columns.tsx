@@ -1,4 +1,4 @@
-import { SumFooter, AverageFooter, CountFooter } from './components/Footer/FooterColumn'
+import { SumFooter, AverageFooter, CountFooter } from './components/footer/FooterColumn'
 import { TextCell } from './components/cells/orinal/TextCell';
 import { NumberUsCell, NumberVnCell, NumberCell } from './components/cells/orinal/NumberCell';
 import { DateVnCell,DateUsCell, DateCell } from './components/cells/orinal/DateCell';
