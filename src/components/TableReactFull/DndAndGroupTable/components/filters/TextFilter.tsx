@@ -19,13 +19,18 @@ function TextFilter({ column }) {
             case 'EmptyString':
                 column.columnDef.filterFn = EmptyString;
                 break;
+            case 'ExistsString':
+                column.columnDef.filterFn = ExistsString;
+                break;
             default:
                 column.columnDef.filterFn = e.target.value;
         }
 
-        if  (e.target.value ==="EmptyString"){
+        if (e.target.value === "EmptyString") {
             column.setFilterValue("Empty")
-        } else if (FilterValue.current) {
+        } else if (e.target.value === "ExistsString"){
+            column.setFilterValue("Not Empty")
+        }else if (FilterValue.current) {
             column.setFilterValue(FilterValue.current);
         } else {
             column.setFilterValue(undefined); // or handle the empty case as needed
@@ -53,6 +58,7 @@ function TextFilter({ column }) {
                 <option value="startWithString" title="Starts With String">⭲</option>
                 <option value="endWithString" title="Ends With String">⭰</option>
                 <option value="EmptyString" title="Empty">∅</option>
+                <option value="ExistsString" title="Exists">∃</option>
             </select>
         </div>
 
@@ -63,6 +69,15 @@ function TextFilter({ column }) {
 export default TextFilter;
 
 // Các hàm FilterFn
+
+
+const ExistsString = (row, columnId, value) => {
+    const cellValue = row.getValue(columnId);
+
+    // Return true if the cell value is null or an empty string, otherwise return false
+    return cellValue !== null && cellValue !== '';
+
+}
 
 const EmptyString = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);

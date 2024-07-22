@@ -33,18 +33,23 @@ function NumberFilter({ column }) {
             case 'EmptyNumber':
                 column.columnDef.filterFn = EmptyNumber;
                 break;
+            case 'ExistsNumber':
+                column.columnDef.filterFn = ExistsNumber;
+                break;
             default:
                 column.columnDef.filterFn = e.target.value;
         }
 
-        if  (e.target.value ==="EmptyNumber"){
+        if (e.target.value === "EmptyNumber") {
             column.setFilterValue("Empty")
-        } else if (FilterValue.current) {
+        } else if (e.target.value === "ExistsNumber"){
+            column.setFilterValue("Not Empty")
+        }else if (FilterValue.current) {
             column.setFilterValue(FilterValue.current);
         } else {
             column.setFilterValue(undefined); // or handle the empty case as needed
         }
-        
+
     };
 
     function handelOnChange(e) {
@@ -68,6 +73,7 @@ function NumberFilter({ column }) {
                 <option value="GreaterNumber" title="Greater" >{'>'}</option>
                 <option value="DifferentNumber" title="Different" >{'≠'}</option>
                 <option value="EmptyNumber" title="Empty">∅</option>
+                <option value="ExistsNumber" title="Exists">∃</option>
             </select>
         </div>
 
@@ -76,6 +82,15 @@ function NumberFilter({ column }) {
 }
 
 export default NumberFilter;
+
+const ExistsNumber = (row, columnId, value) => {
+    const cellValue = row.getValue(columnId);
+
+    // Return true if the cell value is null or an empty string, otherwise return false
+    return cellValue !== null && cellValue !== '';
+
+}
+
 
 const EmptyNumber = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);

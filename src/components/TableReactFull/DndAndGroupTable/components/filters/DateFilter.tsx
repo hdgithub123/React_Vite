@@ -32,6 +32,9 @@ function DateFilter({ column }) {
             case 'EmptyDate':
                 column.columnDef.filterFn = EmptyDate;
                 break;
+            case 'ExistsDate':
+                column.columnDef.filterFn = ExistsDate;
+                break;
             default:
                 column.columnDef.filterFn = e.target.value;
         }
@@ -39,7 +42,9 @@ function DateFilter({ column }) {
 
         if (e.target.value === "EmptyDate") {
             column.setFilterValue("0001-01-01")
-        } else if (FilterValue.current) {
+        } else if (e.target.value === "ExistsDate"){
+            column.setFilterValue("0002-01-01")
+        }else if (FilterValue.current) {
             column.setFilterValue(FilterValue.current);
         } else {
             column.setFilterValue(undefined); // or handle the empty case as needed
@@ -68,6 +73,7 @@ function DateFilter({ column }) {
                 <option value="GreaterDate" title="Greater">{'>'}</option>
                 <option value="DifferentDate" title="Different">{'≠'}</option>
                 <option value="EmptyDate" title="Empty">∅</option>
+                <option value="ExistsDate" title="Exists">∃</option>
             </select>
         </div>
 
@@ -77,12 +83,20 @@ function DateFilter({ column }) {
 
 export default DateFilter;
 
+const ExistsDate = (row, columnId, value) => {
+    const cellValue = row.getValue(columnId);
+
+    // Return true if the cell value is null or an empty string, otherwise return false
+    return cellValue !== null && cellValue !== '';
+
+}
+
+
 const EmptyDate = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
 
     // Return true if the cell value is null or an empty string, otherwise return false
     return cellValue === null || cellValue === '';
-
 }
 
 const EqualsDate = (row, columnId, value) => {

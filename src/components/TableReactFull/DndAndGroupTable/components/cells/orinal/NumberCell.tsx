@@ -13,6 +13,9 @@ export const NumberCell = ({ initialValue, row, column, table, minFractionDigits
 
 
 const formatNumber = (number, minFractionDigits, maxFractionDigits) => {
+    if (!number || number === "") {
+        return '';
+    }
     const locale = navigator.language; 
     return new Intl.NumberFormat(locale, {
         minimumFractionDigits: minFractionDigits,
@@ -21,6 +24,9 @@ const formatNumber = (number, minFractionDigits, maxFractionDigits) => {
 };
 
 const formatUsNumber = (number, minFractionDigits, maxFractionDigits) => {
+    if (!number || number === "") {
+        return '';
+    }
     return new Intl.NumberFormat('en-US', {
         minimumFractionDigits: minFractionDigits,
         maximumFractionDigits: maxFractionDigits,
@@ -28,6 +34,9 @@ const formatUsNumber = (number, minFractionDigits, maxFractionDigits) => {
 };
 
 const formatVnNumber = (number, minFractionDigits, maxFractionDigits) => {
+    if (!number || number === "") {
+        return '';
+    }
     return new Intl.NumberFormat('vi-VN', {
         minimumFractionDigits: minFractionDigits,
         maximumFractionDigits: maxFractionDigits,
