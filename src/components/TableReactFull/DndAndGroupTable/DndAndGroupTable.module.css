@@ -52,6 +52,10 @@
   /* padding: 8px; */
 }
 
+.table_body td{
+  /* khong bi gioi han keo */
+  max-width: 0; 
+}
 
 .foot_container{
   position: sticky; /* make the table heads sticky */
