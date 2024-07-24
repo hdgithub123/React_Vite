@@ -55,6 +55,10 @@
 /* .table_body tr{
   background-color: white;
 } */
+ .table_body td{
+  /* khong bi gioi han keo */
+  max-width: 0; 
+}
 
 .table_body tr:hover {
   background-color: aqua;

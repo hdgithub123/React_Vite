@@ -78,7 +78,7 @@ export const makeData = [
     { firstName: '77Liam', lastName: 'Jackson', age: 311123.439876, visits: "2025-05-01", progress: 80, status: 'single' },
     { firstName: '78Noah', lastName: 'Thompson', age: 34, visits: "2025-062-01", progress: 85, status: 'complicated' },
     { firstName: '', lastName: 'White', age: '', visits: '', progress: 90, status: 'relationship' },
-    { firstName: '80Sophia1234567890123456 789001234567890 0123456789001234567890', lastName: 'Harris', age: '', visits: "2025-08-01", progress: 70, status: 'single' },
+    { firstName: '80Sophia1234567890123456 789001234567890 0123456789001234567890', lastName: 'Harris asdadsa dasdad dasdasdas dasdas 3456', age: '', visits: "2025-08-01", progress: 70, status: 'single' },
 
 ];
 
