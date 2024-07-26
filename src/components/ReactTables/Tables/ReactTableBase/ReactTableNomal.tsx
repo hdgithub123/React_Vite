@@ -22,17 +22,17 @@ import {
     DragEndEvent,
     useSensor,
     useSensors,
+
 } from '@dnd-kit/core';
 
 import {
-    useSortable,
     arrayMove,
+    useSortable,
     SortableContext,
     horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
 import { CSS } from '@dnd-kit/utilities';
-
 import styles from './ReactTableNomal.module.css';
 import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
 import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
@@ -86,13 +86,11 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
 
     });
 
-    // các cell được render
-    // các cell được render đang phải để bên trong hàm thì mới kéo thả trơn tru được vì nó cần phải được render lại cell
-    const DragAlongCell = ({ cell }) => {
+    const DragAlongCell = ({ cell}) => {
         const { isDragging, setNodeRef, transform } = useSortable({
             id: cell.column.id,
         });
-
+    
         const style: CSSProperties = {
             opacity: isDragging ? 0.8 : 1,
             position: 'relative',
@@ -101,9 +99,9 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
             width: cell.column.getSize(),
             zIndex: isDragging ? 1 : 0,
         };
-
+    
         const { row } = cell.getContext();
-
+    
         return (
             <td
                 ref={setNodeRef}
@@ -111,20 +109,20 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
                     key: cell.id,
                     style: {
                         style,
-                        background: cell.getIsGrouped()
-                            ? '#ddd'
-                            : cell.getIsAggregated()
-                                ? '#ddd'
-                                : cell.getIsPlaceholder()
-                                    ? 'white'
-                                    : null,
-
+                        // background: cell.getIsGrouped()
+                        //     ? '#ddd'
+                        //     : cell.getIsAggregated()
+                        //         ? '#ddd'
+                        //         : cell.getIsPlaceholder()
+                        //             ? 'white'
+                        //             : null,
+    
                         fontWeight: cell.getIsGrouped()
                             ? 'bold'
                             : cell.getIsAggregated()
                                 ? 'bold'
                                 : 'normal',
-
+    
                     },
                 }}
             >
@@ -142,7 +140,6 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
                             }}
                         >
                             {row.getIsExpanded() ? '⮛' : '⮚'}{' '}
-                            {/* {row.getIsExpanded() ? <img src={arrow_drop_down} style={{ width: '10px', height: '10px' }} /> : <img src={arrow_right} style={{ width: '10px', height: '10px' }} />}{' '} */}
                         </button>
                         {flexRender(
                             cell.column.columnDef.cell,
@@ -268,7 +265,7 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
                                         <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
                                             {headerGroup.headers.map((header) =>
                                                 isLeafColumn(header) ? (
-                                                    <DraggableTableHeader key={header.id} header={header} />
+                                                    <DraggableTableHeader key={header.id} header={header}/>
                                                 ) : (
                                                     <StaticTableHeader key={header.id} header={header} />
                                                 )
@@ -282,7 +279,7 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
                                     {table.getRowModel().rows.map(row => (
                                         <tr onDoubleClick={() => handleRowClick(row.original)} className={styles.body_container_tr} key={row.id}>
                                             {row.getVisibleCells().map(cell => (
-                                                <DragAlongCell key={cell.id} cell={cell} />
+                                                <DragAlongCell key={cell.id} cell={cell}/>
                                             ))}
                                         </tr>
                                     ))}
@@ -305,9 +302,6 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
                             </tfoot>}
                         </table>
                     </div>
-
-
-
                 </DndContext>
             </div>
         </div>

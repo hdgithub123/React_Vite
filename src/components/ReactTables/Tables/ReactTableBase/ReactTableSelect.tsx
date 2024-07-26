@@ -23,16 +23,15 @@ import {
     useSensors,
 } from '@dnd-kit/core';
 import {
-    useSortable,
     arrayMove,
     SortableContext,
     horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
-import { CSS } from '@dnd-kit/utilities';
 
 import styles from './ReactTableSelect.module.css';
 import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
+import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
 import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
 import { customCollisionDetection } from '../../components/MainComponent/Others/customCollisionDetection';
 import { DropableContainerGroup } from '../../components/MainComponent/Others/DropableContainerGroup';
@@ -109,89 +108,6 @@ function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect }) {
         },
 
     });
-
-
-    // các cell được render
-    // các cell được render đang phải để bên trong hàm thì mới kéo thả trơn tru được vì nó cần phải được render lại cell
-    const DragAlongCell = ({ cell }) => {
-        const { isDragging, setNodeRef, transform } = useSortable({
-            id: cell.column.id,
-        });
-
-        const style: CSSProperties = {
-            opacity: isDragging ? 0.8 : 1,
-            position: 'relative',
-            transform: CSS.Translate.toString(transform),
-            transition: 'width transform 0.2s ease-in-out',
-            width: cell.column.getSize(),
-            zIndex: isDragging ? 1 : 0,
-        };
-
-        const { row } = cell.getContext();
-
-        return (
-            <td
-                ref={setNodeRef}
-                {...{
-                    key: cell.id,
-                    style: {
-                        style,
-                        background: cell.getIsGrouped()
-                            ? '#ddd'
-                            : cell.getIsAggregated()
-                                ? '#ddd'
-                                : cell.getIsPlaceholder()
-                                    ? 'white'
-                                    : null,
-
-                        fontWeight: cell.getIsGrouped()
-                            ? 'bold'
-                            : cell.getIsAggregated()
-                                ? 'bold'
-                                : 'normal',
-
-                    },
-                }}
-            >
-                {cell.getIsGrouped() ? (
-                    // If it's a grouped cell, add an expander and row count
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <button
-                            {...{
-                                onClick: row.getToggleExpandedHandler(),
-                                style: {
-                                    cursor: row.getCanExpand() ? 'pointer' : 'normal',
-                                    border: 'none',
-                                    background: 'none',
-                                },
-                            }}
-                        >
-                            {row.getIsExpanded() ? '⮛' : '⮚'}{' '}
-                            {/* {row.getIsExpanded() ? <img src={arrow_drop_down} style={{ width: '10px', height: '10px' }} /> : <img src={arrow_right} style={{ width: '10px', height: '10px' }} />}{' '} */}
-                        </button>
-                        {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                        )}{' '}
-                        ({row.subRows.length})
-                    </div>
-                ) : cell.getIsAggregated() ? (
-                    // If the cell is aggregated, use the Aggregated renderer for cell
-                    flexRender(
-                        cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
-                        cell.getContext()
-                    )
-                ) : cell.getIsPlaceholder() ? null : (
-                    // For cells with repeated values, render null
-                    // Otherwise, just render the regular cell
-                    flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                    )
-                )}
-            </td>
-        );
-    };
 
 
     const isLeafColumn = (header) => !header.subHeaders || header.subHeaders.length === 0;
