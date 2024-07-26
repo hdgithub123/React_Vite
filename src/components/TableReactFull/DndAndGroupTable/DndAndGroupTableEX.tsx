@@ -92,9 +92,15 @@ function DndAndGroupTableEX() {
         setSelectedMoreData(rowData); // Update state with the selected row data
         console.log("selectedMoreData",selectedMoreData)
     };
-    // console.log("selectedMoreData",selectedMoreData)
+    const btnclick= ()=>{
+        console.log("selectedMoreData",selectedMoreData)
+    }
+  
     return (
         <div>
+            <div>
+                <button onClick={btnclick}> kich here</button>
+            </div>
             <div style={{ height: '500px', }}>
                 {/* <VitualExample></VitualExample> */}
                 {/* <DndAndGroupTable data={makeData} columns ={columns}></DndAndGroupTable> */}

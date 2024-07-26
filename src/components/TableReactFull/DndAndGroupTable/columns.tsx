@@ -71,7 +71,8 @@ const columns = [
                 header: 'First Name',
                 id: 'firstName',
                 filterType: 'text',
-                footer: info => `Count: ${CountFooter(info.table)}`,
+                // footer: info => `Count: ${CountFooter(info.table)}`,
+                footer: info =>`Count: ${CountFooter(info.table)}`,
                 cell: TextCell,
                 //cell: (info) => info.getValue(),
                 /**
@@ -96,7 +97,9 @@ const columns = [
                 accessorKey: 'age',
                 id: 'age',
                 header: () => 'Age',
-                footer: (info) => `Sum: ${formatNumber(SumFooter(info.column, info.table),0,2)}`,
+                footer: (info) => <div style={{ 
+                    textAlign: 'right',
+                }}>{`Sum: ${formatNumber(SumFooter(info.column, info.table),0,2)}`}</div> ,
                 filterType: 'number',
                 cell: ({ cell }) => (
                     <NumberCell

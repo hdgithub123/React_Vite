@@ -1,4 +1,4 @@
-import { useState, useEffect, CSSProperties } from 'react';
+import { useState, useEffect,useRef, CSSProperties } from 'react';
 import React from 'react'
 
 import styles from './ReactTableFull.module.css';
@@ -302,13 +302,31 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
 
     const parentRef = React.useRef<HTMLDivElement>(null)
 
-    const virtualizer = useVirtualizer({
-        count: rows.length,
-        getScrollElement: () => parentRef.current,
-        estimateSize: () => 20,
-        overscan: 20,
+    const rowHeights = useRef({});
 
-    })
+    const virtualizer = useVirtualizer({
+        count: table.getRowModel().rows.length,
+        getScrollElement: () => parentRef.current,
+        estimateSize: (index) => rowHeights.current[index] || 35, // Default to 35 if height is not measured
+        overscan: 10,
+        measureElement: (el) => {
+            if (el) {
+                const index = Number(el.dataset.index);
+                const height = el.getBoundingClientRect().height;
+                rowHeights.current[index] = height;
+            }
+        },
+    });
+
+
+
+    // const virtualizer = useVirtualizer({
+    //     count: rows.length,
+    //     getScrollElement: () => parentRef.current,
+    //     estimateSize: () => 20,
+    //     overscan: 20,
+
+    // })
 
     const items = virtualizer.getVirtualItems();
 

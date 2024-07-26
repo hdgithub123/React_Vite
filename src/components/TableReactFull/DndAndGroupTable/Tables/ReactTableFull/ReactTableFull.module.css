@@ -52,13 +52,20 @@
   /* padding: 8px; */
 }
 
-/* .table_body tr{
-  background-color: white;
-} */
-.table_body td{
   /* khong bi gioi han keo */
+/* .table_head td{
+  max-width: 0; 
+} */
+
+/* khong bi gioi han keo */
+.table_body td{
   max-width: 0; 
 }
+
+/* khong bi gioi han keo */
+/* .foot_container td{
+  max-width: 0; 
+} */
 
 .table_body tr:hover {
   background-color: aqua;
@@ -90,8 +97,6 @@
 .div_table_container::-webkit-scrollbar-thumb:hover {
   background: #555; /* Color of the thumb on hover */
 }
-
-
 
 
 /* Cho checkbox */
