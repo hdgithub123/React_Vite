@@ -1,29 +1,13 @@
-import { useState, useEffect, useCallback, useRef, useMemo, CSSProperties } from 'react';
-import React from 'react'
-
-import styles from './DndAndGroupTable.module.css';
+import { useState, useEffect, CSSProperties } from 'react';
 import {
-
-
-
-    ColumnFiltersState,
     FilterFn,
-    SortingFn,
-
     GroupingState,
-    getPaginationRowModel,
     getGroupedRowModel,
     getExpandedRowModel,
-
-    Cell,
-    ColumnDef,
-    Header,
     flexRender,
     getCoreRowModel,
     useReactTable,
     getFilteredRowModel,
-
-    getFacetedMinMaxValues,
     getFacetedRowModel,
     getFacetedUniqueValues,
     getSortedRowModel,
@@ -31,59 +15,35 @@ import {
 
 import {
     DndContext,
-    useDroppable,
     KeyboardSensor,
     MouseSensor,
     TouchSensor,
-    closestCenter,
-    closestCorners,
     DragEndEvent,
     useSensor,
     useSensors,
-
-    CancelDrop,
-
-    pointerWithin,
-    rectIntersection,
-    CollisionDetection,
-
-    DragOverlay,
-    DropAnimation,
-    getFirstCollision,
-
-    Modifiers,
-
-    UniqueIdentifier,
-
-    MeasuringStrategy,
-    KeyboardCoordinateGetter,
-    defaultDropAnimationSideEffects,
-    Active,
-    ClientRect,
-    DroppableContainer,
-
-
 } from '@dnd-kit/core';
-import { restrictToHorizontalAxis, restrictToParentElement, restrictToWindowEdges, } from '@dnd-kit/modifiers';
 import {
     useSortable,
     arrayMove,
     SortableContext,
     horizontalListSortingStrategy,
-    rectSortingStrategy,
-    verticalListSortingStrategy,
-    rectSwappingStrategy,
 } from '@dnd-kit/sortable';
 
 import { CSS } from '@dnd-kit/utilities';
 
-import arrow_drop_down from './source/images/arrows/pointer-down-svgrepo-com.svg';
-import arrow_right from './source/images/arrows/pointer-right-svgrepo-com.svg';
-import Filter from './components/filters/Filter';
+import styles from './ReactTableSelect.module.css';
+import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
+import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
+import { customCollisionDetection } from '../../components/MainComponent/Others/customCollisionDetection';
+import { DropableContainerGroup } from '../../components/MainComponent/Others/DropableContainerGroup';
+import { ColumnVisibilityToggle } from '../../components/MainComponent/Others/ColumnVisibilityToggle';
+import { RenderHeaderByID } from '../../components/MainComponent/Others/RenderHeaderByID';
+import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
+import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 
 
 
-function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect }) {
+function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -150,21 +110,6 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect
 
     });
 
-
-
-
-    const rerender = () => {
-        console.log("columnOrder:", columnOrder)
-        console.log("columnFilters:", columnFilters)
-        console.log("getCoreRowModel():", getCoreRowModel())
-        console.log("getFilteredRowModel():", table.getFilteredRowModel())
-        console.log("table:", table);
-        console.log("grouping:", grouping);
-        console.log("table grouping:", table.getHeaderGroups());
-        table.setExpanded(true) // Mở tất cả các cột
-        //table.setExpanded({}) // đóng tất cả các cột
-
-    };
 
     // các cell được render
     // các cell được render đang phải để bên trong hàm thì mới kéo thả trơn tru được vì nó cần phải được render lại cell
@@ -248,40 +193,6 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect
         );
     };
 
-    // dau vao là columID render ra header
-    const RenderHeaderByID = ({ columnID, columns }) => {
-        const findHeader = (columns, id) => {
-            for (const column of columns) {
-                if (column.id === id) {
-                    return column;
-                }
-                if (column.columns) {
-                    const found = findHeader(column.columns, id);
-                    if (found) {
-                        return found;
-                    }
-                }
-            }
-            return undefined;
-        };
-
-        const columnDef = findHeader(columns, columnID);
-        if (columnDef) {
-            return <div>{flexRender(columnDef.header, {})} <button
-                {...{
-                    onClick: () => setGrouping(grouping.filter(item => item !== columnID)),
-                    style: {
-                        cursor: 'pointer',
-                    },
-                }}
-            >
-                X
-            </button>
-            </div>;
-        }
-
-        return <div>Header not found</div>;
-    };
 
     const isLeafColumn = (header) => !header.subHeaders || header.subHeaders.length === 0;
     const leafHeaderGroupIndex = table.getHeaderGroups().length - 1;
@@ -360,9 +271,6 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect
             <div className={styles.botton_container}>
                 {/* Chọn Column hiển thị */}
                 <ColumnVisibilityToggle table={table}></ColumnVisibilityToggle>
-                <button onClick={rerender}>
-                    Regenerate
-                </button>
                 <button onClick={table.getToggleAllRowsExpandedHandler()}>
                     Expand/Collapse all
                 </button>
@@ -382,7 +290,7 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect
                             {/* <h1>Thả vào đây</h1> */}
                             {grouping.length > 0 ? (
                                 grouping.map((id) => (
-                                    <RenderHeaderByID key={id} columnID={id} columns={columns} />
+                                    <RenderHeaderByID key={id} columnID={id} columns={columns} setGrouping={setGrouping} grouping={grouping} />
                                 ))
                             ) : (
                                 <div style={{ padding: '10px', fontSize: '14px', color: '#999' }}>
@@ -430,7 +338,7 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect
                                 ))}
                             </thead>
                             {table.getRowModel().rows.length > 0 ? (
-                                <tbody className={styles.body_container}>
+                                <tbody className={styles.table_body}>
                                     {table.getRowModel().rows.map(row => (
                                         <tr onDoubleClick={() => handleRowClick(row.original)} className={styles.body_container_tr} key={row.id}>
                                             <td>
@@ -451,7 +359,7 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect
                                 </tbody>
                             ) : (
                                 <tbody>
-                                    <tr className={styles.body_container}>
+                                    <tr className={styles.table_body}>
                                         <td></td>
                                         <td colSpan={countLeafColumns(columns)} style={{ textAlign: 'center' }}>
                                             No data available
@@ -478,373 +386,4 @@ function DndAndGroupTableWithCheckbox({ data, columns, onRowSelect, onRowsSelect
 
     );
 }
-export default DndAndGroupTableWithCheckbox;
-
-
-
-
-// DraggableTableHeader
-const DraggableTableHeader = ({ header }) => {
-    const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
-        id: header.column.id,
-    });
-
-    const style: CSSProperties = {
-        opacity: isDragging ? 0.8 : 1,
-        cursor: isDragging ? 'move' : 'default',
-        position: 'relative',
-        transform: CSS.Translate.toString(transform),
-        transition: 'width transform 0.2s ease-in-out',
-        whiteSpace: 'nowrap',
-        width: header.column.getSize(),
-        zIndex: isDragging ? 1 : 0,
-        boxSizing: 'border-box',
-
-    };
-    return (
-        <>
-
-            <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
-                {header.isPlaceholder ? null : (
-                    <>
-                        <div  {...attributes} {...listeners}>
-                            <div
-                                className={
-                                    header.column.getCanSort()
-                                        ? 'cursor-pointer select-none'
-                                        : ''
-                                }
-                                onClick={header.column.getToggleSortingHandler()}
-                                title={
-                                    header.column.getCanSort()
-                                        ? header.column.getNextSortingOrder() === 'asc'
-                                            ? 'Sort ascending'
-                                            : header.column.getNextSortingOrder() === 'desc'
-                                                ? 'Sort descending'
-                                                : 'Clear sort'
-                                        : undefined
-                                }
-                            >
-                                {header.column.getIsGrouped()
-                                    ? `!`
-                                    : ``}
-                                {flexRender(
-                                    header.column.columnDef.header,
-                                    header.getContext()
-                                )}
-                                {{
-                                    asc: ' 🠹',
-                                    desc: ' 🠻',
-                                }[header.column.getIsSorted() as string] ?? null}
-                            </div>
-                        </div>
-                        {/* Filter colum*/}
-
-                        {header.column.getCanFilter() ? (
-                            <div>
-                                <Filter column={header.column}></Filter>
-                            </div>
-                        ) : null}
-
-                        {/* Colum Resize Begin*/}
-                        <div
-                            {...{
-                                onMouseDown: header.getResizeHandler(),
-                                onTouchStart: header.getResizeHandler(),
-                                className: `${styles.resizer} 
-                                    } ${header.column.getIsResizing() ? styles.isResizing : ''
-                                    }`,
-                            }}
-                        />
-                        {/* Colum Resize end*/}
-                    </>
-                )}
-            </th>
-        </>
-    );
-}
-
-
-
-
-const StaticTableHeader = ({ header }) => {
-    return (
-        <th colSpan={header.colSpan}>
-            {header.isPlaceholder
-                ? null
-                : flexRender(header.column.columnDef.header, header.getContext())}
-        </th>
-    );
-};
-
-
-// DraggableTablefooter
-const DraggableTablefooter = ({ header }) => {
-    const { attributes, isDragging, listeners, setNodeRef, transform } = useSortable({
-        id: header.column.id,
-    });
-    const style: CSSProperties = {
-        borderTop: '2px solid gray',
-        borderBottom: '2px solid gray',
-        fontWeight: 'bold',
-        opacity: isDragging ? 0.8 : 1,
-        cursor: isDragging ? 'move' : 'default',
-        position: 'relative',
-        transform: CSS.Translate.toString(transform),
-        transition: 'width transform 0.2s ease-in-out',
-        whiteSpace: 'nowrap',
-        width: header.column.getSize(),
-        zIndex: isDragging ? 1 : 0,
-        boxSizing: 'border-box',
-    };
-    return (
-        <td colSpan={header.colSpan} ref={setNodeRef} style={style}>
-            {header.isPlaceholder ? null : (
-                <>
-                    <div  {...attributes} {...listeners}>
-
-                        {flexRender(
-                            header.column.columnDef.footer,
-                            header.getContext(),
-                        )}
-
-                    </div>
-
-                </>
-            )}
-        </td>
-    );
-}
-
-
-// tu lam va cham
-function customCollisionDetection({
-    active,
-    collisionRect,
-    droppableRects,
-    droppableContainers,
-    pointerCoordinates,
-}: {
-    active: Active;
-    collisionRect: ClientRect;
-    droppableRects: RectMap;
-    droppableContainers: DroppableContainer[];
-    pointerCoordinates: Coordinates | null;
-}) {
-    // Lọc ra các container droppable là DropableContainerGroupID
-    const otherContainers = droppableContainers.filter(({ id }) => id === 'DropableContainerGroupID');
-
-    // Sử dụng thuật toán pointerWithin để kiểm tra va chạm với các container sortable
-    const rectIntersectionCollisions = pointerWithin({
-        active,
-        collisionRect,
-        droppableRects,
-        droppableContainers: otherContainers,
-        pointerCoordinates,
-    });
-
-    // Nếu có va chạm với các container sortable, trả về các va chạm đó
-    if (rectIntersectionCollisions.length > 0) {
-        return rectIntersectionCollisions;
-    }
-
-    // Lọc ra các container droppable có id bắt đầu là 'sortable'
-    const sortableContainers = droppableContainers.filter(({ id }) => id !== 'DropableContainerGroupID');
-
-    // Sử dụng thuật toán rectIntersection để kiểm tra va chạm với các container sortable   
-    return closestCorners({
-        active,
-        collisionRect,
-        droppableRects,
-        droppableContainers: sortableContainers,
-        pointerCoordinates,
-    });
-};
-
-
-// Tạo chỗ kéo thả group
-const DropableContainerGroup = ({ children }) => {
-    const { isOver, setNodeRef } = useDroppable({
-        id: `DropableContainerGroupID`,
-
-    });
-
-    const style = {
-        border: isOver ? '0.1px dashed blue' : '0.1px dashed gray',
-        padding: '1px',
-        marginBottom: '1px',
-        background: isOver ? 'yellow' : 'white',
-        width: 'calc(100% - 2px)',
-        height: '40px', // Set your desired height here
-        justifyContent: 'left',
-        alignItems: 'center',
-        display: 'flex',
-        borderRadius: '4px', // Đặt bán kính bo góc
-
-    };
-
-    return (
-        <div ref={setNodeRef} style={style}>
-            {children}
-        </div>
-    );
-};
-
-
-
-// hien thi column order
-const ColumnVisibilityToggle = ({ table }) => {
-    const [showToggle, setShowToggle] = useState(false);
-    const modalRef = useRef(null); // Tạo một ref cho hộp thoại modal
-    const modalStyle = {
-        position: 'absolute', // Đặt vị trí tương đối với nút
-        zIndex: 1, // Đặt z-index để nó nằm trên các phần tử khác
-        left: 0, // Đặt vị trí trái ngay dưới nút
-        top: '100%', // Đặt vị trí trên ngay dưới nút
-        backgroundColor: '#fff', // Đặt màu nền
-        padding: '2px', // Đặt padding
-        border: '1px solid #000', // Đặt viền
-        borderRadius: '4px', // Đặt bán kính bo góc
-        width: '150%', // Đặt chiều rộng
-    };
-    // Hàm xử lý sự kiện onMouseDown
-    const handleMouseDown = (event) => {
-        // Kiểm tra xem phần tử được nhấp có nằm trong hộp thoại modal hay không
-        if (modalRef.current && !modalRef.current.contains(event.target)) {
-            // Nếu không, ẩn hộp thoại modal
-            setShowToggle(false);
-        }
-    };
-
-    // Thêm sự kiện onMouseDown vào document.body khi hộp thoại modal được hiển thị
-    useEffect(() => {
-        if (showToggle) {
-            document.body.addEventListener('mousedown', handleMouseDown);
-        }
-
-        // Loại bỏ sự kiện onMouseDown khỏi document.body khi hộp thoại modal bị ẩn hoặc khi component bị unmount
-        return () => {
-            document.body.removeEventListener('mousedown', handleMouseDown);
-        };
-    }, [showToggle]); // Chạy lại effect này mỗi khi giá trị của showToggle thay đổi
-
-    return (
-        <div style={{ position: 'relative' }}> {/* Đặt vị trí tương đối cho div cha */}
-            <button onClick={() => setShowToggle(!showToggle)}>
-                Show Column
-            </button>
-            {showToggle &&
-                <div ref={modalRef} style={modalStyle}> {/* Thêm ref vào div chứa hộp thoại modal */}
-                    <div className="px-1 border-b border-black">
-                        <label>
-                            <input
-                                {...{
-                                    type: 'checkbox',
-                                    checked: table.getIsAllColumnsVisible(),
-                                    onChange: table.getToggleAllColumnsVisibilityHandler(),
-                                }}
-                            />{' '}
-                            Toggle All
-                        </label>
-                    </div>
-                    {table.getAllLeafColumns().map(column => {
-                        return (
-                            <div key={column.id} className="px-1">
-                                <label>
-                                    <input
-                                        {...{
-                                            type: 'checkbox',
-                                            checked: column.getIsVisible(),
-                                            onChange: column.getToggleVisibilityHandler(),
-                                        }}
-                                    />{' '}
-                                    {flexRender(column.columnDef.header, {})}
-                                </label>
-                            </div>
-                        )
-                    })}
-                </div>}
-        </div>
-    );
-}
-
-
-function IndeterminateCheckbox({
-    indeterminate,
-    className = '',
-    ...rest
-}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
-    const ref = React.useRef<HTMLInputElement>(null!);
-
-    React.useEffect(() => {
-        if (typeof indeterminate === 'boolean') {
-            ref.current.indeterminate = !rest.checked && indeterminate;
-        }
-    }, [ref, indeterminate]);
-
-    return (
-        <input
-            type="checkbox"
-            ref={ref}
-            className={className + ' cursor-pointer'}
-            {...rest}
-        />
-    );
-}
-
-
-
-function TriStateCheckbox({ onChange }) {
-    const [state, setState] = useState('indeterminate'); // 'unchecked', 'checked', or 'indeterminate'
-    const inputRef = useRef(null);
-
-    useEffect(() => {
-        const checkbox = inputRef.current;
-        if (checkbox) {
-            checkbox.indeterminate = state === 'indeterminate';
-        }
-    }, [state]);
-
-    useEffect(() => {
-        let value;
-        switch (state) {
-            case 'checked':
-                value = true;
-                break;
-            case 'unchecked':
-                value = false;
-                break;
-            case 'indeterminate':
-                value = '';
-                break;
-            default:
-                value = true;
-        }
-        onChange(value);
-    }, [state]);
-
-    const handleClick = () => {
-        setState(prevState => {
-            switch (prevState) {
-                case 'unchecked':
-                    return 'checked';
-                case 'checked':
-                    return 'indeterminate';
-                case 'indeterminate':
-                    return 'unchecked';
-                default:
-                    return prevState;
-            }
-        });
-    };
-
-    return (
-        <input
-            type="checkbox"
-            ref={inputRef}
-            checked={state === 'checked'}
-            onClick={handleClick}
-            readOnly
-        />
-    );
-}
+export default ReactTableSelect;

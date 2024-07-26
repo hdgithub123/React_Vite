@@ -21,8 +21,8 @@
 // import DndTableRectFull from './components/TableReactFull/DndTable/DndTableRectFull';
 
 
-import TableComponent from './components/TableReactFull/TableUI/TableComponent';
-import DndAndGroupTableEX from './components/TableReactFull/DndAndGroupTable/DndAndGroupTableEX';
+//import TableComponent from './components/TableReactFull/TableUI/TableComponent';
+import ReactTableExample from './components/ReactTables/ReactTableExample';
 
 
 
@@ -42,8 +42,8 @@ function App() {
       {/* <GroupTable></GroupTable> */}
 
       {/* <DndTableRectFull></DndTableRectFull> */}
-      <p> DndAndGroupTable</p>
-      <DndAndGroupTableEX></DndAndGroupTableEX>
+      <p> ReactTableExample</p>
+      <ReactTableExample></ReactTableExample>
 
       {/* <TableComponent></TableComponent> */}
      {/* <MutipleContainers></MutipleContainers> */}

@@ -74,13 +74,12 @@ import EditableCell from './components/cells/edit/EditableCell'
 import {makeData} from './makeData';
 import columns from './columns';
 
-import DndAndGroupTable from './DndAndGroupTable';
-import DndAndGroupTableWithCheckbox from './DndAndGroupTableWithCheckbox';
+import ReactTableNomal from './Tables/ReactTableBase/ReactTableNomal';
+import ReactTableSelect from './Tables/ReactTableBase/ReactTableSelect';
 import DndAndGroupTableWithCheckboxFilter from './DndAndGroupTableWithCheckboxFilter';
 import ReactTableFull from './Tables/ReactTableFull/ReactTableFull';
-import VitualExample from './VitualExample';
 
-function DndAndGroupTableEX() {
+function ReactTableExample() {
     const [selectedData, setSelectedData] = useState(null); // State to store the selected data from the table
     const [selectedMoreData, setSelectedMoreData] = useState(null); // State to store the selected data from the table
     // Event handler when selecting a row in the table
@@ -102,12 +101,11 @@ function DndAndGroupTableEX() {
                 <button onClick={btnclick}> kich here</button>
             </div>
             <div style={{ height: '500px', }}>
-                {/* <VitualExample></VitualExample> */}
-                {/* <DndAndGroupTable data={makeData} columns ={columns}></DndAndGroupTable> */}
-                {/* <DndAndGroupTableWithCheckbox data={makeData} 
+                {/* <ReactTableNomal data={makeData} columns ={columns}></ReactTableNomal> */}
+                {/* <ReactTableSelect data={makeData} 
                 columns={columns} onRowSelect={handleRowSelect} 
                 onRowsSelect={handleRowsSelect}>
-                </DndAndGroupTableWithCheckbox> */}
+                </ReactTableSelect> */}
                 {/* <DndAndGroupTableWithCheckboxFilter data={makeData} columns={columns} ></DndAndGroupTableWithCheckboxFilter> */}
                 {/* <h1>ds</h1>
                 <h1>ds</h1>
@@ -145,4 +143,4 @@ function DndAndGroupTableEX() {
 
 }
 
-export default DndAndGroupTableEX;
+export default ReactTableExample;
