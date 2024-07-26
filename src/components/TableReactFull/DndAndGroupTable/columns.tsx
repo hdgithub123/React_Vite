@@ -1,6 +1,6 @@
 import { SumFooter, AverageFooter, CountFooter } from './components/Footer/FooterColumn'
 import { TextCell } from './components/cells/orinal/TextCell';
-import { NumberUsCell, NumberVnCell, NumberCell } from './components/cells/orinal/NumberCell';
+import { NumberUsCell, NumberVnCell, NumberCell, formatNumber, formatVnNumber,formatUsNumber } from './components/cells/orinal/NumberCell';
 import { DateVnCell,DateUsCell, DateCell } from './components/cells/orinal/DateCell';
 import { DateTimeCell,DateTimeVnCell } from './components/cells/orinal/DateTimeCell';
 import EditableCell from './components/cells/edit/EditableCell';
@@ -96,7 +96,7 @@ const columns = [
                 accessorKey: 'age',
                 id: 'age',
                 header: () => 'Age',
-                footer: (info) => `Sum: ${SumFooter(info.column, info.table)}`,
+                footer: (info) => `Sum: ${formatNumber(SumFooter(info.column, info.table),0,2)}`,
                 filterType: 'number',
                 cell: ({ cell }) => (
                     <NumberCell
@@ -150,7 +150,7 @@ const columns = [
                         id: 'progress',
                         header: 'Profile Progress',
                         filterType: 'number',
-                        footer: (info) => `Average: ${AverageFooter(info.column, info.table)}`,
+                        footer: (info) => `Average: ${formatNumber(AverageFooter(info.column, info.table),0,2)}`,
                         cell: ({ getValue }) =>
                             Math.round(getValue<number>() * 100) / 100 + '%',
                         aggregationFn: 'mean',

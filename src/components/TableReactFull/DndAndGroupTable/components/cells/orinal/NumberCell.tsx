@@ -10,9 +10,7 @@ export const NumberCell = ({ initialValue, row, column, table, minFractionDigits
     return <div style={{ textAlign: 'right' }}>{formatNumber(initialValue, minFractionDigits, maxFractionDigits)}</div>;
 };
 
-
-
-const formatNumber = (number, minFractionDigits, maxFractionDigits) => {
+export const formatNumber = (number, minFractionDigits, maxFractionDigits) => {
     if (!number || number === "") {
         return '';
     }
@@ -23,7 +21,7 @@ const formatNumber = (number, minFractionDigits, maxFractionDigits) => {
     }).format(number);
 };
 
-const formatUsNumber = (number, minFractionDigits, maxFractionDigits) => {
+export const formatUsNumber = (number, minFractionDigits, maxFractionDigits) => {
     if (!number || number === "") {
         return '';
     }
@@ -33,7 +31,7 @@ const formatUsNumber = (number, minFractionDigits, maxFractionDigits) => {
     }).format(number);
 };
 
-const formatVnNumber = (number, minFractionDigits, maxFractionDigits) => {
+export const formatVnNumber = (number, minFractionDigits, maxFractionDigits) => {
     if (!number || number === "") {
         return '';
     }
