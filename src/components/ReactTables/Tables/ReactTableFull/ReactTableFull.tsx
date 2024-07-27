@@ -331,7 +331,9 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
                                             </tr>
                                         )
                                     })}
-
+                                    <tr className={styles.table_body_td_empty}>
+                                    <td></td>
+                                    </tr>
                                     {after > 0 && (
                                         <tr className={styles.table_body_tr}>
                                             <td style={{ height: `${after}px` }}></td>

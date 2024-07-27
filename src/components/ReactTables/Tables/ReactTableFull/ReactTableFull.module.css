@@ -111,3 +111,11 @@
   border-top: 2px solid gray;
   border-bottom: 2px solid gray;
 }
+
+.table_container{
+  height: 100%;
+}
+.table_container tr.table_body_td_empty td {
+  border: none;
+  height: 100%;
+}

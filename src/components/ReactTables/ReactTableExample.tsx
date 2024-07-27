@@ -101,7 +101,8 @@ function ReactTableExample() {
                 <button onClick={btnclick}> kich here</button>
             </div>
             <div style={{ height: '500px', }}>
-                {/* <ReactTableNomal data={makeData} columns ={columns} onRowSelect={handleRowSelect} ></ReactTableNomal> */}
+                {/* <ReactTableNomal data={makeData} columns ={columns} 
+                onRowSelect={handleRowSelect} ></ReactTableNomal> */}
                 {/* <ReactTableSelect data={makeData} 
                 columns={columns} onRowSelect={handleRowSelect} 
                 onRowsSelect={handleRowsSelect}>

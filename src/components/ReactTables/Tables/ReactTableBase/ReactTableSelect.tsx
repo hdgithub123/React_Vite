@@ -350,6 +350,9 @@ function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect }) {
                                             ))}
                                         </tr>
                                     ))}
+                                    <tr className={styles.table_body_td_empty}>
+                                    <td></td>
+                                    </tr>
                                 </tbody>
                             ) : (
                                 <tbody>

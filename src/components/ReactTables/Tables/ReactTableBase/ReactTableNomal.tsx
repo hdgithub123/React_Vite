@@ -55,7 +55,7 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
         data: dataDef,
         columns,
         columnResizeMode: 'onChange',
-        
+
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
@@ -72,17 +72,17 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
         // getPaginationRowModel: getPaginationRowModel(),
         meta: {
             updateData: (rowIndex, columnId, value) =>
-            setDataDef((prev) =>
-                prev.map((row, index) =>
-                  index === rowIndex
-                    ? {
-                        ...prev[rowIndex],
-                        [columnId]: value,
-                      }
-                    : row
-                )
-              ),
-          },
+                setDataDef((prev) =>
+                    prev.map((row, index) =>
+                        index === rowIndex
+                            ? {
+                                ...prev[rowIndex],
+                                [columnId]: value,
+                            }
+                            : row
+                    )
+                ),
+        },
 
     });
 
@@ -160,7 +160,7 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
                 <DndContext
                     collisionDetection={customCollisionDetection}
                     onDragEnd={handleDragEnd}
-                    autoScroll = {false}
+                    autoScroll={false}
                     sensors={sensors}
                 >
                     <div className={styles.Dropable_Container_Group}>
@@ -188,7 +188,7 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
                                         <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
                                             {headerGroup.headers.map((header) =>
                                                 isLeafColumn(header) ? (
-                                                    <DraggableTableHeader key={header.id} header={header}/>
+                                                    <DraggableTableHeader key={header.id} header={header} />
                                                 ) : (
                                                     <StaticTableHeader key={header.id} header={header} />
                                                 )
@@ -202,10 +202,13 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
                                     {table.getRowModel().rows.map(row => (
                                         <tr onDoubleClick={() => handleRowClick(row.original)} className={styles.body_container_tr} key={row.id}>
                                             {row.getVisibleCells().map(cell => (
-                                                <DragAlongCell key={cell.id} cell={cell}/>
+                                                <DragAlongCell key={cell.id} cell={cell} />
                                             ))}
                                         </tr>
                                     ))}
+                                    <tr className={styles.table_body_td_empty}>
+                                        <td></td>
+                                    </tr>
                                 </tbody>
                             ) : (
                                 <tbody>
@@ -216,19 +219,16 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
                                     </tr>
                                 </tbody>
                             )}
-                            
-                        </table>
-
-                    </div>
-                    <table>
-                    {shouldRenderFooter && <tfoot className={styles.table_footer}>
+                            {shouldRenderFooter && <tfoot className={styles.table_footer}>
                                 <tr>
                                     {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
                                         <DraggableTablefooter key={header.id} header={header} />
                                     ))}
                                 </tr>
                             </tfoot>}
-                    </table>
+                        </table>
+
+                    </div>
                 </DndContext>
             </div>
         </div>
@@ -240,7 +240,7 @@ export default ReactTableNomal;
 
 
 
-const DragAlongCell = ({ cell}) => {
+const DragAlongCell = ({ cell }) => {
     const { isDragging, setNodeRef, transform } = useSortable({
         id: cell.column.id,
     });
@@ -255,7 +255,7 @@ const DragAlongCell = ({ cell}) => {
     };
 
     const { row } = cell.getContext();
-    console.log(" row",row)
+    console.log(" row", row)
     return (
         <td
             ref={setNodeRef}
