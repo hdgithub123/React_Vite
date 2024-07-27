@@ -313,7 +313,7 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
                                                 key={row.id}
                                                 onDoubleClick={() => handleRowClick(row.original)}
                                             >
-                                                <td>
+                                                <td className={styles.table_body_td_checkbox}>
                                                     <IndeterminateCheckbox
                                                         {...{
                                                             checked: row.getIsSelected(),
@@ -348,7 +348,7 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
                                     </tr>
                                 </tbody>
                             )}
-                            {shouldRenderFooter && <tfoot className={styles.foot_container}>
+                            {shouldRenderFooter && <tfoot className={styles.table_footer}>
                                 <tr>
                                     <td className={styles.footer_checkbox}></td>
                                     {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
@@ -357,7 +357,6 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
                                 </tr>
                             </tfoot>}
                         </table>
-
                     </div>
                 </DndContext>
             </div>

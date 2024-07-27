@@ -57,14 +57,15 @@
   max-width: 0; 
 }
 
-.foot_container{
+.table_footer{
   position: sticky; /* make the table heads sticky */
   bottom: 0px; /* table head will be placed from the top of the table and sticks to it */
   background-color: white;
 }
 
 
-.body_container_tr:hover {
+
+.table_body_tr:hover {
   background-color: aqua;
 }
 
@@ -114,7 +115,9 @@
 }
 
 
-
+.table_body_tr_checkbox{
+  text-align: center;
+}
 
 /* Cho checkbox */
 .table_head_tr_th_checkbox{

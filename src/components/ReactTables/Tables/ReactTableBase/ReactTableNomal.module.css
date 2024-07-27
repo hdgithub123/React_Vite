@@ -57,11 +57,13 @@
   max-width: 0; 
 }
 
-.foot_container{
+.table_footer{
   position: sticky; /* make the table heads sticky */
   bottom: 0px; /* table head will be placed from the top of the table and sticks to it */
   background-color: white;
 }
+
+
 
 
 .body_container_tr:hover {
