@@ -179,24 +179,24 @@ type Person = {
             status: 'single',
             subRows: [],
           },
-          {
-            firstName: "2Jane",
-            lastName: "Smith",
-            age: 25,
-            visits: new Date(2021, 5, 20),
-            progress: 80,
-            status: 'single',
+        //   {
+        //     firstName: "2Jane",
+        //     lastName: "Smith",
+        //     age: 25,
+        //     visits: new Date(2021, 5, 20),
+        //     progress: 80,
+        //     status: 'single',
             
-          },
-          {
-            firstName: "3Jane",
-            lastName: "Smith",
-            age: 25,
-            visits: new Date(2021, 5, 20),
-            progress: 80,
-            status: 'single',
+        //   },
+        //   {
+        //     firstName: "3Jane",
+        //     lastName: "Smith",
+        //     age: 25,
+        //     visits: new Date(2021, 5, 20),
+        //     progress: 80,
+        //     status: 'single',
         
-          }
+        //   }
       ]
     },
     {
@@ -206,7 +206,16 @@ type Person = {
       visits: new Date(2021, 5, 20),
       progress: 80,
       status: 'single',
-      subRows: []
+      subRows: [{
+        firstName: "1Jane",
+        lastName: "Smith",
+        age: 25,
+        visits: new Date(2021, 5, 20),
+        progress: 80,
+        status: 'single',
+        subRows: [],
+      },
+    ]
     },
     {
       firstName: "Sam",
@@ -218,7 +227,7 @@ type Person = {
       subRows: []
     },
     {
-      firstName: "Alice",
+      firstName: "Sam",
       lastName: "Johnson",
       age: 35,
       visits: new Date(2020, 8, 25),
