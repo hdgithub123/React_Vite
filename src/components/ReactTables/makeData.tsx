@@ -82,17 +82,7 @@ const makeData1 = [
 
 ];
 
-// cho vao tam thoi
-export type Person = {
-    id: number
-    firstName: string
-    lastName: string
-    age: number
-    visits: number
-    progress: number
-    status: 'relationship' | 'complicated' | 'single'
-    createdAt: Date
-  }
+
 
 
 
@@ -139,4 +129,157 @@ function generateRandomName(length) {
 
 const makeData2 = generateRandomObjectiveArray(500)
 
-export const makeData = makeData1
+type Person = {
+    firstName: string;
+    lastName: string;
+    age: number;
+    visits: Date;
+    progress: number;
+    status: 'relationship' | 'complicated' | 'single';
+    subRows?: Person[];
+  };
+  
+  const firstNames = ["John", "Jane", "Sam", "Alice", "Michael", "Sara", "Tom", "Emma", "Chris", "Olivia"];
+  const lastNames = ["Doe", "Smith", "Brown", "Johnson", "Williams", "Jones", "Davis", "Garcia", "Miller", "Wilson"];
+  const statuses = ["relationship", "complicated", "single"];
+  
+  const getRandomElement = (array: any[]) => array[Math.floor(Math.random() * array.length)];
+  const getRandomNumber = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
+  const getRandomDate = (start: Date, end: Date) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+  
+  const generatePerson = (): Person => ({
+    firstName: getRandomElement(firstNames),
+    lastName: getRandomElement(lastNames),
+    age: getRandomNumber(18, 80),
+    visits: getRandomDate(new Date(2020, 0, 1), new Date()), // Random date between Jan 1, 2020, and today
+    progress: getRandomNumber(0, 100),
+    status: getRandomElement(statuses),
+    subRows: Math.random() > 0.7 ? Array.from({ length: getRandomNumber(1, 5) }, generatePerson) : undefined,
+  });
+  
+  const generatePeople = (num: number): Person[] => Array.from({ length: num }, generatePerson);
+  
+  const makeDataSubrows = generatePeople(10);
+
+  const predefinedPeople = [
+    {
+      firstName: "0Jane",
+      lastName: "Doe",
+      age: 30,
+      visits: new Date(2022, 1, 15),
+      progress: 50,
+      status: 'relationship',
+      subRows: [
+        {
+            firstName: "1Jane",
+            lastName: "Smith",
+            age: 25,
+            visits: new Date(2021, 5, 20),
+            progress: 80,
+            status: 'single',
+            subRows: [],
+          },
+          {
+            firstName: "2Jane",
+            lastName: "Smith",
+            age: 25,
+            visits: new Date(2021, 5, 20),
+            progress: 80,
+            status: 'single',
+            
+          },
+          {
+            firstName: "3Jane",
+            lastName: "Smith",
+            age: 25,
+            visits: new Date(2021, 5, 20),
+            progress: 80,
+            status: 'single',
+        
+          }
+      ]
+    },
+    {
+      firstName: "0Jane",
+      lastName: "Smith",
+      age: 25,
+      visits: new Date(2021, 5, 20),
+      progress: 80,
+      status: 'single',
+      subRows: []
+    },
+    {
+      firstName: "Sam",
+      lastName: "Brown",
+      age: 40,
+      visits: new Date(2023, 3, 10),
+      progress: 30,
+      status: 'complicated',
+      subRows: []
+    },
+    {
+      firstName: "Alice",
+      lastName: "Johnson",
+      age: 35,
+      visits: new Date(2020, 8, 25),
+      progress: 60,
+      status: 'relationship',
+      subRows: []
+    },
+    {
+      firstName: "Michael",
+      lastName: "Williams",
+      age: 50,
+      visits: new Date(2022, 11, 5),
+      progress: 90,
+      status: 'single',
+      subRows: []
+    },
+    {
+      firstName: "Sara",
+      lastName: "Jones",
+      age: 45,
+      visits: new Date(2023, 0, 18),
+      progress: 40,
+      status: 'complicated',
+      subRows: []
+    },
+    {
+      firstName: "Tom",
+      lastName: "Davis",
+      age: 28,
+      visits: new Date(2021, 4, 10),
+      progress: 70,
+      status: 'relationship',
+      subRows: []
+    },
+    {
+      firstName: "Emma",
+      lastName: "Garcia",
+      age: 33,
+      visits: new Date(2020, 9, 22),
+      progress: 20,
+      status: 'single',
+      subRows: []
+    },
+    {
+      firstName: "Chris",
+      lastName: "Miller",
+      age: 38,
+      visits: new Date(2022, 6, 30),
+      progress: 55,
+      status: 'complicated',
+      subRows: []
+    },
+    {
+      firstName: "Olivia",
+      lastName: "Wilson",
+      age: 29,
+      visits: new Date(2021, 2, 14),
+      progress: 75,
+      status: 'relationship',
+      subRows: []
+    }
+  ];
+
+export const makeData = predefinedPeople

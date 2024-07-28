@@ -4,6 +4,43 @@ import { NumberUsCell, NumberVnCell, NumberCell, formatNumber, formatVnNumber,fo
 import { DateVnCell,DateUsCell, DateCell } from './components/cells/orinal/DateCell';
 import { DateTimeCell,DateTimeVnCell } from './components/cells/orinal/DateTimeCell';
 import EditableCell from './components/cells/edit/EditableCell';
+
+
+
+const ExplandingCell = ({ row, getValue }) => {
+   console.log("row.depth",row.depth)
+    return (
+        <div
+          style={{
+            // Since rows are flattened by default,
+            // we can use the row.depth property
+            // and paddingLeft to visually indicate the depth
+            // of the row
+            paddingLeft: `${row.depth * 2}rem`,
+          }}
+        >
+          <div>
+            {row.getCanExpand() ? (
+              <button
+                {...{
+                  onClick: row.getToggleExpandedHandler(),
+                  style: { cursor: 'pointer' },
+                }}
+              >
+                {row.getIsExpanded() ? '👇' : '👉'}
+              </button>
+            ) : (
+              '🔵'
+            )}{' '}
+            {getValue<boolean>()}
+          </div>
+        </div>
+      )
+}
+
+
+
+
 // const columns = 
 //  [
 //         {
@@ -240,5 +277,109 @@ const columnskof = [
     },
 ]
 
-const columns = columnscof
+const columnssubrowf= [
+    {
+        header: 'Name',
+        columns: [
+            {
+                accessorKey: 'firstName',
+                header: 'First Name',
+                id: 'firstName',
+                filterType: 'text',
+                // footer: info => `Count: ${CountFooter(info.table)}`,
+                footer: info =>`Count: ${CountFooter(info.table)}`,
+                cell: ExplandingCell,
+                //cell: (info) => info.getValue(),
+                /**
+                 * override the value used for row grouping
+                 * (otherwise, defaults to the value derived from accessorKey / accessorFn)
+                 */
+                getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
+            },
+            {
+                accessorFn: (row) => row.lastName,
+                id: 'lastName',
+                header: () => <span>Last Name</span>,
+                filterType: 'text',
+                cell: (info) => info.getValue(),
+            },
+        ],
+    },
+    {
+        header: 'Info',
+        columns: [
+            {
+                accessorKey: 'age',
+                id: 'age',
+                header: () => 'Age',
+                footer: (info) => <div style={{ 
+                    textAlign: 'right',
+                }}>{`Sum: ${formatNumber(SumFooter(info.column, info.table),0,2)}`}</div> ,
+                filterType: 'number',
+                cell: ({ cell }) => (
+                    <NumberCell
+                        initialValue={cell.getValue()}
+                        minFractionDigits={0}
+                        maxFractionDigits={4}
+                    />),
+
+                
+                aggregatedCell: ({ cell }) => (
+                    <NumberCell
+                        initialValue={cell.getValue()}
+                        minFractionDigits={0}
+                        maxFractionDigits={4}
+                    />),
+
+
+                // aggregatedCell: ({ getValue }) =>
+                //     Math.round(getValue<number>() * 100) / 100,
+                aggregationFn: 'mean',
+            },
+            {
+                header: 'More Info',
+
+                columns: [
+                    {
+                        accessorKey: 'visits',
+                        id: 'visits',
+                        header: () => <span>Visits</span>,
+                        cell: DateCell,
+                        filterType: 'date',
+                        // aggregationFn: 'sum',
+                        aggregationFn: 'count',
+                       aggregatedCell: ({ cell }) => (
+                        <NumberCell
+                            initialValue={cell.getValue()}
+                            minFractionDigits={0}
+                            maxFractionDigits={4}
+                        />),
+                        //aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
+                    },
+                    {
+                        accessorKey: 'status',
+                        id: 'status',
+                        header: 'Status',
+                        cell: TextCell,
+                        filterType: 'range',
+                    },
+                    {
+                        accessorKey: 'progress',
+                        id: 'progress',
+                        header: 'Profile Progress',
+                        filterType: 'number',
+                        footer: (info) => `Average: ${formatNumber(AverageFooter(info.column, info.table),0,2)}`,
+                        cell: ({ getValue }) =>
+                            Math.round(getValue<number>() * 100) / 100 + '%',
+                        aggregationFn: 'mean',
+                        aggregatedCell: ({ getValue }) =>
+                            Math.round(getValue<number>() * 100) / 100 + '%',
+                    },
+                ],
+            },
+        ],
+    },
+]
+const columns = columnssubrowf
 export default columns;
+

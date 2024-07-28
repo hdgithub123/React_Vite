@@ -92,6 +92,7 @@ function ReactTableExample() {
     };
     const btnclick= ()=>{
         console.log("selectedMoreData",selectedMoreData)
+        console.log("makeData",makeData)
     }
   
     return (
@@ -100,8 +101,8 @@ function ReactTableExample() {
                 <button onClick={btnclick}> kich here</button>
             </div>
             <div style={{ height: '70vh', width: '100%' }}>
-                {/* <ReactTableNomal data={makeData} columns ={columns} 
-                onRowSelect={handleRowSelect} ></ReactTableNomal> */}
+                <ReactTableNomal data={makeData} columns ={columns} 
+                onRowSelect={handleRowSelect} ></ReactTableNomal>
 
                 {/* <h1>ReactTableSelect</h1>
                 <ReactTableSelect data={makeData} 

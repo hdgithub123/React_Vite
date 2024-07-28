@@ -59,6 +59,10 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
+
+        getSubRows: row => row.subRows,
+        maxLeafRowFilterDepth: 0, 
+        
         state: { columnOrder, columnFilters, grouping, },
         onColumnFiltersChange: setColumnFilters,
         onColumnOrderChange: setColumnOrder,
@@ -255,7 +259,6 @@ const DragAlongCell = ({ cell }) => {
     };
 
     const { row } = cell.getContext();
-    console.log(" row", row)
     return (
         <td
             ref={setNodeRef}
