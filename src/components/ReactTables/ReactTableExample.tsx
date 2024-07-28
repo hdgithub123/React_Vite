@@ -89,7 +89,6 @@ function ReactTableExample() {
 
     const handleRowsSelect = (rowData) => {
         setSelectedMoreData(rowData); // Update state with the selected row data
-        console.log("selectedMoreData",selectedMoreData)
     };
     const btnclick= ()=>{
         console.log("selectedMoreData",selectedMoreData)
@@ -100,7 +99,7 @@ function ReactTableExample() {
             <div>
                 <button onClick={btnclick}> kich here</button>
             </div>
-            <div style={{ height: '500px', }}>
+            <div style={{ height: '70vh', width: '100%' }}>
                 {/* <ReactTableNomal data={makeData} columns ={columns} 
                 onRowSelect={handleRowSelect} ></ReactTableNomal> */}
 

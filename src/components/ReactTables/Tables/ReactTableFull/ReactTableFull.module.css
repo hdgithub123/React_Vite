@@ -68,7 +68,7 @@
 
 
 .table_body td{
-  /* outline: 1px solid lightgray; */
+  outline: 0.3px dotted lightgray;
   max-width: 0; /* khong bi gioi han keo */
 }
 

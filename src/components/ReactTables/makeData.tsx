@@ -137,6 +137,6 @@ function generateRandomName(length) {
 }
 
 
-const makeData2 = generateRandomObjectiveArray(1000)
+const makeData2 = generateRandomObjectiveArray(500)
 
 export const makeData = makeData2
