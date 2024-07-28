@@ -61,8 +61,9 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
         getFilteredRowModel: getFilteredRowModel(),
 
         getSubRows: row => row.subRows,
-        maxLeafRowFilterDepth: 0, 
-        
+        //maxLeafRowFilterDepth: 0, 
+        filterFromLeafRows: true,
+
         state: { columnOrder, columnFilters, grouping, },
         onColumnFiltersChange: setColumnFilters,
         onColumnOrderChange: setColumnOrder,
