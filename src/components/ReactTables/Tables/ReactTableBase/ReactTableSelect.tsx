@@ -232,8 +232,9 @@ function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect }) {
     useEffect(() => {
         const selectedRowIndices = Object.keys(table.getState().rowSelection).map(Number);
         const selectedData = selectedRowIndices.map(index => data[index]);
+        const filteredUndefinedData = selectedData.filter(row => row !== undefined);
         if (onRowsSelect) {
-            onRowsSelect(selectedData);
+            onRowsSelect(filteredUndefinedData);
         }
     }, [table.getState().rowSelection]);
 
