@@ -103,22 +103,14 @@ function ReactTableExample() {
             <div style={{ height: '500px', }}>
                 {/* <ReactTableNomal data={makeData} columns ={columns} 
                 onRowSelect={handleRowSelect} ></ReactTableNomal> */}
-                {/* <ReactTableSelect data={makeData} 
+
+                {/* <h1>ReactTableSelect</h1>
+                <ReactTableSelect data={makeData} 
                 columns={columns} onRowSelect={handleRowSelect} 
                 onRowsSelect={handleRowsSelect}>
                 </ReactTableSelect> */}
-                {/* <DndAndGroupTableWithCheckboxFilter data={makeData} columns={columns} ></DndAndGroupTableWithCheckboxFilter> */}
-                {/* <h1>ds</h1>
-                <h1>ds</h1>
-                <h1>ds</h1>
-                <h1>ds</h1>
-                <h1>ds</h1>
-                <h1>ds</h1>
-                <h1>ds</h1>
-                <h1>ds</h1>
-                
-                
-                 */}
+
+                <h1>ReactTableFull</h1>
                 <ReactTableFull 
                 data={makeData} 
                 columns={columns} 
@@ -126,7 +118,11 @@ function ReactTableExample() {
                 onRowsSelect={handleRowsSelect}>
                 </ReactTableFull>
             </div>
-
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
             {selectedData && (
                 <div style={{ display: 'flex', }}>
                     <h2>Selected Data</h2>

@@ -66,9 +66,10 @@
   max-width: 0; 
 } */
 
-/* khong bi gioi han keo */
+
 .table_body td{
-  max-width: 0; 
+  /* outline: 1px solid lightgray; */
+  max-width: 0; /* khong bi gioi han keo */
 }
 
 /* khong bi gioi han keo */
@@ -86,6 +87,12 @@
   background-color: white;
 }
 
+.table_footer_tr td{
+  outline: 1px solid lightgray;
+  border-Top: 2px solid gray;
+  border-Bottom: 2px solid gray;
+  font-Weight: bold;
+}
 
 /* Custom Scrollbar for tbody */
 .div_table_container::-webkit-scrollbar {

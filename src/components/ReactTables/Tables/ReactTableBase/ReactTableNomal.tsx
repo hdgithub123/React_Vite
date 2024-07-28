@@ -220,7 +220,7 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
                                 </tbody>
                             )}
                             {shouldRenderFooter && <tfoot className={styles.table_footer}>
-                                <tr>
+                                <tr className={styles.table_footer_tr}>
                                     {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
                                         <DraggableTablefooter key={header.id} header={header} />
                                     ))}

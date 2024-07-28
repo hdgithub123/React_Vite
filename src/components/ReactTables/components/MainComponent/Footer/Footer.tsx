@@ -17,9 +17,6 @@ export const DraggableTablefooter = ({ header }) => {
         id: header.column.id,
     });
     const style: CSSProperties = {
-        borderTop: '2px solid gray',
-        borderBottom: '2px solid gray',
-        fontWeight: 'bold',
         opacity: isDragging ? 0.8 : 1,
         cursor: isDragging ? 'move' : 'default',
         position: 'relative',

@@ -63,7 +63,12 @@
   background-color: white;
 }
 
-
+.table_footer_tr td{
+  outline: 1px solid lightgray;
+  border-Top: 2px solid gray;
+  border-Bottom: 2px solid gray;
+  font-Weight: bold;
+}
 
 
 .body_container_tr:hover {

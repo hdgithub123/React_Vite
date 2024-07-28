@@ -1,4 +1,4 @@
-export const makeData = [
+const makeData1 = [
     { firstName: '1Alice', lastName: 'Smith', age: 28, visits: "2024-01-01", progress: 75, status: 'relationship' },
     { firstName: '2Bob', lastName: 'Johnson', age: 32, visits: "2024-02-01", progress: 80, status: 'single' },
     { firstName: '3Charlie', lastName: 'Williams', age: 45, visits: "2024-03-01", progress: 85, status: 'complicated' },
@@ -19,7 +19,7 @@ export const makeData = [
     { firstName: '18 Noah', lastName: 'Thompson', age: 34, visits: "2025-06-01", progress: 85, status: 'complicated' },
     { firstName: '19 William', lastName: 'White', age: 43, visits: "2025-07-01", progress: 90, status: 'relationship' },
     { firstName: '20 Sophia', lastName: 'Harris', age: 47, visits: "2025-08-01", progress: 70, status: 'single' },
-    { firstName: '21 Alice', lastName: 'Smith', age: 28, visits: "2024-01-01", progress: 75, status: 'relationship' },
+    { firstName: '21 Alice', lastName: 'ănh hồ vịnh', age: 28, visits: "2024-01-01", progress: 75, status: 'relationship' },
     { firstName: '22 Bob', lastName: 'Johnson', age: 32, visits: "2024-02-01", progress: 80, status: 'single' },
     { firstName: '23 Charlie', lastName: 'Williams', age: 45, visits: "2024-03-01", progress: 85, status: 'complicated' },
     { firstName: '24David', lastName: 'Brown', age: 23, visits: "2024-04-01", progress: 90, status: 'relationship' },
@@ -94,3 +94,49 @@ export type Person = {
     createdAt: Date
   }
 
+
+
+  function generateRandomObjectiveArray(numbeRows) {
+    const objectiveArray = [];
+
+    for (let i = 0; i < numbeRows; i++) {
+        const randomFirstName = `${i + 1} ${generateRandomName(50)}`;
+        const randomLastName = generateRandomName(6);
+        const randomAge = Math.floor(Math.random() * 70) + 18;
+        const randomVisits = `${Math.floor(Math.random() * 26) + 2000}-${
+            Math.floor(Math.random() * 12) + 1
+        }-${Math.floor(Math.random() * 28) + 1}`;
+        const randomProgress = Math.floor(Math.random() * 101);
+        const randomStatus = ['complicated', 'simple', 'in progress'][Math.floor(Math.random() * 3)];
+
+        const objective = {
+            firstName: randomFirstName,
+            lastName: randomLastName,
+            age: randomAge,
+            visits: randomVisits,
+            progress: randomProgress,
+            status: randomStatus,
+        };
+
+        objectiveArray.push(objective);
+    }
+
+    return objectiveArray;
+}
+
+function generateRandomName(length) {
+    const characters = 'abcdefghijklmnopqrstuvwxyz';
+    let randomName = '';
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        randomName += characters[randomIndex];
+    }
+
+    return randomName;
+}
+
+
+const makeData2 = generateRandomObjectiveArray(1000)
+
+export const makeData = makeData2
