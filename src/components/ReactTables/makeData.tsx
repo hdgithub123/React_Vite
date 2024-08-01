@@ -179,31 +179,31 @@ type Person = {
             status: 'single',
             subRows: [],
           },
-        //   {
-        //     firstName: "2Jane",
-        //     lastName: "Smith",
-        //     age: 25,
-        //     visits: new Date(2021, 5, 20),
-        //     progress: 80,
-        //     status: 'single',
+          {
+            firstName: "1Jane",
+            lastName: "Smith",
+            age: 25,
+            visits: new Date(2021, 5, 20),
+            progress: 80,
+            status: 'single',
             
-        //   },
-        //   {
-        //     firstName: "3Jane",
-        //     lastName: "Smith",
-        //     age: 25,
-        //     visits: new Date(2021, 5, 20),
-        //     progress: 80,
-        //     status: 'single',
+          },
+          {
+            firstName: "3Jane",
+            lastName: "Smith",
+            age: 25,
+            visits: new Date(2021, 5, 20),
+            progress: 80,
+            status: 'single',
         
-        //   }
+          }
       ]
     },
     {
       firstName: "0Jane",
       lastName: "Smith",
       age: 25,
-      visits: new Date(2021, 5, 20),
+      visits: "2025-04-01",
       progress: 80,
       status: 'single',
       subRows: [{
@@ -221,10 +221,9 @@ type Person = {
       firstName: "Sam",
       lastName: "Brown",
       age: 40,
-      visits: new Date(2023, 3, 10),
+      visits: "2025-05-01",
       progress: 30,
       status: 'complicated',
-      subRows: []
     },
     {
       firstName: "Sam",
@@ -233,7 +232,6 @@ type Person = {
       visits: new Date(2020, 8, 25),
       progress: 60,
       status: 'relationship',
-      subRows: []
     },
     {
       firstName: "Michael",
@@ -242,7 +240,6 @@ type Person = {
       visits: new Date(2022, 11, 5),
       progress: 90,
       status: 'single',
-      subRows: []
     },
     {
       firstName: "Sara",
@@ -251,7 +248,6 @@ type Person = {
       visits: new Date(2023, 0, 18),
       progress: 40,
       status: 'complicated',
-      subRows: []
     },
     {
       firstName: "Tom",
@@ -260,7 +256,6 @@ type Person = {
       visits: new Date(2021, 4, 10),
       progress: 70,
       status: 'relationship',
-      subRows: []
     },
     {
       firstName: "Emma",
@@ -269,7 +264,6 @@ type Person = {
       visits: new Date(2020, 9, 22),
       progress: 20,
       status: 'single',
-      subRows: []
     },
     {
       firstName: "Chris",
@@ -278,7 +272,6 @@ type Person = {
       visits: new Date(2022, 6, 30),
       progress: 55,
       status: 'complicated',
-      subRows: []
     },
     {
       firstName: "Olivia",
@@ -287,7 +280,6 @@ type Person = {
       visits: new Date(2021, 2, 14),
       progress: 75,
       status: 'relationship',
-      subRows: []
     }
   ];
 

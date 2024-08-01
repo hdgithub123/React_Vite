@@ -71,12 +71,19 @@ function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect }) {
         }
 
     };
+    // const [expanded, setExpanded] = useState<ExpandedState>({})
 
     const table = useReactTable({
         data: dataDef,
         columns,
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
+        
+        // getSubRows: row => row.subRows,
+        // //maxLeafRowFilterDepth: 0, 
+        // filterFromLeafRows: true,
+        // onExpandedChange: setExpanded,
+
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         filterFns: {

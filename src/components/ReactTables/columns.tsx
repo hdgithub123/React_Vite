@@ -8,7 +8,6 @@ import EditableCell from './components/cells/edit/EditableCell';
 
 
 const ExplandingCell = ({ row, getValue }) => {
-   console.log("row.depth",row.depth)
     return (
         <div
           style={{
