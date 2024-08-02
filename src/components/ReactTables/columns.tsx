@@ -11,11 +11,8 @@ const ExplandingCell = ({ row, getValue }) => {
     return (
         <div
           style={{
-            // Since rows are flattened by default,
-            // we can use the row.depth property
-            // and paddingLeft to visually indicate the depth
-            // of the row
-            paddingLeft: `${row.depth * 2}rem`,
+            // paddingLeft: `${row.depth * 2}rem`,
+            paddingLeft: `${row.depth}rem`,
           }}
         >
           <div>
@@ -29,13 +26,35 @@ const ExplandingCell = ({ row, getValue }) => {
                 {row.getIsExpanded() ? '👇' : '👉'}
               </button>
             ) : (
-              '🔵'
+              ''
             )}{' '}
             {getValue<boolean>()}
           </div>
         </div>
       )
 }
+
+// const ExplandingCell = ({ row, getValue }) => {
+//     return (
+//         <div
+//           style={{
+//             paddingLeft: `${row.depth * 2}rem`,
+//           }}
+//         >
+//           <div>
+//               <button
+//                 {...{
+//                   onClick: row.getToggleExpandedHandler(),
+//                   style: { cursor: 'pointer' },
+//                 }}
+//               >
+//                 {row.getIsExpanded() ? '' : '⮚'}
+//               </button>
+//             {getValue<boolean>()}
+//           </div>
+//         </div>
+//       )
+// }
 
 
 
@@ -288,6 +307,8 @@ const columnssubrowf= [
                 // footer: info => `Count: ${CountFooter(info.table)}`,
                 footer: info =>`Count: ${CountFooter(info.table)}`,
                 cell: ExplandingCell,
+                aggregatedCell: ExplandingCell,
+                aggregationFn: 'count',
                 //cell: (info) => info.getValue(),
                 /**
                  * override the value used for row grouping
