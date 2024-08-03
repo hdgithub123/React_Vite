@@ -79,9 +79,9 @@ function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect }) {
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
         
-        // getSubRows: row => row.subRows,
+        getSubRows: row => row.subRows,
         // //maxLeafRowFilterDepth: 0, 
-        // filterFromLeafRows: true,
+        filterFromLeafRows: true,
         // onExpandedChange: setExpanded,
 
         getSortedRowModel: getSortedRowModel(),
