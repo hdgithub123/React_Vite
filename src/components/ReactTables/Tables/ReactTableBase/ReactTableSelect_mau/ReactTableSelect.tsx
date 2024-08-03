@@ -1,6 +1,4 @@
-import { useState, useEffect,useRef, CSSProperties } from 'react';
-import React from 'react'
-
+import { useState, useEffect, CSSProperties } from 'react';
 import {
     FilterFn,
     GroupingState,
@@ -26,25 +24,26 @@ import {
 } from '@dnd-kit/core';
 import {
     arrayMove,
+    useSortable,
     SortableContext,
     horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
+import { CSS } from '@dnd-kit/utilities';
+import styles from './ReactTableSelect.module.css';
+import { DraggableTableHeader, StaticTableHeader } from '../../../components/MainComponent/Header/Header';
+// import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
+import { DraggableTablefooter } from '../../../components/MainComponent/Footer/Footer';
+import { customCollisionDetection } from '../../../components/MainComponent/Others/customCollisionDetection';
+import { DropableContainerGroup } from '../../../components/MainComponent/Others/DropableContainerGroup';
+import { ColumnVisibilityToggle } from '../../../components/MainComponent/Others/ColumnVisibilityToggle';
+import { RenderHeaderByID } from '../../../components/MainComponent/Others/RenderHeaderByID';
+import { IndeterminateCheckbox } from '../../../components/MainComponent/Others/IndeterminateCheckbox';
+import { TriStateCheckbox } from '../../../components/MainComponent/Others/TriStateCheckbox';
 
-import styles from './ReactTableFull.module.css';
-import { useVirtualizer, notUndefined } from "@tanstack/react-virtual";
-import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
-import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
-import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
-import { customCollisionDetection } from '../../components/MainComponent/Others/customCollisionDetection';
-import { DropableContainerGroup } from '../../components/MainComponent/Others/DropableContainerGroup';
-import { ColumnVisibilityToggle } from '../../components/MainComponent/Others/ColumnVisibilityToggle';
-import { RenderHeaderByID } from '../../components/MainComponent/Others/RenderHeaderByID';
-import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
-import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 
 
-function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
+function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -72,15 +71,21 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
         }
 
     };
+    // const [expanded, setExpanded] = useState<ExpandedState>({})
 
     const table = useReactTable({
         data: dataDef,
         columns,
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
-        getSortedRowModel: getSortedRowModel(),
+        
         getSubRows: row => row.subRows,
         filterFromLeafRows: true,
+        // //maxLeafRowFilterDepth: 0, 
+        
+        // onExpandedChange: setExpanded,
+
+        getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         filterFns: {
             selectedFilter, // Register the custom filter function
@@ -113,6 +118,84 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
 
     });
 
+    const DragAlongCell = ({ cell }) => {
+        const { isDragging, setNodeRef, transform } = useSortable({
+            id: cell.column.id,
+        });
+
+        const style: CSSProperties = {
+            opacity: isDragging ? 0.8 : 1,
+            position: 'relative',
+            transform: CSS.Translate.toString(transform),
+            transition: 'width transform 0.2s ease-in-out',
+            width: cell.column.getSize(),
+            zIndex: isDragging ? 1 : 0,
+        };
+
+        const { row } = cell.getContext();
+
+        return (
+            <td
+                ref={setNodeRef}
+                {...{
+                    key: cell.id,
+                    style: {
+                        style,
+                        // background: cell.getIsGrouped()
+                        //     ? '#ddd'
+                        //     : cell.getIsAggregated()
+                        //         ? '#ddd'
+                        //         : cell.getIsPlaceholder()
+                        //             ? 'white'
+                        //             : null,
+
+                        fontWeight: cell.getIsGrouped()
+                            ? 'bold'
+                            : cell.getIsAggregated()
+                                ? 'bold'
+                                : 'normal',
+
+                    },
+                }}
+            >
+                {cell.getIsGrouped() ? (
+                    // If it's a grouped cell, add an expander and row count
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <button
+                            {...{
+                                onClick: row.getToggleExpandedHandler(),
+                                style: {
+                                    cursor: row.getCanExpand() ? 'pointer' : 'normal',
+                                    border: 'none',
+                                    background: 'none',
+                                },
+                            }}
+                        >
+                            {row.getIsExpanded() ? '⮛' : '⮚'}{' '}
+                        </button>
+                        {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                        )}{' '}
+                        ({row.subRows.length})
+                    </div>
+                ) : cell.getIsAggregated() ? (
+                    // If the cell is aggregated, use the Aggregated renderer for cell
+                    flexRender(
+                        cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
+                        cell.getContext()
+                    )
+                ) : cell.getIsPlaceholder() ? null : (
+                    // For cells with repeated values, render null
+                    // Otherwise, just render the regular cell
+                    flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                    )
+                )}
+            </td>
+        );
+    };
     const isLeafColumn = (header) => !header.subHeaders || header.subHeaders.length === 0;
     const leafHeaderGroupIndex = table.getHeaderGroups().length - 1;
     const leafHeaderGroup = table.getHeaderGroups()[leafHeaderGroupIndex];
@@ -125,12 +208,6 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
             return count + 1;
         }, 0);
     };
-
-
-
-
-
-    
 
     const sensors = useSensors(
         useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
@@ -161,12 +238,14 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
 
 
     useEffect(() => {
-        const selectedRowIndices = Object.keys(table.getState().rowSelection).map(Number);
-        const selectedData = selectedRowIndices.map(index => data[index]);
-        const filteredUndefinedData = selectedData.filter(row => row !== undefined);
+        // const selectedRowIndices = Object.keys(table.getState().rowSelection).map(Number);
+        // const selectedData = selectedRowIndices.map(index => data[index]);
+        // const filteredUndefinedData = selectedData.filter(row => row !== undefined);
+        const filteredUndefinedData = getSelectedData(table);
         if (onRowsSelect) {
             onRowsSelect(filteredUndefinedData);
         }
+        console.log("table.getState().rowSelection",table.getState().rowSelection)
     }, [table.getState().rowSelection]);
 
 
@@ -190,41 +269,6 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
             table.setGlobalFilter('none')
         }
     };
-    // bắt đầu render Virtual
-
-    const { rows } = table.getRowModel()
-
-    const parentRef = React.useRef<HTMLDivElement>(null)
-
-    const rowHeights = useRef({});
-
-    const virtualizer = useVirtualizer({
-        count: table.getRowModel().rows.length,
-        getScrollElement: () => parentRef.current,
-        estimateSize: (index) => rowHeights.current[index] || 35, // Default to 35 if height is not measured
-        overscan: 10,
-        measureElement: (el) => {
-            if (el) {
-                const index = Number(el.dataset.index);
-                const height = el.getBoundingClientRect().height;
-                rowHeights.current[index] = height;
-            }
-        },
-    });
-
-    const items = virtualizer.getVirtualItems();
-
-
-    const [before, after] =
-        items.length > 0
-            ? [
-                notUndefined(items[0]).start - virtualizer.options.scrollMargin,
-                virtualizer.getTotalSize() - notUndefined(items[items.length - 1]).end
-            ]
-            : [0, 0];
-
-
-
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
@@ -242,7 +286,7 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
                 <DndContext
                     collisionDetection={customCollisionDetection}
                     onDragEnd={handleDragEnd}
-                    autoScroll = {false}
+                    autoScroll={false}
                     sensors={sensors}
                 >
                     <div className={styles.Dropable_Container_Group}>
@@ -260,11 +304,8 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
                             )}
                         </DropableContainerGroup>
                     </div>
-                    <div
-                        ref={parentRef}
-                        className={styles.div_table_container}
-                    >
 
+                    <div className={styles.div_table_container}>
                         {/* Bắt đầu render table */}
                         <table className={styles.table_container}>
                             <thead className={styles.table_head}>
@@ -303,45 +344,26 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
                             </thead>
                             {table.getRowModel().rows.length > 0 ? (
                                 <tbody className={styles.table_body}>
-                                    {before > 0 && (
-                                        <tr className={styles.table_body_tr}>
-                                            <td style={{ height: `${before}px` }}></td>
+                                    {table.getRowModel().rows.map(row => (
+                                        <tr onDoubleClick={() => handleRowClick(row.original)} className={styles.table_body_tr} key={row.id}>
+                                            <td className={styles.table_body_tr_checkbox}>
+                                                <IndeterminateCheckbox
+                                                    {...{
+                                                        checked: row.getIsSelected(),
+                                                        disabled: !row.getCanSelect(),
+                                                        indeterminate: row.getIsSomeSelected(),
+                                                        onChange: row.getToggleSelectedHandler(),
+                                                    }}
+                                                />
+                                            </td>
+                                            {row.getVisibleCells().map(cell => (
+                                                <DragAlongCell key={cell.id} cell={cell} />
+                                            ))}
                                         </tr>
-                                    )}
-                                    {items.map((virtualRow, index) => {
-                                        const row = rows[virtualRow.index]
-                                        return (
-                                            <tr
-                                                className={styles.table_body_tr}
-                                                key={row.id}
-                                                onDoubleClick={() => handleRowClick(row.original)}
-                                            >
-                                                <td className={styles.table_body_td_checkbox}>
-                                                    <IndeterminateCheckbox
-                                                        {...{
-                                                            checked: row.getIsSelected(),
-                                                            disabled: !row.getCanSelect(),
-                                                            indeterminate: row.getIsSomeSelected(),
-                                                            onChange: row.getToggleSelectedHandler(),
-                                                        }}
-                                                    />
-                                                </td>
-                                                {row.getVisibleCells().map((cell) => {
-                                                    return (
-                                                        <DragAlongCell key={cell.id} cell={cell} />
-                                                    )
-                                                })}
-                                            </tr>
-                                        )
-                                    })}
+                                    ))}
                                     <tr className={styles.table_body_td_empty}>
                                     <td></td>
                                     </tr>
-                                    {after > 0 && (
-                                        <tr className={styles.table_body_tr}>
-                                            <td style={{ height: `${after}px` }}></td>
-                                        </tr>
-                                    )}
                                 </tbody>
                             ) : (
                                 <tbody>
@@ -360,7 +382,7 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
                                         <DraggableTablefooter key={header.id} header={header} />
                                     ))}
                                 </tr>
-                            </tfoot>}
+                            </tfoot>}                        
                         </table>
                     </div>
                 </DndContext>
@@ -369,6 +391,79 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
 
     );
 }
-export default ReactTableFull;
+export default ReactTableSelect;
 
 
+
+// function getSelectedData<T>(table: Table<T>): T[] {
+//     const { rowSelection } = table.getState();
+//     const processedRowIds = new Set<string>();
+  
+//     function extractSelectedRows(rows: any[], selectedRowIds: Set<string>, isParentSelected = false): T[] {
+//       let selectedData: T[] = [];
+  
+//       rows.forEach(row => {
+//         const isSelected = selectedRowIds.has(row.id);
+  
+//         // Process only if the row is selected and hasn't been processed yet
+//         if (isSelected && !processedRowIds.has(row.id)) {
+//           selectedData.push(row.original);
+//           processedRowIds.add(row.id); // Mark the row as processed
+//         }
+  
+//         // Recursively extract selected subRows only if the parent row is not selected
+//         if (row.subRows && row.subRows.length > 0) {
+//           selectedData = selectedData.concat(extractSelectedRows(row.subRows, selectedRowIds, isSelected));
+//         }
+//       });
+  
+//       return selectedData;
+//     }
+  
+//     // Convert the rowSelection keys to a Set for quick lookup
+//     const selectedRowIds = new Set(Object.keys(rowSelection));
+  
+//     // Start with the root rows
+//     return extractSelectedRows(table.getRowModel().rows, selectedRowIds);
+//   }
+
+
+  function getSelectedData<T>(table: Table<T>): T[] {
+    const { rowSelection } = table.getState();
+    const processedRowIds = new Set<string>();
+  
+    function extractSelectedRows(rows: any[], selectedRowIds: Set<string>, isParentSelected = false): T[] {
+      let selectedData: T[] = [];
+  
+      rows.forEach(row => {
+        const isSelected = selectedRowIds.has(row.id);
+  
+        // Skip processing group rows
+        if (row.isGroup) {
+          return;
+        }
+  
+        // Process only if the row is selected and hasn't been processed yet
+        if (isSelected && !processedRowIds.has(row.id)) {
+          selectedData.push(row.original);
+          processedRowIds.add(row.id); // Mark the row as processed
+        }
+  
+        // Recursively extract selected subRows
+        if (row.subRows && row.subRows.length > 0) {
+          selectedData = selectedData.concat(extractSelectedRows(row.subRows, selectedRowIds, isSelected));
+        }
+      });
+  
+      return selectedData;
+    }
+  
+    // Convert the rowSelection keys to a Set for quick lookup
+    const selectedRowIds = new Set(Object.keys(rowSelection));
+  
+    // Start with the root rows
+    return extractSelectedRows(table.getRowModel().rows, selectedRowIds);
+  }
+  
+
+  

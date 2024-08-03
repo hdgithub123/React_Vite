@@ -20,10 +20,10 @@ const ExplandingCell = ({ row , getValue }) => {
               <button
                 {...{
                   onClick: row.getToggleExpandedHandler(),
-                  style: { cursor: 'pointer' },
+                  style: { cursor: 'pointer', background: 'none', border:'none' },
                 }}
               >
-                {row.getIsExpanded() ? '👇' : '👉'}
+                {row.getIsExpanded() ? '⮛' : '⮚'}
               </button>
             ) : (
               ''

@@ -1,10 +1,9 @@
 import { useState, useEffect, CSSProperties } from 'react';
-
 import {
+    FilterFn,
     GroupingState,
     getGroupedRowModel,
     getExpandedRowModel,
-    ColumnDef,
     flexRender,
     getCoreRowModel,
     useReactTable,
@@ -22,9 +21,7 @@ import {
     DragEndEvent,
     useSensor,
     useSensors,
-
 } from '@dnd-kit/core';
-
 import {
     arrayMove,
     useSortable,
@@ -33,17 +30,20 @@ import {
 } from '@dnd-kit/sortable';
 
 import { CSS } from '@dnd-kit/utilities';
-import styles from './ReactTableNomal.module.css';
-import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
-import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
-import { customCollisionDetection } from '../../components/MainComponent/Others/customCollisionDetection';
-import { DropableContainerGroup } from '../../components/MainComponent/Others/DropableContainerGroup';
-import { ColumnVisibilityToggle } from '../../components/MainComponent/Others/ColumnVisibilityToggle';
-import { RenderHeaderByID } from '../../components/MainComponent/Others/RenderHeaderByID';
+import styles from './ReactTableSelect.module.css';
+import { DraggableTableHeader, StaticTableHeader } from '../../../components/MainComponent/Header/Header';
+// import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
+import { DraggableTablefooter } from '../../../components/MainComponent/Footer/Footer';
+import { customCollisionDetection } from '../../../components/MainComponent/Others/customCollisionDetection';
+import { DropableContainerGroup } from '../../../components/MainComponent/Others/DropableContainerGroup';
+import { ColumnVisibilityToggle } from '../../../components/MainComponent/Others/ColumnVisibilityToggle';
+import { RenderHeaderByID } from '../../../components/MainComponent/Others/RenderHeaderByID';
+import { IndeterminateCheckbox } from '../../../components/MainComponent/Others/IndeterminateCheckbox';
+import { TriStateCheckbox } from '../../../components/MainComponent/Others/TriStateCheckbox';
 
 
 
-function ReactTableNomal({ data, columns, onRowSelect }) {
+function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -51,19 +51,45 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
     );
     const [grouping, setGrouping] = useState<GroupingState>([])
 
+    const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
+        // Get the selected row IDs from the table state
+        const selectedRowIds = table.getState().rowSelection;
+        // If filterValue is true, return selected rows
+        if (filterValue === 'checked') {
+            if (selectedRowIds[rows.id] === true) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (filterValue === 'unchecked') {
+            if (selectedRowIds[rows.id] !== true) {
+                return true;
+            }
+            return false;
+        } else {
+            return true;
+        }
+
+    };
+    // const [expanded, setExpanded] = useState<ExpandedState>({})
+
     const table = useReactTable({
         data: dataDef,
         columns,
         columnResizeMode: 'onChange',
-
         getCoreRowModel: getCoreRowModel(),
+        
+        getSubRows: row => row.subRows,
+        filterFromLeafRows: true,
+        // //maxLeafRowFilterDepth: 0, 
+        
+        // onExpandedChange: setExpanded,
+
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-
-        getSubRows: row => row.subRows,
-        //maxLeafRowFilterDepth: 0, 
-        filterFromLeafRows: true,
-
+        filterFns: {
+            selectedFilter, // Register the custom filter function
+        },
         state: { columnOrder, columnFilters, grouping, },
         onColumnFiltersChange: setColumnFilters,
         onColumnOrderChange: setColumnOrder,
@@ -72,6 +98,7 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
         getGroupedRowModel: getGroupedRowModel(),
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues(),
+        globalFilterFn: 'selectedFilter',
         manualExpanding: false, // set bàng false thì có thể sử dụng cả useEffect để expanded
         autoResetExpanded: false, // set bang false thì tất cả các row được expanding bằng true thì không sử dụng cả useEffect
         // getPaginationRowModel: getPaginationRowModel(),
@@ -91,8 +118,84 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
 
     });
 
+    const DragAlongCell = ({ cell }) => {
+        const { isDragging, setNodeRef, transform } = useSortable({
+            id: cell.column.id,
+        });
 
+        const style: CSSProperties = {
+            opacity: isDragging ? 0.8 : 1,
+            position: 'relative',
+            transform: CSS.Translate.toString(transform),
+            transition: 'width transform 0.2s ease-in-out',
+            width: cell.column.getSize(),
+            zIndex: isDragging ? 1 : 0,
+        };
 
+        const { row } = cell.getContext();
+
+        return (
+            <td
+                ref={setNodeRef}
+                {...{
+                    key: cell.id,
+                    style: {
+                        style,
+                        // background: cell.getIsGrouped()
+                        //     ? '#ddd'
+                        //     : cell.getIsAggregated()
+                        //         ? '#ddd'
+                        //         : cell.getIsPlaceholder()
+                        //             ? 'white'
+                        //             : null,
+
+                        fontWeight: cell.getIsGrouped()
+                            ? 'bold'
+                            : cell.getIsAggregated()
+                                ? 'bold'
+                                : 'normal',
+
+                    },
+                }}
+            >
+                {cell.getIsGrouped() ? (
+                    // If it's a grouped cell, add an expander and row count
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <button
+                            {...{
+                                onClick: row.getToggleExpandedHandler(),
+                                style: {
+                                    cursor: row.getCanExpand() ? 'pointer' : 'normal',
+                                    border: 'none',
+                                    background: 'none',
+                                },
+                            }}
+                        >
+                            {row.getIsExpanded() ? '⮛' : '⮚'}{' '}
+                        </button>
+                        {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                        )}{' '}
+                        ({row.subRows.length})
+                    </div>
+                ) : cell.getIsAggregated() ? (
+                    // If the cell is aggregated, use the Aggregated renderer for cell
+                    flexRender(
+                        cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
+                        cell.getContext()
+                    )
+                ) : cell.getIsPlaceholder() ? null : (
+                    // For cells with repeated values, render null
+                    // Otherwise, just render the regular cell
+                    flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                    )
+                )}
+            </td>
+        );
+    };
     const isLeafColumn = (header) => !header.subHeaders || header.subHeaders.length === 0;
     const leafHeaderGroupIndex = table.getHeaderGroups().length - 1;
     const leafHeaderGroup = table.getHeaderGroups()[leafHeaderGroupIndex];
@@ -105,7 +208,6 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
             return count + 1;
         }, 0);
     };
-
 
     const sensors = useSensors(
         useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
@@ -135,6 +237,15 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
     };
 
 
+    useEffect(() => {
+        const selectedRowIndices = Object.keys(table.getState().rowSelection).map(Number);
+        const selectedData = selectedRowIndices.map(index => data[index]);
+        const filteredUndefinedData = selectedData.filter(row => row !== undefined);
+        if (onRowsSelect) {
+            onRowsSelect(filteredUndefinedData);
+        }
+    }, [table.getState().rowSelection]);
+
 
     // sử dụng để expanded all
     useEffect(() => {
@@ -147,7 +258,15 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
         }
     };
 
-
+    const handleTriStateCheckboxSelectChange = (value) => {
+        if (value === true) {
+            table.setGlobalFilter('checked')
+        } else if (value === false) {
+            table.setGlobalFilter('unchecked')
+        } else {
+            table.setGlobalFilter('none')
+        }
+    };
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
@@ -188,8 +307,27 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
                         {/* Bắt đầu render table */}
                         <table className={styles.table_container}>
                             <thead className={styles.table_head}>
-                                {table.getHeaderGroups().map(headerGroup => (
+                                {table.getHeaderGroups().map((headerGroup, rowIndex) => (
                                     <tr className={styles.table_head_tr} key={headerGroup.id}>
+                                        {rowIndex === leafHeaderGroupIndex
+                                            ?
+                                            (<th className={styles.table_head_tr_th_checkbox}>
+                                                <div title="Select All/ Unselect All">
+                                                    <IndeterminateCheckbox
+                                                        {...{
+                                                            checked: table.getIsAllRowsSelected(),
+                                                            indeterminate: table.getIsSomeRowsSelected(),
+                                                            onChange: table.getToggleAllRowsSelectedHandler(),
+                                                        }}
+                                                    />
+                                                </div>
+                                                <div title="Filter Select">
+                                                    <TriStateCheckbox onChange={handleTriStateCheckboxSelectChange}></TriStateCheckbox>
+                                                </div>
+                                            </th>) : (
+                                                <th></th>
+                                            )
+                                        }
                                         <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
                                             {headerGroup.headers.map((header) =>
                                                 isLeafColumn(header) ? (
@@ -205,19 +343,30 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
                             {table.getRowModel().rows.length > 0 ? (
                                 <tbody className={styles.table_body}>
                                     {table.getRowModel().rows.map(row => (
-                                        <tr onDoubleClick={() => handleRowClick(row.original)} className={styles.body_container_tr} key={row.id}>
+                                        <tr onDoubleClick={() => handleRowClick(row.original)} className={styles.table_body_tr} key={row.id}>
+                                            <td className={styles.table_body_tr_checkbox}>
+                                                <IndeterminateCheckbox
+                                                    {...{
+                                                        checked: row.getIsSelected(),
+                                                        disabled: !row.getCanSelect(),
+                                                        indeterminate: row.getIsSomeSelected(),
+                                                        onChange: row.getToggleSelectedHandler(),
+                                                    }}
+                                                />
+                                            </td>
                                             {row.getVisibleCells().map(cell => (
                                                 <DragAlongCell key={cell.id} cell={cell} />
                                             ))}
                                         </tr>
                                     ))}
                                     <tr className={styles.table_body_td_empty}>
-                                        <td></td>
+                                    <td></td>
                                     </tr>
                                 </tbody>
                             ) : (
                                 <tbody>
                                     <tr className={styles.table_body}>
+                                        <td></td>
                                         <td colSpan={countLeafColumns(columns)} style={{ textAlign: 'center' }}>
                                             No data available
                                         </td>
@@ -226,13 +375,13 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
                             )}
                             {shouldRenderFooter && <tfoot className={styles.table_footer}>
                                 <tr className={styles.table_footer_tr}>
+                                    <td className={styles.footer_checkbox}></td>
                                     {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
                                         <DraggableTablefooter key={header.id} header={header} />
                                     ))}
                                 </tr>
-                            </tfoot>}
+                            </tfoot>}                        
                         </table>
-
                     </div>
                 </DndContext>
             </div>
@@ -240,86 +389,8 @@ function ReactTableNomal({ data, columns, onRowSelect }) {
 
     );
 }
-export default ReactTableNomal;
+export default ReactTableSelect;
 
+  
 
-
-
-const DragAlongCell = ({ cell }) => {
-    const { isDragging, setNodeRef, transform } = useSortable({
-        id: cell.column.id,
-    });
-
-    const style: CSSProperties = {
-        opacity: isDragging ? 0.8 : 1,
-        position: 'relative',
-        transform: CSS.Translate.toString(transform),
-        transition: 'width transform 0.2s ease-in-out',
-        width: cell.column.getSize(),
-        zIndex: isDragging ? 1 : 0,
-    };
-
-    const { row } = cell.getContext();
-    return (
-        <td
-            ref={setNodeRef}
-            {...{
-                key: cell.id,
-                style: {
-                    style,
-                    // background: cell.getIsGrouped()
-                    //     ? '#ddd'
-                    //     : cell.getIsAggregated()
-                    //         ? '#ddd'
-                    //         : cell.getIsPlaceholder()
-                    //             ? 'white'
-                    //             : null,
-
-                    fontWeight: cell.getIsGrouped()
-                        ? 'bold'
-                        : cell.getIsAggregated()
-                            ? 'bold'
-                            : 'normal',
-
-                },
-            }}
-        >
-            {cell.getIsGrouped() ? (
-                // If it's a grouped cell, add an expander and row count
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <button
-                        {...{
-                            onClick: row.getToggleExpandedHandler(),
-                            style: {
-                                cursor: row.getCanExpand() ? 'pointer' : 'normal',
-                                border: 'none',
-                                background: 'none',
-                            },
-                        }}
-                    >
-                        {row.getIsExpanded() ? '⮛' : '⮚'}{' '}
-                    </button>
-                    {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                    )}{' '}
-                    ({row.subRows.length})
-                </div>
-            ) : cell.getIsAggregated() ? (
-                // If the cell is aggregated, use the Aggregated renderer for cell
-                flexRender(
-                    cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell,
-                    cell.getContext()
-                )
-            ) : cell.getIsPlaceholder() ? null : (
-                // For cells with repeated values, render null
-                // Otherwise, just render the regular cell
-                flexRender(
-                    cell.column.columnDef.cell,
-                    cell.getContext()
-                )
-            )}
-        </td>
-    );
-};
-
+  

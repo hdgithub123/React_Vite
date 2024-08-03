@@ -294,4 +294,4 @@ type Person = {
     }
   ];
 
-export const makeData = predefinedPeople
+export const makeData = makeDataSubrows

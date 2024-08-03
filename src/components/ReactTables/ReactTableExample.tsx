@@ -74,8 +74,9 @@ import EditableCell from './components/cells/edit/EditableCell'
 import {makeData} from './makeData';
 import columns from './columns';
 
-import ReactTableNomal from './Tables/ReactTableBase/ReactTableNomal';
-import ReactTableSelect from './Tables/ReactTableBase/ReactTableSelect';
+import ReactTableNomal from './Tables/ReactTableBase/ReactTableNomal/ReactTableNomal';
+//import ReactTableSelect from './Tables/ReactTableBase/ReactTableSelect/ReactTableSelect';
+import ReactTableSelect from './Tables/ReactTableBase/ReactTableSelect_mau/ReactTableSelect';
 import DndAndGroupTableWithCheckboxFilter from './DndAndGroupTableWithCheckboxFilter';
 import ReactTableFull from './Tables/ReactTableFull/ReactTableFull';
 
@@ -101,8 +102,8 @@ function ReactTableExample() {
                 <button onClick={btnclick}> kich here</button>
             </div>
             <div style={{ height: '70vh', width: '100%' }}>
-                <ReactTableNomal data={makeData} columns ={columns} 
-                onRowSelect={handleRowSelect} ></ReactTableNomal>
+                {/* <ReactTableNomal data={makeData} columns ={columns} 
+                onRowSelect={handleRowSelect} ></ReactTableNomal> */}
 
                 <h1>ReactTableSelect</h1>
                 <ReactTableSelect data={makeData} 
