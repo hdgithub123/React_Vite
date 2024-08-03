@@ -7,7 +7,7 @@ import EditableCell from './components/cells/edit/EditableCell';
 
 
 
-const ExplandingCell = ({ row, getValue }) => {
+const ExplandingCell = ({ row , getValue }) => {
     return (
         <div
           style={{
@@ -306,7 +306,9 @@ const columnssubrowf= [
                 filterType: 'text',
                 // footer: info => `Count: ${CountFooter(info.table)}`,
                 footer: info =>`Count: ${CountFooter(info.table)}`,
-                cell: (info) => <div style={{paddingLeft: `${info.column.depth*20}px`,}}> {info.getValue()}</div> ,
+                cell: (info) => <div 
+                                    style={{paddingLeft: `${info.row.depth*20}px`,}}> {info.getValue()}
+                                </div> ,
                 aggregatedCell: ExplandingCell,
                 // aggregationFn: 'count',
                 //cell: (info) => info.getValue(),

@@ -177,8 +177,19 @@ type Person = {
             visits: "2025-01-01",
             progress: 80,
             status: 'single',
-            subRows: [],
-          },
+            subRows: [
+              {
+              firstName: "10Jane",
+              lastName: "Smith",
+              age: 25,
+              visits: "2025-01-01",
+              progress: 80,
+              status: 'single',
+              
+            },
+          ],
+          
+        },
           {
             firstName: "1Jane",
             lastName: "Smith",

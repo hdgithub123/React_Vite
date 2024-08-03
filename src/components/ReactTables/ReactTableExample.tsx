@@ -104,19 +104,19 @@ function ReactTableExample() {
                 <ReactTableNomal data={makeData} columns ={columns} 
                 onRowSelect={handleRowSelect} ></ReactTableNomal>
 
-                <h1>ReactTableSelect</h1>
+                {/* <h1>ReactTableSelect</h1>
                 <ReactTableSelect data={makeData} 
                 columns={columns} onRowSelect={handleRowSelect} 
                 onRowsSelect={handleRowsSelect}>
-                </ReactTableSelect>
+                </ReactTableSelect> */}
 
-                <h1>ReactTableFull</h1>
+                {/* <h1>ReactTableFull</h1>
                 <ReactTableFull 
                 data={makeData} 
                 columns={columns} 
                 onRowSelect={handleRowSelect} 
                 onRowsSelect={handleRowsSelect}>
-                </ReactTableFull>
+                </ReactTableFull> */}
             </div>
             <br></br>
             <br></br>
