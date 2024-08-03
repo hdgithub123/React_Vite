@@ -306,9 +306,9 @@ const columnssubrowf= [
                 filterType: 'text',
                 // footer: info => `Count: ${CountFooter(info.table)}`,
                 footer: info =>`Count: ${CountFooter(info.table)}`,
-                cell: ExplandingCell,
+                cell: (info) => <div style={{paddingLeft: `${info.column.depth*20}px`,}}> {info.getValue()}</div> ,
                 aggregatedCell: ExplandingCell,
-                aggregationFn: 'count',
+                // aggregationFn: 'count',
                 //cell: (info) => info.getValue(),
                 /**
                  * override the value used for row grouping
@@ -368,12 +368,7 @@ const columnssubrowf= [
                         filterType: 'date',
                         // aggregationFn: 'sum',
                         aggregationFn: 'count',
-                       aggregatedCell: ({ cell }) => (
-                        <NumberCell
-                            initialValue={cell.getValue()}
-                            minFractionDigits={0}
-                            maxFractionDigits={4}
-                        />),
+                       aggregatedCell: DateCell,
                         //aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
                     },
                     {
