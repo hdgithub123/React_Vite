@@ -394,40 +394,6 @@ function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect }) {
 export default ReactTableSelect;
 
 
-
-// function getSelectedData<T>(table: Table<T>): T[] {
-//     const { rowSelection } = table.getState();
-//     const processedRowIds = new Set<string>();
-  
-//     function extractSelectedRows(rows: any[], selectedRowIds: Set<string>, isParentSelected = false): T[] {
-//       let selectedData: T[] = [];
-  
-//       rows.forEach(row => {
-//         const isSelected = selectedRowIds.has(row.id);
-  
-//         // Process only if the row is selected and hasn't been processed yet
-//         if (isSelected && !processedRowIds.has(row.id)) {
-//           selectedData.push(row.original);
-//           processedRowIds.add(row.id); // Mark the row as processed
-//         }
-  
-//         // Recursively extract selected subRows only if the parent row is not selected
-//         if (row.subRows && row.subRows.length > 0) {
-//           selectedData = selectedData.concat(extractSelectedRows(row.subRows, selectedRowIds, isSelected));
-//         }
-//       });
-  
-//       return selectedData;
-//     }
-  
-//     // Convert the rowSelection keys to a Set for quick lookup
-//     const selectedRowIds = new Set(Object.keys(rowSelection));
-  
-//     // Start with the root rows
-//     return extractSelectedRows(table.getRowModel().rows, selectedRowIds);
-//   }
-
-
   function getSelectedData<T>(table: Table<T>): T[] {
     const { rowSelection } = table.getState();
     const processedRowIds = new Set<string>();
@@ -437,9 +403,8 @@ export default ReactTableSelect;
   
       rows.forEach(row => {
         const isSelected = selectedRowIds.has(row.id);
-  
         // Skip processing group rows
-        if (row.isGroup) {
+        if (row.getIsGrouped()) {
           return;
         }
   
@@ -463,7 +428,6 @@ export default ReactTableSelect;
   
     // Start with the root rows
     return extractSelectedRows(table.getRowModel().rows, selectedRowIds);
-  }
+  };
   
-
   

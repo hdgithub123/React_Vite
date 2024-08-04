@@ -76,7 +76,7 @@ import columns from './columns';
 
 import ReactTableNomal from './Tables/ReactTableBase/ReactTableNomal/ReactTableNomal';
 //import ReactTableSelect from './Tables/ReactTableBase/ReactTableSelect/ReactTableSelect';
-import ReactTableSelect from './Tables/ReactTableBase/ReactTableSelect_mau/ReactTableSelect';
+import ReactTableSelect from './Tables/ReactTableBase/ReactTableSelect_mau/ReactTableSelect_mau';
 import DndAndGroupTableWithCheckboxFilter from './DndAndGroupTableWithCheckboxFilter';
 import ReactTableFull from './Tables/ReactTableFull/ReactTableFull';
 
