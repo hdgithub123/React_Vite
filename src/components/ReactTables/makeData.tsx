@@ -159,9 +159,9 @@ type Person = {
   
   const generatePeople = (num: number): Person[] => Array.from({ length: num }, generatePerson);
   
-  const makeDataSubrows = generatePeople(10);
+  const makeDataSubrows1 = generatePeople(10);
 
-  const predefinedPeople = [
+  const makeDataSubrows2 = [
     {
       firstName: "0Jane",
       lastName: "Doe",
@@ -294,4 +294,7 @@ type Person = {
     }
   ];
 
-export const makeData = makeDataSubrows
+
+  // makeData1: data thuong, makeData2: 500 data thuong, 
+  //makeDataSubrows1: 10 subrow thuong, makeDataSubrows2 : subrow chi chi dinh
+export const makeData = makeData1

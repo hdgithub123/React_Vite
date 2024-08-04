@@ -398,6 +398,6 @@ const columnssubrowf= [
         ],
     },
 ]
-const columns = columnssubrowf
+const columns = columnscof
 export default columns;
 
