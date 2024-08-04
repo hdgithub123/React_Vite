@@ -1,4 +1,5 @@
 import { SumFooter, AverageFooter, CountFooter } from './components/Footer/FooterColumn'
+import { SumExpandingFooter,AverageExpandingFooter,CountExpandingFooter } from './components/Footer/FooterExpandingColumn';
 import { TextCell } from './components/cells/orinal/TextCell';
 import { NumberUsCell, NumberVnCell, NumberCell, formatNumber, formatVnNumber,formatUsNumber } from './components/cells/orinal/NumberCell';
 import { DateVnCell,DateUsCell, DateCell } from './components/cells/orinal/DateCell';
@@ -23,7 +24,7 @@ const ExplandingCell = ({ row , getValue }) => {
                   style: { cursor: 'pointer', background: 'none', border:'none' },
                 }}
               >
-                {row.getIsExpanded() ? '⮛' : '⮚'}
+                {row.getIsExpanded() ? '⮞' : '⮟'}
               </button>
             ) : (
               ''
@@ -305,7 +306,7 @@ const columnssubrowf= [
                 id: 'firstName',
                 filterType: 'text',
                 // footer: info => `Count: ${CountFooter(info.table)}`,
-                footer: info =>`Count: ${CountFooter(info.table)}`,
+                footer: info =>`Count: ${CountExpandingFooter(info.table)}`,
                 cell: (info) => <div 
                                     style={{paddingLeft: `${info.row.depth*20}px`,}}> {info.getValue()}
                                 </div> ,
@@ -336,7 +337,7 @@ const columnssubrowf= [
                 header: () => 'Age',
                 footer: (info) => <div style={{ 
                     textAlign: 'right',
-                }}>{`Sum: ${formatNumber(SumFooter(info.column, info.table),0,2)}`}</div> ,
+                }}>{`Sum: ${formatNumber(SumExpandingFooter(info.column, info.table),0,2)}`}</div> ,
                 filterType: 'number',
                 cell: ({ cell }) => (
                     <NumberCell
@@ -385,7 +386,7 @@ const columnssubrowf= [
                         id: 'progress',
                         header: 'Profile Progress',
                         filterType: 'number',
-                        footer: (info) => `Average: ${formatNumber(AverageFooter(info.column, info.table),0,2)}`,
+                        footer: (info) => `Average: ${formatNumber(AverageExpandingFooter(info.column, info.table),0,2)}`,
                         cell: ({ getValue }) =>
                             Math.round(getValue<number>() * 100) / 100 + '%',
                         aggregationFn: 'mean',

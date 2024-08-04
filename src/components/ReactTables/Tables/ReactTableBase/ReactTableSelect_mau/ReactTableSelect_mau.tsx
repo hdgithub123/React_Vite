@@ -81,6 +81,7 @@ function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect }) {
         
         getSubRows: row => row.subRows,
         filterFromLeafRows: true,
+        enableSubRowSelection: false, // click on subrow not auto select
         // //maxLeafRowFilterDepth: 0, 
         
         // onExpandedChange: setExpanded,
