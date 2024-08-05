@@ -51,6 +51,7 @@ export const DraggableTableHeader = ({ header }) => {
                             style={ {display: 'flex', justifyContent: 'space-between'} }
                             className={styles.th_header_pin}
                             >
+                                 {/* pin colum*/}
                                 <div>
                                 {header.column.getIsPinned() !== 'left' ? (
                                     <button
@@ -90,6 +91,7 @@ export const DraggableTableHeader = ({ header }) => {
                                             : undefined
                                     }
                                 >
+                                    {/* Group colum*/}
                                     {header.column.getIsGrouped()
                                         ? `!`
                                         : ``}
@@ -98,6 +100,7 @@ export const DraggableTableHeader = ({ header }) => {
                                         header.column.columnDef.header,
                                         header.getContext()
                                     )}
+                                      {/* Short colum*/}
                                     {{
                                         asc: ' 🠹',
                                         desc: ' 🠻',
