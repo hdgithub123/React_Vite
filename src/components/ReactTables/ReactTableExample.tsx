@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo, CSSProperties } from 'react';
 import React from 'react'
 
-
-import { formatDate } from './components/cells/orinal/DateCell';
-
+import { formatDate } from './components/cells/orinal/fomatCell';
 import EditableCell from './components/cells/edit/EditableCell'
 
 

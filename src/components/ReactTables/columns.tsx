@@ -1,7 +1,7 @@
 import { SumFooter, AverageFooter, CountFooter } from './components/Footer/FooterColumn'
-import { SumExpandingFooter,AverageExpandingFooter,CountExpandingFooter } from './components/Footer/FooterExpandingColumn';
 import { TextCell } from './components/cells/orinal/TextCell';
-import { NumberUsCell, NumberVnCell, NumberCell, formatNumber, formatVnNumber,formatUsNumber } from './components/cells/orinal/NumberCell';
+import {formatNumber,formatVnNumber,formatUsNumber, formatDate} from './components/cells/orinal/fomatCell'
+import { NumberUsCell, NumberVnCell, NumberCell} from './components/cells/orinal/NumberCell';
 import { DateVnCell,DateUsCell, DateCell } from './components/cells/orinal/DateCell';
 import { DateTimeCell,DateTimeVnCell } from './components/cells/orinal/DateTimeCell';
 import EditableCell from './components/cells/edit/EditableCell';
@@ -198,7 +198,7 @@ const columnssubrowf= [
                 id: 'firstName',
                 filterType: 'text',
                 // footer: info => `Count: ${CountFooter(info.table)}`,
-                footer: info =>`Count: ${CountExpandingFooter(info.table)}`,
+                footer: info =>`Count: ${CountFooter(info.table)}`,
                 cell: TextCellExplanding,
                 aggregatedCell: ExplandingTextCell,
                 // aggregationFn: 'count',
@@ -227,7 +227,7 @@ const columnssubrowf= [
                 header: () => 'Age',
                 footer: (info) => <div style={{ 
                     textAlign: 'right',
-                }}>{`Sum: ${formatNumber(SumExpandingFooter(info.column, info.table),0,2)}`}</div> ,
+                }}>{`Sum: ${formatNumber(SumFooter(info.column, info.table),0,2)}`}</div> ,
                 filterType: 'number',
                 cell: ({ cell }) => (
                     <NumberCell
@@ -257,7 +257,7 @@ const columnssubrowf= [
                         accessorKey: 'visits',
                         id: 'visits',
                         header: () => <span>Visits</span>,
-                        cell: DateCell,
+                        cell: DateVnCell,
                         filterType: 'date',
                         // aggregationFn: 'sum',
                        // aggregationFn: 'count',
@@ -276,7 +276,7 @@ const columnssubrowf= [
                         id: 'progress',
                         header: 'Profile Progress',
                         filterType: 'number',
-                        footer: (info) => `Average: ${formatNumber(AverageExpandingFooter(info.column, info.table),0,2)}`,
+                        footer: (info) => `Average: ${formatNumber(AverageFooter(info.column, info.table),0,2)}`,
                         cell: ({ getValue }) =>
                             Math.round(getValue<number>() * 100) / 100 + '%',
                         aggregationFn: 'mean',
