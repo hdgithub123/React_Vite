@@ -1,4 +1,4 @@
-export const ExplandingCell = ({ row, getValue }) => {
+export const ExplandingTextCell = ({ row, getValue }) => {
     return (
         <div
             style={{
@@ -27,7 +27,7 @@ export const ExplandingCell = ({ row, getValue }) => {
     )
 }
 
-export const CellExplanding = ({ row, getValue }) => {
+export const TextCellExplanding = ({ row, getValue }) => {
     return (< div
         style={{
             paddingLeft: `${row.depth * 20}px`,
@@ -40,3 +40,4 @@ export const CellExplanding = ({ row, getValue }) => {
         {getValue()}
     </div >)
 }
+

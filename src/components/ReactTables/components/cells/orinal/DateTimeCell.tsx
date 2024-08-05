@@ -1,34 +1,19 @@
 export const DateTimeVnCell = ({ getValue, row, column, table }) => {
   const dateValue = getValue();
   const formattedDate = formatVnDateTime(dateValue);
-  if (row.getIsGrouped()) {
-    return ''
-  }
-  else {
     return <div style={{ textAlign: 'right' }}>{formattedDate}</div>;
-  }
 };
 
 export const DateTimeCell = ({ getValue, row, column, table }) => {
   const dateValue = getValue();
   const formattedDate = formatDateTime(dateValue);
-  if (row.getIsGrouped()) {
-    return ''
-  }
-  else {
     return <div style={{ textAlign: 'right' }}>{formattedDate}</div>;
-  }
 };
 
 export const DateTimeUsCell = ({ getValue, row, column, table }) => {
   const dateValue = getValue();
   const formattedDate = formatUsDateTime(dateValue);
-  if (row.getIsGrouped()) {
-    return ''
-  }
-  else {
     return <div style={{ textAlign: 'right' }}>{formattedDate}</div>;
-  }
 };
 
 

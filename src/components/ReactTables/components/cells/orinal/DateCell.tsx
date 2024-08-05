@@ -2,39 +2,24 @@
 export const DateUsCell = ({ getValue, row, column, table }) => {
   const dateValue = getValue();
   const formattedDate = formatUsDate(dateValue);
-  if (row.getIsGrouped()) {
-    return ''
-  }
-  else {
     return <div style={{ textAlign: 'right' }}>{formattedDate}</div>;
-  }
 };
 
 export const DateVnCell = ({ getValue, row, column, table }) => {
   const dateValue = getValue();
   const formattedDate = formatVnDate(dateValue);
-  if (row.getIsGrouped()) {
-    return ''
-  }
-  else {
     return <div style={{ textAlign: 'right' }}>{formattedDate}</div>;
-  }
 };
 
 export const DateCell = ({ getValue, row, column, table }) => {
   const dateValue = getValue();
   const formattedDate = formatDate(dateValue);
-  if (row.getIsGrouped()) {
-    return ''
-  }
-  else {
     return <div style={{ textAlign: 'right' }}>{formattedDate}</div>;
-  }
 };
 
 
 
-const formatDate = (date) => {
+export const formatDate = (date) => {
   if (!date || date === "") {
     return '';
   }
@@ -52,7 +37,7 @@ const formatDate = (date) => {
 
 
 
-const formatVnDate = (date) => {
+export const formatVnDate = (date) => {
   if (!date || date === "") {
     return '';
   }
@@ -68,7 +53,7 @@ const formatVnDate = (date) => {
 };
 
 
-const formatUsDate = (date) => {
+export const formatUsDate = (date) => {
   if (!date || date === "") {
     return '';
   }

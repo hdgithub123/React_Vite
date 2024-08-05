@@ -5,8 +5,8 @@ import { NumberUsCell, NumberVnCell, NumberCell, formatNumber, formatVnNumber,fo
 import { DateVnCell,DateUsCell, DateCell } from './components/cells/orinal/DateCell';
 import { DateTimeCell,DateTimeVnCell } from './components/cells/orinal/DateTimeCell';
 import EditableCell from './components/cells/edit/EditableCell';
-import { ExplandingCell, CellExplanding, } from './components/cells/orinal/ExplandingCell';
-
+import { ExplandingTextCell, TextCellExplanding, } from './components/cells/orinal/ExplandingTextCell';
+import { ExplandingDateCell } from './components/cells/orinal/ExplandingDateCell';
 
 
 
@@ -199,8 +199,8 @@ const columnssubrowf= [
                 filterType: 'text',
                 // footer: info => `Count: ${CountFooter(info.table)}`,
                 footer: info =>`Count: ${CountExpandingFooter(info.table)}`,
-                cell: CellExplanding,
-                aggregatedCell: ExplandingCell,
+                cell: TextCellExplanding,
+                aggregatedCell: ExplandingTextCell,
                 // aggregationFn: 'count',
                 //cell: (info) => info.getValue(),
                 /**
@@ -261,7 +261,7 @@ const columnssubrowf= [
                         filterType: 'date',
                         // aggregationFn: 'sum',
                        // aggregationFn: 'count',
-                       aggregatedCell: DateCell,
+                       aggregatedCell: ExplandingDateCell,
                         //aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
                     },
                     {

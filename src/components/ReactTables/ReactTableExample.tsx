@@ -1,71 +1,8 @@
 import { useState, useEffect, useCallback, useRef, useMemo, CSSProperties } from 'react';
 import React from 'react'
 
-import {
 
-
-
-    GroupingState,
-    getPaginationRowModel,
-    getGroupedRowModel,
-    getExpandedRowModel,
-
-    Cell,
-    ColumnDef,
-    Header,
-    flexRender,
-    getCoreRowModel,
-    useReactTable,
-    getFilteredRowModel,
-} from '@tanstack/react-table';
-
-import {
-    DndContext,
-    useDroppable,
-    KeyboardSensor,
-    MouseSensor,
-    TouchSensor,
-    closestCenter,
-    closestCorners,
-    DragEndEvent,
-    useSensor,
-    useSensors,
-
-    CancelDrop,
-
-    pointerWithin,
-    rectIntersection,
-    CollisionDetection,
-
-    DragOverlay,
-    DropAnimation,
-    getFirstCollision,
-
-    Modifiers,
-
-    UniqueIdentifier,
-
-    MeasuringStrategy,
-    KeyboardCoordinateGetter,
-    defaultDropAnimationSideEffects,
-    Active,
-    ClientRect,
-    DroppableContainer,
-
-
-} from '@dnd-kit/core';
-import { restrictToHorizontalAxis, restrictToParentElement, restrictToWindowEdges, } from '@dnd-kit/modifiers';
-import {
-    useSortable,
-    arrayMove,
-    SortableContext,
-    horizontalListSortingStrategy,
-    rectSortingStrategy,
-    verticalListSortingStrategy,
-    rectSwappingStrategy,
-} from '@dnd-kit/sortable';
-
-import { CSS } from '@dnd-kit/utilities';
+import { formatDate } from './components/cells/orinal/DateCell';
 
 import EditableCell from './components/cells/edit/EditableCell'
 
@@ -105,11 +42,11 @@ function ReactTableExample() {
                 {/* <ReactTableNomal data={makeData} columns ={columns} 
                 onRowSelect={handleRowSelect} ></ReactTableNomal> */}
 
-                <h1>ReactTableSelect</h1>
+                {/* <h1>ReactTableSelect</h1>
                 <ReactTableSelect data={makeData} 
                 columns={columns} onRowSelect={handleRowSelect} 
                 onRowsSelect={handleRowsSelect}>
-                </ReactTableSelect>
+                </ReactTableSelect> */}
 
                 <h1>ReactTableFull</h1>
                 <ReactTableFull 
@@ -130,7 +67,7 @@ function ReactTableExample() {
                     <p>ID: {selectedData.firstName}</p>
                     <p>Name: {selectedData.lastName}</p>
                     <p>Age: {selectedData.age}</p>
-                    <p>visits: {selectedData.visits}</p>
+                    <p>visits: {formatDate(selectedData.visits)}</p>
                     <p>progress: {selectedData.progress}</p>
                     <p>status: {selectedData.status}</p>
                 </div>
