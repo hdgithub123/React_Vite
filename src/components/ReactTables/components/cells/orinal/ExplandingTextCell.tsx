@@ -17,7 +17,7 @@ export const ExplandingTextCell = ({ row, getValue }) => {
                             style: { cursor: 'pointer', background: 'none', border: 'none' },
                         }}
                     >
-                        {row.getIsExpanded() ? '⮞' : '⮟'}
+                        {row.getIsExpanded() ? '⮟' : '⮞'}
                     </button>
                 ) : (
                     ''
