@@ -12,6 +12,9 @@ import { CSS } from '@dnd-kit/utilities';
 
 import styles from './Header.module.css';
 import Filter from '../../filters/Filter';
+import pinIcon from '../../../img/pin.svg';
+import unpinIcon from '../../../img/unpin.svg';
+
 
 // DraggableTableHeader
 export const DraggableTableHeader = ({ header }) => {
@@ -33,41 +36,74 @@ export const DraggableTableHeader = ({ header }) => {
     };
     return (
         <>
-            <th colSpan={header.colSpan} ref={setNodeRef} 
-            style={style}
-            className={
-                header.column.getIsGrouped()
-                    ? styles.th_header_Grouped
-                    : ''
-            }
+            <th colSpan={header.colSpan} ref={setNodeRef}
+                style={style}
+                className={
+                    header.column.getIsGrouped()
+                        ? styles.th_header_Grouped
+                        : ''
+                }
             >
                 {header.isPlaceholder ? null : (
                     <>
                         <div  {...attributes} {...listeners}>
                             <div
-                                
-                                onClick={header.column.getToggleSortingHandler()}
-                                title={
-                                    header.column.getCanSort()
-                                        ? header.column.getNextSortingOrder() === 'asc'
-                                            ? 'Sort ascending'
-                                            : header.column.getNextSortingOrder() === 'desc'
-                                                ? 'Sort descending'
-                                                : 'Clear sort'
-                                        : undefined
-                                }
+                            style={ {display: 'flex', justifyContent: 'space-between'} }
+                            className={styles.th_header_pin}
                             >
-                                {header.column.getIsGrouped()
-                                    ? `!`
-                                    : ``}
-                                {flexRender(
-                                    header.column.columnDef.header,
-                                    header.getContext()
-                                )}
-                                {{
-                                    asc: ' 🠹',
-                                    desc: ' 🠻',
-                                }[header.column.getIsSorted() as string] ?? null}
+                                <div>
+                                {header.column.getIsPinned() !== 'left' ? (
+                                    <button
+                                        className={styles.th_header_pined}
+                                        title={'pin'}
+                                        onClick={() => {
+                                            header.column.pin('left')
+                                        }}
+                                    >
+                                        <img src={pinIcon} alt="pin svg" width={10} height={10} />
+                                    </button>
+                                ) : null}
+
+                                {header.column.getIsPinned() ? (
+                                    <button
+                                        className={styles.th_header_unpined}
+                                        title={'unpin'}
+                                        onClick={() => {
+                                            header.column.pin(false)
+                                        }}
+                                    >
+                                        <img src={unpinIcon} alt="unpin svg" width={10} height={10} />
+                                    </button>
+                                ) : null}
+                                </div>
+                                
+                                <div
+                                    style={ { margin: '0 auto' } }
+                                    onClick={header.column.getToggleSortingHandler()}
+                                    title={
+                                        header.column.getCanSort()
+                                            ? header.column.getNextSortingOrder() === 'asc'
+                                                ? 'Sort ascending'
+                                                : header.column.getNextSortingOrder() === 'desc'
+                                                    ? 'Sort descending'
+                                                    : 'Clear sort'
+                                            : undefined
+                                    }
+                                >
+                                    {header.column.getIsGrouped()
+                                        ? `!`
+                                        : ``}
+
+                                    {flexRender(
+                                        header.column.columnDef.header,
+                                        header.getContext()
+                                    )}
+                                    {{
+                                        asc: ' 🠹',
+                                        desc: ' 🠻',
+                                    }[header.column.getIsSorted() as string] ?? null}
+                                </div>
+
                             </div>
                         </div>
                         {/* Filter colum*/}
@@ -81,6 +117,7 @@ export const DraggableTableHeader = ({ header }) => {
                         {/* Colum Resize Begin*/}
                         <div
                             {...{
+                                onDoubleClick: () => header.column.resetSize(),
                                 onMouseDown: header.getResizeHandler(),
                                 onTouchStart: header.getResizeHandler(),
                                 className: `${styles.resizer} 

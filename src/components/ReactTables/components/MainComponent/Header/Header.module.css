@@ -19,3 +19,19 @@
   .th_header_Grouped{
     border: 1px sienna solid;
   }
+
+
+  .th_header_pined{
+    visibility: hidden;
+    border : none;
+    background : none;
+  }
+
+  .th_header_unpined{
+    border : none;
+    background : none;
+  }
+
+  .th_header_pin:hover .th_header_pined {
+    visibility: visible; /* Hiển thị phần tử khi hover */
+  }
