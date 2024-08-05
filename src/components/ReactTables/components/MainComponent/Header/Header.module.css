@@ -15,3 +15,7 @@
     background: rgb(160, 160, 204);
     opacity: 1;
   }
+
+  .th_header_Grouped{
+    border: 1px sienna solid;
+  }

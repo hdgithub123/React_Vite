@@ -33,17 +33,19 @@ export const DraggableTableHeader = ({ header }) => {
     };
     return (
         <>
-
-            <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
+            <th colSpan={header.colSpan} ref={setNodeRef} 
+            style={style}
+            className={
+                header.column.getIsGrouped()
+                    ? styles.th_header_Grouped
+                    : ''
+            }
+            >
                 {header.isPlaceholder ? null : (
                     <>
                         <div  {...attributes} {...listeners}>
                             <div
-                                className={
-                                    header.column.getCanSort()
-                                        ? 'cursor-pointer select-none'
-                                        : ''
-                                }
+                                
                                 onClick={header.column.getToggleSortingHandler()}
                                 title={
                                     header.column.getCanSort()
