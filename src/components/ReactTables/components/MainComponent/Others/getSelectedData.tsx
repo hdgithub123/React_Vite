@@ -2,7 +2,7 @@ export function getSelectedData<T>(table: Table<T>): T[] {
     const { rowSelection } = table.getState();
     const processedRowIds = new Set<string>();
   
-    function extractSelectedRows(rows: any[], selectedRowIds: Set<string>, isParentSelected = false): T[] {
+    function extractSelectedRows(rows: any[], selectedRowIds: Set<string>): T[] {
       let selectedData: T[] = [];
   
       rows.forEach(row => {
