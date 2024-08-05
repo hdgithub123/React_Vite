@@ -5,117 +5,9 @@ import { NumberUsCell, NumberVnCell, NumberCell, formatNumber, formatVnNumber,fo
 import { DateVnCell,DateUsCell, DateCell } from './components/cells/orinal/DateCell';
 import { DateTimeCell,DateTimeVnCell } from './components/cells/orinal/DateTimeCell';
 import EditableCell from './components/cells/edit/EditableCell';
+import { ExplandingCell, CellExplanding, } from './components/cells/orinal/ExplandingCell';
 
 
-
-const ExplandingCell = ({ row , getValue }) => {
-    return (
-        <div
-          style={{
-            // paddingLeft: `${row.depth * 2}rem`,
-            paddingLeft: `${row.depth}rem`,
-          }}
-        >
-          <div>
-            {row.getCanExpand() ? (
-              <button
-                {...{
-                  onClick: row.getToggleExpandedHandler(),
-                  style: { cursor: 'pointer', background: 'none', border:'none' },
-                }}
-              >
-                {row.getIsExpanded() ? '⮞' : '⮟'}
-              </button>
-            ) : (
-              ''
-            )}{' '}
-            {getValue<boolean>()}
-          </div>
-        </div>
-      )
-}
-
-// const ExplandingCell = ({ row, getValue }) => {
-//     return (
-//         <div
-//           style={{
-//             paddingLeft: `${row.depth * 2}rem`,
-//           }}
-//         >
-//           <div>
-//               <button
-//                 {...{
-//                   onClick: row.getToggleExpandedHandler(),
-//                   style: { cursor: 'pointer' },
-//                 }}
-//               >
-//                 {row.getIsExpanded() ? '' : '⮚'}
-//               </button>
-//             {getValue<boolean>()}
-//           </div>
-//         </div>
-//       )
-// }
-
-
-
-
-// const columns = 
-//  [
-//         {
-//             accessorKey: 'firstName',
-//             id: 'firstName',
-//             header: 'First Name',
-//             footer: info => `Count: ${calculateRowCount(info.table)}`,
-//             filterType: 'text',
-//             cell: info => info.getValue(),
-//         },
-//         {
-//             accessorFn: row => row.lastName,
-//             id: 'lastName',
-//             filterType: 'text',
-//             header: () => <span>Last Name</span>,
-//             cell: info => info.getValue(),
-//         },
-//         {
-//             accessorKey: 'age',
-//             id: 'age',
-//             filterType: 'number',
-//             header: () => 'Age',
-//             footer: (info) =>`Average: ${calculateColumnAverage(info.column, info.table)}`,
-//             aggregatedCell: ({ getValue }) =>
-//                 Math.round(getValue<number>() * 100) / 100,
-//             aggregationFn: 'median',
-//         },
-//         {
-//             accessorKey: 'visits',
-//             id: 'visits',
-//             filterType: 'date',
-//             header: () => <span>Visits</span>,
-//             aggregationFn: 'sum',
-//             aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
-//         },
-//         {
-//             accessorKey: 'status',
-//             id: 'status',
-//             filterType: 'range',
-//             size: 150,
-//             header: 'Status',
-//         },
-//         {
-//             accessorKey: 'progress',
-//             id: 'progress',
-//             filterType: 'number',
-//             header: 'Profile Progress',
-//             cell: ({ getValue }) =>
-//                 Math.round(getValue<number>() * 100) / 100 + '%',
-//             aggregationFn: 'mean',
-//             aggregatedCell: ({ getValue }) =>
-//                 Math.round(getValue<number>() * 100) / 100 + '%',
-//         },
-
-
-// ]
 
 
 const columnscof = [
@@ -307,9 +199,7 @@ const columnssubrowf= [
                 filterType: 'text',
                 // footer: info => `Count: ${CountFooter(info.table)}`,
                 footer: info =>`Count: ${CountExpandingFooter(info.table)}`,
-                cell: (info) => <div 
-                                    style={{paddingLeft: `${info.row.depth*20}px`,}}> {info.getValue()}
-                                </div> ,
+                cell: CellExplanding,
                 aggregatedCell: ExplandingCell,
                 // aggregationFn: 'count',
                 //cell: (info) => info.getValue(),
@@ -324,7 +214,7 @@ const columnssubrowf= [
                 id: 'lastName',
                 header: () => <span>Last Name</span>,
                 filterType: 'text',
-                cell: (info) => info.getValue(),
+                cell: TextCell,
             },
         ],
     },
@@ -370,7 +260,7 @@ const columnssubrowf= [
                         cell: DateCell,
                         filterType: 'date',
                         // aggregationFn: 'sum',
-                        aggregationFn: 'count',
+                       // aggregationFn: 'count',
                        aggregatedCell: DateCell,
                         //aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
                     },
@@ -400,5 +290,6 @@ const columnssubrowf= [
 ]
 // columnscof : co footer, columnskof: khong co footer, columnssubrowf: subrow co footer
 const columns = columnssubrowf
+
 export default columns;
 

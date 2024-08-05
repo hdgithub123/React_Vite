@@ -10,7 +10,7 @@ import {
 
 import { CSS } from '@dnd-kit/utilities';
 
-export const DragAlongCell = ({ cell}) => {
+export const DragAlongCell = ({ cell }) => {
     const { isDragging, setNodeRef, transform } = useSortable({
         id: cell.column.id,
     });
@@ -24,6 +24,32 @@ export const DragAlongCell = ({ cell}) => {
         zIndex: isDragging ? 1 : 0,
     };
 
+    const styleGrouped = {
+        fontWeight: 'bold',
+        textAlign: 'left',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+    }
+
+    const styleAggregated = {
+        fontWeight: 'bold',
+        textAlign: 'left',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+    }
+
+    const styleNormal = {
+        fontWeight: 'normal',
+        textAlign: 'left',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+    }
+
+
+
     const { row } = cell.getContext();
 
     return (
@@ -33,19 +59,13 @@ export const DragAlongCell = ({ cell}) => {
                 key: cell.id,
                 style: {
                     style,
-                    // background: cell.getIsGrouped()
-                    //     ? '#ddd'
-                    //     : cell.getIsAggregated()
-                    //         ? '#ddd'
-                    //         : cell.getIsPlaceholder()
-                    //             ? 'white'
-                    //             : null,
-
-                    fontWeight: cell.getIsGrouped()
-                        ? 'bold'
-                        : cell.getIsAggregated()
-                            ? 'bold'
-                            : 'normal',
+                    ...(
+                        cell.getIsGrouped()
+                            ? styleGrouped
+                            : cell.getIsAggregated()
+                                ? styleAggregated
+                                : styleNormal
+                    ),
 
                 },
             }}

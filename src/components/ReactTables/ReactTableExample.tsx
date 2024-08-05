@@ -111,13 +111,13 @@ function ReactTableExample() {
                 onRowsSelect={handleRowsSelect}>
                 </ReactTableSelect>
 
-                {/* <h1>ReactTableFull</h1>
+                <h1>ReactTableFull</h1>
                 <ReactTableFull 
                 data={makeData} 
                 columns={columns} 
                 onRowSelect={handleRowSelect} 
                 onRowsSelect={handleRowsSelect}>
-                </ReactTableFull> */}
+                </ReactTableFull>
             </div>
             <br></br>
             <br></br>

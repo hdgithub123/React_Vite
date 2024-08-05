@@ -42,7 +42,7 @@ import { ColumnVisibilityToggle } from '../../components/MainComponent/Others/Co
 import { RenderHeaderByID } from '../../components/MainComponent/Others/RenderHeaderByID';
 import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
-
+import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
 
 function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
     const [dataDef, setDataDef] = useState(data);
@@ -79,8 +79,11 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
+
         getSubRows: row => row.subRows,
         filterFromLeafRows: true,
+        enableSubRowSelection: false, // click on subrow not auto select
+
         getFilteredRowModel: getFilteredRowModel(),
         filterFns: {
             selectedFilter, // Register the custom filter function
@@ -126,11 +129,10 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
         }, 0);
     };
 
-
-
-
-
+    const DragACell = ({ cell }) => {
+        return <DragAlongCell cell = {cell}></DragAlongCell>
     
+     }
 
     const sensors = useSensors(
         useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
@@ -161,9 +163,7 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
 
 
     useEffect(() => {
-        const selectedRowIndices = Object.keys(table.getState().rowSelection).map(Number);
-        const selectedData = selectedRowIndices.map(index => data[index]);
-        const filteredUndefinedData = selectedData.filter(row => row !== undefined);
+        const filteredUndefinedData = getSelectedData(table);
         if (onRowsSelect) {
             onRowsSelect(filteredUndefinedData);
         }
@@ -328,7 +328,7 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
                                                 </td>
                                                 {row.getVisibleCells().map((cell) => {
                                                     return (
-                                                        <DragAlongCell key={cell.id} cell={cell} />
+                                                        <DragACell key={cell.id} cell={cell} />
                                                     )
                                                 })}
                                             </tr>
