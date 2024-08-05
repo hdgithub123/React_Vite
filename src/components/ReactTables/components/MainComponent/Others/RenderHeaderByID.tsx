@@ -2,6 +2,12 @@ import {
     flexRender,
 } from '@tanstack/react-table';
 
+import styles from './RenderHeaderByID.module.css';
+
+
+
+
+
 export const RenderHeaderByID = ({ columnID, columns, setGrouping, grouping }) => {
     const findHeader = (columns, id) => {
         for (const column of columns) {
@@ -20,12 +26,15 @@ export const RenderHeaderByID = ({ columnID, columns, setGrouping, grouping }) =
 
     const columnDef = findHeader(columns, columnID);
     if (columnDef) {
-        return <div>{flexRender(columnDef.header, {})} <button
+        return <div className={styles.styleHeaderByID}>
+        <div className={styles.styleHeaderText}>
+            {flexRender(columnDef.header, {})} 
+        </div>
+        <button
+            className={styles.styleclosebutton}
             {...{
                 onClick: () => setGrouping(grouping.filter(item => item !== columnID)),
-                style: {
-                    cursor: 'pointer',
-                },
+                
             }}
         >
             X

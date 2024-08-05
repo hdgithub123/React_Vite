@@ -1,0 +1,31 @@
+.styleHeaderByID  {
+    display: flex;
+    padding: 3px 10px;
+    /* border: 2px solid rgb(114, 16, 211); */
+    margin: 3px;
+    border-radius: 5px;
+    background-color:black;
+    position: relative;
+}
+.styleHeaderText{
+    color: white;
+}
+.styleclosebutton {
+    cursor: pointer;
+    border: none;
+    margin: 2px;
+    visibility: hidden;
+    background-color: none;
+    background:black;
+    border-radius: 50%;
+    position: absolute;
+    top: -50%;
+    right: -10px;
+    color: white;
+    font-size: 70%;
+}
+
+.styleHeaderByID:hover .styleclosebutton {
+    visibility: visible; /* Hiển thị phần tử khi hover */
+  }
+
