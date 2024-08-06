@@ -47,7 +47,7 @@ function ReactTableExample() {
                 {/* <ReactTableNomal data={makeData} columns ={columns} 
                 onRowSelect={handleRowSelect} ></ReactTableNomal> */}
 
-                {/* <h1>ReactTableSelect</h1>
+                <h1>ReactTableSelect</h1>
                 <ReactTableSelect data={makeData} 
                 columns={columns} 
                 onDataChange = {handleDataChange}
@@ -55,8 +55,8 @@ function ReactTableExample() {
                 onRowsSelect={handleRowsSelect}
                 // grouped={['firstName','age']}
                 >
-                </ReactTableSelect> */}
-
+                </ReactTableSelect>
+{/* 
                 <h1>ReactTableFull</h1>
                 <ReactTableFull 
                 data={makeData} 
@@ -65,7 +65,7 @@ function ReactTableExample() {
                 onRowsSelect={handleRowsSelect}
                 grouped={['firstName','age']}
                 >
-                </ReactTableFull>
+                </ReactTableFull> */}
                 
                 {/* <h1>ReactTableBasic</h1>
                 <ReactTableBasic 
