@@ -40,13 +40,13 @@ import { TriStateCheckbox } from '../../../components/MainComponent/Others/TriSt
 
 
 
-function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect }) {
+function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect, grouped = [] }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
     );
-    const [grouping, setGrouping] = useState<GroupingState>([])
+    const [grouping, setGrouping] = useState<GroupingState>(grouped)
 
     const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
         // Get the selected row IDs from the table state

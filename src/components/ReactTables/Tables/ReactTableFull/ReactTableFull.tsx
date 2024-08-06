@@ -44,13 +44,13 @@ import { IndeterminateCheckbox } from '../../components/MainComponent/Others/Ind
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
 
-function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
+function ReactTableFull({ data, columns, onRowSelect, onRowsSelect, grouped = [] }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
     );
-    const [grouping, setGrouping] = useState<GroupingState>([])
+    const [grouping, setGrouping] = useState<GroupingState>(grouped)
 
     const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
         // Get the selected row IDs from the table state
@@ -99,7 +99,6 @@ function ReactTableFull({ data, columns, onRowSelect, onRowsSelect }) {
         globalFilterFn: 'selectedFilter',
         manualExpanding: false, // set bàng false thì có thể sử dụng cả useEffect để expanded
         autoResetExpanded: false, // set bang false thì tất cả các row được expanding bằng true thì không sử dụng cả useEffect
-        // getPaginationRowModel: getPaginationRowModel(),
         meta: {
             updateData: (rowIndex, columnId, value) =>
                 setDataDef((prev) =>

@@ -40,13 +40,13 @@ import { RenderHeaderByID } from '../../../components/MainComponent/Others/Rende
 
 
 
-function ReactTableNomal({ data, columns, onRowSelect }) {
+function ReactTableNomal({ data, columns, onRowSelect, grouped = [] }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
     );
-    const [grouping, setGrouping] = useState<GroupingState>([])
+    const [grouping, setGrouping] = useState<GroupingState>(grouped)
 
     const table = useReactTable({
         data: dataDef,
