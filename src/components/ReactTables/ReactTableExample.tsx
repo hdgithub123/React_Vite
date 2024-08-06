@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef, useMemo, CSSProperties } from 'react';
 import React from 'react'
+import styles from './ReactTableExample.module.css';
 
 import { formatDate } from './components/cells/orinal/fomatCell';
 import EditableCell from './components/cells/edit/EditableCell'
@@ -43,38 +44,47 @@ function ReactTableExample() {
             <div>
                 <button onClick={btnclick}> kich here</button>
             </div>
-            <div style={{ height: '70vh', width: '100%' }}>
-                <ReactTableNomal data={makeData} columns ={columns} 
-                onRowSelect={handleRowSelect} ></ReactTableNomal>
-
-                {/* <h1>ReactTableSelect</h1>
-                <ReactTableSelect data={makeData} 
-                columns={columns} 
-                onDataChange = {handleDataChange}
-                onRowSelect={handleRowSelect} 
-                onRowsSelect={handleRowsSelect}
-                // grouped={['firstName','age']}
-                >
-                </ReactTableSelect> */}
-{/* 
-                <h1>ReactTableFull</h1>
-                <ReactTableFull 
-                data={makeData} 
-                columns={columns} 
-                onRowSelect={handleRowSelect} 
-                onRowsSelect={handleRowsSelect}
-                grouped={['firstName','age']}
-                >
-                </ReactTableFull> */}
+            <div className={styles.parent}>
+                {/* <div className={styles.div1}>
+                    <ReactTableNomal data={makeData} columns ={columns} 
+                    onRowSelect={handleRowSelect} ></ReactTableNomal>
+                </div> */}
                 
-                {/* <h1>ReactTableBasic</h1>
-                <ReactTableBasic 
-                data={makeData} 
-                columns={columns} 
-                onRowSelect={handleRowSelect} 
-                onRowsSelect={handleRowsSelect}
-                >
-                </ReactTableBasic> */}
+                {/* <div className={styles.div2}>
+                    <h1>ReactTableSelect</h1>
+                    <ReactTableSelect data={makeData} 
+                    columns={columns} 
+                    onDataChange = {handleDataChange}
+                    onRowSelect={handleRowSelect} 
+                    onRowsSelect={handleRowsSelect}
+                    // grouped={['firstName','age']}
+                    >
+                    </ReactTableSelect>
+                </div> */}
+                
+                <div className={styles.div3}>
+                  
+                    <ReactTableFull 
+                    data={makeData} 
+                    columns={columns} 
+                    onRowSelect={handleRowSelect} 
+                    onRowsSelect={handleRowsSelect}
+                    //grouped={['firstName','age']}
+                    >
+                    </ReactTableFull>
+                </div>
+                
+                {/* <div className={styles.div4}>
+                    <h1>ReactTableBasic</h1>
+                    <ReactTableBasic 
+                    data={makeData} 
+                    columns={columns} 
+                    onRowSelect={handleRowSelect} 
+                    onRowsSelect={handleRowsSelect}
+                    >
+                    </ReactTableBasic>
+                </div> */}
+                
 
 
 

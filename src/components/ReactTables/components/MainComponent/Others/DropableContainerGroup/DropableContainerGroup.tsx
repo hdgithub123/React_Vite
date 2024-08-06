@@ -2,7 +2,6 @@ import {
     useDroppable,
 } from '@dnd-kit/core';
 
-
 // Tạo chỗ kéo thả group
 export const DropableContainerGroup = ({ children }) => {
     const { isOver, setNodeRef } = useDroppable({

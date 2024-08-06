@@ -36,9 +36,9 @@ import { DraggableTableHeader, StaticTableHeader } from '../../components/MainCo
 import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
 import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
 import { customCollisionDetection } from '../../components/MainComponent/Others/customCollisionDetection';
-import { DropableContainerGroup } from '../../components/MainComponent/Others/DropableContainerGroup';
+import { DropableContainerGroup } from '../../components/MainComponent/Others/DropableContainerGroup/DropableContainerGroup';
 import { ColumnVisibilityToggle } from '../../components/MainComponent/Others/ColumnVisibilityToggle';
-import { RenderHeaderByID } from '../../components/MainComponent/Others/RenderHeaderByID';
+import { RenderHeaderByID } from '../../components/MainComponent/Others/DropableContainerGroup/RenderHeaderByID';
 import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
@@ -258,7 +258,7 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
                                     <RenderHeaderByID key={id} columnID={id} columns={columns} setGrouping={setGrouping} grouping={grouping} />
                                 ))
                             ) : (
-                                <div style={{ padding: '10px', fontSize: '14px', color: '#999' }}>
+                                <div style={{ padding: '10px', fontSize: '14px', color: '#999',  userSelect: 'none' }}>
                                     Drag header to group
                                 </div>
                             )}
