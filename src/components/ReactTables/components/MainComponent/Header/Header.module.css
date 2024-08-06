@@ -33,11 +33,13 @@
     visibility: hidden;
     border : none;
     background : none;
+    opacity: 0.5;
   }
 
   .th_header_unpined{
     border : none;
     background : none;
+    opacity: 0.5;
   }
 
   .th_header_general:hover .th_header_pined {
