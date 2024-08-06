@@ -14,7 +14,7 @@ import styles from './Header.module.css';
 import Filter from '../../filters/Filter';
 import pinIcon from '../../../img/pin.svg';
 import unpinIcon from '../../../img/unpin.svg';
-
+import { getCommonPinningStyles } from '../Others/getCommonPinningStyles';
 
 // DraggableTableHeader
 export const DraggableTableHeader = ({ header }) => {
@@ -37,7 +37,9 @@ export const DraggableTableHeader = ({ header }) => {
     return (
         <>
             <th colSpan={header.colSpan} ref={setNodeRef}
-                style={style}
+                style={{...style, 
+                    // ...getCommonPinningStyles(header.column)
+                }}
                 className={
                     header.column.getIsGrouped()
                         ? styles.th_header_Grouped

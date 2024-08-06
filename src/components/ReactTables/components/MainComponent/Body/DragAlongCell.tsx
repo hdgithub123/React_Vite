@@ -9,6 +9,7 @@ import {
 } from '@dnd-kit/sortable';
 
 import { CSS } from '@dnd-kit/utilities';
+import { getCommonPinningStyles } from '../Others/getCommonPinningStyles';
 
 export const DragAlongCell = ({ cell }) => {
     const { isDragging, setNodeRef, transform } = useSortable({
@@ -51,7 +52,7 @@ export const DragAlongCell = ({ cell }) => {
 
 
     const { row } = cell.getContext();
-
+    // const { column } = cell
     return (
         <td
             ref={setNodeRef}
@@ -59,6 +60,7 @@ export const DragAlongCell = ({ cell }) => {
                 key: cell.id,
                 style: {
                     style,
+                    // ...getCommonPinningStyles(column),
                     ...(
                         cell.getIsGrouped()
                             ? styleGrouped

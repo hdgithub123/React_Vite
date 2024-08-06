@@ -122,11 +122,17 @@
 
 .table_body_tr_checkbox{
   text-align: center;
+  /* position: sticky;
+  left: 0;
+  background-color: #555; */
 }
 
 /* Cho checkbox */
 .table_head_tr_th_checkbox{
   width: 3px;
+  /* position: sticky;
+  left: 0;
+  background-color: #555; */
 }
 
 .footer_checkbox{
