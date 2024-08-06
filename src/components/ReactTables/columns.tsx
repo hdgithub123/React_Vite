@@ -215,6 +215,7 @@ const columnssubrowf= [
                 header: () => <span>Last Name</span>,
                 filterType: 'text',
                 cell: TextCell,
+                aggregatedCell: TextCell,
             },
         ],
     },
@@ -289,7 +290,7 @@ const columnssubrowf= [
     },
 ]
 // columnscof : co footer, columnskof: khong co footer, columnssubrowf: subrow co footer
-const columns = columnssubrowf
+const columns = columnscof
 
 export default columns;
 

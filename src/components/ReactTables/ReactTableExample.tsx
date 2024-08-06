@@ -14,10 +14,12 @@ import ReactTableNomal from './Tables/ReactTableBase/ReactTableNomal/ReactTableN
 import ReactTableSelect from './Tables/ReactTableBase/ReactTableSelect_mau/ReactTableSelect_mau';
 import DndAndGroupTableWithCheckboxFilter from './DndAndGroupTableWithCheckboxFilter';
 import ReactTableFull from './Tables/ReactTableFull/ReactTableFull';
+import ReactTableBasic from './Tables/ReactTableBasic/ReactTableBasic';
 
 function ReactTableExample() {
     const [selectedData, setSelectedData] = useState(null); // State to store the selected data from the table
     const [selectedMoreData, setSelectedMoreData] = useState(null); // State to store the selected data from the table
+    const [dataChange, setDataChange] = useState(null); // State to store the selected data from the table
     // Event handler when selecting a row in the table
     const handleRowSelect = (rowData) => {
         setSelectedData(rowData); // Update state with the selected row data
@@ -26,9 +28,14 @@ function ReactTableExample() {
     const handleRowsSelect = (rowData) => {
         setSelectedMoreData(rowData); // Update state with the selected row data
     };
+
+    const handleDataChange =(rowData) => {
+        setDataChange(rowData);
+    };
     const btnclick= ()=>{
         console.log("selectedMoreData",selectedMoreData)
         console.log("makeData",makeData)
+        console.log("dataChange",dataChange)
     }
   
     return (
@@ -40,13 +47,15 @@ function ReactTableExample() {
                 {/* <ReactTableNomal data={makeData} columns ={columns} 
                 onRowSelect={handleRowSelect} ></ReactTableNomal> */}
 
-                <h1>ReactTableSelect</h1>
+                {/* <h1>ReactTableSelect</h1>
                 <ReactTableSelect data={makeData} 
-                columns={columns} onRowSelect={handleRowSelect} 
+                columns={columns} 
+                onDataChange = {handleDataChange}
+                onRowSelect={handleRowSelect} 
                 onRowsSelect={handleRowsSelect}
-                grouped={['firstName','age']}
+                // grouped={['firstName','age']}
                 >
-                </ReactTableSelect>
+                </ReactTableSelect> */}
 
                 <h1>ReactTableFull</h1>
                 <ReactTableFull 
@@ -57,6 +66,18 @@ function ReactTableExample() {
                 grouped={['firstName','age']}
                 >
                 </ReactTableFull>
+                
+                {/* <h1>ReactTableBasic</h1>
+                <ReactTableBasic 
+                data={makeData} 
+                columns={columns} 
+                onRowSelect={handleRowSelect} 
+                onRowsSelect={handleRowsSelect}
+                >
+                </ReactTableBasic> */}
+
+
+
             </div>
             <br></br>
             <br></br>

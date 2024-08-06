@@ -40,7 +40,7 @@ import { RenderHeaderByID } from '../../../components/MainComponent/Others/Rende
 
 
 
-function ReactTableNomal({ data, columns, onRowSelect, grouped = [] }) {
+function ReactTableNomal({ data, columns, onDataChange, onRowSelect, grouped = [] }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -134,7 +134,11 @@ function ReactTableNomal({ data, columns, onRowSelect, grouped = [] }) {
 
     };
 
-
+    useEffect(() => {
+        if (onDataChange) {
+            onDataChange(dataDef);
+        }
+    }, [dataDef]);
 
     // sử dụng để expanded all
     useEffect(() => {

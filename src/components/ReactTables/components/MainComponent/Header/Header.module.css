@@ -21,6 +21,14 @@
   }
 
 
+  .th_header_general{
+    display: flex; 
+    justify-Content: space-between;
+    align-items: center;
+    position: relative;
+  }
+
+
   .th_header_pined{
     visibility: hidden;
     border : none;
@@ -32,6 +40,13 @@
     background : none;
   }
 
-  .th_header_pin:hover .th_header_pined {
+  .th_header_general:hover .th_header_pined {
     visibility: visible; /* Hiển thị phần tử khi hover */
+  }
+
+
+  .th_header_unpin{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }

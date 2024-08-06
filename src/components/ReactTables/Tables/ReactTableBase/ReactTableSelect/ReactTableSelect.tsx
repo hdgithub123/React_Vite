@@ -40,7 +40,7 @@ import { TriStateCheckbox } from '../../../components/MainComponent/Others/TriSt
 
 
 
-function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect, grouped = [] }) {
+function ReactTableSelect({ data, columns, onDataChange, onRowSelect, onRowsSelect, grouped = [] }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -159,7 +159,12 @@ function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect, grouped = 
         }
 
     };
-
+    
+    useEffect(() => {
+        if (onDataChange) {
+            onDataChange(dataDef);
+        }
+    }, [dataDef]);
 
     useEffect(() => {
         const selectedRowIndices = Object.keys(table.getState().rowSelection).map(Number);

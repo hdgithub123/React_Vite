@@ -16,6 +16,7 @@ import {
 
 import {
     DndContext,
+    closestCenter,
     KeyboardSensor,
     MouseSensor,
     TouchSensor,
@@ -29,27 +30,25 @@ import {
     horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
+import { restrictToHorizontalAxis } from '@dnd-kit/modifiers'
 
-import styles from './ReactTableFull.module.css';
+import styles from './ReactTableBasic.module.css';
 import { useVirtualizer, notUndefined } from "@tanstack/react-virtual";
 import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
 import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
 import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
-import { customCollisionDetection } from '../../components/MainComponent/Others/customCollisionDetection';
-import { DropableContainerGroup } from '../../components/MainComponent/Others/DropableContainerGroup';
 import { ColumnVisibilityToggle } from '../../components/MainComponent/Others/ColumnVisibilityToggle';
-import { RenderHeaderByID } from '../../components/MainComponent/Others/RenderHeaderByID';
 import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
 
-function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect, grouped = [] }) {
+function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
     );
-    const [grouping, setGrouping] = useState<GroupingState>(grouped)
+    const [grouping, setGrouping] = useState<GroupingState>([])
 
     const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
         // Get the selected row IDs from the table state
@@ -161,12 +160,6 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
 
     useEffect(() => {
-        if (onDataChange) {
-            onDataChange(dataDef);
-        }
-    }, [dataDef]);
-
-    useEffect(() => {
         const filteredUndefinedData = getSelectedData(table);
         if (onRowsSelect) {
             onRowsSelect(filteredUndefinedData);
@@ -244,26 +237,12 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
             <div className={styles.container}>
                 {/* Tạo Drop Group Area */}
                 <DndContext
-                    collisionDetection={customCollisionDetection}
+                    collisionDetection={closestCenter}
+                    modifiers={[restrictToHorizontalAxis]}
                     onDragEnd={handleDragEnd}
                     autoScroll = {false}
                     sensors={sensors}
                 >
-                    <div className={styles.Dropable_Container_Group}>
-                        {/* Phần thả group column */}
-                        <DropableContainerGroup >
-                            {/* <h1>Thả vào đây</h1> */}
-                            {grouping.length > 0 ? (
-                                grouping.map((id) => (
-                                    <RenderHeaderByID key={id} columnID={id} columns={columns} setGrouping={setGrouping} grouping={grouping} />
-                                ))
-                            ) : (
-                                <div style={{ padding: '10px', fontSize: '14px', color: '#999' }}>
-                                    Drag header to group
-                                </div>
-                            )}
-                        </DropableContainerGroup>
-                    </div>
                     <div
                         ref={parentRef}
                         className={styles.div_table_container}
@@ -373,6 +352,6 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
     );
 }
-export default ReactTableFull;
+export default ReactTableBasic;
 
 

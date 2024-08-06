@@ -42,7 +42,7 @@ import { TriStateCheckbox } from '../../../components/MainComponent/Others/TriSt
 import { getSelectedData } from '../../../components/MainComponent/Others/getSelectedData';
 
 
-function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect, grouped = [] }) {
+function ReactTableSelect({ data, columns, onDataChange, onRowSelect, onRowsSelect, grouped = [] }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -115,7 +115,6 @@ function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect, grouped = 
                     )
                 ),
         },
-
     });
 
 
@@ -164,13 +163,17 @@ function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect, grouped = 
 
     };
 
+    useEffect(() => {
+        if (onDataChange) {
+            onDataChange(dataDef);
+        }
+    }, [dataDef]);
 
     useEffect(() => {
         const filteredUndefinedData = getSelectedData(table);
         if (onRowsSelect) {
             onRowsSelect(filteredUndefinedData);
         }
-        console.log("group",grouping)
     }, [table.getState().rowSelection]);
 
 
@@ -317,5 +320,3 @@ function ReactTableSelect({ data, columns, onRowSelect, onRowsSelect, grouped = 
     );
 }
 export default ReactTableSelect;
-
-  

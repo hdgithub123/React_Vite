@@ -170,7 +170,7 @@ type Person = {
       status: 'relationship',
       subRows: [
         {
-            firstName: "1Jane",
+            firstName: "0.1Jane",
             lastName: "Smith",
             age: 25,
             visits: "2025-01-01",
@@ -178,7 +178,7 @@ type Person = {
             status: 'single',
             subRows: [
               {
-              firstName: "10Jane",
+              firstName: "0.0.1Jane",
               lastName: "Smith",
               age: 25,
               visits: "2025-01-01",
@@ -190,7 +190,7 @@ type Person = {
           
         },
           {
-            firstName: "1Jane",
+            firstName: "0.2Jane",
             lastName: "Smith",
             age: 25,
             visits: "2025-01-01",
@@ -199,7 +199,7 @@ type Person = {
             
           },
           {
-            firstName: "3Jane",
+            firstName: "0.3Jane",
             lastName: "Smith",
             age: 25,
             visits: "2025-01-01",
@@ -293,7 +293,7 @@ type Person = {
     }
   ];
 
-  const makeDataSubrows1 = generatePeople(20);
+  const makeDataSubrows1 = generatePeople(200);
   // makeData1: data thuong, makeData2: 500 data thuong, 
   //makeDataSubrows1: 1000 subrow thuong, makeDataSubrows2 : subrow chi chi dinh
-export const makeData = makeDataSubrows1
+export const makeData = makeData2

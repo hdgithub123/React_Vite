@@ -48,8 +48,7 @@ export const DraggableTableHeader = ({ header }) => {
                     <>
                         <div  {...attributes} {...listeners}>
                             <div
-                            style={ {display: 'flex', justifyContent: 'space-between'} }
-                            className={styles.th_header_pin}
+                            className={styles.th_header_general}
                             >
                                  {/* pin colum*/}
                                 <div>
@@ -79,7 +78,7 @@ export const DraggableTableHeader = ({ header }) => {
                                 </div>
                                 
                                 <div
-                                    style={ { margin: '0 auto' } }
+                                    className={styles.th_header_unpin}
                                     onClick={header.column.getToggleSortingHandler()}
                                     title={
                                         header.column.getCanSort()
