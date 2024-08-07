@@ -1,4 +1,4 @@
-import { useState, useEffect,useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import React from 'react'
 
 import {
@@ -42,6 +42,8 @@ import { RenderHeaderByID } from '../../components/MainComponent/Others/Dropable
 import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
+import { DropableSelectClick, DropableSelectHover } from '../../components/utils/Others/DropSelect/DropableSelect';
+
 
 function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, grouped = [] }) {
     const [dataDef, setDataDef] = useState(data);
@@ -128,9 +130,9 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
     };
 
     const DragACell = ({ cell }) => {
-        return <DragAlongCell cell = {cell}></DragAlongCell>
-    
-     }
+        return <DragAlongCell cell={cell}></DragAlongCell>
+
+    }
 
     const sensors = useSensors(
         useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
@@ -246,21 +248,34 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
                 <DndContext
                     collisionDetection={customCollisionDetection}
                     onDragEnd={handleDragEnd}
-                    autoScroll = {false}
+                    autoScroll={false}
                     sensors={sensors}
                 >
                     <div className={styles.Dropable_Container_Group}>
-                       
+
                         {/* Phần thả group column */}
                         <DropableContainerGroup >
-                        <div className={styles.botton_area}>::</div>
+                            <div className={styles.botton_area}>
+                                <DropableSelectClick
+                                    droptitle={<div>::</div>}
+                                    position='bottom'
+                                >
+                                    <div style ={{ width:'200px', textAlign: 'left', background:'white',margin: '5px'}}>
+                                    <ColumnVisibilityToggle table={table}></ColumnVisibilityToggle>
+                                    </div>
+                                    
+                                    <button style ={{ width:'200px',textAlign: 'left', margin: '5px'}} onClick={table.getToggleAllRowsExpandedHandler()}>
+                                        Expand/Collapse all
+                                    </button>
+                                </DropableSelectClick>
+                            </div>
                             {/* <h1>Thả vào đây</h1> */}
                             {grouping.length > 0 ? (
                                 grouping.map((id) => (
                                     <RenderHeaderByID key={id} columnID={id} columns={columns} setGrouping={setGrouping} grouping={grouping} />
                                 ))
                             ) : (
-                                <div style={{ padding: '10px', fontSize: '14px', color: '#999',  userSelect: 'none' }}>
+                                <div style={{ padding: '10px', fontSize: '14px', color: '#999', userSelect: 'none' }}>
                                     Drag header to group
                                 </div>
                             )}
@@ -341,7 +356,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
                                         )
                                     })}
                                     <tr className={styles.table_body_td_empty}>
-                                    <td></td>
+                                        <td></td>
                                     </tr>
                                     {after > 0 && (
                                         <tr className={styles.table_body_tr}>

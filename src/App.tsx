@@ -23,8 +23,7 @@
 
 //import TableComponent from './components/TableReactFull/TableUI/TableComponent';
 import ReactTableExample from './components/ReactTables/ReactTableExample';
-import {DropableSelectExample} from './Nhap/NavbarSelectExample';
-
+import {DropableSelectExample} from './components/ReactTables/components/utils/Others/DropSelect/DropableSelectExample';
 
 //import GroupTable from './components/TableReactFull/GroupTable/GroupTable';
 
@@ -42,8 +41,8 @@ function App() {
       {/* <GroupTable></GroupTable> */}
 
       {/* <DndTableRectFull></DndTableRectFull> */}
-      {/* <p> ReactTableExample</p>
-      <ReactTableExample></ReactTableExample> */}
+      <p> ReactTableExample</p>
+      <ReactTableExample></ReactTableExample>
 
       {/* <TableComponent></TableComponent> */}
      {/* <MutipleContainers></MutipleContainers> */}
@@ -68,7 +67,7 @@ function App() {
 
     {/* <DropdownComponent></DropdownComponent> */}
 
-        <DropableSelectExample></DropableSelectExample>
+        {/* <DropableSelectExample></DropableSelectExample> */}
 
 
       </>
