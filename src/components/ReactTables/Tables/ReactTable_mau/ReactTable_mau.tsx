@@ -1,10 +1,11 @@
-import { useState, useEffect, CSSProperties } from 'react';
+import { useState, useEffect,useRef } from 'react';
+import React from 'react'
+
 import {
     FilterFn,
     GroupingState,
     getGroupedRowModel,
     getExpandedRowModel,
-    flexRender,
     getCoreRowModel,
     useReactTable,
     getFilteredRowModel,
@@ -24,25 +25,25 @@ import {
 } from '@dnd-kit/core';
 import {
     arrayMove,
-    useSortable,
     SortableContext,
     horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
-import styles from './ReactTableSelect.module.css';
-import { DraggableTableHeader, StaticTableHeader } from '../../../components/MainComponent/Header/Header';
-import { DragAlongCell } from '../../../components/MainComponent/Body/DragAlongCell';
-import { DraggableTablefooter } from '../../../components/MainComponent/Footer/Footer';
-import { customCollisionDetection } from '../../../components/MainComponent/Others/customCollisionDetection';
-import { DropableContainerGroup } from '../../../components/MainComponent/Others/DropableContainerGroup/DropableContainerGroup';
-import { ColumnVisibilityToggle } from '../../../components/MainComponent/Others/ColumnVisibilityToggle';
-import { RenderHeaderByID } from '../../../components/MainComponent/Others/DropableContainerGroup/RenderHeaderByID';
-import { IndeterminateCheckbox } from '../../../components/MainComponent/Others/IndeterminateCheckbox';
-import { TriStateCheckbox } from '../../../components/MainComponent/Others/TriStateCheckbox';
-import { getSelectedData } from '../../../components/MainComponent/Others/getSelectedData';
 
+import styles from './ReactTable_mau.module.css';
+import { useVirtualizer, notUndefined } from "@tanstack/react-virtual";
+import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
+import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
+import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
+import { customCollisionDetection } from '../../components/MainComponent/Others/customCollisionDetection';
+import { DropableContainerGroup } from '../../components/MainComponent/Others/DropableContainerGroup/DropableContainerGroup';
+import { ColumnVisibilityToggle } from '../../components/MainComponent/Others/ColumnVisibilityToggle';
+import { RenderHeaderByID } from '../../components/MainComponent/Others/DropableContainerGroup/RenderHeaderByID';
+import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
+import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
+import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
 
-function ReactTableSelect({ data, columns, onDataChange, onRowSelect, onRowsSelect, grouped = [] }) {
+function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, grouped = [] }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -70,22 +71,18 @@ function ReactTableSelect({ data, columns, onDataChange, onRowSelect, onRowsSele
         }
 
     };
-    // const [expanded, setExpanded] = useState<ExpandedState>({})
 
     const table = useReactTable({
         data: dataDef,
         columns,
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
-        
+        getSortedRowModel: getSortedRowModel(),
+
         getSubRows: row => row.subRows,
         filterFromLeafRows: true,
         enableSubRowSelection: false, // click on subrow not auto select
-        // //maxLeafRowFilterDepth: 0, 
-        
-        // onExpandedChange: setExpanded,
 
-        getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         filterFns: {
             selectedFilter, // Register the custom filter function
@@ -101,7 +98,6 @@ function ReactTableSelect({ data, columns, onDataChange, onRowSelect, onRowsSele
         globalFilterFn: 'selectedFilter',
         manualExpanding: false, // set bàng false thì có thể sử dụng cả useEffect để expanded
         autoResetExpanded: false, // set bang false thì tất cả các row được expanding bằng true thì không sử dụng cả useEffect
-        // getPaginationRowModel: getPaginationRowModel(),
         meta: {
             updateData: (rowIndex, columnId, value) =>
                 setDataDef((prev) =>
@@ -115,9 +111,8 @@ function ReactTableSelect({ data, columns, onDataChange, onRowSelect, onRowsSele
                     )
                 ),
         },
+
     });
-
-
 
     const isLeafColumn = (header) => !header.subHeaders || header.subHeaders.length === 0;
     const leafHeaderGroupIndex = table.getHeaderGroups().length - 1;
@@ -132,6 +127,11 @@ function ReactTableSelect({ data, columns, onDataChange, onRowSelect, onRowsSele
         }, 0);
     };
 
+    const DragACell = ({ cell }) => {
+        return <DragAlongCell cell = {cell}></DragAlongCell>
+    
+     }
+
     const sensors = useSensors(
         useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
         useSensor(TouchSensor, { activationConstraint: { distance: 5 } }),
@@ -139,10 +139,6 @@ function ReactTableSelect({ data, columns, onDataChange, onRowSelect, onRowsSele
     );
 
 
- const DragACell = ({ cell }) => {
-    return <DragAlongCell cell = {cell}></DragAlongCell>
-
- }
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
         if (over.id !== "DropableContainerGroupID") {
@@ -162,6 +158,7 @@ function ReactTableSelect({ data, columns, onDataChange, onRowSelect, onRowsSele
         }
 
     };
+
 
     useEffect(() => {
         if (onDataChange) {
@@ -197,6 +194,41 @@ function ReactTableSelect({ data, columns, onDataChange, onRowSelect, onRowsSele
             table.setGlobalFilter('none')
         }
     };
+    // bắt đầu render Virtual
+
+    const { rows } = table.getRowModel()
+
+    const parentRef = React.useRef<HTMLDivElement>(null)
+
+    const rowHeights = useRef({});
+
+    const virtualizer = useVirtualizer({
+        count: table.getRowModel().rows.length,
+        getScrollElement: () => parentRef.current,
+        estimateSize: (index) => rowHeights.current[index] || 35, // Default to 35 if height is not measured
+        overscan: 10,
+        measureElement: (el) => {
+            if (el) {
+                const index = Number(el.dataset.index);
+                const height = el.getBoundingClientRect().height;
+                rowHeights.current[index] = height;
+            }
+        },
+    });
+
+    const items = virtualizer.getVirtualItems();
+
+
+    const [before, after] =
+        items.length > 0
+            ? [
+                notUndefined(items[0]).start - virtualizer.options.scrollMargin,
+                virtualizer.getTotalSize() - notUndefined(items[items.length - 1]).end
+            ]
+            : [0, 0];
+
+
+
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
@@ -214,26 +246,31 @@ function ReactTableSelect({ data, columns, onDataChange, onRowSelect, onRowsSele
                 <DndContext
                     collisionDetection={customCollisionDetection}
                     onDragEnd={handleDragEnd}
-                    autoScroll={false}
+                    autoScroll = {false}
                     sensors={sensors}
                 >
                     <div className={styles.Dropable_Container_Group}>
+                       
                         {/* Phần thả group column */}
                         <DropableContainerGroup >
+                        <div className={styles.botton_area}>::</div>
                             {/* <h1>Thả vào đây</h1> */}
                             {grouping.length > 0 ? (
                                 grouping.map((id) => (
                                     <RenderHeaderByID key={id} columnID={id} columns={columns} setGrouping={setGrouping} grouping={grouping} />
                                 ))
                             ) : (
-                                <div style={{ padding: '10px', fontSize: '14px', color: '#999', userSelect: 'none' }}>
+                                <div style={{ padding: '10px', fontSize: '14px', color: '#999',  userSelect: 'none' }}>
                                     Drag header to group
                                 </div>
                             )}
                         </DropableContainerGroup>
                     </div>
+                    <div
+                        ref={parentRef}
+                        className={styles.div_table_container}
+                    >
 
-                    <div className={styles.div_table_container}>
                         {/* Bắt đầu render table */}
                         <table className={styles.table_container}>
                             <thead className={styles.table_head}>
@@ -272,26 +309,45 @@ function ReactTableSelect({ data, columns, onDataChange, onRowSelect, onRowsSele
                             </thead>
                             {table.getRowModel().rows.length > 0 ? (
                                 <tbody className={styles.table_body}>
-                                    {table.getRowModel().rows.map(row => (
-                                        <tr onDoubleClick={() => handleRowClick(row.original)} className={styles.table_body_tr} key={row.id}>
-                                            <td className={styles.table_body_tr_checkbox}>
-                                                <IndeterminateCheckbox
-                                                    {...{
-                                                        checked: row.getIsSelected(),
-                                                        disabled: !row.getCanSelect(),
-                                                        indeterminate: row.getIsSomeSelected(),
-                                                        onChange: row.getToggleSelectedHandler(),
-                                                    }}
-                                                />
-                                            </td>
-                                            {row.getVisibleCells().map(cell => (
-                                                <DragACell key={cell.id} cell={cell} />
-                                            ))}
+                                    {before > 0 && (
+                                        <tr className={styles.table_body_tr}>
+                                            <td style={{ height: `${before}px` }}></td>
                                         </tr>
-                                    ))}
+                                    )}
+                                    {items.map((virtualRow, index) => {
+                                        const row = rows[virtualRow.index]
+                                        return (
+                                            <tr
+                                                className={styles.table_body_tr}
+                                                key={row.id}
+                                                onDoubleClick={() => handleRowClick(row.original)}
+                                            >
+                                                <td className={styles.table_body_td_checkbox}>
+                                                    <IndeterminateCheckbox
+                                                        {...{
+                                                            checked: row.getIsSelected(),
+                                                            disabled: !row.getCanSelect(),
+                                                            indeterminate: row.getIsSomeSelected(),
+                                                            onChange: row.getToggleSelectedHandler(),
+                                                        }}
+                                                    />
+                                                </td>
+                                                {row.getVisibleCells().map((cell) => {
+                                                    return (
+                                                        <DragACell key={cell.id} cell={cell} />
+                                                    )
+                                                })}
+                                            </tr>
+                                        )
+                                    })}
                                     <tr className={styles.table_body_td_empty}>
                                     <td></td>
                                     </tr>
+                                    {after > 0 && (
+                                        <tr className={styles.table_body_tr}>
+                                            <td style={{ height: `${after}px` }}></td>
+                                        </tr>
+                                    )}
                                 </tbody>
                             ) : (
                                 <tbody>
@@ -310,7 +366,7 @@ function ReactTableSelect({ data, columns, onDataChange, onRowSelect, onRowsSele
                                         <DraggableTablefooter key={header.id} header={header} />
                                     ))}
                                 </tr>
-                            </tfoot>}                        
+                            </tfoot>}
                         </table>
                     </div>
                 </DndContext>
@@ -319,4 +375,6 @@ function ReactTableSelect({ data, columns, onDataChange, onRowSelect, onRowsSele
 
     );
 }
-export default ReactTableSelect;
+export default ReactTable_mau;
+
+

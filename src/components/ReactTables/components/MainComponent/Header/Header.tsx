@@ -11,7 +11,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 
 import styles from './Header.module.css';
-import Filter from '../../filters/Filter';
+import Filter from '../filters/Filter';
 import pinIcon from '../../../img/pin.svg';
 import unpinIcon from '../../../img/unpin.svg';
 import { getCommonPinningStyles } from '../Others/getCommonPinningStyles';

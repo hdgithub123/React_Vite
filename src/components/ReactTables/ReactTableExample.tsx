@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback, useRef, useMemo, CSSProperties } from
 import React from 'react'
 import styles from './ReactTableExample.module.css';
 
-import { formatDate } from './components/cells/orinal/fomatCell';
-import EditableCell from './components/cells/edit/EditableCell'
+import { formatDate } from './components/utils/cells/orinal/fomatCell';
+import EditableCell from './components/utils/cells/edit/EditableCell'
 
 
 
@@ -16,6 +16,7 @@ import ReactTableSelect from './Tables/ReactTableBase/ReactTableSelect_mau/React
 import DndAndGroupTableWithCheckboxFilter from './DndAndGroupTableWithCheckboxFilter';
 import ReactTableFull from './Tables/ReactTableFull/ReactTableFull';
 import ReactTableBasic from './Tables/ReactTableBasic/ReactTableBasic';
+import ReactTable_mau from './Tables/ReactTable_mau/ReactTable_mau';
 
 function ReactTableExample() {
     const [selectedData, setSelectedData] = useState(null); // State to store the selected data from the table
@@ -62,7 +63,7 @@ function ReactTableExample() {
                     </ReactTableSelect>
                 </div> */}
                 
-                <div className={styles.div3}>
+                {/* <div className={styles.div3}>
                   
                     <ReactTableFull 
                     data={makeData} 
@@ -72,7 +73,7 @@ function ReactTableExample() {
                     //grouped={['firstName','age']}
                     >
                     </ReactTableFull>
-                </div>
+                </div> */}
                 
                 {/* <div className={styles.div4}>
                     <h1>ReactTableBasic</h1>
@@ -85,7 +86,17 @@ function ReactTableExample() {
                     </ReactTableBasic>
                 </div> */}
                 
-
+                <div className={styles.div5}>
+                  
+                  <ReactTable_mau 
+                  data={makeData} 
+                  columns={columns} 
+                  onRowSelect={handleRowSelect} 
+                  onRowsSelect={handleRowsSelect}
+                  //grouped={['firstName','age']}
+                  >
+                  </ReactTable_mau>
+              </div>
 
 
             </div>

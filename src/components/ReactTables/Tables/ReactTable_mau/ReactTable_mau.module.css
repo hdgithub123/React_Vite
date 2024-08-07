@@ -15,7 +15,27 @@
 
 .Dropable_Container_Group {
   width: 100%;
+  display: flex;
 }
+
+/* sua tai day */
+.botton_area{
+  margin-left: 2px ;
+  padding: 2px;
+  background-color: none;
+  border: none;
+  border-radius: 2px;
+  /* border: gray dotted 1px; */
+  text-align: center;
+  width: 24px;
+}
+
+.botton_area:hover{
+  background-color: rgb(147, 74, 241);
+}
+
+
+/* sua tai day */
 
 .div_table_container {
   width: 100%;
@@ -37,6 +57,15 @@
   background-color: white;
 }
 
+.table_container{
+  height: 100%;
+}
+
+.table_container tr.table_body_td_empty td {
+  border: none;
+  height: 100%;
+}
+
 .table_head tr{
   width: 100%;
   box-sizing: border-box;
@@ -52,9 +81,24 @@
   /* padding: 8px; */
 }
 
-.table_body td{
   /* khong bi gioi han keo */
+/* .table_head td{
   max-width: 0; 
+} */
+
+
+.table_body td{
+  outline: 0.3px dotted lightgray;
+  max-width: 0; /* khong bi gioi han keo */
+}
+
+/* khong bi gioi han keo */
+/* .foot_container td{
+  max-width: 0; 
+} */
+
+.table_body tr:hover {
+  background-color: aqua;
 }
 
 .table_footer{
@@ -62,42 +106,13 @@
   bottom: 0px; /* table head will be placed from the top of the table and sticks to it */
   background-color: white;
 }
+
 .table_footer_tr td{
   outline: 1px solid lightgray;
   border-Top: 2px solid gray;
   border-Bottom: 2px solid gray;
   font-Weight: bold;
 }
-
-
-.table_body_tr:hover {
-  background-color: aqua;
-}
-
-/* căn chỉnh hiện thanh resize */
-.resizer {
-  position: absolute;
-  top: 0;
-  right: -0.1rem;
-  height: 100%;
-  width: 3px;
-  background: transparent;
-  cursor: col-resize;
-  user-select: none;
-  touch-action: none;
-}
-
-.resizer.isResizing {
-  background: rgb(160, 160, 204);
-  opacity: 1;
-}
-
-.enter_highlight{
-  background: aqua;
-  opacity: 1;
-
-}
-
 
 /* Custom Scrollbar for tbody */
 .div_table_container::-webkit-scrollbar {
@@ -119,31 +134,20 @@
   background: #555; /* Color of the thumb on hover */
 }
 
-
-.table_body_tr_checkbox{
+.table_body_td_checkbox{
   text-align: center;
-  /* position: sticky;
-  left: 0;
-  background-color: #555; */
+  width: 0%;
 }
 
 /* Cho checkbox */
 .table_head_tr_th_checkbox{
-  width: 3px;
-  /* position: sticky;
-  left: 0;
-  background-color: #555; */
+  width: 0%;
 }
 
 .footer_checkbox{
+  width: 3px;
   border-top: 2px solid gray;
   border-bottom: 2px solid gray;
 }
 
-.table_container{
-  height: 100%;
-}
-.table_container tr.table_body_td_empty td {
-  border: none;
-  height: 100%;
-}
+
