@@ -42,8 +42,9 @@ import { IndeterminateCheckbox } from '../../components/MainComponent/Others/Ind
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
+import {getDataVisibleColumn} from '../../components/MainComponent/Others/getDataVisibleColumn';
 
-function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect, grouped = [] }) {
+function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [] }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -173,6 +174,14 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
         }
     }, [table.getState().rowSelection]);
 
+    // chi lay ra cac o column khong bi an
+    useEffect(() => {
+        const filteredUndefinedData = getDataVisibleColumn(getSelectedData(table),table.getState().columnVisibility);
+
+        if (onVisibleColumnDataSelect) {
+            onVisibleColumnDataSelect(filteredUndefinedData);
+        }
+    }, [table.getState().rowSelection,table.getState().columnVisibility]);
 
     // sử dụng để expanded all
     useEffect(() => {

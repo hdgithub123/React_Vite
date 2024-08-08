@@ -31,9 +31,16 @@ function ReactTableExample() {
         setSelectedMoreData(rowData); // Update state with the selected row data
     };
 
+    const handleonVisibleColumnDataSelect =(rowData) => {
+        setDataChange(rowData);
+    };
+
     const handleDataChange =(rowData) => {
         setDataChange(rowData);
     };
+
+
+
     const btnclick= ()=>{
         console.log("selectedMoreData",selectedMoreData)
         console.log("makeData",makeData)
@@ -55,6 +62,8 @@ function ReactTableExample() {
                     columns={columns} 
                     onRowSelect={handleRowSelect} 
                     onRowsSelect={handleRowsSelect}
+                    onDataChange={handleDataChange}
+                    onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
                     //grouped={['firstName','age']}
                     >
                     </ReactTableFull>
@@ -67,6 +76,7 @@ function ReactTableExample() {
                     columns={columns} 
                     onRowSelect={handleRowSelect} 
                     onRowsSelect={handleRowsSelect}
+                    onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
                     >
                     </ReactTableBasic>
                 </div>
@@ -78,6 +88,7 @@ function ReactTableExample() {
                   columns={columns} 
                   onRowSelect={handleRowSelect} 
                   onRowsSelect={handleRowsSelect}
+                  onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
                   //grouped={['firstName','age']}
                   >
                   </ReactTable_mau>

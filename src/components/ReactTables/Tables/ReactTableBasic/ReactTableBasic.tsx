@@ -1,4 +1,4 @@
-import { useState, useEffect,useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import React from 'react'
 
 import {
@@ -41,9 +41,9 @@ import { ColumnVisibilityToggleBasic } from '../../components/MainComponent/Othe
 import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
+import {getDataVisibleColumn} from '../../components/MainComponent/Others/getDataVisibleColumn';
 
-
-function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect }) {
+function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleColumnDataSelect }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -128,9 +128,9 @@ function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect }) {
     };
 
     const DragACell = ({ cell }) => {
-        return <DragAlongCell cell = {cell}></DragAlongCell>
-    
-     }
+        return <DragAlongCell cell={cell}></DragAlongCell>
+
+    }
 
     const sensors = useSensors(
         useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
@@ -167,6 +167,15 @@ function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect }) {
         }
     }, [table.getState().rowSelection]);
 
+
+    // chi lay ra cac o column khong bi an
+    useEffect(() => {
+        const filteredUndefinedData = getDataVisibleColumn(getSelectedData(table), table.getState().columnVisibility);
+
+        if (onVisibleColumnDataSelect) {
+            onVisibleColumnDataSelect(filteredUndefinedData);
+        }
+    }, [table.getState().rowSelection, table.getState().columnVisibility]);
 
     // sử dụng để expanded all
     useEffect(() => {
@@ -228,7 +237,7 @@ function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect }) {
         <div className={styles.general_table}>
             {/* Render các nút điều khiển */}
             <div className={styles.botton_container}>
-            <ColumnVisibilityToggleBasic table={table}></ColumnVisibilityToggleBasic>
+                <ColumnVisibilityToggleBasic table={table}></ColumnVisibilityToggleBasic>
             </div>
 
             <div className={styles.container}>
@@ -237,7 +246,7 @@ function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect }) {
                     collisionDetection={closestCenter}
                     modifiers={[restrictToHorizontalAxis]}
                     onDragEnd={handleDragEnd}
-                    autoScroll = {false}
+                    autoScroll={false}
                     sensors={sensors}
                 >
                     <div
@@ -315,7 +324,7 @@ function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect }) {
                                         )
                                     })}
                                     <tr className={styles.table_body_td_empty}>
-                                    <td></td>
+                                        <td></td>
                                     </tr>
                                     {after > 0 && (
                                         <tr className={styles.table_body_tr}>

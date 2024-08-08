@@ -42,8 +42,9 @@ import { IndeterminateCheckbox } from '../../components/MainComponent/Others/Ind
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
+import {getDataVisibleColumn} from '../../components/MainComponent/Others/getDataVisibleColumn';
 
-function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, grouped = [] }) {
+function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [] }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -166,12 +167,22 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         }
     }, [dataDef]);
 
+   
     useEffect(() => {
         const filteredUndefinedData = getSelectedData(table);
         if (onRowsSelect) {
             onRowsSelect(filteredUndefinedData);
         }
     }, [table.getState().rowSelection]);
+
+// chi lay ra cac o column khong bi an
+    useEffect(() => {
+        const filteredUndefinedData = getDataVisibleColumn(getSelectedData(table),table.getState().columnVisibility);
+
+        if (onVisibleColumnDataSelect) {
+            onVisibleColumnDataSelect(filteredUndefinedData);
+        }
+    }, [table.getState().rowSelection,table.getState().columnVisibility]);
 
 
     // sử dụng để expanded all
@@ -369,5 +380,3 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
     );
 }
 export default ReactTable_mau;
-
-
