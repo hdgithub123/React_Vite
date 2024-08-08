@@ -1,3 +1,10 @@
+:root {
+  --HoverColour: aqua;
+  --BackgroundColour: white;
+  --Border: 1px black solid;
+  --Boxshadow: 1px 1px brown;
+}
+
 .general_table{
   height: 100%;
 }
@@ -9,13 +16,30 @@
   flex-direction: column;
 }
 
-.botton_container{
+.Dropable_Container_Group {
+  width: 100%;
   display: flex;
 }
 
-.Dropable_Container_Group {
-  width: 100%;
+/* sua tai day */
+.botton_dot{
+  margin-left: 2px ;
+  padding: 2px;
+  background-color: white;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  display: block;
+  width: 22px;
+  opacity: 0.5;
 }
+
+.botton_dot:hover{
+  background: var(--HoverColour);
+  opacity: 1;
+}
+
+/* sua tai day */
 
 .div_table_container {
   width: 100%;
@@ -113,6 +137,7 @@
 .div_table_container::-webkit-scrollbar-thumb:hover {
   background: #555; /* Color of the thumb on hover */
 }
+
 .table_body_td_checkbox{
   text-align: center;
   width: 0%;

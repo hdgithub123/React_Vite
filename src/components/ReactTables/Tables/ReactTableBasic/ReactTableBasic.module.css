@@ -13,6 +13,24 @@
   display: flex;
 }
 
+/* sua tai day */
+.botton_dot{
+  margin-left: 2px ;
+  padding: 2px;
+  background-color: white;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  display: block;
+  width: 22px;
+}
+
+.botton_dot:hover{
+  background: var(--HoverColour);
+}
+
+/* sua tai day */
+
 .Dropable_Container_Group {
   width: 100%;
 }

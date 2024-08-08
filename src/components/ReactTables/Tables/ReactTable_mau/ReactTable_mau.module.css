@@ -1,3 +1,10 @@
+:root {
+  --HoverColour: aqua;
+  --BackgroundColour: white;
+  --Border: 1px black solid;
+  --Boxshadow: 1px 1px brown;
+}
+
 .general_table{
   height: 100%;
 }
@@ -9,31 +16,28 @@
   flex-direction: column;
 }
 
-.botton_container{
-  display: flex;
-}
-
 .Dropable_Container_Group {
   width: 100%;
   display: flex;
 }
 
 /* sua tai day */
-.botton_area{
+.botton_dot{
   margin-left: 2px ;
   padding: 2px;
   background-color: white;
   border: none;
-  border-radius: 2px;
-  /* border: gray dotted 1px; */
+  border-radius: 4px;
   text-align: center;
-  width: 24px;
+  display: block;
+  width: 22px;
+  opacity: 0.5;
 }
 
-.botton_area:hover{
-  background-color: rgb(147, 74, 241);
+.botton_dot:hover{
+  background: var(--HoverColour);
+  opacity: 1;
 }
-
 
 /* sua tai day */
 

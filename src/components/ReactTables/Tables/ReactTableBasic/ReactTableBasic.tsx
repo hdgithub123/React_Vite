@@ -37,10 +37,11 @@ import { useVirtualizer, notUndefined } from "@tanstack/react-virtual";
 import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
 import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
 import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
-import { ColumnVisibilityToggle } from '../../components/MainComponent/Others/ColumnVisibilityToggle';
+import { ColumnVisibilityToggleBasic } from '../../components/MainComponent/Others/ColumnVisibilityToggle/ColumnVisibilityToggleBasic';
 import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
+
 
 function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect }) {
     const [dataDef, setDataDef] = useState(data);
@@ -227,11 +228,7 @@ function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect }) {
         <div className={styles.general_table}>
             {/* Render các nút điều khiển */}
             <div className={styles.botton_container}>
-                {/* Chọn Column hiển thị */}
-                <ColumnVisibilityToggle table={table}></ColumnVisibilityToggle>
-                <button onClick={table.getToggleAllRowsExpandedHandler()}>
-                    Expand/Collapse all
-                </button>
+            <ColumnVisibilityToggleBasic table={table}></ColumnVisibilityToggleBasic>
             </div>
 
             <div className={styles.container}>

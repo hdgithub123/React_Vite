@@ -1,0 +1,30 @@
+:root {
+    --HoverColour: aqua;
+    --BackgroundColour: white;
+    --Border: 1px black solid;
+    --Boxshadow: 1px 1px brown;
+  }
+
+
+.child{
+    display: flex;
+    flex-direction: column;
+    background: var(--BackgroundColour);
+    border: var(--Border);
+    padding: 2px;
+    border-radius: 4px;
+    box-shadow: var(--Boxshadow);
+}
+.child_item{
+    display: flex;
+    flex-direction: row;
+    width: 150px;
+    /* border: 1px black solid; */
+    padding: 2px;
+    font-weight: bold;
+
+}
+
+.child_item:hover {
+    background-color: var(--HoverColour);
+}

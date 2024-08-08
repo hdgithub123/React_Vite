@@ -1,4 +1,4 @@
-import { useState, useEffect,useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import React from 'react'
 
 import {
@@ -37,11 +37,11 @@ import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell
 import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
 import { customCollisionDetection } from '../../components/MainComponent/Others/customCollisionDetection';
 import { DropableContainerGroup } from '../../components/MainComponent/Others/DropableContainerGroup/DropableContainerGroup';
-import { ColumnVisibilityToggle } from '../../components/MainComponent/Others/ColumnVisibilityToggle';
 import { RenderHeaderByID } from '../../components/MainComponent/Others/DropableContainerGroup/RenderHeaderByID';
 import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
+import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 
 function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect, grouped = [] }) {
     const [dataDef, setDataDef] = useState(data);
@@ -128,9 +128,9 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
     };
 
     const DragACell = ({ cell }) => {
-        return <DragAlongCell cell = {cell}></DragAlongCell>
-    
-     }
+        return <DragAlongCell cell={cell}></DragAlongCell>
+
+    }
 
     const sensors = useSensors(
         useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
@@ -232,33 +232,28 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
-            {/* Render các nút điều khiển */}
-            <div className={styles.botton_container}>
-                {/* Chọn Column hiển thị */}
-                <ColumnVisibilityToggle table={table}></ColumnVisibilityToggle>
-                <button onClick={table.getToggleAllRowsExpandedHandler()}>
-                    Expand/Collapse all
-                </button>
-            </div>
-
             <div className={styles.container}>
                 {/* Tạo Drop Group Area */}
                 <DndContext
                     collisionDetection={customCollisionDetection}
                     onDragEnd={handleDragEnd}
-                    autoScroll = {false}
+                    autoScroll={false}
                     sensors={sensors}
                 >
                     <div className={styles.Dropable_Container_Group}>
+
                         {/* Phần thả group column */}
                         <DropableContainerGroup >
+                            <div className={styles.botton_dot}>
+                                <ButtonPanel table={table}></ButtonPanel>
+                            </div>
                             {/* <h1>Thả vào đây</h1> */}
                             {grouping.length > 0 ? (
                                 grouping.map((id) => (
                                     <RenderHeaderByID key={id} columnID={id} columns={columns} setGrouping={setGrouping} grouping={grouping} />
                                 ))
                             ) : (
-                                <div style={{ padding: '10px', fontSize: '14px', color: '#999',  userSelect: 'none' }}>
+                                <div style={{ padding: '10px', fontSize: '14px', color: '#999', userSelect: 'none' }}>
                                     Drag header to group
                                 </div>
                             )}
@@ -339,7 +334,7 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
                                         )
                                     })}
                                     <tr className={styles.table_body_td_empty}>
-                                    <td></td>
+                                        <td></td>
                                     </tr>
                                     {after > 0 && (
                                         <tr className={styles.table_body_tr}>

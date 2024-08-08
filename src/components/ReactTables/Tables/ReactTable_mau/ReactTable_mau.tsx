@@ -37,13 +37,11 @@ import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell
 import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
 import { customCollisionDetection } from '../../components/MainComponent/Others/customCollisionDetection';
 import { DropableContainerGroup } from '../../components/MainComponent/Others/DropableContainerGroup/DropableContainerGroup';
-import { ColumnVisibilityToggle } from '../../components/MainComponent/Others/ColumnVisibilityToggle';
 import { RenderHeaderByID } from '../../components/MainComponent/Others/DropableContainerGroup/RenderHeaderByID';
 import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
-import { DropableSelectClick, DropableSelectHover } from '../../components/utils/Others/DropSelect/DropableSelect';
-
+import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 
 function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, grouped = [] }) {
     const [dataDef, setDataDef] = useState(data);
@@ -234,15 +232,6 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
-            {/* Render các nút điều khiển */}
-            <div className={styles.botton_container}>
-                {/* Chọn Column hiển thị */}
-                <ColumnVisibilityToggle table={table}></ColumnVisibilityToggle>
-                <button onClick={table.getToggleAllRowsExpandedHandler()}>
-                    Expand/Collapse all
-                </button>
-            </div>
-
             <div className={styles.container}>
                 {/* Tạo Drop Group Area */}
                 <DndContext
@@ -255,19 +244,8 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
                         {/* Phần thả group column */}
                         <DropableContainerGroup >
-                            <div className={styles.botton_area}>
-                                <DropableSelectClick
-                                    droptitle={<div>::</div>}
-                                    position='bottom'
-                                >
-                                    <div style ={{ width:'200px', textAlign: 'left', background:'white',margin: '5px'}}>
-                                    <ColumnVisibilityToggle table={table}></ColumnVisibilityToggle>
-                                    </div>
-                                    
-                                    <button style ={{ width:'200px',textAlign: 'left', margin: '5px'}} onClick={table.getToggleAllRowsExpandedHandler()}>
-                                        Expand/Collapse all
-                                    </button>
-                                </DropableSelectClick>
+                            <div className={styles.botton_dot}>
+                                <ButtonPanel table={table}></ButtonPanel>
                             </div>
                             {/* <h1>Thả vào đây</h1> */}
                             {grouping.length > 0 ? (

@@ -46,24 +46,9 @@ function ReactTableExample() {
                 <button onClick={btnclick}> kich here</button>
             </div>
             <div className={styles.parent}>
-                {/* <div className={styles.div1}>
-                    <ReactTableNomal data={makeData} columns ={columns} 
-                    onRowSelect={handleRowSelect} ></ReactTableNomal>
-                </div> */}
                 
-                {/* <div className={styles.div2}>
-                    <h1>ReactTableSelect</h1>
-                    <ReactTableSelect data={makeData} 
-                    columns={columns} 
-                    onDataChange = {handleDataChange}
-                    onRowSelect={handleRowSelect} 
-                    onRowsSelect={handleRowsSelect}
-                    // grouped={['firstName','age']}
-                    >
-                    </ReactTableSelect>
-                </div> */}
                 
-                {/* <div className={styles.div3}>
+                <div className={styles.div3}>
                   
                     <ReactTableFull 
                     data={makeData} 
@@ -73,9 +58,9 @@ function ReactTableExample() {
                     //grouped={['firstName','age']}
                     >
                     </ReactTableFull>
-                </div> */}
+                </div>
                 
-                {/* <div className={styles.div4}>
+                <div className={styles.div4}>
                     <h1>ReactTableBasic</h1>
                     <ReactTableBasic 
                     data={makeData} 
@@ -84,9 +69,9 @@ function ReactTableExample() {
                     onRowsSelect={handleRowsSelect}
                     >
                     </ReactTableBasic>
-                </div> */}
+                </div>
                 
-                <div className={styles.div5}>
+                {/* <div className={styles.div5}>
                   
                   <ReactTable_mau 
                   data={makeData} 
@@ -96,7 +81,7 @@ function ReactTableExample() {
                   //grouped={['firstName','age']}
                   >
                   </ReactTable_mau>
-              </div>
+              </div> */}
 
 
             </div>

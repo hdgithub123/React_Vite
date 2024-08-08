@@ -296,4 +296,4 @@ type Person = {
   const makeDataSubrows1 = generatePeople(200);
   // makeData1: data thuong, makeData2: 500 data thuong, 
   //makeDataSubrows1: 1000 subrow thuong, makeDataSubrows2 : subrow chi chi dinh
-export const makeData = makeData1
+export const makeData = makeData2
