@@ -194,6 +194,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         if (onRowSelect) {
             onRowSelect(rowData);
         }
+        console.log("table",table.getAllColumns())
     };
 
     const handleTriStateCheckboxSelectChange = (value) => {
