@@ -8,8 +8,8 @@ import styles from './ButtonPanel.module.css';
 import { getDataVisibleColumn } from '../getDataVisibleColumn'
 
 export const ButtonPanel = ({ table}) => {
-    // const filteredUndefinedData = getDataVisibleColumn(getSelectedData(table),table.getState().columnVisibility);
-    const filteredUndefinedData = table.getRowModel().rows
+    const filteredUndefinedData = getDataVisibleColumn(getSelectedData(table),table.getState().columnVisibility);
+    // const filteredUndefinedData = table.getRowModel().rows
     console.log("getRowModel",filteredUndefinedData)
     return <>
         <DropableSelectClick
