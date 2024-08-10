@@ -6,6 +6,7 @@ export const ExportExcelTable = ({ data, columns}) => {
     const sheetName = 'Sheet1';
     const handleExportExcell = () =>{
         console.log("columns",columns)
+        console.log("data",data)
         exportExcelTanstack(data, filename, sheetName, columns);
     }
     

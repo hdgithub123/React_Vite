@@ -30,6 +30,33 @@ function convertColumnsToHeaders(columns) {
     return headers;
 }
 
+// function convertColumnsToHeaders(columns) {
+//     const headers = [];
+
+//     function processColumn(column, rowIndex = 0, colIndex = 0) {
+//         if (!headers[rowIndex]) headers[rowIndex] = {};
+//         if (column.columnDef && column.columnDef.header) {
+//             // Đặt tiêu đề cho cột hiện tại
+//             headers[rowIndex][colIndex] = column.columnDef.header;
+//         }
+
+//         if (column.columns && column.columns.length > 0) {
+//             // Xử lý các cột con
+//             column.columns.forEach((subColumn, subColIndex) => {
+//                 processColumn(subColumn, rowIndex + 1, subColIndex);
+//             });
+//         }
+//     }
+
+//     columns.forEach((column, index) => {
+//         processColumn(column, 0, index);
+//     });
+
+//     return headers;
+// }
+
+
+
 /**
  * Xuất dữ liệu từ JSON sang tệp Excel với nhiều hàng tiêu đề
  * @param {Array} data - Dữ liệu JSON cần xuất.
@@ -40,9 +67,10 @@ function convertColumnsToHeaders(columns) {
 export function exportExcelTanstack(data, filename, sheetName, columns) {
     // Tạo worksheet từ dữ liệu JSON
     const ws = XLSX.utils.json_to_sheet(data);
-
+    console.log("columns",columns)
     // Chuyển đổi cấu trúc tiêu đề dạng cây thành mảng các hàng tiêu đề
     const headerRows = convertColumnsToHeaders(columns);
+    console.log("headerRows",headerRows)
 
     // Thêm nhiều hàng tiêu đề vào worksheet
     headerRows.forEach((headerRow, rowIndex) => {
@@ -62,5 +90,3 @@ export function exportExcelTanstack(data, filename, sheetName, columns) {
     // Ghi workbook ra tệp Excel
     XLSX.writeFile(wb, filename);
 }
-
-

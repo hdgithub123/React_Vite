@@ -1,49 +1,65 @@
+import { getGroupedRowModel } from "@tanstack/react-table"
+
 header.column.columnDef.filterFn-- -> đường dẫn đến filterFn
 header.column.setFilterValue-- -> đường dẫn đến setFilterValue
 column.columnDef.filterT-- > lấy được giá trị của filterT: trên colums
 
+// ve xuat excell 
 
-// tính tổng trên từng cột
-const calculateColumnSum = (column, table) => {
-  return table.getFilteredRowModel().rows.reduce((sum, row) => {
-    const cellValue = row.getValue(column.id);
-    return typeof cellValue === 'number' ? sum + cellValue : sum;
-  }, 0);
+để lấy dữ liệu ra khi bị getGroupedRowModel
+
+với các ô group thì tại các dòng row là gruop thì 
+nếu ô nào là gruop thì lấy giá trị theo groupingColumnId = row._valuesCache = {
+  idcolumn: Value,
+}
+
+nếu các ô còn lại thuộc row._groupingValuesCache thì lấy theo giá trị này _groupingValuesCache ={
+  idcolumn1: Value1,
+  idcolumn2: Value2,
+}
+
+còn lại thì sẽ lấy giá trị null
+
+
+---> chỉnh sửa hàm này ở phần 
+
+if (row.getIsGrouped()) {
+  return;
+}
+
+
+export function getSelectedData<T>(table: Table<T>): T[] {
+  const { rowSelection } = table.getState();
+  const processedRowIds = new Set<string>();
+
+  function extractSelectedRows(rows: any[], selectedRowIds: Set<string>): T[] {
+    let selectedData: T[] = [];
+
+    rows.forEach(row => {
+      const isSelected = selectedRowIds.has(row.id);
+      // Skip processing group rows
+      if (row.getIsGrouped()) {
+        return;
+      }
+
+      // Process only if the row is selected and hasn't been processed yet
+      if (isSelected && !processedRowIds.has(row.id)) {
+        selectedData.push(row.original);
+        processedRowIds.add(row.id); // Mark the row as processed
+      }
+
+      // Recursively extract selected subRows
+      if (row.subRows && row.subRows.length > 0) {
+        selectedData = selectedData.concat(extractSelectedRows(row.subRows, selectedRowIds, isSelected));
+      }
+    });
+
+    return selectedData;
+  }
+
+  // Convert the rowSelection keys to a Set for quick lookup
+  const selectedRowIds = new Set(Object.keys(rowSelection));
+
+  // Start with the root rows
+  return extractSelectedRows(table.getRowModel().rows, selectedRowIds);
 };
-
-// tính tổng trên từng cột thêm  chữ Sum ở trước
-const calculateColumnSum = (column, table) => {
-  const sum = table.getFilteredRowModel().rows.reduce((sum, row) => {
-    const cellValue = row.getValue(column.id);
-    return typeof cellValue === 'number' ? sum + cellValue : sum;
-  }, 0);
-  return `Sum: ${sum}`;
-};
-
-// hoặc dùng cách này thêm Sum trên cùng
-footer: (info) =>`Sum: ${calculateColumnSum(info.column, info.table)}`,
-
-
-
-footer: (info) => calculateColumnSum(info.column, info.table),
-
-
-  // tìm leafHeaderGroupIndex
-  const leafHeaderGroupIndex = table.getHeaderGroups().length - 1;
-// render tfoot ở mức leaf
-<tfoot>
-  <tr>
-    {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
-      <td key={header.id} colSpan={header.colSpan}>
-        {header.isPlaceholder ? null : (
-          <div>
-            {header.column.columnDef.footer && flexRender(
-              header.column.columnDef.footer,
-              header.getContext()
-            )}
-          </div>
-        )}
-      </td>
-    ))}
-  </tr>
-</tfoot>

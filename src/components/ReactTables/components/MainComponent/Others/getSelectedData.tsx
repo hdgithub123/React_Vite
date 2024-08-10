@@ -8,8 +8,10 @@ export function getSelectedData<T>(table: Table<T>): T[] {
       rows.forEach(row => {
         const isSelected = selectedRowIds.has(row.id);
         // Skip processing group rows
-        if (row.getIsGrouped()) {
-          return;
+        if (isSelected && row.getIsGrouped()) {
+          const GroupRow = { ...row._valuesCache, ...row._groupingValuesCache };
+          selectedData.push(GroupRow)
+          // return;
         }
   
         // Process only if the row is selected and hasn't been processed yet
