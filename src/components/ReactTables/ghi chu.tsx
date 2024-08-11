@@ -63,3 +63,10 @@ export function getSelectedData<T>(table: Table<T>): T[] {
   // Start with the root rows
   return extractSelectedRows(table.getRowModel().rows, selectedRowIds);
 };
+
+
+
+
+columns.parent : nếu undefined thì không có parent
+columns.parent.id : lấy ra id của parent
+columns.parent.columnDef.header : tên của column cha

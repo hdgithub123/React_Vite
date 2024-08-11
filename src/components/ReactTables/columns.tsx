@@ -44,7 +44,8 @@ const columnscof = [
             {
                 accessorKey: 'age',
                 id: 'age',
-                header: () => 'Age',
+                // header: () => 'Age',
+                header: 'Age',
                 footer: (info) => <div style={{
                     textAlign: 'right',
                 }}>{`Sum: ${formatNumber(SumFooter(info.column, info.table), 0, 2)}`}</div>,
@@ -76,7 +77,8 @@ const columnscof = [
                     {
                         accessorKey: 'visits',
                         id: 'visits',
-                        header: () => <span>Visits</span>,
+                        // header: () => <span>Visits</span>,
+                        header: 'Visits',
                         cell: DateCell,
                         filterType: 'date',
                         // aggregationFn: 'sum',

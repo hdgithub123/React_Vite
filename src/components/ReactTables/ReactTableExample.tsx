@@ -43,7 +43,7 @@ function ReactTableExample() {
 
     const btnclick= ()=>{
         console.log("selectedMoreData",selectedMoreData)
-        console.log("makeData",makeData)
+        // console.log("makeData",makeData)
         console.log("dataChange",dataChange)
     }
   
