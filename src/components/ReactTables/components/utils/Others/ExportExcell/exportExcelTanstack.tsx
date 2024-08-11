@@ -5,107 +5,14 @@ import * as XLSX from 'xlsx';
  * @param {Array} columns - Cấu trúc tiêu đề dạng cây.
  * @returns {Array} - Mảng các hàng tiêu đề.
  */
-// function convertColumnsToHeaders(columns) {
-//     const headers = [];
 
-//     function processColumn(column, rowIndex = 0, colIndex = 0) {
-//         if (!headers[rowIndex]) headers[rowIndex] = {};
-//         if (column.header) {
-//             // Đặt tiêu đề cho cột hiện tại
-//             headers[rowIndex][colIndex] = column.header;
-//         }
-
-//         if (column.columns && column.columns.length > 0) {
-//             // Xử lý các cột con
-//             column.columns.forEach((subColumn, subColIndex) => {
-//                 processColumn(subColumn, rowIndex + 1, subColIndex);
-//             });
-//         }
-//     }
-
-//     columns.forEach((column, index) => {
-//         processColumn(column, 0, index);
-//     });
-
-//     return headers;
-// }
-
-// function convertColumnsToHeaders(columns) {
-//     const headers = [];
-
-//     function processColumn(column, rowIndex = 0, colIndex = 0) {
-//         if (!headers[rowIndex]) headers[rowIndex] = {};
-//         if (column.columnDef && column.columnDef.header) {
-//             // Đặt tiêu đề cho cột hiện tại
-//             headers[rowIndex][colIndex] = column.columnDef.header;
-//         }
-
-//         if (column.columns && column.columns.length > 0) {
-//             // Xử lý các cột con
-//             column.columns.forEach((subColumn, subColIndex) => {
-//                 processColumn(subColumn, rowIndex + 1, subColIndex);
-//             });
-//         }
-//     }
-
-//     columns.forEach((column, index) => {
-//         processColumn(column, 0, index);
-//     });
-
-//     return headers;
-// }
-
-// function convertColumnsToHeaders(columns) {
-//     const headers = [];
-//     const columnMapping = {}; // Để lưu trữ mối quan hệ cột con và cột cha
-//     const leafKeys = {}; // Để lưu trữ các khóa của các bậc lá
-
-//     function processColumn(column, rowIndex = 0, colIndex = 0) {
-//         if (!headers[rowIndex]) headers[rowIndex] = {};
-
-//         if (column.columnDef && column.columnDef.header) {
-//             // Đặt tiêu đề cho cột hiện tại
-//             headers[rowIndex][colIndex] = column.columnDef.header;
-//             columnMapping[`${rowIndex}-${colIndex}`] = column;
-
-//             // Nếu là bậc lá, lưu khóa
-//             if (column.columns.length === 0) {
-//                 leafKeys[column.id] = colIndex;
-//             }
-//         }
-
-//         if (column.columns && column.columns.length > 0) {
-//             // Xử lý các cột con
-//             column.columns.forEach((subColumn, subColIndex) => {
-//                 processColumn(subColumn, rowIndex + 1, subColIndex);
-//             });
-//         }
-//     }
-
-//     // Xử lý từng cột cấp trên cùng
-//     columns.forEach((column, index) => {
-//         processColumn(column, 0, index);
-//     });
-
-//     // Tạo mảng tiêu đề cuối cùng
-//     const finalHeadersArray = [];
-//     const maxDepth = Math.max(...Object.keys(columnMapping).map(key => parseInt(key.split('-')[0], 10)));
-
-//     for (let depth = 0; depth <= maxDepth; depth++) {
-//         const newRow = {};
-//         Object.keys(headers[depth] || {}).forEach(colIndex => {
-//             const key = Object.keys(leafKeys).find(key => leafKeys[key] === parseInt(colIndex, 10));
-//             if (key) {
-//                 newRow[key] = headers[depth][colIndex];
-//             }
-//         });
-//         finalHeadersArray.push(newRow);
-//     }
-
-//     return finalHeadersArray;
-// }
 
 function convertColumnsToHeaders(columns, columnsLeafVisible) {
+    // const headers = [
+    //     ['Name', 'Name', 'Info', 'Info', 'Info', 'Info'],
+    //     ['First Name', 'Last Name', 'Age', 'Visits', 'Status', 'Profile Progress']
+    // ]; mau
+
 
     const header = columnsLeafVisible.map(item => {
 
