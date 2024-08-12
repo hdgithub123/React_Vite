@@ -21,7 +21,7 @@ export const ExplandingTextCell = ({ row, getValue }) => {
                     </button>
                 ) : (
                     ''
-                )}{' '}
+                )}{' '} 
                 {getValue()}
         </div>
     )

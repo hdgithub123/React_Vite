@@ -17,7 +17,7 @@ export const ButtonPanel = ({ table}) => {
             <div className={styles.child}>
                 <div className={styles.child_item}><ExplandingRow table={table}></ExplandingRow></div>
                 <div className={styles.child_item}><ColumnVisibilityToggle table={table}></ColumnVisibilityToggle></div>
-                <div className={styles.child_item}><ExportExcelTable data={filteredUndefinedData} columns={table.getAllColumns() } columnsLeafvisible ={table.getAllLeafColumns()}></ExportExcelTable></div>
+                <div className={styles.child_item}><ExportExcelTable data={filteredUndefinedData} columns={table.getAllColumns() } columnsLeafvisible ={table.getAllLeafColumns()} columnVisibility={table.getState().columnVisibility}></ExportExcelTable></div>
             </div>
         </DropableSelectClick>
     </>

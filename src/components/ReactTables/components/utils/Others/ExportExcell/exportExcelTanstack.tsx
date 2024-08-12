@@ -1,4 +1,5 @@
 import * as XLSX from 'xlsx';
+import { getDataVisibleColumn } from '../../../MainComponent/Others/getDataVisibleColumn';
 
 /**
  * Chuyển đổi cấu trúc tiêu đề dạng cây thành mảng các hàng tiêu đề
@@ -119,8 +120,9 @@ function mergeHeaderCells(ws, headers) {
  * @param {string} sheetName - Tên của worksheet trong tệp Excel.
  * @param {Array} column - Tiêu đề của cột, dạng mảng các đối tượng.
  */
-export function exportExcelTanstack(data, filename, sheetName, columns, columnsLeafvisible) {
-    const headers = convertColumnsToHeaders(columns, columnsLeafvisible);
+export function exportExcelTanstack(data, filename, sheetName, columns, columnsLeafvisible, columnVisibility) {
+    const columnsLeafvisibleFilter = columnsLeafvisible.filter(item => columnVisibility[item.id] !== false);
+    const headers = convertColumnsToHeaders(columns, columnsLeafvisibleFilter);
     const workbook = XLSX.utils.book_new();
 
     // Tạo worksheet với nhiều hàng tiêu đề
