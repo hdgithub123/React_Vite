@@ -57,6 +57,52 @@ function convertColumnsToHeaders(columns, columnsLeafVisible) {
 
 
 
+function mergeHeaderCells(ws, headers) {
+    const merges = [];
+    const rowCount = headers.length;
+    const colCount = headers[0] ? headers[0].length : 0;
+
+    // Merge theo hàng
+    for (let row = 0; row < rowCount; row++) {
+        let startCol = 0;
+
+        for (let col = 1; col < colCount; col++) {
+            const currentHeader = headers[row][col];
+            const prevHeader = headers[row][col - 1];
+
+            if (currentHeader === prevHeader) {
+                const startAddress = { c: startCol, r: row };
+                const endAddress = { c: col, r: row };
+                merges.push({ s: startAddress, e: endAddress });
+            } else {
+                startCol = col;
+            }
+        }
+    }
+
+    // Merge theo cột
+    for (let col = 0; col < colCount; col++) {
+        let startRow = 0;
+
+        for (let row = 1; row < rowCount; row++) {
+            const currentHeader = headers[row][col];
+            const prevHeader = headers[row - 1][col];
+
+            if (currentHeader === prevHeader) {
+                const startAddress = { c: col, r: startRow };
+                const endAddress = { c: col, r: row };
+                merges.push({ s: startAddress, e: endAddress });
+            } else {
+                startRow = row;
+            }
+        }
+    }
+
+    // Định dạng merge cho các ô
+    ws['!merges'] = merges;
+}
+
+
 
 
 
@@ -79,7 +125,27 @@ export function exportExcelTanstack(data, filename, sheetName, columns, columnsL
 
 
 
+     // Merge các ô tiêu đề có giá trị giống nhau
+     mergeHeaderCells(wsWithHeaders, headers);
 
+    // // Định dạng tiêu đề để bôi đậm
+    // const boldHeaderStyle = {
+    //     font: { bold: true }  // Bôi đậm tiêu đề
+    // };
+
+    // // Áp dụng định dạng cho tiêu đề
+    // headers.forEach((headerRow, rowIndex) => {
+    //     headerRow.forEach((header, colIndex) => {
+    //         const cellAddress = { c: colIndex, r: rowIndex };
+    //         const cellRef = XLSX.utils.encode_cell(cellAddress);
+            
+    //         // Cập nhật kiểu của ô nếu chưa được định nghĩa
+    //         if (!wsWithHeaders[cellRef]) {
+    //             wsWithHeaders[cellRef] = {};
+    //         }
+    //         wsWithHeaders[cellRef].s = boldHeaderStyle;
+    //     });
+    // });
 
 
 
