@@ -9,10 +9,6 @@ import { getDataVisibleColumn } from '../getDataVisibleColumn'
 
 export const ButtonPanel = ({ table}) => {
     const filteredUndefinedData = getDataVisibleColumn(getSelectedData(table),table.getState().columnVisibility);
-    // const filteredUndefinedData = table.getRowModel().rows
-    console.log("table.getAllColumns()",table.getAllColumns())
-    console.log("table.getAllLeafColumns()",table.getAllLeafColumns())
-    console.log("table.getState().columnVisibility",table.getState().columnVisibility)
     return <>
         <DropableSelectClick
             droptitle={<div>::</div>}

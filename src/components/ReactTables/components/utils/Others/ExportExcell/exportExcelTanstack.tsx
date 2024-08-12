@@ -30,17 +30,17 @@ function convertColumnsToHeaders(columns, columnsLeafVisible) {
         return Math.max(...array.map(obj => obj.depth));
     };
     const maxDepth = getMaxDepth(columnsLeafVisible)
-    let parentObj = getParentObj(columnsLeafVisible); 
+    let parentObj = getParentObj(columnsLeafVisible);
 
     for (let i = 0; i < maxDepth; i++) {
         parentHeader.push(parentObj);
         parentObj = getParentObj(parentObj);
-        
+
     }
     parentHeader.reverse();
     parentHeader.push(columnsLeafVisible);
 
-    const headers= []
+    const headers = []
     parentHeader.forEach(parentItem => {
         let header = []
         parentItem.forEach(item => {
@@ -52,6 +52,22 @@ function convertColumnsToHeaders(columns, columnsLeafVisible) {
         });
         headers.push(header);
     });
+    
+    const rowCount = headers.length;
+    const colCount = headers[0] ? headers[0].length : 0;
+
+    for (let col = 0; col < colCount; col++) {
+        let currentHeader = headers[0][col];
+        for (let row = 0; row < rowCount -1 ; row++) { 
+            let nextHeader = headers[row + 1][col];
+    
+            if (currentHeader === nextHeader) {
+                headers[row + 1][col] = "";
+            } else {
+                currentHeader = headers[row + 1][col];
+            }
+        }
+    }
     return headers;
 }
 
@@ -61,43 +77,30 @@ function mergeHeaderCells(ws, headers) {
     const merges = [];
     const rowCount = headers.length;
     const colCount = headers[0] ? headers[0].length : 0;
-
     // Merge theo hàng
     for (let row = 0; row < rowCount; row++) {
-        let startCol = 0;
+        let startAddress = { c: 0, r: row }
+        let endAddress = { c: 0, r: row }
 
-        for (let col = 1; col < colCount; col++) {
+        for (let col = 0; col < colCount; col++) {
             const currentHeader = headers[row][col];
-            const prevHeader = headers[row][col - 1];
+            const NextHeader = headers[row][col + 1];
 
-            if (currentHeader === prevHeader) {
-                const startAddress = { c: startCol, r: row };
-                const endAddress = { c: col, r: row };
-                merges.push({ s: startAddress, e: endAddress });
+
+            if (currentHeader === NextHeader) {
+                // Merge các ô có cùng giá trị trên cùng một hàng
+                startAddress = { c: startAddress.c, r: startAddress.r };
             } else {
-                startCol = col;
+                endAddress = { c: col, r: row };
+                if (JSON.stringify(startAddress) !== JSON.stringify(endAddress) && (currentHeader !== null && currentHeader !== "")) {
+                    merges.push({ s: startAddress, e: endAddress });
+                }
+
+                startAddress = { c: col + 1, r: row };
             }
         }
+
     }
-
-    // Merge theo cột
-    for (let col = 0; col < colCount; col++) {
-        let startRow = 0;
-
-        for (let row = 1; row < rowCount; row++) {
-            const currentHeader = headers[row][col];
-            const prevHeader = headers[row - 1][col];
-
-            if (currentHeader === prevHeader) {
-                const startAddress = { c: col, r: startRow };
-                const endAddress = { c: col, r: row };
-                merges.push({ s: startAddress, e: endAddress });
-            } else {
-                startRow = row;
-            }
-        }
-    }
-
     // Định dạng merge cho các ô
     ws['!merges'] = merges;
 }
@@ -124,10 +127,6 @@ export function exportExcelTanstack(data, filename, sheetName, columns, columnsL
     const wsWithHeaders = XLSX.utils.aoa_to_sheet(headers);
 
 
-
-     // Merge các ô tiêu đề có giá trị giống nhau
-     mergeHeaderCells(wsWithHeaders, headers);
-
     // // Định dạng tiêu đề để bôi đậm
     // const boldHeaderStyle = {
     //     font: { bold: true }  // Bôi đậm tiêu đề
@@ -138,7 +137,7 @@ export function exportExcelTanstack(data, filename, sheetName, columns, columnsL
     //     headerRow.forEach((header, colIndex) => {
     //         const cellAddress = { c: colIndex, r: rowIndex };
     //         const cellRef = XLSX.utils.encode_cell(cellAddress);
-            
+
     //         // Cập nhật kiểu của ô nếu chưa được định nghĩa
     //         if (!wsWithHeaders[cellRef]) {
     //             wsWithHeaders[cellRef] = {};
@@ -147,7 +146,8 @@ export function exportExcelTanstack(data, filename, sheetName, columns, columnsL
     //     });
     // });
 
-
+    // Merge các ô tiêu đề có giá trị giống nhau
+    mergeHeaderCells(wsWithHeaders, headers);
 
     // Thêm dữ liệu vào worksheet (bắt đầu từ dòng đầu tiên trống sau tiêu đề)
     XLSX.utils.sheet_add_json(wsWithHeaders, data, { header: [], skipHeader: true, origin: -1 });
