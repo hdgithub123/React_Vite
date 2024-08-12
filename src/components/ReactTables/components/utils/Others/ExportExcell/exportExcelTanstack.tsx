@@ -12,27 +12,53 @@ function convertColumnsToHeaders(columns, columnsLeafVisible) {
     //     ['Name', 'Name', 'Info', 'Info', 'Info', 'Info'],
     //     ['First Name', 'Last Name', 'Age', 'Visits', 'Status', 'Profile Progress']
     // ]; mau
+    const parentHeader = []
 
-
-    const header = columnsLeafVisible.map(item => {
-
-        if (typeof item.columnDef.header === 'string') {
-         
-            return item.columnDef.header;
-        } else {
-            return item.id;
+    const getParentObj = (array) => {
+        const result = [];
+        for (let i = 0; i < array.length; i++) {
+            if (array[i].parent === undefined) {
+                result.push(array[i]);
+            } else {
+                result.push(array[i].parent);
+            }
         }
+        return result;
+    };
 
+    const getMaxDepth = (array) => {
+        return Math.max(...array.map(obj => obj.depth));
+    };
+    const maxDepth = getMaxDepth(columnsLeafVisible)
+    let parentObj = getParentObj(columnsLeafVisible); 
+
+    for (let i = 0; i < maxDepth; i++) {
+        parentHeader.push(parentObj);
+        parentObj = getParentObj(parentObj);
+        
+    }
+    parentHeader.reverse();
+    parentHeader.push(columnsLeafVisible);
+
+    const headers= []
+    parentHeader.forEach(parentItem => {
+        let header = []
+        parentItem.forEach(item => {
+            if (typeof item.columnDef.header === 'string') {
+                header.push(item.columnDef.header);
+            } else {
+                header.push(item.id);
+            }
+        });
+        headers.push(header);
     });
-
-    // can xu ly tiep cac bac 0, 1.. trên bậc lá
-
-    const headers = [
-        header,
-    ]
-
     return headers;
 }
+
+
+
+
+
 
 
 
@@ -46,11 +72,16 @@ function convertColumnsToHeaders(columns, columnsLeafVisible) {
  */
 export function exportExcelTanstack(data, filename, sheetName, columns, columnsLeafvisible) {
     const headers = convertColumnsToHeaders(columns, columnsLeafvisible);
-    console.log("headers", headers)
     const workbook = XLSX.utils.book_new();
 
     // Tạo worksheet với nhiều hàng tiêu đề
     const wsWithHeaders = XLSX.utils.aoa_to_sheet(headers);
+
+
+
+
+
+
 
     // Thêm dữ liệu vào worksheet (bắt đầu từ dòng đầu tiên trống sau tiêu đề)
     XLSX.utils.sheet_add_json(wsWithHeaders, data, { header: [], skipHeader: true, origin: -1 });
@@ -60,6 +91,4 @@ export function exportExcelTanstack(data, filename, sheetName, columns, columnsL
 
     // Ghi workbook ra file
     XLSX.writeFile(workbook, filename);
-
-
 }
