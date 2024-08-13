@@ -276,7 +276,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
                     >
 
                         {/* Bắt đầu render table */}
-                        <table className={styles.table_container}>
+                        <table id={'React_table_id'} className={styles.table_container}>
                             <thead className={styles.table_head}>
                                 {table.getHeaderGroups().map((headerGroup, rowIndex) => (
                                     <tr className={styles.table_head_tr} key={headerGroup.id}>

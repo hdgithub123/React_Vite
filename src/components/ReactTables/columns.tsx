@@ -1,5 +1,5 @@
 import { SumFooter, AverageFooter, CountFooter } from './components/utils/Footer/FooterColumn'
-import { TextCell } from './components/utils/cells/orinal/TextCell';
+import { TextCell,TextGroupCell } from './components/utils/cells/orinal/TextCell';
 import { formatNumber, formatVnNumber, formatUsNumber, formatDate } from './components/utils/cells/orinal/fomatCell'
 import { NumberUsCell, NumberVnCell, NumberCell } from './components/utils/cells/orinal/NumberCell';
 import { DateVnCell, DateUsCell, DateCell } from './components/utils/cells/orinal/DateCell';
@@ -22,12 +22,13 @@ const columnscof = [
                 // footer: info => `Count: ${CountFooter(info.table)}`,
                 footer: info => `Count: ${CountFooter(info.table)}`,
                 cell: TextCell,
+                groupCell: TextGroupCell, // bo sung group cell
                 //cell: (info) => info.getValue(),
                 /**
                  * override the value used for row grouping
                  * (otherwise, defaults to the value derived from accessorKey / accessorFn)
                  */
-                getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
+                
             },
             {
                 accessorFn: (row) => row.lastName,
@@ -35,6 +36,7 @@ const columnscof = [
                 header: () => <span>Last Name</span>,
                 filterType: 'text',
                 cell: (info) => info.getValue(),
+                groupCell: TextGroupCell,
             },
         ],
     },

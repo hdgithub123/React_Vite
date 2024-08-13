@@ -87,10 +87,9 @@ export const DragAlongCell = ({ cell }) => {
                         {row.getIsExpanded() ? '⮛' : '⮚'}{' '}
                     </button>
                     {flexRender(
-                        cell.column.columnDef.cell,
+                        cell.column.columnDef.groupCell ?? cell.column.columnDef.cell,
                         cell.getContext()
-                    )}{' '}
-                    ({row.subRows.length})
+                    )}
                 </div>
             ) : cell.getIsAggregated() ? (
                 // If the cell is aggregated, use the Aggregated renderer for cell
