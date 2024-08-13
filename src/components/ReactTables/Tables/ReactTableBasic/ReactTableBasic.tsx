@@ -41,7 +41,8 @@ import { ColumnVisibilityToggleBasic } from '../../components/MainComponent/Othe
 import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
-import {getDataVisibleColumn} from '../../components/MainComponent/Others/getDataVisibleColumn';
+import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
+import { ButtonPanelBasic } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 
 function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleColumnDataSelect }) {
     const [dataDef, setDataDef] = useState(data);
@@ -236,8 +237,8 @@ function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleCo
     return (
         <div className={styles.general_table}>
             {/* Render các nút điều khiển */}
-            <div className={styles.botton_container}>
-                <ColumnVisibilityToggleBasic table={table}></ColumnVisibilityToggleBasic>
+            <div className={styles.botton_dot}>
+                <ButtonPanelBasic table={table}></ButtonPanelBasic>
             </div>
 
             <div className={styles.container}>

@@ -55,7 +55,7 @@ function ReactTableExample() {
             <div className={styles.parent}>
                 
                 
-                {/* <div className={styles.div3}>
+                <div className={styles.div3}>
                   
                     <ReactTableFull 
                     data={makeData} 
@@ -67,9 +67,9 @@ function ReactTableExample() {
                     //grouped={['firstName','age']}
                     >
                     </ReactTableFull>
-                </div> */}
-                
-                {/* <div className={styles.div4}>
+                </div>
+{/*                 
+                <div className={styles.div4}>
                     <h1>ReactTableBasic</h1>
                     <ReactTableBasic 
                     data={makeData} 
@@ -81,7 +81,7 @@ function ReactTableExample() {
                     </ReactTableBasic>
                 </div> */}
                 
-                <div className={styles.div5}>
+                {/* <div className={styles.div5}>
                   
                   <ReactTable_mau 
                   data={makeData} 
@@ -92,7 +92,7 @@ function ReactTableExample() {
                   //grouped={['firstName','age']}
                   >
                   </ReactTable_mau>
-              </div>
+              </div> */}
 
 
             </div>

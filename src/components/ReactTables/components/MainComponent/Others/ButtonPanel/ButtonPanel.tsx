@@ -23,4 +23,19 @@ export const ButtonPanel = ({ table}) => {
     </>
 }
 
+export const ButtonPanelBasic = ({ table}) => {
+    const filteredUndefinedData = getDataVisibleColumn(getSelectedData(table),table.getState().columnVisibility);
+    return <>
+        <DropableSelectClick
+            droptitle={<div>::</div>}
+            position='bottom'
+        >
+            <div className={styles.child}>
+                <div className={styles.child_item}><ColumnVisibilityToggle table={table}></ColumnVisibilityToggle></div>
+                <div className={styles.child_item}><ExportExcelTable data={filteredUndefinedData} columnsLeafvisible ={table.getAllLeafColumns()} columnVisibility={table.getState().columnVisibility}></ExportExcelTable></div>
+            </div>
+        </DropableSelectClick>
+    </>
+}
+
 

@@ -4,12 +4,16 @@ export function getSelectedData<T>(table: Table<T>): T[] {
 
   function extractSelectedRows(rows: any[], selectedRowIds: Set<string>): T[] {
     let selectedData: T[] = [];
-
+    
     rows.forEach(row => {
       const isSelected = selectedRowIds.has(row.id);
       // Skip processing group rows
       if (isSelected && row.getIsGrouped()) {
-        const GroupRow = { ...row._valuesCache, ...row._groupingValuesCache };
+        const emptyOriginal = Object.keys(row.original).reduce((acc, key) => {
+          acc[key] = "";
+          return acc;
+        }, {});
+        const GroupRow = { ...emptyOriginal,...row._valuesCache, ...row._groupingValuesCache };
         selectedData.push(GroupRow)
         // return;
       } else {
