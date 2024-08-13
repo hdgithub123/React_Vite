@@ -104,12 +104,6 @@ function mergeHeaderCells(ws, headers) {
 }
 
 
-
-
-
-
-
-
 /**
  * Xuất dữ liệu từ JSON sang tệp Excel với nhiều hàng tiêu đề
  * @param {Array} data - Dữ liệu JSON cần xuất.
@@ -118,7 +112,7 @@ function mergeHeaderCells(ws, headers) {
  * @param {Array} column - Tiêu đề của cột, dạng mảng các đối tượng.
  */
 
-export function exportExcelTanstack(data, filename, sheetName, columns, columnsLeafvisible, columnVisibility, columnWidths) {
+export function exportExcelTanstack(data, filename, sheetName, columnsLeafvisible, columnVisibility, columnWidths) {
     const columnsLeafvisibleFilter = columnsLeafvisible.filter(item => columnVisibility[item.id] !== false);
     const headers = convertColumnsToHeaders(columnsLeafvisibleFilter);
     const workbook = XLSX.utils.book_new();
@@ -153,37 +147,12 @@ export function exportExcelTanstack(data, filename, sheetName, columns, columnsL
     // Thêm dữ liệu vào worksheet (bắt đầu từ dòng đầu tiên trống sau tiêu đề)
     XLSX.utils.sheet_add_json(wsWithHeaders, data, { header: [], skipHeader: true, origin: -1 });
 
-    // Thiết lập độ rộng cột nếu có columnWidths
-    // if (Array.isArray(columnWidths) && columnWidths.length > 0) {
-    //     wsWithHeaders['!cols'] = columnWidths.map(width => ({ wpx: width }));
-    // }
-
-    // if (Array.isArray(columnWidths) && columnWidths.length > 0) {
-    //     const maxWidth = columnWidths[0]; // Độ rộng tối đa
-    //     const spaceWidth = columnWidths[1]; // Khoảng trống bổ sung
-
-    //     // Tính toán độ rộng tối ưu cho từng cột
-    //     const colWidths = [];
-    //     const dataKeys = headers[headers.length - 1]; // Sử dụng hàng tiêu đề cuối cùng (bậc lá)
-
-    //     dataKeys.forEach((key, index) => {
-    //         // Tính độ rộng của cột dựa trên nội dung
-    //         let maxContentWidth = Math.max(...data.map(row => (row[key] ? row[key].toString().length : 0)));
-
-    //         // Tính toán độ rộng tối ưu, cộng với khoảng trống
-    //         let colWidth = Math.min(maxContentWidth + spaceWidth, maxWidth);
-    //         colWidths.push({ wpx: colWidth }); // Điều chỉnh đơn vị độ rộng theo nhu cầu
-    //     });
-    //     console.log("colWidths",colWidths)
-    //     wsWithHeaders['!cols'] = colWidths;
-    // }
-    console.log("data", data)
-
     // Thiết lập độ rộng cột với maxColWidth, minColWidth và spaceWidth nếu columnWidths được cung cấp
     if (Array.isArray(columnWidths) && columnWidths.length === 3) {
-        const maxColWidth = columnWidths[0]*6.1; // Độ rộng tối đa (pixel/ký tự) ước tính 1 ký tự = 6.1 px
-        const minColWidth = columnWidths[1]*6.1; // Độ rộng tối thiểu (pixel/ký tự) ký tự 1 ký tự = 6.1 px
-        const spaceWidth = columnWidths[2]*6.1; // Khoảng trống bổ sung (pixel/ký tự) 1 ký tự = 6.1 px
+        const characterPixel  = 6; // ước tính 1 ký tự = 6.0 px
+        const maxColWidth = columnWidths[0]; // Độ rộng tối đa (pixel)
+        const minColWidth = columnWidths[1]; // Độ rộng tối thiểu (pixel)
+        const spaceWidth = columnWidths[2]; // Khoảng trống bổ sung (pixel)
 
         // Lấy các khóa của các cột từ tiêu đề (cột cuối cùng trong headers)
         const columnKeys = headers[headers.length - 1].map((_, index) => Object.keys(data[0])[index]);
@@ -193,12 +162,8 @@ export function exportExcelTanstack(data, filename, sheetName, columns, columnsL
 
         // Đảm bảo độ rộng không vượt quá maxColWidth và không nhỏ hơn minColWidth
         colWidths.forEach(colWidth => {
-            console.log("colWidth",colWidth)
-            console.log("colWidth",maxColWidth)
-            colWidth.wpx = Math.max(minColWidth, Math.min(colWidth.wpx, maxColWidth)); // Điều chỉnh độ rộng
+            colWidth.wpx = Math.max(minColWidth, Math.min(colWidth.wpx, maxColWidth))*characterPixel; 
         });
-
-        console.log("colWidths",colWidths)
         wsWithHeaders['!cols'] = colWidths;
     }
 
@@ -230,7 +195,7 @@ function calculateColumnWidths(data, columnKeys, spaceWidth) {
         const dataWidth = maxLength + spaceWidth;
 
         // Đưa vào mảng với đơn vị là pixel, nhân với 10 để phù hợp với định dạng của XLSX
-        colWidths.push({ wpx: dataWidth * 10 });
+        colWidths.push({ wpx: dataWidth });
     });
 
     return colWidths;
