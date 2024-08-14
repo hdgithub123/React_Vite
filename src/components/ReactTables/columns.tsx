@@ -48,10 +48,11 @@ const columnscof = [
                 id: 'age',
                 // header: () => 'Age',
                 header: 'Age',
+
                 footer: (info) => <div style={{
                     textAlign: 'right',
                 }}>{`Sum: ${formatNumber(SumFooter(info.column, info.table), 0, 2)}`}</div>,
-                filterType: 'number',
+                 filterType: 'number',
                 cell: ({ cell }) => (
                     <NumberCell
                         initialValue={cell.getValue()}

@@ -10,9 +10,11 @@ import{getRowModelData} from '../getRowModelData'
 export const ButtonPanel = ({ table}) => {
     const filteredUndefinedData = getDataVisibleColumn(getSelectedData(table),table.getState().columnVisibility);
     const filterData = getDataVisibleColumn(getRowModelData(table),table.getState().columnVisibility);
-    console.log("table",table.getRowModel().rows)
+    console.log("table",table)
+   // console.log("table.getHeaderGroups()",table.getHeaderGroups()[2].headers[0].column.columnDef.footer())
     console.log("filteredUndefinedData",filteredUndefinedData)
     console.log("getSelectedData(table)",getSelectedData(table))
+   // console.log("table.getFooterGroups()[0].headers[0].column.columnDef là:",table.getFooterGroups()[0].headers[2].column.columnDef.footer())
     return <>
         <DropableSelectClick
             droptitle={<div>::</div>}
