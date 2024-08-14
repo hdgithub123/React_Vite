@@ -1,6 +1,5 @@
 import * as XLSX from 'xlsx-js-style';
 
-
 /**
  * Xuất dữ liệu từ JSON sang tệp Excel với nhiều hàng tiêu đề
  * @param {Array} data - Dữ liệu JSON cần xuất.
@@ -22,7 +21,7 @@ export function exportExcelTanstack(data, filename, sheetName, columnsLeafvisibl
     // Định dạng tiêu đề để bôi đậm, căn giữa và thay đổi màu nền
     const boldHeaderStyle = {
         font: { bold: true }, // Bôi đậm tiêu đề
-        alignment: { horizontal: 'center', vertical: 'center' }, // Căn giữa
+        alignment: { horizontal: 'center', vertical: 'center',wrapText: true }, // Căn giữa
         fill: { fgColor: { rgb: 'D2B48C' } } // Màu nền nâu (tan)
     };
 
@@ -46,9 +45,42 @@ export function exportExcelTanstack(data, filename, sheetName, columnsLeafvisibl
     // Thêm dữ liệu vào worksheet (bắt đầu từ dòng đầu tiên trống sau tiêu đề)
     XLSX.utils.sheet_add_json(wsWithHeaders, sortedData, { header: [], skipHeader: true, origin: -1 });
 
+    // Định dạng cho hàng có kiểu "normal" (chữ màu đen)
+    const dataStyleNormalRow = {
+        font: { color: { rgb: '000000' }, bold: false }, // Màu chữ đen
+        // alignment: { horizontal: 'left', vertical: 'center' } // Căn lề trái và căn giữa theo chiều dọc
+    };
+
+    // Định dạng cho hàng có kiểu "group" hoặc "expand" (chữ màu vàng)
+    const dataStyleGroupExpand = {
+        font: { color: { rgb: '000000' }, bold: true }, // Màu chữ vàng
+    };
+
+    // Áp dụng định dạng cho dữ liệu dựa trên typeofRow
+    data.forEach((row, rowIndex) => {
+        console.log("row",row)
+        Object.keys(row).forEach((key, colIndex) => {
+            const cellAddress = { c: colIndex, r: rowIndex + headers.length }; // Dòng bắt đầu sau tiêu đề
+            const cellRef = XLSX.utils.encode_cell(cellAddress);
+
+            // Chọn định dạng dựa trên typeofRow
+            let cellStyle = dataStyleNormalRow; // Mặc định là kiểu normal
+            if (row.typeofRow === "group" || row.typeofRow === "expand") {
+                cellStyle = dataStyleGroupExpand;
+            }
+
+            // Cập nhật kiểu của ô nếu chưa được định nghĩa
+            if (!wsWithHeaders[cellRef]) {
+                wsWithHeaders[cellRef] = {};
+            }
+            wsWithHeaders[cellRef].s = cellStyle;
+        });
+    });
+
+
     // Thiết lập độ rộng cột với maxColWidth, minColWidth và spaceWidth nếu columnWidths được cung cấp
     if (Array.isArray(columnWidths) && columnWidths.length === 3) {
-        const characterPixel  = 6; // ước tính 1 ký tự = 6.0 px
+        const characterPixel = 6; // ước tính 1 ký tự = 6.0 px
         const maxColWidth = columnWidths[0]; // Độ rộng tối đa (pixel)
         const minColWidth = columnWidths[1]; // Độ rộng tối thiểu (pixel)
         const spaceWidth = columnWidths[2]; // Khoảng trống bổ sung (pixel)
@@ -61,31 +93,31 @@ export function exportExcelTanstack(data, filename, sheetName, columnsLeafvisibl
 
         // Đảm bảo độ rộng không vượt quá maxColWidth và không nhỏ hơn minColWidth
         colWidths.forEach(colWidth => {
-            colWidth.wpx = Math.max(minColWidth, Math.min(colWidth.wpx, maxColWidth))*characterPixel; 
+            colWidth.wpx = Math.max(minColWidth, Math.min(colWidth.wpx, maxColWidth)) * characterPixel;
         });
         wsWithHeaders['!cols'] = colWidths;
     }
     // Thêm worksheet vào workbook
     XLSX.utils.book_append_sheet(workbook, wsWithHeaders, sheetName);
-       // Ghi workbook ra file
-       XLSX.writeFile(workbook, filename);
+    // Ghi workbook ra file
+    XLSX.writeFile(workbook, filename);
 }
 
 function sortData(arraySort, data) {
     // Lấy thứ tự id từ arraySort
     const order = arraySort.map(item => item.id);
-  
+
     // Sắp xếp dataB theo thứ tự id của arraySort
     return data.map(item => {
-      const sortedItem = {};
-      order.forEach(id => {
-        if (item.hasOwnProperty(id)) {
-          sortedItem[id] = item[id];
-        }
-      });
-      return sortedItem;
+        const sortedItem = {};
+        order.forEach(id => {
+            if (item.hasOwnProperty(id)) {
+                sortedItem[id] = item[id];
+            }
+        });
+        return sortedItem;
     });
-  }
+}
 
 
 /**

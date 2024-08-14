@@ -8,7 +8,6 @@ export function getSelectedData<T>(table: Table<T>): T[] {
     rows.forEach(row => {
       const isSelected = selectedRowIds.has(row.id);
       let typeofRow = { typeofRow: 'nomal' }
-      console.log("row", row)
       // Skip processing group rows
       if (isSelected && row.getIsGrouped()) {
         typeofRow = { typeofRow: 'group' }
