@@ -383,8 +383,8 @@ const columnssubrowf = [
         ],
     },
 ]
-// columnscof : co footer, columnskof: khong co footer, columnssubrowf: subrow co footer, columns1headercof
-const columns = columnscof
+// columnscof : co footer, columnskof: columns1headercof, khong co footer, columnssubrowf: subrow co footer, 
+const columns = columnssubrowf
 
 export default columns;
 

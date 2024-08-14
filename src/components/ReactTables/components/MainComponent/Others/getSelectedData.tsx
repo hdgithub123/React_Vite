@@ -4,29 +4,34 @@ export function getSelectedData<T>(table: Table<T>): T[] {
 
   function extractSelectedRows(rows: any[], selectedRowIds: Set<string>): T[] {
     let selectedData: T[] = [];
-    
+
     rows.forEach(row => {
       const isSelected = selectedRowIds.has(row.id);
+      let typeofRow = { typeofRow: 'nomal' }
+      console.log("row", row)
       // Skip processing group rows
       if (isSelected && row.getIsGrouped()) {
+        typeofRow = { typeofRow: 'group' }
         const emptyOriginal = Object.keys(row.original).reduce((acc, key) => {
           acc[key] = "";
           return acc;
         }, {});
-        const GroupRow = { ...emptyOriginal,...row._valuesCache, ...row._groupingValuesCache };
+        const GroupRow = { ...emptyOriginal, ...row._valuesCache, ...row._groupingValuesCache, ...typeofRow };
         selectedData.push(GroupRow)
         // return;
       } else {
-        // Process only if the row is selected and hasn't been processed yet
-        if (isSelected && !processedRowIds.has(row.id)) {
-          selectedData.push(row.original);
-          processedRowIds.add(row.id); // Mark the row as processed
+        if (isSelected && row.getCanExpand()) {
+          typeofRow = { typeofRow: 'expand' }
+          const ExpandRow = { ...row.original, ...typeofRow };
+          selectedData.push(ExpandRow);
+        } else {
+          // Process only if the row is selected and hasn't been processed yet
+          if (isSelected && !processedRowIds.has(row.id)) {
+            const NomalRow = { ...row.original, ...typeofRow };
+            selectedData.push(NomalRow);
+            processedRowIds.add(row.id); // Mark the row as processed
+          }
         }
-        // Recursively extract selected subRows
-        if (row.subRows && row.subRows.length > 0) {
-          selectedData = selectedData.concat(extractSelectedRows(row.subRows, selectedRowIds, isSelected));
-        }
-
       }
     });
 
