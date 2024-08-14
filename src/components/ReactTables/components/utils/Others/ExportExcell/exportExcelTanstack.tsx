@@ -58,7 +58,6 @@ export function exportExcelTanstack(data, filename, sheetName, columnsLeafvisibl
 
     // Áp dụng định dạng cho dữ liệu dựa trên typeofRow
     data.forEach((row, rowIndex) => {
-        console.log("row",row)
         Object.keys(row).forEach((key, colIndex) => {
             const cellAddress = { c: colIndex, r: rowIndex + headers.length }; // Dòng bắt đầu sau tiêu đề
             const cellRef = XLSX.utils.encode_cell(cellAddress);
