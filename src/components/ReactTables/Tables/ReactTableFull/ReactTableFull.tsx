@@ -43,6 +43,7 @@ import { TriStateCheckbox } from '../../components/MainComponent/Others/TriState
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 import {getDataVisibleColumn} from '../../components/MainComponent/Others/getDataVisibleColumn';
+import {getIsAllRowsSelected, getToggleAllRowsSelectedHandler} from '../../components/MainComponent/Others/RowsSelected'
 
 function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [] }) {
     const [dataDef, setDataDef] = useState(data);
@@ -284,9 +285,9 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
                                                 <div title="Select All/ Unselect All">
                                                     <IndeterminateCheckbox
                                                         {...{
-                                                            checked: table.getIsAllRowsSelected(),
+                                                            checked: getIsAllRowsSelected(table),
                                                             indeterminate: table.getIsSomeRowsSelected(),
-                                                            onChange: table.getToggleAllRowsSelectedHandler(),
+                                                            onChange: getToggleAllRowsSelectedHandler(table),
                                                         }}
                                                     />
                                                 </div>

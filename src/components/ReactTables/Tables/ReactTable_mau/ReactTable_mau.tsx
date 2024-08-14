@@ -42,7 +42,8 @@ import { IndeterminateCheckbox } from '../../components/MainComponent/Others/Ind
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
-import {getDataVisibleColumn} from '../../components/MainComponent/Others/getDataVisibleColumn';
+import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
+import {getIsAllRowsSelected, getToggleAllRowsSelectedHandler} from '../../components/MainComponent/Others/RowsSelected'
 
 function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [] }) {
     const [dataDef, setDataDef] = useState(data);
@@ -167,7 +168,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         }
     }, [dataDef]);
 
-   
+
     useEffect(() => {
         const filteredUndefinedData = getSelectedData(table);
         if (onRowsSelect) {
@@ -175,14 +176,14 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         }
     }, [table.getState().rowSelection]);
 
-// chi lay ra cac o column khong bi an
+    // chi lay ra cac o column khong bi an
     useEffect(() => {
-        const filteredUndefinedData = getDataVisibleColumn(getSelectedData(table),table.getState().columnVisibility);
+        const filteredUndefinedData = getDataVisibleColumn(getSelectedData(table), table.getState().columnVisibility);
 
         if (onVisibleColumnDataSelect) {
             onVisibleColumnDataSelect(filteredUndefinedData);
         }
-    }, [table.getState().rowSelection,table.getState().columnVisibility]);
+    }, [table.getState().rowSelection, table.getState().columnVisibility]);
 
 
     // sử dụng để expanded all
@@ -286,9 +287,12 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
                                                 <div title="Select All/ Unselect All">
                                                     <IndeterminateCheckbox
                                                         {...{
-                                                            checked: table.getIsAllRowsSelected(),
+                                                            // checked: table.getIsAllRowsSelected(),
+                                                            // indeterminate: table.getIsSomeRowsSelected(),
+                                                            // onChange: table.getToggleAllRowsSelectedHandler(),
+                                                            checked: getIsAllRowsSelected(table),
                                                             indeterminate: table.getIsSomeRowsSelected(),
-                                                            onChange: table.getToggleAllRowsSelectedHandler(),
+                                                            onChange: getToggleAllRowsSelectedHandler(table),
                                                         }}
                                                     />
                                                 </div>

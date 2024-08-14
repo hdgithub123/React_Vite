@@ -37,12 +37,13 @@ import { useVirtualizer, notUndefined } from "@tanstack/react-virtual";
 import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
 import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
 import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
-import { ColumnVisibilityToggleBasic } from '../../components/MainComponent/Others/ColumnVisibilityToggle/ColumnVisibilityToggleBasic';
 import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { ButtonPanelBasic } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
+import {getIsAllRowsSelected, getToggleAllRowsSelectedHandler} from '../../components/MainComponent/Others/RowsSelected'
+
 
 function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleColumnDataSelect }) {
     const [dataDef, setDataDef] = useState(data);
@@ -266,9 +267,9 @@ function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleCo
                                                 <div title="Select All/ Unselect All">
                                                     <IndeterminateCheckbox
                                                         {...{
-                                                            checked: table.getIsAllRowsSelected(),
+                                                            checked: getIsAllRowsSelected(table),
                                                             indeterminate: table.getIsSomeRowsSelected(),
-                                                            onChange: table.getToggleAllRowsSelectedHandler(),
+                                                            onChange: getToggleAllRowsSelectedHandler(table),
                                                         }}
                                                     />
                                                 </div>

@@ -54,8 +54,8 @@ function ReactTableExample() {
             </div>
             <div className={styles.parent}>
                 
-{/*                 
-                <div className={styles.div3}>
+                
+                {/* <div className={styles.div3}>
                   
                     <ReactTableFull 
                     data={makeData} 
