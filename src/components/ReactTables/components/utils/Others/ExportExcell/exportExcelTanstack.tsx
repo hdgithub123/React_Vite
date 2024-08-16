@@ -15,6 +15,7 @@ export function exportExcelTanstack(data, filename, sheetName, columnsLeafvisibl
     const headers = convertColumnsToHeaders(columnsLeafvisibleFilter);
     const workbook = XLSX.utils.book_new();
 
+    console.log("columnsLeafvisible",columnsLeafvisible)
     // Tạo worksheet với nhiều hàng tiêu đề
     const wsWithHeaders = XLSX.utils.aoa_to_sheet(headers);
 

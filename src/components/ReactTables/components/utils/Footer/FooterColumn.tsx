@@ -1,29 +1,3 @@
-// tính tổng trên từng cột
-// export const SumFooter = (column, table) => {
-//   return table.getFilteredRowModel().rows.reduce((sum, row) => {
-//     const cellValue = row.getValue(column.id);
-//     return typeof cellValue === 'number' ? sum + cellValue : sum;
-//   }, 0);
-// };
-
-// export const AverageFooter = (column, table) => {
-//     const { sum, count } = table.getFilteredRowModel().rows.reduce((acc, row) => {
-//       const cellValue = row.getValue(column.id);
-//       if (typeof cellValue === 'number') {
-//         acc.sum += cellValue;
-//         acc.count += 1;
-//       }
-//       return acc;
-//     }, { sum: 0, count: 0 });
-  
-//     return count > 0 ? sum / count : 0;
-//   };
-  
-
-  // export const CountFooter = (table) => {
-  //   return table.getFilteredRowModel().rows.length;
-  // };
-
 
 // tính tổng trên từng cột
 export const SumFooter = (column, table) => {
@@ -44,7 +18,7 @@ export const SumFooter = (column, table) => {
   };
 
   // Start the calculation with the filtered row model
-  return calculateSum(table.getFilteredRowModel().rows);
+  return calculateSum(table.getRowModel().rows);
 };
 
 
@@ -73,7 +47,7 @@ export const AverageFooter = (column, table) => {
   };
 
   // Start calculation from the filtered row model
-  const { sum, count } = calculateSumAndCount(table.getFilteredRowModel().rows);
+  const { sum, count } = calculateSumAndCount(table.getRowModel().rows);
 
   return count > 0 ? sum / count : 0;
 };
@@ -96,30 +70,6 @@ export const CountFooter = (table) => {
   };
 
   // Start counting from the filtered row model
-  return countRows(table.getFilteredRowModel().rows);
+  return countRows(table.getRowModel().rows);
 };
 
-
-
-//ví dụ
-
-//   export const SumFooter = ({column, table}) => {
-//     // Recursive function to sum all rows, including sub-rows
-//     const calculateSum = (rows) => {
-//       return rows.reduce((sum, row) => {
-//         const cellValue = row.getValue(column.id);
-//         // If the cell value is a number, add it to the sum
-//         let rowSum = typeof cellValue === 'number' ? cellValue : 0;
-  
-//         // Recursively sum the sub-rows if they exist
-//         if (row.subRows && row.subRows.length > 0) {
-//           rowSum += calculateSum(row.subRows);
-//         }
-  
-//         return  sum + rowSum;
-//       }, 0);
-//     };
-
-//   // Start the calculation with the filtered row model
-//   return <div> {calculateSum(table.getFilteredRowModel().rows)}</div>
-// };

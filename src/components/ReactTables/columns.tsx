@@ -19,8 +19,8 @@ const columnscof = [
                 header: 'First Name',
                 id: 'firstName',
                 filterType: 'text',
-                // footer: info => `Count: ${CountFooter(info.table)}`,
                 footer: info => `Count: ${CountFooter(info.table)}`,
+                // footer: CountFooter,
                 cell: TextCell,
                 groupCell: TextGroupCell, // bo sung group cell
                 //cell: (info) => info.getValue(),
@@ -52,6 +52,11 @@ const columnscof = [
                 footer: (info) => <div style={{
                     textAlign: 'right',
                 }}>{`Sum: ${formatNumber(SumFooter(info.column, info.table), 0, 2)}`}</div>,
+
+
+                // footer: SumFooter,
+
+
                  filterType: 'number',
                 cell: ({ cell }) => (
                     <NumberCell
@@ -107,6 +112,7 @@ const columnscof = [
                         header: 'Profile Progress',
                         filterType: 'number',
                         footer: (info) => `Average: ${formatNumber(AverageFooter(info.column, info.table), 0, 2)}`,
+                        // footer: AverageFooter,
                         cell: ({ getValue }) =>
                             Math.round(getValue<number>() * 100) / 100 + '%',
                         aggregationFn: 'mean',
