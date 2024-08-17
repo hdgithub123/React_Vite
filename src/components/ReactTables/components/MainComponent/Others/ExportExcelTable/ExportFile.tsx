@@ -14,8 +14,8 @@ export const ExportFile = ({ table }) => {
             position='right'
         >
             <div className={styles.child}>
-                <div className={styles.child_item}><ExportExcelTable data={filteredUndefinedData} table={table} filename='My Select cell.xlsx'>Export Select Cell</ExportExcelTable></div>
-                <div className={styles.child_item}><ExportExcelTable data={filterData} table={table}>Export View Cell</ExportExcelTable></div>
+                <div className={styles.child_item}><ExportExcelTable data={filteredUndefinedData} table={table} filename='My Select cell.xlsx'>Export Select Rows</ExportExcelTable></div>
+                <div className={styles.child_item}><ExportExcelTable data={filterData} table={table}>Export View Rows</ExportExcelTable></div>
             </div>
         </DropableSelectHover>
     </>

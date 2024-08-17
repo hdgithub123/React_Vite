@@ -16,7 +16,7 @@
     border-radius: 4px;
     box-shadow: var(--Boxshadow);
     margin: 2px;
-    
+    user-select: none;
 }
 .child_item{
     display: flex;
