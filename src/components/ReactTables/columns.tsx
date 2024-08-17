@@ -35,7 +35,7 @@ const columnscof = [
                 id: 'lastName',
                 header: () => <span>Last Name</span>,
                 filterType: 'text',
-                cell: (info) =>  `Count: ${info.getValue()}`,
+                cell: (info) =>  info.getValue(),
                 groupCell: TextGroupCell,
             },
         ],
