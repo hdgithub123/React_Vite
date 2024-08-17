@@ -14,13 +14,13 @@ import { sortData } from './ExportExcellComponent/sortData';
  * @param {Array} columnVisibility - các cột nào được hiển thị
  * @param {Array} columnWidths - chinh độ rộng cho các cột [max-width, min-width, space-width] đơn vị tính là chữ cái
  */
-export function exportExcelTanstack(data, filename = "Myfile.xlsx", sheetName = "Sheet1", table, columnWidths = [80, 10, 3]) {
+export function exportExcelTanstack(data, filename = "Myfile.xlsx", sheetName = "Sheet1", table, isfooter = true, columnWidths = [80, 10, 3]) {
     const columnsLeafvisible = table.getAllLeafColumns()
     const columnVisibility = table.getState().columnVisibility
     const columnsLeafvisibleFilter = columnsLeafvisible.filter(item => columnVisibility[item.id] !== false);
     const sortedData = sortData(columnsLeafvisibleFilter, data);
     const headers = convertColumnsToHeaders(columnsLeafvisibleFilter);
-    const footerData = [footerExcelTanstack(table)]
+    const footerData = [footerExcelTanstack(data,table)]
     const workbook = XLSX.utils.book_new();
     // Tạo worksheet với nhiều hàng tiêu đề
     const wsWithHeaders = XLSX.utils.aoa_to_sheet(headers);
@@ -103,29 +103,35 @@ export function exportExcelTanstack(data, filename = "Myfile.xlsx", sheetName = 
         });
         wsWithHeaders['!cols'] = colWidths;
     }
-    const footerStartRow = headers.length + sortedData.length;
-    XLSX.utils.sheet_add_json(wsWithHeaders, footerData, { header: [], skipHeader: true, origin: footerStartRow });
-
-    // Định dạng cho footer với bôi đậm, nền vàng và chữ đen
-    const footerStyle = {
-        font: { bold: true }, // Bôi đậm tiêu đề
-        alignment: { horizontal: 'center', vertical: 'center', wrapText: true }, // Căn giữa
-        fill: { fgColor: { rgb: 'D2B48C' } } // Màu nền nâu (tan)
-    };
 
 
-    // Áp dụng định dạng cho footer
-    footerData.forEach((row, rowIndex) => {
-        Object.keys(row).forEach((key, colIndex) => {
-            const cellAddress = { c: colIndex, r: rowIndex + footerStartRow };
-            const cellRef = XLSX.utils.encode_cell(cellAddress);
+    if (isfooter) {
+        const footerStartRow = headers.length + sortedData.length;
+        XLSX.utils.sheet_add_json(wsWithHeaders, footerData, { header: [], skipHeader: true, origin: footerStartRow });
 
-            if (!wsWithHeaders[cellRef]) {
-                wsWithHeaders[cellRef] = {};
-            }
-            wsWithHeaders[cellRef].s = footerStyle;
+        // Định dạng cho footer với bôi đậm, nền vàng và chữ đen
+        const footerStyle = {
+            font: { bold: true }, // Bôi đậm tiêu đề
+            alignment: { horizontal: 'center', vertical: 'center', wrapText: true }, // Căn giữa
+            fill: { fgColor: { rgb: 'D2B48C' } } // Màu nền nâu (tan)
+        };
+
+
+        // Áp dụng định dạng cho footer
+        footerData.forEach((row, rowIndex) => {
+            Object.keys(row).forEach((key, colIndex) => {
+                const cellAddress = { c: colIndex, r: rowIndex + footerStartRow };
+                const cellRef = XLSX.utils.encode_cell(cellAddress);
+
+                if (!wsWithHeaders[cellRef]) {
+                    wsWithHeaders[cellRef] = {};
+                }
+                wsWithHeaders[cellRef].s = footerStyle;
+            });
         });
-    });
+
+
+    }
 
     // Thêm worksheet vào workbook
     XLSX.utils.book_append_sheet(workbook, wsWithHeaders, sheetName);

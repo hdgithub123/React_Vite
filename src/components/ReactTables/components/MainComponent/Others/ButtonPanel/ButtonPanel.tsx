@@ -5,6 +5,7 @@ import {ExportFile} from '../../Others/ExportExcelTable/ExportFile'
 import styles from './ButtonPanel.module.css';
 
 export const ButtonPanel = ({ table}) => {
+    console.log("table.getRowModel().rows",table.getRowModel().rows)
     return <>
         <DropableSelectClick
             droptitle={<div>::</div>}

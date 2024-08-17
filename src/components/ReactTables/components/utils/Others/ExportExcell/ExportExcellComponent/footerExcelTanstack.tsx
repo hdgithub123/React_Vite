@@ -1,6 +1,5 @@
-import { SumFooter, AverageFooter, CountFooter } from '../../../Footer/FooterColumn'
-
-export function footerExcelTanstack(table) {
+export function footerExcelTanstack(data, table ) {
+  console.log("data",data)
   let caculateItem
   const columnsLeafvisible = table.getAllLeafColumns()
   const columnVisibility = table.getState().columnVisibility
@@ -11,6 +10,7 @@ export function footerExcelTanstack(table) {
   let footerObject ={}
 
   columnsLeafvisibleFilter.map(item => {
+    console.log("item",item)
     let fuctionString = "";
     if (typeof item.columnDef.footer === 'function') {
       fuctionString = item.columnDef.footer.toString()
@@ -20,11 +20,14 @@ export function footerExcelTanstack(table) {
       caculateItem = ""
     } else {
       if (fuctionString.includes(functionSumFooterName)) {
-        caculateItem = "Sum: " + SumFooter(item, table).toString();
+        // caculateItem = "Sum: " + SumFooter(item, table).toString();
+        caculateItem = "Sum: " + calculateSum(item, data).toString();
       } else if (fuctionString.includes(functionAverageFooterName)) {
-        caculateItem = "Average: " + AverageFooter(item, table).toString();
+        // caculateItem = "Average: " + AverageFooter(item, table).toString();
+        caculateItem = "Average: " + calculateAverage(item, data).toString();
       } else if (fuctionString.includes(functionCountFooterName)) {
-        caculateItem = "Count: " + CountFooter(table).toString();
+        // caculateItem = "Count: " + CountFooter(table).toString();
+        caculateItem = "Count: " + countRows(data).toString();
       } else {
         caculateItem = ""
       }
@@ -34,3 +37,65 @@ export function footerExcelTanstack(table) {
   });
   return footerObject
 }
+
+
+const calculateSum = (column, rows) => {
+  return rows.reduce((sum, row) => {
+    const cellValue = row[column.id];
+    // If the cell value is a number, add it to the sum
+    let rowSum = typeof cellValue === 'number' ? cellValue : 0;
+
+    // Recursively sum the sub-rows if they exist
+    if (row.subRows && row.subRows.length > 0) {
+      rowSum += calculateSum(column,row.subRows);
+    }
+
+    return sum + rowSum;
+  }, 0);
+};
+
+
+const calculateAverage = (column, rows) => {
+  const calculateSumAndCount = (column, rows) => {
+    return rows.reduce(
+      (acc, row) => {
+        const cellValue = row[column.id];
+        if (typeof cellValue === 'number') {
+          acc.sum += cellValue;
+          acc.count += 1;
+        }
+  
+        // Recursively process sub-rows if they exist
+        if (row.subRows && row.subRows.length > 0) {
+          const subRowResult = calculateSumAndCount(column,row.subRows);
+          acc.sum += subRowResult.sum;
+          acc.count += subRowResult.count;
+        }
+  
+        return acc;
+      },
+      { sum: 0, count: 0 }
+    );
+  };
+
+    // Start calculation from the filtered row model
+    const { sum, count } = calculateSumAndCount(column, rows);
+    return count > 0 ? sum / count : 0;
+}
+
+
+
+
+
+const countRows = (rows) => {
+  return rows.reduce((acc, row) => {
+    let totalCount = acc + 1; // Count the current row
+
+    // Recursively count sub-rows if they exist
+    if (row.subRows && row.subRows.length > 0) {
+      totalCount += countRows(row.subRows);
+    }
+
+    return totalCount;
+  }, 0);
+};
