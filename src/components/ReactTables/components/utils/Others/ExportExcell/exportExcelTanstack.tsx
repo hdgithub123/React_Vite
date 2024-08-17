@@ -1,4 +1,9 @@
 import * as XLSX from 'xlsx-js-style';
+import { calculateColumnWidths } from './ExportExcellComponent/calculateColumnWidths';
+import { convertColumnsToHeaders } from './ExportExcellComponent/convertColumnsToHeaders';
+import { footerExcelTanstack } from './ExportExcellComponent/footerExcelTanstack';
+import { mergeHeaderCells } from './ExportExcellComponent/mergeHeaderCells';
+import { sortData } from './ExportExcellComponent/sortData';
 
 /**
  * Xuất dữ liệu từ JSON sang tệp Excel với nhiều hàng tiêu đề
@@ -9,20 +14,21 @@ import * as XLSX from 'xlsx-js-style';
  * @param {Array} columnVisibility - các cột nào được hiển thị
  * @param {Array} columnWidths - chinh độ rộng cho các cột [max-width, min-width, space-width] đơn vị tính là chữ cái
  */
-export function exportExcelTanstack(data, filename, sheetName, columnsLeafvisible, columnVisibility, columnWidths) {
+export function exportExcelTanstack(data, filename = "Myfile.xlsx", sheetName = "Sheet1", table, columnWidths = [80, 10, 3]) {
+    const columnsLeafvisible = table.getAllLeafColumns()
+    const columnVisibility = table.getState().columnVisibility
     const columnsLeafvisibleFilter = columnsLeafvisible.filter(item => columnVisibility[item.id] !== false);
     const sortedData = sortData(columnsLeafvisibleFilter, data);
     const headers = convertColumnsToHeaders(columnsLeafvisibleFilter);
+    const footerData = [footerExcelTanstack(table)]
     const workbook = XLSX.utils.book_new();
-
-    console.log("columnsLeafvisible",columnsLeafvisible)
     // Tạo worksheet với nhiều hàng tiêu đề
     const wsWithHeaders = XLSX.utils.aoa_to_sheet(headers);
 
     // Định dạng tiêu đề để bôi đậm, căn giữa và thay đổi màu nền
     const boldHeaderStyle = {
         font: { bold: true }, // Bôi đậm tiêu đề
-        alignment: { horizontal: 'center', vertical: 'center',wrapText: true }, // Căn giữa
+        alignment: { horizontal: 'center', vertical: 'center', wrapText: true }, // Căn giữa
         fill: { fgColor: { rgb: 'D2B48C' } } // Màu nền nâu (tan)
     };
 
@@ -97,146 +103,32 @@ export function exportExcelTanstack(data, filename, sheetName, columnsLeafvisibl
         });
         wsWithHeaders['!cols'] = colWidths;
     }
+    const footerStartRow = headers.length + sortedData.length;
+    XLSX.utils.sheet_add_json(wsWithHeaders, footerData, { header: [], skipHeader: true, origin: footerStartRow });
+
+    // Định dạng cho footer với bôi đậm, nền vàng và chữ đen
+    const footerStyle = {
+        font: { bold: true, color: { rgb: '000000' } }, // Chữ màu đen và bôi đậm
+        alignment: { horizontal: 'center', vertical: 'center' }, // Căn giữa
+        fill: { fgColor: { rgb: 'FFFF00' } } // Nền màu vàng
+    };
+
+
+    // Áp dụng định dạng cho footer
+    footerData.forEach((row, rowIndex) => {
+        Object.keys(row).forEach((key, colIndex) => {
+            const cellAddress = { c: colIndex, r: rowIndex + footerStartRow };
+            const cellRef = XLSX.utils.encode_cell(cellAddress);
+
+            if (!wsWithHeaders[cellRef]) {
+                wsWithHeaders[cellRef] = {};
+            }
+            wsWithHeaders[cellRef].s = footerStyle;
+        });
+    });
+
     // Thêm worksheet vào workbook
     XLSX.utils.book_append_sheet(workbook, wsWithHeaders, sheetName);
     // Ghi workbook ra file
     XLSX.writeFile(workbook, filename);
-}
-
-function sortData(arraySort, data) {
-    // Lấy thứ tự id từ arraySort
-    const order = arraySort.map(item => item.id);
-
-    // Sắp xếp dataB theo thứ tự id của arraySort
-    return data.map(item => {
-        const sortedItem = {};
-        order.forEach(id => {
-            if (item.hasOwnProperty(id)) {
-                sortedItem[id] = item[id];
-            }
-        });
-        return sortedItem;
-    });
-}
-
-
-/**
- * Chuyển đổi cấu trúc tiêu đề dạng cây thành mảng các hàng tiêu đề
- * @param {Array} columns - Cấu trúc tiêu đề dạng cây.
- * @returns {Array} - Mảng các hàng tiêu đề.
- */
-function convertColumnsToHeaders(columnsLeafVisible) {
-    const parentHeader = []
-
-    const getParentObj = (array) => {
-        const result = [];
-        for (let i = 0; i < array.length; i++) {
-            if (array[i].parent === undefined) {
-                result.push(array[i]);
-            } else {
-                result.push(array[i].parent);
-            }
-        }
-        return result;
-    };
-
-    const getMaxDepth = (array) => {
-        return Math.max(...array.map(obj => obj.depth));
-    };
-    const maxDepth = getMaxDepth(columnsLeafVisible)
-    let parentObj = getParentObj(columnsLeafVisible);
-
-    for (let i = 0; i < maxDepth; i++) {
-        parentHeader.push(parentObj);
-        parentObj = getParentObj(parentObj);
-
-    }
-    parentHeader.reverse();
-    parentHeader.push(columnsLeafVisible);
-
-    const headers = []
-    parentHeader.forEach(parentItem => {
-        let header = []
-        parentItem.forEach(item => {
-            if (typeof item.columnDef.header === 'string') {
-                header.push(item.columnDef.header);
-            } else {
-                header.push(item.id);
-            }
-        });
-        headers.push(header);
-    });
-
-    const rowCount = headers.length;
-    const colCount = headers[0] ? headers[0].length : 0;
-
-    for (let col = 0; col < colCount; col++) {
-        let currentHeader = headers[0][col];
-        for (let row = 0; row < rowCount - 1; row++) {
-            let nextHeader = headers[row + 1][col];
-
-            if (currentHeader === nextHeader) {
-                headers[row + 1][col] = "";
-            } else {
-                currentHeader = headers[row + 1][col];
-            }
-        }
-    }
-    return headers;
-}
-
-
-
-function mergeHeaderCells(ws, headers) {
-    const merges = [];
-    const rowCount = headers.length;
-    const colCount = headers[0] ? headers[0].length : 0;
-    // Merge theo hàng
-    for (let row = 0; row < rowCount; row++) {
-        let startAddress = { c: 0, r: row }
-        let endAddress = { c: 0, r: row }
-
-        for (let col = 0; col < colCount; col++) {
-            const currentHeader = headers[row][col];
-            const NextHeader = headers[row][col + 1];
-
-
-            if (currentHeader === NextHeader) {
-                // Merge các ô có cùng giá trị trên cùng một hàng
-                startAddress = { c: startAddress.c, r: startAddress.r };
-            } else {
-                endAddress = { c: col, r: row };
-                if (JSON.stringify(startAddress) !== JSON.stringify(endAddress) && (currentHeader !== null && currentHeader !== "")) {
-                    merges.push({ s: startAddress, e: endAddress });
-                }
-
-                startAddress = { c: col + 1, r: row };
-            }
-        }
-
-    }
-    // Định dạng merge cho các ô
-    ws['!merges'] = merges;
-}
-
-
-function calculateColumnWidths(data, columnKeys, spaceWidth) {
-    // Mảng lưu độ rộng cột tính toán cho từng cột
-    const colWidths = [];
-
-    // Duyệt qua các key của các cột
-    columnKeys.forEach((key, index) => {
-        // Tính toán độ rộng tối ưu cho cột hiện tại
-        const maxLength = Math.max(
-            ...data.map(row => row[key] ? row[key].toString().length : 0)
-        );
-
-        // Tính toán độ rộng của cột với khoảng trống bổ sung
-        const dataWidth = maxLength + spaceWidth;
-
-        // Đưa vào mảng với đơn vị là pixel, nhân với 10 để phù hợp với định dạng của XLSX
-        colWidths.push({ wpx: dataWidth });
-    });
-
-    return colWidths;
 }
