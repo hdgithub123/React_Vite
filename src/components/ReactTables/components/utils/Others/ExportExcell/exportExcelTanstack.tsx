@@ -108,9 +108,9 @@ export function exportExcelTanstack(data, filename = "Myfile.xlsx", sheetName = 
 
     // Định dạng cho footer với bôi đậm, nền vàng và chữ đen
     const footerStyle = {
-        font: { bold: true, color: { rgb: '000000' } }, // Chữ màu đen và bôi đậm
-        alignment: { horizontal: 'center', vertical: 'center' }, // Căn giữa
-        fill: { fgColor: { rgb: 'FFFF00' } } // Nền màu vàng
+        font: { bold: true }, // Bôi đậm tiêu đề
+        alignment: { horizontal: 'center', vertical: 'center', wrapText: true }, // Căn giữa
+        fill: { fgColor: { rgb: 'D2B48C' } } // Màu nền nâu (tan)
     };
 
 
