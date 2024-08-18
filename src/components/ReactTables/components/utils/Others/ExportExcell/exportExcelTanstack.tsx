@@ -14,7 +14,7 @@ import { sortData } from './ExportExcellComponent/sortData';
  * @param {Array} columnVisibility - các cột nào được hiển thị
  * @param {Array} columnWidths - chinh độ rộng cho các cột [max-width, min-width, space-width] đơn vị tính là chữ cái
  */
-export function exportExcelTanstack(data, exportFileName = "Myfile.xlsx", sheetName = "Sheet1", table , columnWidths = [80, 10, 3]) {
+export function exportExcelTanstack(data, table , exportFileName = "Myfile.xlsx", sheetName = "Sheet1", columnWidths = [80, 10, 3]) {
     const columnsLeafvisible = table.getAllLeafColumns()
     const columnVisibility = table.getState().columnVisibility
     const columnsLeafvisibleFilter = columnsLeafvisible.filter(item => columnVisibility[item.id] !== false);
@@ -91,10 +91,10 @@ export function exportExcelTanstack(data, exportFileName = "Myfile.xlsx", sheetN
         const spaceWidth = columnWidths[2]; // Khoảng trống bổ sung (pixel)
 
         // Lấy các khóa của các cột từ tiêu đề (cột cuối cùng trong headers)
-        const columnKeys = headers[headers.length - 1].map((_, index) => Object.keys(data[0])[index]);
+        const columnKeys = headers[headers.length - 1].map((_, index) => Object.keys(sortedData[0])[index]);
 
         // Tính toán độ rộng cột
-        const colWidths = calculateColumnWidths(data, columnKeys, spaceWidth);
+        const colWidths = calculateColumnWidths(sortedData, columnKeys, spaceWidth);
 
         // Đảm bảo độ rộng không vượt quá maxColWidth và không nhỏ hơn minColWidth
         colWidths.forEach(colWidth => {
