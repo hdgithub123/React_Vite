@@ -14,7 +14,7 @@ import { sortData } from './ExportExcellComponent/sortData';
  * @param {Array} columnVisibility - các cột nào được hiển thị
  * @param {Array} columnWidths - chinh độ rộng cho các cột [max-width, min-width, space-width] đơn vị tính là chữ cái
  */
-export function exportExcelTanstack(data, filename = "Myfile.xlsx", sheetName = "Sheet1", table, isfooter = true, columnWidths = [80, 10, 3]) {
+export function exportExcelTanstack(data, exportFileName = "Myfile.xlsx", sheetName = "Sheet1", table , columnWidths = [80, 10, 3]) {
     const columnsLeafvisible = table.getAllLeafColumns()
     const columnVisibility = table.getState().columnVisibility
     const columnsLeafvisibleFilter = columnsLeafvisible.filter(item => columnVisibility[item.id] !== false);
@@ -54,13 +54,12 @@ export function exportExcelTanstack(data, filename = "Myfile.xlsx", sheetName = 
 
     // Định dạng cho hàng có kiểu "normal" (chữ màu đen)
     const dataStyleNormalRow = {
-        font: { color: { rgb: '000000' }, bold: false }, // Màu chữ đen
-        // alignment: { horizontal: 'left', vertical: 'center' } // Căn lề trái và căn giữa theo chiều dọc
+        font: { color: { rgb: '000000' }, bold: false }, 
     };
 
-    // Định dạng cho hàng có kiểu "group" hoặc "expand" (chữ màu vàng)
+    // Định dạng cho hàng có kiểu "group" hoặc "expand"
     const dataStyleGroupExpand = {
-        font: { color: { rgb: '000000' }, bold: true }, // Màu chữ vàng
+        font: { color: { rgb: '000000' }, bold: true }, 
     };
 
     // Áp dụng định dạng cho dữ liệu dựa trên typeofRow
@@ -105,7 +104,6 @@ export function exportExcelTanstack(data, filename = "Myfile.xlsx", sheetName = 
     }
 
 
-    if (isfooter) {
         const footerStartRow = headers.length + sortedData.length;
         XLSX.utils.sheet_add_json(wsWithHeaders, footerData, { header: [], skipHeader: true, origin: footerStartRow });
 
@@ -130,11 +128,8 @@ export function exportExcelTanstack(data, filename = "Myfile.xlsx", sheetName = 
             });
         });
 
-
-    }
-
     // Thêm worksheet vào workbook
     XLSX.utils.book_append_sheet(workbook, wsWithHeaders, sheetName);
     // Ghi workbook ra file
-    XLSX.writeFile(workbook, filename);
+    XLSX.writeFile(workbook, exportFileName);
 }

@@ -18,7 +18,7 @@ export const SumFooter = (column, table) => {
   };
 
   // Start the calculation with the filtered row model
-  return calculateSum(table.getRowModel().rows);
+  return calculateSum(table.getFilteredRowModel ().rows);
 };
 
 
@@ -47,7 +47,7 @@ export const AverageFooter = (column, table) => {
   };
 
   // Start calculation from the filtered row model
-  const { sum, count } = calculateSumAndCount(table.getRowModel().rows);
+  const { sum, count } = calculateSumAndCount(table.getFilteredRowModel().rows);
 
   return count > 0 ? sum / count : 0;
 };
@@ -70,6 +70,6 @@ export const CountFooter = (table) => {
   };
 
   // Start counting from the filtered row model
-  return countRows(table.getRowModel().rows);
+  return countRows(table.getFilteredRowModel().rows);
 };
 

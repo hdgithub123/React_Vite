@@ -90,6 +90,7 @@ function ReactTableExample() {
                   onRowsSelect={handleRowsSelect}
                   onDataChange={handleDataChange}
                   onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
+                  exportFileName={'day la file cua toi.xlsx'}
                   //grouped={['firstName','age']}
                   >
                   </ReactTable_mau>

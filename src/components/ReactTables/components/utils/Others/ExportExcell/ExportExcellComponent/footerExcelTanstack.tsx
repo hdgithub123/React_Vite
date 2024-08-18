@@ -36,16 +36,21 @@ export function footerExcelTanstack(data, table ) {
 
 const calculateSum = (column, rows) => {
   return rows.reduce((sum, row) => {
-    const cellValue = row[column.id];
-    // If the cell value is a number, add it to the sum
-    let rowSum = typeof cellValue === 'number' ? cellValue : 0;
+    if (row.typeofRow !== 'group'){
+      const cellValue = row[column.id];
+      // If the cell value is a number, add it to the sum
+      let rowSum = typeof cellValue === 'number' ? cellValue : 0;
+  
+      // Recursively sum the sub-rows if they exist
+      if (row.subRows && row.subRows.length > 0) {
+        rowSum += calculateSum(column,row.subRows);
+      }
+  
+      return sum + rowSum;
+    } else {
+      return sum;
+    } 
 
-    // Recursively sum the sub-rows if they exist
-    if (row.subRows && row.subRows.length > 0) {
-      rowSum += calculateSum(column,row.subRows);
-    }
-
-    return sum + rowSum;
   }, 0);
 };
 
@@ -54,12 +59,14 @@ const calculateAverage = (column, rows) => {
   const calculateSumAndCount = (column, rows) => {
     return rows.reduce(
       (acc, row) => {
-        const cellValue = row[column.id];
-        if (typeof cellValue === 'number') {
-          acc.sum += cellValue;
-          acc.count += 1;
-        }
-  
+        if (row.typeofRow !== 'group'){
+          const cellValue = row[column.id];
+          if (typeof cellValue === 'number') {
+            acc.sum += cellValue;
+            acc.count += 1;
+          }
+        } 
+        
         // Recursively process sub-rows if they exist
         if (row.subRows && row.subRows.length > 0) {
           const subRowResult = calculateSumAndCount(column,row.subRows);
@@ -84,13 +91,13 @@ const calculateAverage = (column, rows) => {
 
 const countRows = (rows) => {
   return rows.reduce((acc, row) => {
-    let totalCount = acc + 1; // Count the current row
-
-    // Recursively count sub-rows if they exist
-    if (row.subRows && row.subRows.length > 0) {
-      totalCount += countRows(row.subRows);
+    if (row.typeofRow !== 'group') {
+      acc += 1; // Count the current row
+      // Recursively count sub-rows if they exist
+      if (row.subRows && row.subRows.length > 0) {
+        acc += countRows(row.subRows);
+      }
     }
-
-    return totalCount;
+    return acc; // Return the accumulator
   }, 0);
 };

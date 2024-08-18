@@ -45,7 +45,7 @@ import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/B
 import {getIsAllRowsSelected, getToggleAllRowsSelectedHandler} from '../../components/MainComponent/Others/RowsSelected'
 
 
-function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleColumnDataSelect }) {
+function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, exportFileName= "MyFile.xlsx" }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -239,7 +239,7 @@ function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleCo
         <div className={styles.general_table}>
             {/* Render các nút điều khiển */}
             <div className={styles.botton_dot}>
-                <ButtonPanel table={table}></ButtonPanel>
+                <ButtonPanel table={table} exportFileName= {exportFileName}></ButtonPanel>
             </div>
 
             <div className={styles.container}>
