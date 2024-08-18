@@ -1,5 +1,4 @@
 export function footerExcelTanstack(data, table ) {
-  console.log("data",data)
   let caculateItem
   const columnsLeafvisible = table.getAllLeafColumns()
   const columnVisibility = table.getState().columnVisibility
@@ -10,7 +9,6 @@ export function footerExcelTanstack(data, table ) {
   let footerObject ={}
 
   columnsLeafvisibleFilter.map(item => {
-    console.log("item",item)
     let fuctionString = "";
     if (typeof item.columnDef.footer === 'function') {
       fuctionString = item.columnDef.footer.toString()
@@ -20,13 +18,10 @@ export function footerExcelTanstack(data, table ) {
       caculateItem = ""
     } else {
       if (fuctionString.includes(functionSumFooterName)) {
-        // caculateItem = "Sum: " + SumFooter(item, table).toString();
         caculateItem = "Sum: " + calculateSum(item, data).toString();
       } else if (fuctionString.includes(functionAverageFooterName)) {
-        // caculateItem = "Average: " + AverageFooter(item, table).toString();
         caculateItem = "Average: " + calculateAverage(item, data).toString();
       } else if (fuctionString.includes(functionCountFooterName)) {
-        // caculateItem = "Count: " + CountFooter(table).toString();
         caculateItem = "Count: " + countRows(data).toString();
       } else {
         caculateItem = ""

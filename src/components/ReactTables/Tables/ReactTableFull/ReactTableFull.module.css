@@ -1,8 +1,10 @@
 :root {
   --HoverColour: aqua;
   --BackgroundColour: white;
-  --Border: 1px black solid;
-  --Boxshadow: 1px 1px brown;
+  --OutlineHeaderColour: 1px solid lightgray;
+  --OutlineBodyColour: 0.3px dotted lightgray;
+  --OutlineFooterColour: 1px solid lightgray;
+  --BorderFooterColour: 2px solid gray;
 }
 
 .general_table{
@@ -21,11 +23,10 @@
   display: flex;
 }
 
-/* sua tai day */
 .botton_dot{
   margin-left: 2px ;
   padding: 2px;
-  background-color: white;
+  background-color: var(--BackgroundColour);
   border: none;
   border-radius: 4px;
   text-align: center;
@@ -39,7 +40,6 @@
   opacity: 1;
 }
 
-/* sua tai day */
 
 .div_table_container {
   width: 100%;
@@ -47,18 +47,18 @@
   overflow-y: auto;
   overflow-x: auto;
   height: 100%;
-  background-color: white;
+  background-color: var(--BackgroundColour);
 }
 
 .div_table_container table {
-  width: 100%;
+  min-width: 100%;
   /* border-collapse: collapse; */
 }
 
 .div_table_container thead {
   position: sticky; /* make the table heads sticky */
   top: 0px; /* table head will be placed from the top of the table and sticks to it */
-  background-color: white;
+  background-color: var(--BackgroundColour);
 }
 
 .table_container{
@@ -76,47 +76,56 @@
 }
 
 .table_head th{
-  outline: 1px solid lightgray;
+  outline: var(--OutlineHeaderColour);
   padding: 2px;
 }
 
 .table_head td{
-  outline: 1px solid lightgray;
-  /* padding: 8px; */
+  outline: var(--OutlineHeaderColour);
 }
-
-  /* khong bi gioi han keo */
-/* .table_head td{
-  max-width: 0; 
-} */
 
 
 .table_body td{
-  outline: 0.3px dotted lightgray;
+  outline: var(--OutlineBodyColour);
   max-width: 0; /* khong bi gioi han keo */
 }
 
-/* khong bi gioi han keo */
-/* .foot_container td{
-  max-width: 0; 
-} */
 
 .table_body tr:hover {
-  background-color: aqua;
+  background-color: var(--HoverColour);
 }
 
 .table_footer{
   position: sticky; /* make the table heads sticky */
   bottom: 0px; /* table head will be placed from the top of the table and sticks to it */
-  background-color: white;
+  background-color: var(--BackgroundColour);
 }
 
 .table_footer_tr td{
-  outline: 1px solid lightgray;
-  border-Top: 2px solid gray;
-  border-Bottom: 2px solid gray;
+  outline: var(--OutlineFooterColour);
+  border-Top: var(--BorderFooterColour);
+  border-Bottom: var(--BorderFooterColour);
   font-Weight: bold;
 }
+
+
+.table_body_td_checkbox{
+  text-align: center;
+  width: 0%;
+}
+
+/* Cho checkbox */
+.table_head_tr_th_checkbox{
+  width: 0%;
+}
+
+.footer_checkbox{
+  width: 3px;
+  border-top: var(--BorderFooterColour);
+  border-bottom: var(--BorderFooterColour);
+}
+
+
 
 /* Custom Scrollbar for tbody */
 .div_table_container::-webkit-scrollbar {
@@ -137,21 +146,4 @@
 .div_table_container::-webkit-scrollbar-thumb:hover {
   background: #555; /* Color of the thumb on hover */
 }
-
-.table_body_td_checkbox{
-  text-align: center;
-  width: 0%;
-}
-
-/* Cho checkbox */
-.table_head_tr_th_checkbox{
-  width: 0%;
-}
-
-.footer_checkbox{
-  width: 3px;
-  border-top: 2px solid gray;
-  border-bottom: 2px solid gray;
-}
-
 

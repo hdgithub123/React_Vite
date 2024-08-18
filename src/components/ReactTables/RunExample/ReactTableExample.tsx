@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback, useRef, useMemo, CSSProperties } from
 import React from 'react'
 import styles from './ReactTableExample.module.css';
 
-import { formatDate } from './components/utils/cells/orinal/fomatCell';
-import EditableCell from './components/utils/cells/edit/EditableCell'
+import { formatDate } from '../components/utils/cells/orinal/fomatCell';
+import EditableCell from '../components/utils/cells/edit/EditableCell'
 
 
 
@@ -14,9 +14,9 @@ import ReactTableNomal from './Tables/ReactTableBase/ReactTableNomal/ReactTableN
 //import ReactTableSelect from './Tables/ReactTableBase/ReactTableSelect/ReactTableSelect';
 import ReactTableSelect from './Tables/ReactTableBase/ReactTableSelect_mau/ReactTableSelect_mau';
 import DndAndGroupTableWithCheckboxFilter from './DndAndGroupTableWithCheckboxFilter';
-import ReactTableFull from './Tables/ReactTableFull/ReactTableFull';
-import ReactTableBasic from './Tables/ReactTableBasic/ReactTableBasic';
-import ReactTable_mau from './Tables/ReactTable_mau/ReactTable_mau';
+import ReactTableFull from '../Tables/ReactTableFull/ReactTableFull';
+import ReactTableBasic from '../Tables/ReactTableBasic/ReactTableBasic';
+import ReactTable_mau from '../Tables/ReactTable_mau/ReactTable_mau';
 
 function ReactTableExample() {
     const [selectedData, setSelectedData] = useState(null); // State to store the selected data from the table
@@ -68,8 +68,8 @@ function ReactTableExample() {
                     >
                     </ReactTableFull>
                 </div> */}
-{/*                 
-                <div className={styles.div4}>
+                
+                {/* <div className={styles.div4}>
                     <h1>ReactTableBasic</h1>
                     <ReactTableBasic 
                     data={makeData} 
@@ -88,6 +88,7 @@ function ReactTableExample() {
                   columns={columns} 
                   onRowSelect={handleRowSelect} 
                   onRowsSelect={handleRowsSelect}
+                  onDataChange={handleDataChange}
                   onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
                   //grouped={['firstName','age']}
                   >

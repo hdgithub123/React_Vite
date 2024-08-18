@@ -28,11 +28,12 @@ export const DraggableTableHeader = ({ header }) => {
         position: 'relative',
         transform: CSS.Translate.toString(transform),
         transition: 'width transform 0.2s ease-in-out',
-        whiteSpace: 'nowrap',
         width: header.column.getSize(),
         zIndex: isDragging ? 1 : 0,
         boxSizing: 'border-box',
-
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
     };
     return (
         <>

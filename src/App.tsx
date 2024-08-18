@@ -22,7 +22,7 @@
 
 
 //import TableComponent from './components/TableReactFull/TableUI/TableComponent';
-import ReactTableExample from './components/ReactTables/ReactTableExample';
+import ReactTableExample from './components/ReactTables/RunExample/ReactTableExample';
 import {DropableSelectExample} from './components/Z_Nhap/DropableSelectExample';
 
 //import GroupTable from './components/TableReactFull/GroupTable/GroupTable';

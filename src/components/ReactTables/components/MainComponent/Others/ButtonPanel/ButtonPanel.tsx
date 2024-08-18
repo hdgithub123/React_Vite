@@ -11,7 +11,7 @@ export const ButtonPanel = ({ table}) => {
             position='bottom'
         >
             <div className={styles.child}>
-                <div className={styles.child_item}><ExplandingRow table={table}></ExplandingRow></div>
+              {table.getCanSomeRowsExpand()?  <div className={styles.child_item}><ExplandingRow table={table}></ExplandingRow></div>:null}
                 <div className={styles.child_item}><ColumnVisibilityToggle table={table}></ColumnVisibilityToggle></div>
                 <div className={styles.child_item}><ExportFile table={table}></ExportFile></div>
             </div>
@@ -19,18 +19,5 @@ export const ButtonPanel = ({ table}) => {
     </>
 }
 
-export const ButtonPanelBasic = ({ table}) => {
-    return <>
-        <DropableSelectClick
-            droptitle={<div>::</div>}
-            position='bottom'
-        >
-            <div className={styles.child}>
-                <div className={styles.child_item}><ColumnVisibilityToggle table={table}></ColumnVisibilityToggle></div>
-                <div className={styles.child_item}><ExportFile table={table}></ExportFile></div>
-            </div>
-        </DropableSelectClick>
-    </>
-}
 
 
