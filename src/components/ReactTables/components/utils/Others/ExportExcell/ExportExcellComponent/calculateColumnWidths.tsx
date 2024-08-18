@@ -4,7 +4,7 @@ export function calculateColumnWidths(data, columnKeys, spaceWidth) {
 
     // Duyệt qua các key của các cột
     columnKeys.forEach((key, index) => {
-        if (key !== 'typeofRow') {
+        if (key !== '_typeofRow') {
             // Tính toán độ rộng tối ưu cho cột hiện tại
             const maxLength = Math.max(
                 ...data.map(row => row[key] ? row[key].toString().length : 0)

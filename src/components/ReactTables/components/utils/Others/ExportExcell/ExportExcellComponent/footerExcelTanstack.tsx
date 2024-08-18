@@ -36,7 +36,7 @@ export function footerExcelTanstack(data, table ) {
 
 const calculateSum = (column, rows) => {
   return rows.reduce((sum, row) => {
-    if (row.typeofRow !== 'group'){
+    if (row._typeofRow !== 'group'){
       const cellValue = row[column.id];
       // If the cell value is a number, add it to the sum
       let rowSum = typeof cellValue === 'number' ? cellValue : 0;
@@ -59,7 +59,7 @@ const calculateAverage = (column, rows) => {
   const calculateSumAndCount = (column, rows) => {
     return rows.reduce(
       (acc, row) => {
-        if (row.typeofRow !== 'group'){
+        if (row._typeofRow !== 'group'){
           const cellValue = row[column.id];
           if (typeof cellValue === 'number') {
             acc.sum += cellValue;
@@ -91,7 +91,7 @@ const calculateAverage = (column, rows) => {
 
 const countRows = (rows) => {
   return rows.reduce((acc, row) => {
-    if (row.typeofRow !== 'group') {
+    if (row._typeofRow !== 'group') {
       acc += 1; // Count the current row
       // Recursively count sub-rows if they exist
       if (row.subRows && row.subRows.length > 0) {

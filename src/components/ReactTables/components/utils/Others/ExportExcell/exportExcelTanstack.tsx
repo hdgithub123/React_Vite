@@ -70,7 +70,7 @@ export function exportExcelTanstack(data, table , exportFileName = "Myfile.xlsx"
 
             // Chọn định dạng dựa trên typeofRow
             let cellStyle = dataStyleNormalRow; // Mặc định là kiểu normal
-            if (row.typeofRow === "group" || row.typeofRow === "expand") {
+            if (row._typeofRow === "group" || row._typeofRow === "expand") {
                 cellStyle = dataStyleGroupExpand;
             }
 

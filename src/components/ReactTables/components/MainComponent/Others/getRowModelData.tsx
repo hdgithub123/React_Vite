@@ -3,19 +3,19 @@ export function getRowModelData<T>(table: Table<T>): T[] {
     let selectedData: T[] = [];
     const rows =  table.getRowModel().rows
     rows.forEach(row => {
-      let typeofRow = { typeofRow: 'nomal' }
+      let typeofRow = { _typeofRow: 'nomal' }
       // Skip processing group rows
       if (row.getIsGrouped()) {
-        typeofRow = { typeofRow: 'group' }
-        const emptyOriginal = Object.keys(row.original).reduce((acc, key) => {
-          acc[key] = "";
+        typeofRow = { _typeofRow: 'group' }
+        const newOriginal = Object.keys(row.original).reduce((acc, key) => {
+          acc[key] = row.getGroupingValue(key);
           return acc;
         }, {});
-        const GroupRow = { ...emptyOriginal, ...row._valuesCache, ...row._groupingValuesCache, ...typeofRow };
+        const GroupRow = { ...newOriginal, ...typeofRow };
         selectedData.push(GroupRow)
       } else {
         if (row.getCanExpand()) {
-          typeofRow = { typeofRow: 'expand' }
+          typeofRow = { _typeofRow: 'expand' }
           const ExpandRow = { ...row.original, ...typeofRow };
           selectedData.push(ExpandRow);
         } else {
