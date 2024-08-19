@@ -45,7 +45,7 @@ import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/B
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import {getIsAllRowsSelected, getToggleAllRowsSelectedHandler} from '../../components/MainComponent/Others/RowsSelected'
 
-function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFileName= "MyFile.xlsx" }) {
+function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = {name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description:null  } }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -257,7 +257,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
                         {/* Phần thả group column */}
                         <DropableContainerGroup >
                             <div className={styles.botton_dot}>
-                                <ButtonPanel table={table} exportFileName= {exportFileName}></ButtonPanel>
+                                <ButtonPanel table={table} exportFile= {exportFile}></ButtonPanel>
                             </div>
                             {/* <h1>Thả vào đây</h1> */}
                             {grouping.length > 0 ? (

@@ -5,7 +5,7 @@ import { ExportExcelTable } from "./ExportExcelTable";
 import { getSelectedData } from "../getSelectedData";
 import styles from './ExportFile.module.css';
 
-export const ExportFile = ({ table, exportFileName = "Myfile.xlsx" }) => {
+export const ExportFile = ({ table, exportFile = {name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null } }) => {
     const filteredUndefinedData = getDataVisibleColumn(getSelectedData(table), table.getState().columnVisibility);
     const filterData = getDataVisibleColumn(getRowModelData(table), table.getState().columnVisibility);
     return <>
@@ -14,8 +14,8 @@ export const ExportFile = ({ table, exportFileName = "Myfile.xlsx" }) => {
             position='right'
         >
             <div className={styles.child}>
-                <div className={styles.child_item}><ExportExcelTable data={filteredUndefinedData} table={table} exportFileName = {exportFileName}>Export Select</ExportExcelTable></div>
-                <div className={styles.child_item}><ExportExcelTable data={filterData} table={table} exportFileName = {exportFileName}>Export View</ExportExcelTable></div>
+                <div className={styles.child_item}><ExportExcelTable data={filteredUndefinedData} table={table} exportFile = {exportFile}>Export Select</ExportExcelTable></div>
+                <div className={styles.child_item}><ExportExcelTable data={filterData} table={table} exportFile = {exportFile}>Export View</ExportExcelTable></div>
             </div>
         </DropableSelectHover>
     </>
