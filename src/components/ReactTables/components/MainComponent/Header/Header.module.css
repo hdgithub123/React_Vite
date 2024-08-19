@@ -1,0 +1,54 @@
+/* căn chỉnh hiện thanh resize */
+.resizer {
+    position: absolute;
+    top: 0;
+    right: -0.1rem;
+    height: 100%;
+    width: 3px;
+    background: transparent;
+    cursor: col-resize;
+    user-select: none;
+    touch-action: none;
+  }
+  
+  .resizer.isResizing {
+    background: rgb(160, 160, 204);
+    opacity: 1;
+  }
+
+  .th_header_Grouped{
+    border: 1px sienna solid;
+  }
+
+
+  .th_header_general{
+    display: flex; 
+    justify-Content: space-between;
+    align-items: center;
+    position: relative;
+  }
+
+
+  .th_header_pined{
+    visibility: hidden;
+    border : none;
+    background : none;
+    opacity: 0.5;
+  }
+
+  .th_header_unpined{
+    border : none;
+    background : none;
+    opacity: 0.5;
+  }
+
+  .th_header_general:hover .th_header_pined {
+    visibility: visible; /* Hiển thị phần tử khi hover */
+  }
+
+
+  .th_header_unpin{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }

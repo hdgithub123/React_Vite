@@ -1,0 +1,186 @@
+.general{
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+
+/* .general::before{
+  content: "";
+  width: calc(100% + 6px);
+  height: calc(100% + 6px);
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  z-index: -1;
+  background-color: transparent;
+} */
+
+
+.title{
+  width: 100%;
+  height: auto;
+  padding: 2px;
+  box-sizing: border-box;
+}
+
+.child_Top,
+.child_Bottom, 
+.child_Left,
+.child_Right{
+  position: absolute;
+  width: auto;
+  padding: 2px;
+  box-sizing: border-box;
+  z-index: 4;
+}
+
+
+.child_Top{
+  bottom: 100%;
+  left: 0%;
+  margin-bottom: 2px;
+}
+
+.child_Bottom{
+  top: 100%;
+  left: 0%;
+  margin-top: 2px;
+  
+}
+.child_Left{
+  top: 0%;
+  right: 100%;
+  margin-right: 2px;
+  
+}
+.child_Right{
+  top: 0%;
+  left: 100%;
+  margin-left: 2px;
+}
+
+
+.child_Top::after,
+.child_Bottom::after, 
+.child_Left::after,
+.child_Right::after{
+  content: "";
+  position: absolute;
+  z-index: 4;
+}
+
+.child_Top::after{
+  width: 100%;
+  height: 3px;
+  top: 100%;
+  left: 0%;
+}
+.child_Bottom::after{
+  width: 100%;
+  height: 3px;
+  bottom: 100%;
+  left: 0%;
+} 
+.child_Left::after{
+  width: 3px;
+  height: 100%;
+  top: 0%;
+  left: 100%;
+}
+.child_Right::after{
+  width: 3px;
+  height: 100%;
+  top: 0%;
+  right: 100%;
+}
+
+
+.general_hover{
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+
+.title_hover{
+  width: 100%;
+  height: auto;
+  padding: 2px;
+  box-sizing: border-box;
+}
+
+.child_hover_Top,
+.child_hover_Bottom, 
+.child_hover_Left,
+.child_hover_Right{
+  position: absolute;
+  visibility: hidden;
+  width: auto;
+  padding: 2px;
+  box-sizing: border-box;
+}
+
+
+.child_hover_Top{
+  bottom: 100%;
+  left: 0%;
+  margin-bottom: 2px;
+}
+
+.child_hover_Bottom{
+  top: 100%;
+  left: 0%;
+  margin-top: 2px;
+  
+}
+.child_hover_Left{
+  top: 0%;
+  right: 100%;
+  margin-right: 2px;
+  
+}
+.child_hover_Right{
+  top: 0%;
+  left: 100%;
+  margin-left: 2px;
+}
+
+.child_hover_Top::after,
+.child_hover_Bottom::after, 
+.child_hover_Left::after,
+.child_hover_Right::after{
+  content: "";
+  position: absolute;
+  z-index: 5;
+}
+.child_hover_Top::after{
+  width: 100%;
+  height: 3px;
+  top: 100%;
+  left: 0%;
+}
+.child_hover_Bottom::after{
+  width: 100%;
+  height: 3px;
+  bottom: 100%;
+  left: 0%;
+} 
+.child_hover_Left::after{
+  width: 3px;
+  height: 100%;
+  top: 0%;
+  left: 100%;
+}
+.child_hover_Right::after{
+  width: 3px;
+  height: 100%;
+  top: 0%;
+  right: 100%;
+}
+
+.general_hover:hover .child_hover_Top, 
+.general_hover:hover .child_hover_Bottom, 
+.general_hover:hover .child_hover_Left, 
+.general_hover:hover .child_hover_Right{
+  visibility: visible; /* Hiển thị phần tử khi hover */
+  z-index: 2;
+}
