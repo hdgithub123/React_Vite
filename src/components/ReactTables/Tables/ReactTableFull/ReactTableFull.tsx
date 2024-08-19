@@ -42,10 +42,10 @@ import { IndeterminateCheckbox } from '../../components/MainComponent/Others/Ind
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
-import {getDataVisibleColumn} from '../../components/MainComponent/Others/getDataVisibleColumn';
-import {getIsAllRowsSelected, getToggleAllRowsSelectedHandler} from '../../components/MainComponent/Others/RowsSelected'
+import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
+import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 
-function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = {name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description:null  } }) {
+function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null } }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -161,6 +161,14 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
     };
 
+    useEffect(() => {
+        setDataDef(data)
+    }, [data]);
+
+    useEffect(() => {
+        setColumnOrder(() =>
+            columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
+    }, [columns]);
 
     useEffect(() => {
         if (onDataChange) {
@@ -177,12 +185,12 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
     // chi lay ra cac o column khong bi an
     useEffect(() => {
-        const filteredUndefinedData = getDataVisibleColumn(getSelectedData(table),table.getState().columnVisibility);
+        const filteredUndefinedData = getDataVisibleColumn(getSelectedData(table), table.getState().columnVisibility);
 
         if (onVisibleColumnDataSelect) {
             onVisibleColumnDataSelect(filteredUndefinedData);
         }
-    }, [table.getState().rowSelection,table.getState().columnVisibility]);
+    }, [table.getState().rowSelection, table.getState().columnVisibility]);
 
     // sử dụng để expanded all
     useEffect(() => {
@@ -255,7 +263,7 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
                         {/* Phần thả group column */}
                         <DropableContainerGroup >
                             <div className={styles.botton_dot}>
-                                <ButtonPanel table={table} exportFile= {exportFile}></ButtonPanel>
+                                <ButtonPanel table={table} exportFile={exportFile}></ButtonPanel>
                             </div>
                             {/* <h1>Thả vào đây</h1> */}
                             {grouping.length > 0 ? (
