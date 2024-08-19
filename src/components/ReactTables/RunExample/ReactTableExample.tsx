@@ -52,14 +52,14 @@ function ReactTableExample() {
     const btnclick2= ()=>{
         setData(generateRandomObjectiveArray(200))
         // setcl(columns2)
-        console.log("Data",Data)
+        // console.log("Data",Data)
     }
   
     return (
         <div>
             <div>
                 <button onClick={btnclick}> kich here</button>
-                <button onClick={btnclick2}> kich here 2</button>
+                <button onClick={btnclick2}> test data vs colum refresh</button>
             </div>
             <div className={styles.parent}>
                 
