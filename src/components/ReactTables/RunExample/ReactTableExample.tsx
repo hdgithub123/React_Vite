@@ -63,6 +63,7 @@ function ReactTableExample() {
                     onRowSelect={handleRowSelect} 
                     onRowsSelect={handleRowsSelect}
                     onDataChange={handleDataChange}
+                    exportFile= {{name:'day la file cua toi.xlsx', sheetName:'My Sheet' , title :"mỳile", description:'mo ta day nay'}}
                     onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
                     //grouped={['firstName','age']}
                     >
@@ -76,6 +77,7 @@ function ReactTableExample() {
                     columns={columns} 
                     onRowSelect={handleRowSelect} 
                     onRowsSelect={handleRowsSelect}
+                    exportFile= {{name:'day la file cua toi.xlsx', sheetName:'My Sheet' , title :"mỳile", description:'mo ta day nay'}}
                     onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
                     >
                     </ReactTableBasic>
@@ -90,7 +92,7 @@ function ReactTableExample() {
                   onRowsSelect={handleRowsSelect}
                   onDataChange={handleDataChange}
                   onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
-                  exportFile= {{name:'day la file cua toi.xlsx', sheetName:'My Sheet' , title :null, description:'mo ta day nay'}}
+                  exportFile= {{name:'day la file cua toi.xlsx', sheetName:'My Sheet' , title :"mỳile", description:'mo ta day nay'}}
                   //grouped={['firstName','age']}
                   >
                   </ReactTable_mau>
