@@ -86,7 +86,7 @@ const makeData1 = [
 
 
 
-  function generateRandomObjectiveArray(numbeRows) {
+export function generateRandomObjectiveArray(numbeRows) {
     const objectiveArray = [];
 
     for (let i = 0; i < numbeRows; i++) {
@@ -114,7 +114,7 @@ const makeData1 = [
     return objectiveArray;
 }
 
-function generateRandomName(length) {
+ function generateRandomName(length) {
     const characters = 'abcdefghijklmnopqrstuvwxyz';
     let randomName = '';
 
@@ -297,3 +297,4 @@ type Person = {
   // makeData1: data thuong, makeData2: 500 data thuong, 
   //makeDataSubrows1: 1000 subrow thuong, makeDataSubrows2 : subrow chi chi dinh
 export const makeData = makeData2
+export const makeDataphhu = makeData1

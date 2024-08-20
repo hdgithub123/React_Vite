@@ -30,7 +30,7 @@ import {
 } from '@dnd-kit/sortable';
 
 
-import styles from './ReactTableFull.module.css';
+import styles from './ReactTable_mau.module.css';
 import { useVirtualizer, notUndefined } from "@tanstack/react-virtual";
 import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
 import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
@@ -45,7 +45,7 @@ import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/B
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 
-function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null } }) {
+function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null } }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -170,11 +170,13 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
             columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
     }, [columns]);
 
+
     useEffect(() => {
         if (onDataChange) {
             onDataChange(dataDef);
         }
     }, [dataDef]);
+
 
     useEffect(() => {
         const filteredUndefinedData = getSelectedData(table);
@@ -191,6 +193,7 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
             onVisibleColumnDataSelect(filteredUndefinedData);
         }
     }, [table.getState().rowSelection, table.getState().columnVisibility]);
+
 
     // sử dụng để expanded all
     useEffect(() => {
@@ -283,7 +286,7 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
                     >
 
                         {/* Bắt đầu render table */}
-                        <table className={styles.table_container}>
+                        <table id={'React_table_id'} className={styles.table_container}>
                             <thead className={styles.table_head}>
                                 {table.getHeaderGroups().map((headerGroup, rowIndex) => (
                                     <tr className={styles.table_head_tr} key={headerGroup.id}>
@@ -293,6 +296,9 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
                                                 <div title="Select All/ Unselect All">
                                                     <IndeterminateCheckbox
                                                         {...{
+                                                            // checked: table.getIsAllRowsSelected(),
+                                                            // indeterminate: table.getIsSomeRowsSelected(),
+                                                            // onChange: table.getToggleAllRowsSelectedHandler(),
                                                             checked: getIsAllRowsSelected(table),
                                                             indeterminate: table.getIsSomeRowsSelected(),
                                                             onChange: getToggleAllRowsSelectedHandler(table),
@@ -386,6 +392,4 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
     );
 }
-export default ReactTableFull;
-
-
+export default ReactTable_mau;

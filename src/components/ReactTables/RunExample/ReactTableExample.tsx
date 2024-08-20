@@ -7,8 +7,8 @@ import EditableCell from '../components/utils/cells/edit/EditableCell'
 
 
 
-import {makeData} from './makeData';
-import columns from './columns';
+import {makeData,makeDataphhu,generateRandomObjectiveArray} from './makeData';
+import {columns, columns2 } from './columns';
 
 import ReactTableNomal from './Tables/ReactTableBase/ReactTableNomal/ReactTableNomal';
 //import ReactTableSelect from './Tables/ReactTableBase/ReactTableSelect/ReactTableSelect';
@@ -22,6 +22,8 @@ function ReactTableExample() {
     const [selectedData, setSelectedData] = useState(null); // State to store the selected data from the table
     const [selectedMoreData, setSelectedMoreData] = useState(null); // State to store the selected data from the table
     const [dataChange, setDataChange] = useState(null); // State to store the selected data from the table
+    const [Data, setData] = useState(makeData);
+    const [cl, setcl] = useState(columns);
     // Event handler when selecting a row in the table
     const handleRowSelect = (rowData) => {
         setSelectedData(rowData); // Update state with the selected row data
@@ -47,10 +49,17 @@ function ReactTableExample() {
         console.log("dataChange",dataChange)
     }
   
+    const btnclick2= ()=>{
+        setData(generateRandomObjectiveArray(200))
+        // setcl(columns2)
+        // console.log("Data",Data)
+    }
+  
     return (
         <div>
             <div>
                 <button onClick={btnclick}> kich here</button>
+                <button onClick={btnclick2}> test data vs colum refresh</button>
             </div>
             <div className={styles.parent}>
                 
@@ -86,8 +95,8 @@ function ReactTableExample() {
                 <div className={styles.div5}>
                   
                   <ReactTable_mau 
-                  data={makeData} 
-                  columns={columns} 
+                  data={Data} 
+                  columns={cl} 
                   onRowSelect={handleRowSelect} 
                   onRowsSelect={handleRowsSelect}
                   onDataChange={handleDataChange}

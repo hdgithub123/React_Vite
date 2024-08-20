@@ -42,10 +42,10 @@ import { TriStateCheckbox } from '../../components/MainComponent/Others/TriState
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
-import {getIsAllRowsSelected, getToggleAllRowsSelectedHandler} from '../../components/MainComponent/Others/RowsSelected'
+import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 
 
-function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, exportFile = {name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description:null  } }) {
+function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null } }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -161,6 +161,20 @@ function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleCo
 
     };
 
+    useEffect(() => {
+        setDataDef(data)
+    }, [data]);
+
+    useEffect(() => {
+        setColumnOrder(() =>
+            columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
+    }, [columns]);
+
+    useEffect(() => {
+        if (onDataChange) {
+            onDataChange(dataDef);
+        }
+    }, [dataDef]);
 
     useEffect(() => {
         const filteredUndefinedData = getSelectedData(table);
@@ -239,7 +253,7 @@ function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleCo
         <div className={styles.general_table}>
             {/* Render các nút điều khiển */}
             <div className={styles.botton_dot}>
-                <ButtonPanel table={table} exportFile= {exportFile}></ButtonPanel>
+                <ButtonPanel table={table} exportFile={exportFile}></ButtonPanel>
             </div>
 
             <div className={styles.container}>
