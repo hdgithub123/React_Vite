@@ -75,7 +75,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
     };
 
     const table = useReactTable({
-        data: dataDef,
+        data: data,
         columns,
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),

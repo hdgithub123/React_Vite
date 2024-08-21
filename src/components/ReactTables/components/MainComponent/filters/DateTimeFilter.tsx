@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
+import {DebouncedInput} from '../../utils/Others/DebouncedInput';
 
 function DateTimeFilter({ column }) {
     const [filterFn, setFilterFn] = useState('');
+    const [columnFilterValue, setcolumnFilterValue] = useState('');
     useEffect(() => {
         setFilterFn('EqualsDate');
         column.columnDef.filterFn = EqualsDateTime;
     }, []);
 
-    const FilterValue = useRef(null);
     const handleFilterChange = (e) => {
         setFilterFn(e.target.value);
         switch (e.target.value) {
@@ -32,33 +33,36 @@ function DateTimeFilter({ column }) {
             case 'EmptyDateTime':
                 column.columnDef.filterFn = EmptyDateTime;
                 break;
+            case 'ExistsDateTime':
+                column.columnDef.filterFn = ExistsDateTime;
+                break;
             default:
                 column.columnDef.filterFn = e.target.value;
         }
-
         if (e.target.value === "EmptyDateTime") {
             column.setFilterValue("0001-01-01 00:00")
-        } else if (FilterValue.current) {
-            column.setFilterValue(FilterValue.current);
+        } else if (columnFilterValue) {
+            column.setFilterValue(columnFilterValue);
         } else {
             column.setFilterValue(undefined); // or handle the empty case as needed
         }
-        
     };
 
-    function handelOnChange(e) {
-        column.setFilterValue(e.target.value) //ok đưa giá trị vào ô filter value
-        FilterValue.current = e.target.value
+    function handelOnChange(value) {
+        setcolumnFilterValue(value)
+        column.setFilterValue(value) //ok đưa giá trị vào ô filter value
     }
     return (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-            <input
-                type="datetime-local"
+            <DebouncedInput
                 style={{ width: 'calc(100% - 35px)', marginRight: '2px' }}
-                value={column.getFilterValue() || ''}
                 onChange={handelOnChange}
-                placeholder='Search...'
+                placeholder={`Search...`}
+                type="datetime-local"
+                value={(columnFilterValue ?? '') as string}
+            // debounce = {800}
             />
+
             <select style={{ width: '33px' }} value={filterFn} onChange={handleFilterChange}>
                 <option value="EqualsDateTime" title="Equal">=</option>
                 <option value="weakEqualsDateTime" title="Weak Equal">{'≤'}</option>
@@ -67,6 +71,7 @@ function DateTimeFilter({ column }) {
                 <option value="GreaterDateTime" title="Greater">{'>'}</option>
                 <option value="DifferentDateTime" title="Different">{'≠'}</option>
                 <option value="EmptyDateTime" title="Empty">∅</option>
+                <option value="ExistsDateTime" title="Exists">∃</option>
             </select>
         </div>
 
@@ -75,6 +80,12 @@ function DateTimeFilter({ column }) {
 }
 
 export default DateTimeFilter;
+
+const ExistsDateTime = (row, columnId, value) => {
+    const cellValue = row.getValue(columnId);
+    // Return true if the cell value is null or an empty string, otherwise return false
+    return cellValue !== null && cellValue !== '';
+}
 
 const EmptyDateTime = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);

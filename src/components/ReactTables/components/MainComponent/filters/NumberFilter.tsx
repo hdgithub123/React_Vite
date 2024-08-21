@@ -1,14 +1,14 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import {DebouncedInput} from '../../utils/Others/DebouncedInput';
 
 function NumberFilter({ column }) {
     const [filterFn, setFilterFn] = useState('');
-
+    const [columnFilterValue, setcolumnFilterValue] = useState('');
     useEffect(() => {
         setFilterFn('EqualsNumber');
         column.columnDef.filterFn = EqualsNumber;
     }, []);
 
-    const FilterValue = useRef(null);
     const handleFilterChange = (e) => {
         setFilterFn(e.target.value);
         switch (e.target.value) {
@@ -44,26 +44,27 @@ function NumberFilter({ column }) {
             column.setFilterValue("Empty")
         } else if (e.target.value === "ExistsNumber"){
             column.setFilterValue("Not Empty")
-        }else if (FilterValue.current) {
-            column.setFilterValue(FilterValue.current);
+        }else if (columnFilterValue) {
+            column.setFilterValue(columnFilterValue);
         } else {
             column.setFilterValue(undefined); // or handle the empty case as needed
         }
 
     };
 
-    function handelOnChange(e) {
-        column.setFilterValue(e.target.value) //ok đưa giá trị vào ô filter value
-        FilterValue.current = e.target.value
+    function handelOnChange(value) {
+        setcolumnFilterValue(value)
+        column.setFilterValue(value) //ok đưa giá trị vào ô filter value
     }
     return (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-            <input
-                type="text"
+               <DebouncedInput
                 style={{ width: 'calc(100% - 35px)', marginRight: '2px' }}
-                value={column.getFilterValue() || ''}
                 onChange={handelOnChange}
-                placeholder='Search...'
+                placeholder={`Search...`}
+                type="number"
+                value={(columnFilterValue ?? '') as string}
+            // debounce = {800}
             />
             <select style={{ width: '33px' }} value={filterFn} onChange={handleFilterChange}>
                 <option value="EqualsNumber" title="Equals">=</option>

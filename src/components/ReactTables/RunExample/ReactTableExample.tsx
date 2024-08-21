@@ -40,8 +40,8 @@ function ReactTableExample() {
     const handleDataChange =(rowData) => {
         setDataChange(rowData);
     };
-
-
+    var d3 = new Date();
+    console.log("time:-1",d3.getTime())
 
     const btnclick= ()=>{
         console.log("selectedMoreData",selectedMoreData)
@@ -50,7 +50,11 @@ function ReactTableExample() {
     }
   
     const btnclick2= ()=>{
-        setData(generateRandomObjectiveArray(200))
+        setData(generateRandomObjectiveArray(30000))
+        // setData(makeDataphhu)
+        console.log("Data",Data)
+        var d = new Date();
+        console.log("time:0",d.getTime())
         // setcl(columns2)
         // console.log("Data",Data)
     }

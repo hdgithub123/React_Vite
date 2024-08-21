@@ -1,13 +1,13 @@
-import { useState, useRef, useEffect } from 'react';
-
+import { useState, useEffect } from 'react';
+import {DebouncedInput} from '../../utils/Others/DebouncedInput';
 function DateFilter({ column }) {
     const [filterFn, setFilterFn] = useState('');
+    const [columnFilterValue, setcolumnFilterValue] = useState('');
     useEffect(() => {
         setFilterFn('EqualsDate');
         column.columnDef.filterFn = EqualsDate;
     }, []);
 
-    const FilterValue = useRef(null);
     const handleFilterChange = (e) => {
         setFilterFn(e.target.value);
         switch (e.target.value) {
@@ -42,28 +42,29 @@ function DateFilter({ column }) {
 
         if (e.target.value === "EmptyDate") {
             column.setFilterValue("0001-01-01")
-        } else if (e.target.value === "ExistsDate"){
+        } else if (e.target.value === "ExistsDate") {
             column.setFilterValue("0002-01-01")
-        }else if (FilterValue.current) {
-            column.setFilterValue(FilterValue.current);
+        } else if (columnFilterValue) {
+            column.setFilterValue(columnFilterValue);
         } else {
             column.setFilterValue(undefined); // or handle the empty case as needed
         }
 
     };
 
-    function handelOnChange(e) {
-        column.setFilterValue(e.target.value) //ok đưa giá trị vào ô filter value
-        FilterValue.current = e.target.value
+    function handelOnChange(value) {
+        setcolumnFilterValue(value)
+        column.setFilterValue(value) //ok đưa giá trị vào ô filter value
     }
     return (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-            <input
-                type="date"
+            <DebouncedInput
                 style={{ width: 'calc(100% - 35px)', marginRight: '2px' }}
-                value={column.getFilterValue() || ''}
                 onChange={handelOnChange}
-                placeholder='Search...'
+                placeholder={`Search...`}
+                type="date"
+                value={(columnFilterValue ?? '') as string}
+            // debounce = {800}
             />
             <select style={{ width: '33px' }} value={filterFn} onChange={handleFilterChange}>
                 <option value="EqualsDate" title="Equal">=</option>

@@ -19,7 +19,7 @@ const columnscof = [
                 header: 'First Name',
                 id: 'firstName',
                 filterType: 'text',
-                footer: info => `Count: ${CountFooter(info.table)}`,
+                footer: info => `Count: ${formatNumber(CountFooter(info.table),0,2)}`,
                 // footer: CountFooter,
                 cell: TextCell,
                 groupCell: TextGroupCell, // bo sung group cell
