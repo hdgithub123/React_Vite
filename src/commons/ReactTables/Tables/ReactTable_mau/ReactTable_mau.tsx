@@ -11,6 +11,7 @@ import {
     getFilteredRowModel,
     getFacetedRowModel,
     getFacetedUniqueValues,
+    getPaginationRowModel,
     getSortedRowModel,
 } from '@tanstack/react-table';
 
@@ -88,6 +89,15 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         }
     };
 
+    const [pagination, setPagination] = React.useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 500,
+      })
+
+
+
+
+
     const table = useReactTable({
         data: data,
         columns,
@@ -100,10 +110,12 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         enableSubRowSelection: false, // click on subrow not auto select
 
         getFilteredRowModel: getFilteredRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
         filterFns: {
             GlobalFilterFn, // Register the custom filter function
         },
-        state: { columnOrder, columnFilters, grouping, globalFilter, },
+        state: { columnOrder, columnFilters, grouping, globalFilter,pagination },
         onColumnFiltersChange: setColumnFilters,
         onColumnOrderChange: setColumnOrder,
         onGroupingChange: setGrouping,
@@ -412,6 +424,69 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
                         </table>
                     </div>
                 </DndContext>
+                <div className="flex items-center gap-2">
+        <button
+          className="border rounded p-1"
+          onClick={() => table.firstPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<<'}
+        </button>
+        <button
+          className="border rounded p-1"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<'}
+        </button>
+        <button
+          className="border rounded p-1"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {'>'}
+        </button>
+        <button
+          className="border rounded p-1"
+          onClick={() => table.lastPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {'>>'}
+        </button>
+        <span className="flex items-center gap-1">
+          <div>Page</div>
+          <strong>
+            {table.getState().pagination.pageIndex + 1} of{' '}
+            {table.getPageCount().toLocaleString()}
+          </strong>
+        </span>
+        <span className="flex items-center gap-1">
+          | Go to page:
+          <input
+            type="number"
+            min="1"
+            max={table.getPageCount()}
+            defaultValue={table.getState().pagination.pageIndex + 1}
+            onChange={e => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0
+              table.setPageIndex(page)
+            }}
+            className="border p-1 rounded w-16"
+          />
+        </span>
+        <select
+          value={table.getState().pagination.pageSize}
+          onChange={e => {
+            table.setPageSize(Number(e.target.value))
+          }}
+        >
+          {[10, 20, 30, 40, 50].map(pageSize => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
             </div>
         </div>
 

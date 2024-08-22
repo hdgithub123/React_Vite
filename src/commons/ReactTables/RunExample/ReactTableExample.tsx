@@ -50,7 +50,7 @@ function ReactTableExample() {
     }
   
     const btnclick2= ()=>{
-        setData(generateRandomObjectiveArray(100000))
+        setData(generateRandomObjectiveArray(500000))
         // setData(makeDataphhu)
         // console.log("Data",Data)
         // var d = new Date();
@@ -71,7 +71,7 @@ function ReactTableExample() {
                 {/* <div className={styles.div3}>
                   
                     <ReactTableFull 
-                    data={makeData} 
+                    data={Data} 
                     columns={columns} 
                     onRowSelect={handleRowSelect} 
                     onRowsSelect={handleRowsSelect}
@@ -84,7 +84,7 @@ function ReactTableExample() {
                     </ReactTableFull>
                 </div> */}
                 
-                <div className={styles.div4}>
+                {/* <div className={styles.div4}>
                     <h1>ReactTableBasic</h1>
                     <ReactTableBasic 
                     data={makeData} 
@@ -97,9 +97,9 @@ function ReactTableExample() {
                     isGlobalFilter = {true}
                     >
                     </ReactTableBasic>
-                </div>
+                </div> */}
                 
-                {/* <div className={styles.div5}>
+                <div className={styles.div5}>
                   
                   <ReactTable_mau 
                   data={Data} 
@@ -113,7 +113,7 @@ function ReactTableExample() {
                   isGlobalFilter = {true}
                   >
                   </ReactTable_mau>
-              </div> */}
+              </div>
 
 
             </div>
