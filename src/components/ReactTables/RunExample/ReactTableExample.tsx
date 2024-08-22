@@ -50,7 +50,7 @@ function ReactTableExample() {
     }
   
     const btnclick2= ()=>{
-        setData(generateRandomObjectiveArray(30000))
+        setData(generateRandomObjectiveArray(100000))
         // setData(makeDataphhu)
         console.log("Data",Data)
         var d = new Date();
