@@ -1,22 +1,29 @@
-export function calculateColumnWidths(data, columnKeys, spaceWidth) {
+
+// nâng cấp để tính nhiều dòng trong 1 file cứ 100,000 dòng sẽ tính 1 lần
+
+export function calculateColumnWidths(data, columnKeys, spaceWidth ) {
+    const chunkSize = 100000
     // Mảng lưu độ rộng cột tính toán cho từng cột
-    const colWidths = [];
+    const colWidths = Array(columnKeys.length).fill(0);
 
-    // Duyệt qua các key của các cột
-    columnKeys.forEach((key, index) => {
-        if (key !== '_typeofRow') {
-            // Tính toán độ rộng tối ưu cho cột hiện tại
-            const maxLength = Math.max(
-                ...data.map(row => row[key] ? row[key].toString().length : 0)
-            );
+    // Tính toán trong các chunk để tránh xử lý quá nhiều dòng một lúc
+    for (let i = 0; i < data.length; i += chunkSize) {
+        const chunk = data.slice(i, i + chunkSize);
 
-            // Tính toán độ rộng của cột với khoảng trống bổ sung
-            const dataWidth = maxLength + spaceWidth;
+        // Duyệt qua các key của các cột
+        columnKeys.forEach((key, index) => {
+            if (key !== '_typeofRow') {
+                // Tìm độ dài lớn nhất trong chunk hiện tại cho cột này
+                const maxLength = Math.max(
+                    ...chunk.map(row => row[key] ? row[key].toString().length : 0)
+                );
 
-            // Đưa vào mảng với đơn vị là pixel, nhân với 10 để phù hợp với định dạng của XLSX
-            colWidths.push({ wpx: dataWidth });
-        }
+                // Cập nhật độ rộng cột nếu maxLength trong chunk này lớn hơn
+                colWidths[index] = Math.max(colWidths[index], maxLength + spaceWidth);
+            }
+        });
+    }
 
-    });
-    return colWidths;
+    // Chuyển đổi độ rộng từ ký tự sang pixel (wpx)
+    return colWidths.map(width => ({ wpx: width }));
 }

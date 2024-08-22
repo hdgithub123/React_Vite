@@ -40,17 +40,21 @@ function ReactTableExample() {
     const handleDataChange =(rowData) => {
         setDataChange(rowData);
     };
-
-
+    // var d3 = new Date();
+    // console.log("time:-1",d3.getTime())
 
     const btnclick= ()=>{
         console.log("selectedMoreData",selectedMoreData)
         // console.log("makeData",makeData)
-        console.log("dataChange",dataChange)
+        // console.log("dataChange",dataChange)
     }
   
     const btnclick2= ()=>{
-        setData(generateRandomObjectiveArray(200))
+        setData(generateRandomObjectiveArray(300000))
+        // setData(makeDataphhu)
+        // console.log("Data",Data)
+        // var d = new Date();
+        // console.log("time:0",d.getTime())
         // setcl(columns2)
         // console.log("Data",Data)
     }

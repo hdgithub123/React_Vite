@@ -19,7 +19,7 @@ const columnscof = [
                 header: 'First Name',
                 id: 'firstName',
                 filterType: 'text',
-                footer: info => `Count: ${CountFooter(info.table)}`,
+                footer: info => `Count: ${formatNumber(CountFooter(info.table),0,2)}`,
                 // footer: CountFooter,
                 cell: TextCell,
                 groupCell: TextGroupCell, // bo sung group cell
@@ -391,7 +391,7 @@ const columnssubrowf = [
     },
 ]
 // columnscof : co footer, columnskof: columns1headercof, khong co footer, columnssubrowf: subrow co footer, 
-export const columns = columnscof
+export const columns = columnssubrowf
 export const columns2 = columnskof
 
 
