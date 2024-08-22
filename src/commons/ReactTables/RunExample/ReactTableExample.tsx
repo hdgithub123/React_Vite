@@ -40,21 +40,21 @@ function ReactTableExample() {
     const handleDataChange =(rowData) => {
         setDataChange(rowData);
     };
-    var d3 = new Date();
-    console.log("time:-1",d3.getTime())
+    // var d3 = new Date();
+    // console.log("time:-1",d3.getTime())
 
     const btnclick= ()=>{
         console.log("selectedMoreData",selectedMoreData)
         // console.log("makeData",makeData)
-        console.log("dataChange",dataChange)
+        // console.log("dataChange",dataChange)
     }
   
     const btnclick2= ()=>{
         setData(generateRandomObjectiveArray(100000))
         // setData(makeDataphhu)
-        console.log("Data",Data)
-        var d = new Date();
-        console.log("time:0",d.getTime())
+        // console.log("Data",Data)
+        // var d = new Date();
+        // console.log("time:0",d.getTime())
         // setcl(columns2)
         // console.log("Data",Data)
     }
@@ -79,24 +79,27 @@ function ReactTableExample() {
                     exportFile= {{name:'day la file cua toi.xlsx', sheetName:'My Sheet' , title :"mỳile", description:'mo ta day nay'}}
                     onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
                     //grouped={['firstName','age']}
+                    isGlobalFilter = {false}
                     >
                     </ReactTableFull>
                 </div> */}
                 
-                {/* <div className={styles.div4}>
+                <div className={styles.div4}>
                     <h1>ReactTableBasic</h1>
                     <ReactTableBasic 
                     data={makeData} 
                     columns={columns} 
                     onRowSelect={handleRowSelect} 
                     onRowsSelect={handleRowsSelect}
+                    onDataChange={handleDataChange}
                     exportFile= {{name:'day la file cua toi.xlsx', sheetName:'My Sheet' , title :"mỳile", description:'mo ta day nay'}}
                     onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
+                    isGlobalFilter = {true}
                     >
                     </ReactTableBasic>
-                </div> */}
+                </div>
                 
-                <div className={styles.div5}>
+                {/* <div className={styles.div5}>
                   
                   <ReactTable_mau 
                   data={Data} 
@@ -107,9 +110,10 @@ function ReactTableExample() {
                   onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
                   exportFile= {{name:'day la file cua toi.xlsx', sheetName:'My Sheet' , title :"mỳile", description:'mo ta day nay'}}
                   //grouped={['firstName','age']}
+                  isGlobalFilter = {true}
                   >
                   </ReactTable_mau>
-              </div>
+              </div> */}
 
 
             </div>

@@ -28,7 +28,7 @@ const columnscof = [
                  * override the value used for row grouping
                  * (otherwise, defaults to the value derived from accessorKey / accessorFn)
                  */
-                
+                // enableGlobalFilter: false,
             },
             {
                 accessorFn: (row) => row.lastName,

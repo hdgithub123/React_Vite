@@ -11,11 +11,7 @@ export function getSelectedData<T>(table: Table<T>): T[] {
       // Skip processing group rows
       if (isSelected && row.getIsGrouped()) {
         typeofRow = { _typeofRow: 'group' }
-        const newOriginal = Object.keys(row.original).reduce((acc, key) => {
-          acc[key] = row.getGroupingValue(key);
-          return acc;
-        }, {});
-        const GroupRow = { ...newOriginal, ...typeofRow };
+        const GroupRow = { ...row.original, ...typeofRow };
         selectedData.push(GroupRow)
       } else {
         if (isSelected && row.getCanExpand()) {

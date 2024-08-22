@@ -16,6 +16,7 @@ import {
 
 import {
     DndContext,
+    closestCenter,
     KeyboardSensor,
     MouseSensor,
     TouchSensor,
@@ -29,53 +30,65 @@ import {
     horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
+import { restrictToHorizontalAxis } from '@dnd-kit/modifiers'
 
-import styles from './ReactTable_mau.module.css';
+import styles from './ReactTableBasic.module.css';
 import { useVirtualizer, notUndefined } from "@tanstack/react-virtual";
 import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
 import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
 import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
-import { customCollisionDetection } from '../../components/MainComponent/Others/customCollisionDetection';
-import { DropableContainerGroup } from '../../components/MainComponent/Others/DropableContainerGroup/DropableContainerGroup';
-import { RenderHeaderByID } from '../../components/MainComponent/Others/DropableContainerGroup/RenderHeaderByID';
 import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
-import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
+import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
+import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
 
-function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null } }) {
+
+function ReactTableBasic({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
     );
-    const [grouping, setGrouping] = useState<GroupingState>(grouped)
+    const [grouping, setGrouping] = useState<GroupingState>([])
+    const [globalFilter, setGlobalFilter] = useState({ checkboxvalue: 'none', filterGlobalValue: '' })
 
-    const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
+    const GlobalFilterFn: FilterFn<any> = (rows, columnIds, filterValue) => {
+        const valueInColumnId = String(rows.original[columnIds])
+        const valueGlobalFilter = String(filterValue.filterGlobalValue)
+        let checkboxCheck
+        // const globalValueCheck = valueInColumnId.includes(valueGlobalFilter);
+        const globalValueCheck = valueInColumnId.toLowerCase().includes(valueGlobalFilter.toLowerCase());
+
         // Get the selected row IDs from the table state
         const selectedRowIds = table.getState().rowSelection;
         // If filterValue is true, return selected rows
-        if (filterValue === 'checked') {
+        if (filterValue.checkboxvalue === 'checked') {
             if (selectedRowIds[rows.id] === true) {
-                return true;
+                checkboxCheck = true;
             } else {
-                return false;
+                checkboxCheck = false;
             }
-        } else if (filterValue === 'unchecked') {
+        } else if (filterValue.checkboxvalue === 'unchecked') {
             if (selectedRowIds[rows.id] !== true) {
-                return true;
+                checkboxCheck = true;
             }
-            return false;
+            checkboxCheck = false;
         } else {
-            return true;
+            checkboxCheck = true;
         }
 
+        if (checkboxCheck && globalValueCheck) {
+            return true
+        } else {
+            return false
+        }
     };
 
     const table = useReactTable({
-        data: data,
+        data: dataDef,
         columns,
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
@@ -87,9 +100,9 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
         getFilteredRowModel: getFilteredRowModel(),
         filterFns: {
-            selectedFilter, // Register the custom filter function
+            GlobalFilterFn, // Register the custom filter function
         },
-        state: { columnOrder, columnFilters, grouping, },
+        state: { columnOrder, columnFilters, grouping, globalFilter, },
         onColumnFiltersChange: setColumnFilters,
         onColumnOrderChange: setColumnOrder,
         onGroupingChange: setGrouping,
@@ -97,7 +110,8 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         getGroupedRowModel: getGroupedRowModel(),
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues(),
-        globalFilterFn: 'selectedFilter',
+        onGlobalFilterChange: setGlobalFilter,
+        globalFilterFn: 'GlobalFilterFn',
         manualExpanding: false, // set bàng false thì có thể sử dụng cả useEffect để expanded
         autoResetExpanded: false, // set bang false thì tất cả các row được expanding bằng true thì không sử dụng cả useEffect
         meta: {
@@ -170,13 +184,11 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
             columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
     }, [columns]);
 
-
     useEffect(() => {
         if (onDataChange) {
             onDataChange(dataDef);
         }
     }, [dataDef]);
-
 
     useEffect(() => {
         const filteredUndefinedData = getSelectedData(table);
@@ -184,6 +196,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
             onRowsSelect(filteredUndefinedData);
         }
     }, [table.getState().rowSelection]);
+
 
     // chi lay ra cac o column khong bi an
     useEffect(() => {
@@ -193,7 +206,6 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
             onVisibleColumnDataSelect(filteredUndefinedData);
         }
     }, [table.getState().rowSelection, table.getState().columnVisibility]);
-
 
     // sử dụng để expanded all
     useEffect(() => {
@@ -207,14 +219,21 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
     };
 
     const handleTriStateCheckboxSelectChange = (value) => {
+        // Create a copy of the globalFilter object
+        let updatedFilter = { ...globalFilter };
+        // Update the checkboxvalue key based on the value
         if (value === true) {
-            table.setGlobalFilter('checked')
+            updatedFilter.checkboxvalue = 'checked';
         } else if (value === false) {
-            table.setGlobalFilter('unchecked')
+            updatedFilter.checkboxvalue = 'unchecked';
         } else {
-            table.setGlobalFilter('none')
+            updatedFilter.checkboxvalue = 'none';
         }
+
+        // Set the global filter with the updated object
+        setGlobalFilter(updatedFilter);
     };
+
     // bắt đầu render Virtual
 
     const { rows } = table.getRowModel()
@@ -253,40 +272,36 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
+            <div style={{display:'flex', alignItems: 'center', width:'100%'}}>
+                {/* Render các nút điều khiển */}
+                <div className={styles.botton_dot}>
+                    <ButtonPanel table={table} exportFile={exportFile}></ButtonPanel>
+                </div>
+
+                {/* Tạo Global Filter */}
+                {isGlobalFilter === true ? (<div style={{display:'flex', alignItems: 'center', width:'100%'}}>
+                    <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter}></GlobalFilter>
+                </div>) : null}
+            </div>
+
+
+
             <div className={styles.container}>
                 {/* Tạo Drop Group Area */}
                 <DndContext
-                    collisionDetection={customCollisionDetection}
+                    collisionDetection={closestCenter}
+                    modifiers={[restrictToHorizontalAxis]}
                     onDragEnd={handleDragEnd}
                     autoScroll={false}
                     sensors={sensors}
                 >
-                    <div className={styles.Dropable_Container_Group}>
-
-                        {/* Phần thả group column */}
-                        <DropableContainerGroup >
-                            <div className={styles.botton_dot}>
-                                <ButtonPanel table={table} exportFile={exportFile}></ButtonPanel>
-                            </div>
-                            {/* <h1>Thả vào đây</h1> */}
-                            {grouping.length > 0 ? (
-                                grouping.map((id) => (
-                                    <RenderHeaderByID key={id} columnID={id} columns={columns} setGrouping={setGrouping} grouping={grouping} />
-                                ))
-                            ) : (
-                                <div style={{ padding: '10px', fontSize: '14px', color: '#999', userSelect: 'none' }}>
-                                    Drag header to group
-                                </div>
-                            )}
-                        </DropableContainerGroup>
-                    </div>
                     <div
                         ref={parentRef}
                         className={styles.div_table_container}
                     >
 
                         {/* Bắt đầu render table */}
-                        <table id={'React_table_id'} className={styles.table_container}>
+                        <table className={styles.table_container}>
                             <thead className={styles.table_head}>
                                 {table.getHeaderGroups().map((headerGroup, rowIndex) => (
                                     <tr className={styles.table_head_tr} key={headerGroup.id}>
@@ -296,9 +311,6 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
                                                 <div title="Select All/ Unselect All">
                                                     <IndeterminateCheckbox
                                                         {...{
-                                                            // checked: table.getIsAllRowsSelected(),
-                                                            // indeterminate: table.getIsSomeRowsSelected(),
-                                                            // onChange: table.getToggleAllRowsSelectedHandler(),
                                                             checked: getIsAllRowsSelected(table),
                                                             indeterminate: table.getIsSomeRowsSelected(),
                                                             onChange: getToggleAllRowsSelectedHandler(table),
@@ -392,4 +404,6 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
     );
 }
-export default ReactTable_mau;
+export default ReactTableBasic;
+
+
