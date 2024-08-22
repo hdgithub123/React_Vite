@@ -5,11 +5,9 @@
 
 // import TableComponent from './components/CreateTableFilterComponent/TableComponent';
 // import TableComponentNoSelect from './components/CreateTableFilterComponentNoSelect/TableComponentNoSelect';
-//  import PopupComponent from './components/PopupComponent/PopupComponent';
 // import DropdownComponent from './components/DropdownComponent/DropdownComponent';
 
-// import CheckSearchBox from './components/SeachboxComponent/CheckSearchBox';
-// import SearchTableDropdownEx from './components/SearchTableDropdown/SearchTableDropdownEx'
+ import SearchTableDropdownEx from './commons/SearchTableDropdown/SearchTableDropdownEx'
  // import ReactTableEx from './components/ReactTable/ReactTableEx';
 // //import FilteringTable from './components/ReactTable/FilteringTable/FilteringTable';
 //import RowSelection from './components/ReactTable/RowSelection/RowSelection';
@@ -22,7 +20,7 @@
 
 
 //import TableComponent from './components/TableReactFull/TableUI/TableComponent';
-import ReactTableExample from './components/ReactTables/RunExample/ReactTableExample';
+import ReactTableExample from './commons/ReactTables/RunExample/ReactTableExample';
 import {DropableSelectExample} from './components/Z_Nhap/DropableSelectExample';
 
 //import GroupTable from './components/TableReactFull/GroupTable/GroupTable';
@@ -35,14 +33,20 @@ function App() {
 
   return (
       <>
-      {/* <SearchTableDropdownEx></SearchTableDropdownEx>
-      <p> end seach table</p> */}
+      <div style={{zIndex:'5', }}>
+      <SearchTableDropdownEx></SearchTableDropdownEx>
+      <p> end seach table</p>
+      </div>
+      
 
       {/* <GroupTable></GroupTable> */}
 
       {/* <DndTableRectFull></DndTableRectFull> */}
       <p> ReactTableExample</p>
-      <ReactTableExample></ReactTableExample>
+      <div style={{zIndex:'3'}}>
+        <ReactTableExample></ReactTableExample>
+      </div>
+     
 
       {/* <TableComponent></TableComponent> */}
      {/* <MutipleContainers></MutipleContainers> */}
@@ -58,12 +62,11 @@ function App() {
   
       {/* <FilteringTable></FilteringTable>
       <p> end seach FilteringTable</p> */}
-      {/* <CheckSearchBox></CheckSearchBox> */}
+
         {/* <h1>hello</h1>
       <RouterComponent></RouterComponent> */}
       {/* <TableComponent></TableComponent> */}
       {/* <TableComponentNoSelect></TableComponentNoSelect> */}
-      {/* <PopupComponent></PopupComponent> */}
 
     {/* <DropdownComponent></DropdownComponent> */}
 

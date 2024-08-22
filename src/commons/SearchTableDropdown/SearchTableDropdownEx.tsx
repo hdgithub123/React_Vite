@@ -58,7 +58,7 @@ const SearchTableDropdownEx = () => {
         columnDisplay={columnDisplay}
         columnSearch={columnSearch}
         displayValue="name"
-        DebounceTime={3}
+        DebounceTime={300}
         onItemSelect={handleItemSelect} // Pass the function to handle item selection
       />
     </div>
