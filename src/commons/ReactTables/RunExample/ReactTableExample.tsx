@@ -50,7 +50,7 @@ function ReactTableExample() {
     }
   
     const btnclick2= ()=>{
-        setData(generateRandomObjectiveArray(300000))
+        setData(generateRandomObjectiveArray(30000))
         // setData(makeDataphhu)
         // console.log("Data",Data)
         // var d = new Date();
@@ -107,6 +107,7 @@ function ReactTableExample() {
                   onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
                   exportFile= {{name:'day la file cua toi.xlsx', sheetName:'My Sheet' , title :"mỳile", description:'mo ta day nay'}}
                   //grouped={['firstName','age']}
+                  isGlobalFilter = {true}
                   >
                   </ReactTable_mau>
               </div>
