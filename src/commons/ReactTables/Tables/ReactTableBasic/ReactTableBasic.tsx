@@ -43,35 +43,48 @@ import { getSelectedData } from '../../components/MainComponent/Others/getSelect
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
+import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
 
 
-function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null } }) {
+function ReactTableBasic({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
     );
     const [grouping, setGrouping] = useState<GroupingState>([])
+    const [globalFilter, setGlobalFilter] = useState({ checkboxvalue: 'none', filterGlobalValue: '' })
 
-    const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
+    const GlobalFilterFn: FilterFn<any> = (rows, columnIds, filterValue) => {
+        const valueInColumnId = String(rows.original[columnIds])
+        const valueGlobalFilter = String(filterValue.filterGlobalValue)
+        let checkboxCheck
+        // const globalValueCheck = valueInColumnId.includes(valueGlobalFilter);
+        const globalValueCheck = valueInColumnId.toLowerCase().includes(valueGlobalFilter.toLowerCase());
+
         // Get the selected row IDs from the table state
         const selectedRowIds = table.getState().rowSelection;
         // If filterValue is true, return selected rows
-        if (filterValue === 'checked') {
+        if (filterValue.checkboxvalue === 'checked') {
             if (selectedRowIds[rows.id] === true) {
-                return true;
+                checkboxCheck = true;
             } else {
-                return false;
+                checkboxCheck = false;
             }
-        } else if (filterValue === 'unchecked') {
+        } else if (filterValue.checkboxvalue === 'unchecked') {
             if (selectedRowIds[rows.id] !== true) {
-                return true;
+                checkboxCheck = true;
             }
-            return false;
+            checkboxCheck = false;
         } else {
-            return true;
+            checkboxCheck = true;
         }
 
+        if (checkboxCheck && globalValueCheck) {
+            return true
+        } else {
+            return false
+        }
     };
 
     const table = useReactTable({
@@ -87,9 +100,9 @@ function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleCo
 
         getFilteredRowModel: getFilteredRowModel(),
         filterFns: {
-            selectedFilter, // Register the custom filter function
+            GlobalFilterFn, // Register the custom filter function
         },
-        state: { columnOrder, columnFilters, grouping, },
+        state: { columnOrder, columnFilters, grouping, globalFilter, },
         onColumnFiltersChange: setColumnFilters,
         onColumnOrderChange: setColumnOrder,
         onGroupingChange: setGrouping,
@@ -97,7 +110,8 @@ function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleCo
         getGroupedRowModel: getGroupedRowModel(),
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues(),
-        globalFilterFn: 'selectedFilter',
+        onGlobalFilterChange: setGlobalFilter,
+        globalFilterFn: 'GlobalFilterFn',
         manualExpanding: false, // set bàng false thì có thể sử dụng cả useEffect để expanded
         autoResetExpanded: false, // set bang false thì tất cả các row được expanding bằng true thì không sử dụng cả useEffect
         meta: {
@@ -205,14 +219,21 @@ function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleCo
     };
 
     const handleTriStateCheckboxSelectChange = (value) => {
+        // Create a copy of the globalFilter object
+        let updatedFilter = { ...globalFilter };
+        // Update the checkboxvalue key based on the value
         if (value === true) {
-            table.setGlobalFilter('checked')
+            updatedFilter.checkboxvalue = 'checked';
         } else if (value === false) {
-            table.setGlobalFilter('unchecked')
+            updatedFilter.checkboxvalue = 'unchecked';
         } else {
-            table.setGlobalFilter('none')
+            updatedFilter.checkboxvalue = 'none';
         }
+
+        // Set the global filter with the updated object
+        setGlobalFilter(updatedFilter);
     };
+
     // bắt đầu render Virtual
 
     const { rows } = table.getRowModel()
@@ -251,10 +272,19 @@ function ReactTableBasic({ data, columns, onRowSelect, onRowsSelect, onVisibleCo
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
-            {/* Render các nút điều khiển */}
-            <div className={styles.botton_dot}>
-                <ButtonPanel table={table} exportFile={exportFile}></ButtonPanel>
+            <div style={{display:'flex', alignItems: 'center', width:'100%'}}>
+                {/* Render các nút điều khiển */}
+                <div className={styles.botton_dot}>
+                    <ButtonPanel table={table} exportFile={exportFile}></ButtonPanel>
+                </div>
+
+                {/* Tạo Global Filter */}
+                {isGlobalFilter === true ? (<div style={{display:'flex', alignItems: 'center', width:'100%'}}>
+                    <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter}></GlobalFilter>
+                </div>) : null}
             </div>
+
+
 
             <div className={styles.container}>
                 {/* Tạo Drop Group Area */}

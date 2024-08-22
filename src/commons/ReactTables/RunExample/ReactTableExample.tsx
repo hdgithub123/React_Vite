@@ -79,24 +79,27 @@ function ReactTableExample() {
                     exportFile= {{name:'day la file cua toi.xlsx', sheetName:'My Sheet' , title :"mỳile", description:'mo ta day nay'}}
                     onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
                     //grouped={['firstName','age']}
+                    isGlobalFilter = {false}
                     >
                     </ReactTableFull>
                 </div> */}
                 
-                {/* <div className={styles.div4}>
+                <div className={styles.div4}>
                     <h1>ReactTableBasic</h1>
                     <ReactTableBasic 
                     data={makeData} 
                     columns={columns} 
                     onRowSelect={handleRowSelect} 
                     onRowsSelect={handleRowsSelect}
+                    onDataChange={handleDataChange}
                     exportFile= {{name:'day la file cua toi.xlsx', sheetName:'My Sheet' , title :"mỳile", description:'mo ta day nay'}}
                     onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
+                    isGlobalFilter = {true}
                     >
                     </ReactTableBasic>
-                </div> */}
+                </div>
                 
-                <div className={styles.div5}>
+                {/* <div className={styles.div5}>
                   
                   <ReactTable_mau 
                   data={Data} 
@@ -110,7 +113,7 @@ function ReactTableExample() {
                   isGlobalFilter = {true}
                   >
                   </ReactTable_mau>
-              </div>
+              </div> */}
 
 
             </div>

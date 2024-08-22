@@ -44,7 +44,7 @@ import { getSelectedData } from '../../components/MainComponent/Others/getSelect
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
-import { DebouncedInput } from '../../components/utils/Others/DebouncedInput';
+import {GlobalFilter} from '../../components/MainComponent/GlobalFilter/GlobalFilter';
 
 
 function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false}) {
@@ -56,7 +56,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
     const [grouping, setGrouping] = useState<GroupingState>(grouped)
     const [globalFilter, setGlobalFilter] = useState({ checkboxvalue: 'none', filterGlobalValue: '' })
 
-    const selectedFilter: FilterFn<any> = (rows, columnIds, filterValue) => {
+    const GlobalFilterFn: FilterFn<any> = (rows, columnIds, filterValue) => {
         const valueInColumnId = String(rows.original[columnIds])
         const valueGlobalFilter = String(filterValue.filterGlobalValue)
         let checkboxCheck
@@ -86,9 +86,6 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         } else {
             return false
         }
-
-
-
     };
 
     const table = useReactTable({
@@ -104,7 +101,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
         getFilteredRowModel: getFilteredRowModel(),
         filterFns: {
-            selectedFilter, // Register the custom filter function
+            GlobalFilterFn, // Register the custom filter function
         },
         state: { columnOrder, columnFilters, grouping, globalFilter, },
         onColumnFiltersChange: setColumnFilters,
@@ -115,7 +112,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues(),
         onGlobalFilterChange: setGlobalFilter,
-        globalFilterFn: 'selectedFilter',
+        globalFilterFn: 'GlobalFilterFn',
         manualExpanding: false, // set bàng false thì có thể sử dụng cả useEffect để expanded
         autoResetExpanded: false, // set bang false thì tất cả các row được expanding bằng true thì không sử dụng cả useEffect
         meta: {
@@ -239,14 +236,6 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         // Set the global filter with the updated object
         setGlobalFilter(updatedFilter);
     };
-    const [globalFilterValue, setGlobalFilterValue] = useState('');
-    const handelGlobalFilterOnChange = (value) => {
-        setGlobalFilterValue(value)
-        let updatedFilter = { ...globalFilter };
-        updatedFilter.filterGlobalValue = value
-        // Set the global filter with the updated object
-        setGlobalFilter(updatedFilter);
-    }
 
     // bắt đầu render Virtual
 
@@ -286,15 +275,9 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
     return (
         <div className={styles.general_table}>
             <div className={styles.container}>
+                {/* Tạo Global Filter */}
                 {isGlobalFilter === true ? (<div className={styles.globalFilter}>
-                    <DebouncedInput
-                        style={{ width: 'calc(100% - 6px)', marginRight: '2px' }}
-                        onChange={handelGlobalFilterOnChange}
-                        placeholder={`Search All...`}
-                        type="text"
-                        value={(globalFilterValue ?? '') as string}
-                    // debounce = {800}
-                    />
+                    <GlobalFilter globalFilter= {globalFilter} setGlobalFilter= {setGlobalFilter}></GlobalFilter>
                 </div>): null}
                 {/* Tạo Drop Group Area */}
                 <DndContext
