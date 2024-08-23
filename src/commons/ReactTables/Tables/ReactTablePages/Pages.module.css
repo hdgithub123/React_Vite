@@ -1,0 +1,31 @@
+.General{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-content: right;
+    margin: 5px;
+}
+
+.General button{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    height: 20px;
+}
+.pageview{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    height: 20px;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+.pageSelect{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    height: 20px;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+

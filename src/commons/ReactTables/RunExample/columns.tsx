@@ -28,7 +28,7 @@ const columnscof = [
                  * override the value used for row grouping
                  * (otherwise, defaults to the value derived from accessorKey / accessorFn)
                  */
-                
+                // enableGlobalFilter: false,
             },
             {
                 accessorFn: (row) => row.lastName,
@@ -391,7 +391,7 @@ const columnssubrowf = [
     },
 ]
 // columnscof : co footer, columnskof: columns1headercof, khong co footer, columnssubrowf: subrow co footer, 
-export const columns = columnssubrowf
+export const columns = columnscof
 export const columns2 = columnskof
 
 

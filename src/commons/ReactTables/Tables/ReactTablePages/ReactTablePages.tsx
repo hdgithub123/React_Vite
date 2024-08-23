@@ -11,6 +11,7 @@ import {
     getFilteredRowModel,
     getFacetedRowModel,
     getFacetedUniqueValues,
+    getPaginationRowModel,
     getSortedRowModel,
 } from '@tanstack/react-table';
 
@@ -30,7 +31,7 @@ import {
 } from '@dnd-kit/sortable';
 
 
-import styles from './ReactTableFull.module.css';
+import styles from './ReactTablePages.module.css';
 import { useVirtualizer, notUndefined } from "@tanstack/react-virtual";
 import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
 import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
@@ -44,9 +45,10 @@ import { getSelectedData } from '../../components/MainComponent/Others/getSelect
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
-import {GlobalFilter} from '../../components/MainComponent/GlobalFilter/GlobalFilter';
+import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
+import {Pages} from './Pages'
 
-function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null },isGlobalFilter = false }) {
+function ReactTablePages({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -80,15 +82,20 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
             checkboxCheck = true;
         }
 
-        if  (checkboxCheck && globalValueCheck) {
+        if (checkboxCheck && globalValueCheck) {
             return true
         } else {
             return false
         }
     };
 
+    const [pagination, setPagination] = React.useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 100,
+    })
+
     const table = useReactTable({
-        data: dataDef,
+        data: data,
         columns,
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
@@ -99,10 +106,12 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
         enableSubRowSelection: false, // click on subrow not auto select
 
         getFilteredRowModel: getFilteredRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        onPaginationChange: setPagination,
         filterFns: {
             GlobalFilterFn, // Register the custom filter function
         },
-        state: { columnOrder, columnFilters, grouping, globalFilter, },
+        state: { columnOrder, columnFilters, grouping, globalFilter, pagination },
         onColumnFiltersChange: setColumnFilters,
         onColumnOrderChange: setColumnOrder,
         onGroupingChange: setGrouping,
@@ -184,11 +193,13 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
             columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
     }, [columns]);
 
+
     useEffect(() => {
         if (onDataChange) {
             onDataChange(dataDef);
         }
     }, [dataDef]);
+
 
     useEffect(() => {
         const filteredUndefinedData = getSelectedData(table);
@@ -205,6 +216,7 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
             onVisibleColumnDataSelect(filteredUndefinedData);
         }
     }, [table.getState().rowSelection, table.getState().columnVisibility]);
+
 
     // sử dụng để expanded all
     useEffect(() => {
@@ -228,10 +240,11 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
         } else {
             updatedFilter.checkboxvalue = 'none';
         }
-    
+
         // Set the global filter with the updated object
         setGlobalFilter(updatedFilter);
     };
+
     // bắt đầu render Virtual
 
     const { rows } = table.getRowModel()
@@ -266,15 +279,14 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
             : [0, 0];
 
 
-
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
             <div className={styles.container}>
                 {/* Tạo Global Filter */}
                 {isGlobalFilter === true ? (<div className={styles.globalFilter}>
-                    <GlobalFilter globalFilter= {globalFilter} setGlobalFilter= {setGlobalFilter}></GlobalFilter>
-                </div>): null}
+                    <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter}></GlobalFilter>
+                </div>) : null}
                 {/* Tạo Drop Group Area */}
                 <DndContext
                     collisionDetection={customCollisionDetection}
@@ -307,7 +319,7 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
                     >
 
                         {/* Bắt đầu render table */}
-                        <table className={styles.table_container}>
+                        <table id={'React_table_id'} className={styles.table_container}>
                             <thead className={styles.table_head}>
                                 {table.getHeaderGroups().map((headerGroup, rowIndex) => (
                                     <tr className={styles.table_head_tr} key={headerGroup.id}>
@@ -317,6 +329,9 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
                                                 <div title="Select All/ Unselect All">
                                                     <IndeterminateCheckbox
                                                         {...{
+                                                            // checked: table.getIsAllRowsSelected(),
+                                                            // indeterminate: table.getIsSomeRowsSelected(),
+                                                            // onChange: table.getToggleAllRowsSelectedHandler(),
                                                             checked: getIsAllRowsSelected(table),
                                                             indeterminate: table.getIsSomeRowsSelected(),
                                                             onChange: getToggleAllRowsSelectedHandler(table),
@@ -405,11 +420,10 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
                         </table>
                     </div>
                 </DndContext>
+                <Pages table={table}></Pages>
             </div>
         </div>
 
     );
 }
-export default ReactTableFull;
-
-
+export default ReactTablePages;
