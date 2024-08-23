@@ -45,6 +45,7 @@ import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/B
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 import {GlobalFilter} from '../../components/MainComponent/GlobalFilter/GlobalFilter';
+import { DebouncedInput } from '../../components/utils/Others/DebouncedInput';
 
 
 function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false}) {
@@ -237,6 +238,75 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         setGlobalFilter(updatedFilter);
     };
 
+
+    // thu enter o day
+    const [headerHeight, setHeaderHeight] = useState(0); // Chiều cao của header
+    const inputRef = useRef(null); // Ref for input element
+    const listRef = useRef(null); // Ref for list element
+    const [selectedIndex, setSelectedIndex] = useState(-1); // Lưu trạng thái hàng được chọn
+    
+    useEffect(() => {
+        if (selectedIndex !== -1 && listRef.current) {
+          const listItem = listRef.current.querySelector(`tr:nth-child(${selectedIndex + 1})`);
+          if (listItem) {
+            const listItemRect = listItem.getBoundingClientRect();
+            const listContainerRect = listRef.current.getBoundingClientRect();
+            // Tính toán chiều cao của header
+            const theadHeight = listRef.current.querySelector('thead').getBoundingClientRect().height;
+            setHeaderHeight(theadHeight);
+    
+            // Tính toán vị trí của dòng được highlight trong phần hiển thị trừ đi chiều cao của header
+            const relativeTop = listItemRect.top - listContainerRect.top - headerHeight;
+            if (relativeTop < 0 || relativeTop + listItemRect.height > listContainerRect.height - headerHeight) {
+              listRef.current.scrollTop = listRef.current.scrollTop + relativeTop;
+            }
+          }
+        }
+      }, [selectedIndex, headerHeight]);
+
+
+const filteredData = table.getRowModel()
+
+      const handleKeyDown = (e) => {
+        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (e.key === 'ArrowUp') {
+            setSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
+            console.log("selectedIndex",selectedIndex)
+          } else if (e.key === 'ArrowDown') {
+            setSelectedIndex(prevIndex => Math.min(prevIndex + 1, filteredData.length - 1));
+            console.log("selectedIndex",selectedIndex)
+          }
+        } else if (e.key === 'Enter') {
+        //   handleSelectItem(filteredData[selectedIndex], selectedIndex);
+          inputRef.current.blur();
+          setShowList(false);
+        }
+      };
+
+    //   const handleSelectItem = (item, index) => {
+    //     // setSearchTerm(item[displayValue]);
+    //     // setSelectedIndex(index);
+    //     if (onItemSelect) {
+    //       onItemSelect(item);
+    //     }
+    //     setShowList(false);
+    //   };
+
+
+
+
+
+      const handelGlobalFilterOnChange = (value) => {
+        let updatedFilter = { ...globalFilter };
+        updatedFilter.filterGlobalValue = value
+        // Set the global filter with the updated object
+        setGlobalFilter(updatedFilter);
+    }
+
+
+
+
     // bắt đầu render Virtual
 
     const { rows } = table.getRowModel()
@@ -276,9 +346,19 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         <div className={styles.general_table}>
             <div className={styles.container}>
                 {/* Tạo Global Filter */}
-                {isGlobalFilter === true ? (<div className={styles.globalFilter}>
+                {/* {isGlobalFilter === true ? (<div className={styles.globalFilter}>
                     <GlobalFilter globalFilter= {globalFilter} setGlobalFilter= {setGlobalFilter}></GlobalFilter>
-                </div>): null}
+                </div>): null} */}
+                <DebouncedInput
+                    style={{ width: 'calc(100% - 6px)', marginRight: '2px' }}
+                    onChange={handelGlobalFilterOnChange}
+                    placeholder={`Search All...`}
+                    type="text"
+                    value={(globalFilter.checkboxvalue ?? '') as string}
+                    onKeyDown={handleKeyDown}
+                // debounce = {800}
+                />
+
                 {/* Tạo Drop Group Area */}
                 <DndContext
                     collisionDetection={customCollisionDetection}
@@ -286,25 +366,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
                     autoScroll={false}
                     sensors={sensors}
                 >
-                    <div className={styles.Dropable_Container_Group}>
 
-                        {/* Phần thả group column */}
-                        <DropableContainerGroup >
-                            <div className={styles.botton_dot}>
-                                <ButtonPanel table={table} exportFile={exportFile}></ButtonPanel>
-                            </div>
-                            {/* <h1>Thả vào đây</h1> */}
-                            {grouping.length > 0 ? (
-                                grouping.map((id) => (
-                                    <RenderHeaderByID key={id} columnID={id} columns={columns} setGrouping={setGrouping} grouping={grouping} />
-                                ))
-                            ) : (
-                                <div style={{ padding: '10px', fontSize: '14px', color: '#999', userSelect: 'none' }}>
-                                    Drag header to group
-                                </div>
-                            )}
-                        </DropableContainerGroup>
-                    </div>
                     <div
                         ref={parentRef}
                         className={styles.div_table_container}
@@ -360,7 +422,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
                                         const row = rows[virtualRow.index]
                                         return (
                                             <tr
-                                                className={styles.table_body_tr}
+                                                className={[styles.table_body_tr, index === selectedIndex ? styles.table_body_highlightkeymove : '']}
                                                 key={row.id}
                                                 onDoubleClick={() => handleRowClick(row.original)}
                                             >
