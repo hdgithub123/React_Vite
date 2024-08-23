@@ -11,6 +11,7 @@ import {
     getFilteredRowModel,
     getFacetedRowModel,
     getFacetedUniqueValues,
+    getPaginationRowModel,
     getSortedRowModel,
 } from '@tanstack/react-table';
 
@@ -30,7 +31,7 @@ import {
 } from '@dnd-kit/sortable';
 
 
-import styles from './ReactTable_mau.module.css';
+import styles from './ReactTablePages.module.css';
 import { useVirtualizer, notUndefined } from "@tanstack/react-virtual";
 import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
 import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
@@ -44,10 +45,10 @@ import { getSelectedData } from '../../components/MainComponent/Others/getSelect
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
-import {GlobalFilter} from '../../components/MainComponent/GlobalFilter/GlobalFilter';
+import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
+import {Pages} from './Pages'
 
-
-function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false}) {
+function ReactTablePages({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -81,12 +82,17 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
             checkboxCheck = true;
         }
 
-        if  (checkboxCheck && globalValueCheck) {
+        if (checkboxCheck && globalValueCheck) {
             return true
         } else {
             return false
         }
     };
+
+    const [pagination, setPagination] = React.useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 100,
+    })
 
     const table = useReactTable({
         data: data,
@@ -100,10 +106,12 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         enableSubRowSelection: false, // click on subrow not auto select
 
         getFilteredRowModel: getFilteredRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        onPaginationChange: setPagination,
         filterFns: {
             GlobalFilterFn, // Register the custom filter function
         },
-        state: { columnOrder, columnFilters, grouping, globalFilter, },
+        state: { columnOrder, columnFilters, grouping, globalFilter, pagination },
         onColumnFiltersChange: setColumnFilters,
         onColumnOrderChange: setColumnOrder,
         onGroupingChange: setGrouping,
@@ -232,7 +240,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         } else {
             updatedFilter.checkboxvalue = 'none';
         }
-    
+
         // Set the global filter with the updated object
         setGlobalFilter(updatedFilter);
     };
@@ -277,8 +285,8 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
             <div className={styles.container}>
                 {/* Tạo Global Filter */}
                 {isGlobalFilter === true ? (<div className={styles.globalFilter}>
-                    <GlobalFilter globalFilter= {globalFilter} setGlobalFilter= {setGlobalFilter}></GlobalFilter>
-                </div>): null}
+                    <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter}></GlobalFilter>
+                </div>) : null}
                 {/* Tạo Drop Group Area */}
                 <DndContext
                     collisionDetection={customCollisionDetection}
@@ -412,9 +420,10 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
                         </table>
                     </div>
                 </DndContext>
+                <Pages table={table}></Pages>
             </div>
         </div>
 
     );
 }
-export default ReactTable_mau;
+export default ReactTablePages;
