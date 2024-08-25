@@ -44,11 +44,11 @@ import { getSelectedData } from '../../components/MainComponent/Others/getSelect
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
-import {GlobalFilter} from '../../components/MainComponent/GlobalFilter/GlobalFilter';
+import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
 import { DebouncedInput } from '../../components/utils/Others/DebouncedInput';
 
 
-function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false}) {
+function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -82,7 +82,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
             checkboxCheck = true;
         }
 
-        if  (checkboxCheck && globalValueCheck) {
+        if (checkboxCheck && globalValueCheck) {
             return true
         } else {
             return false
@@ -233,7 +233,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         } else {
             updatedFilter.checkboxvalue = 'none';
         }
-    
+
         // Set the global filter with the updated object
         setGlobalFilter(updatedFilter);
     };
@@ -244,41 +244,62 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
     const inputRef = useRef(null); // Ref for input element
     const listRef = useRef(null); // Ref for list element
     const [selectedIndex, setSelectedIndex] = useState(-1); // Lưu trạng thái hàng được chọn
-    
+    const numberRowshidden = 10
+
     useEffect(() => {
-        if (selectedIndex !== -1 && listRef.current) {
-          const listItem = listRef.current.querySelector(`tr:nth-child(${selectedIndex + 1})`);
+        if (selectedIndex !== -1 && parentRef.current) {
+        const listItem = parentRef.current.querySelector(`tr[data-key="${selectedIndex}"]`);
           if (listItem) {
-            const listItemRect = listItem.getBoundingClientRect();
-            const listContainerRect = listRef.current.getBoundingClientRect();
+            const listItemRectTop = listItem.getBoundingClientRect().top;// vị tri top cua dòng được chọn
+            const listItemRectHeight = listItem.getBoundingClientRect().height // chiều cao của dòng được chọn
+
+            const listContainerRectTop = parentRef.current.getBoundingClientRect().top; // vi tri top tọa độ table
+            const listContainerRectHeight = parentRef.current.getBoundingClientRect().height;
+
             // Tính toán chiều cao của header
-            const theadHeight = listRef.current.querySelector('thead').getBoundingClientRect().height;
+            const theadHeight = parentRef.current.querySelector('thead').getBoundingClientRect().height; // chiều cao của phần header
+            const tfootheight = parentRef.current.querySelector('tfoot').getBoundingClientRect().height;
+            const tfootTop = parentRef.current.querySelector('tfoot').getBoundingClientRect().top; // vị trí top của footer
             setHeaderHeight(theadHeight);
-    
             // Tính toán vị trí của dòng được highlight trong phần hiển thị trừ đi chiều cao của header
-            const relativeTop = listItemRect.top - listContainerRect.top - headerHeight;
-            if (relativeTop < 0 || relativeTop + listItemRect.height > listContainerRect.height - headerHeight) {
-              listRef.current.scrollTop = listRef.current.scrollTop + relativeTop;
+            const relativeTop = listItemRectTop - listContainerRectTop - headerHeight; // khoảng cách từ dòng hiện tại đến cuối header
+            console.log("relativeTop",relativeTop)
+            console.log("tfootTop",tfootTop)
+            // if (relativeTop < 0 || relativeTop + listItemRectHeight +tfootheight  > listContainerRectHeight - headerHeight) {
+            if (relativeTop + listItemRectHeight +tfootheight  > listContainerRectHeight - headerHeight) {
+                parentRef.current.scrollTop = parentRef.current.scrollTop + relativeTop;
+            } else {
+                // const relativefooter = tfootTop - listItemRectTop + listItemRectHeight;
+                const relativefooter = -listItemRectTop + listContainerRectTop + listContainerRectHeight- 1* listItemRectHeight
+                console.log("relativefooter",relativefooter)
+                console.log("tfootTop - listItemRectTop",(tfootTop - listContainerRectTop - headerHeight -listItemRectHeight))
+                if ( relativeTop <= listItemRectHeight) {
+                    // parentRef.current.scrollTop = parentRef.current.scrollTop + (listContainerRectTop - headerHeight - tfootTop) + 6* listItemRectHeight;
+                    // parentRef.current.scrollTop = tfootTop - listContainerRectTop - headerHeight
+                    parentRef.current.scrollTop = parentRef.current.scrollTop - relativefooter;
+                    console.log("parentRef.current.scrollTop",parentRef.current.scrollTop)
+                }
             }
+            
           }
         }
-      }, [selectedIndex, headerHeight]);
+      }, [selectedIndex]);
 
 
-const filteredData = table.getRowModel()
+    const lengthData = table.getRowModel().rows.length
 
-      const handleKeyDown = (e) => {
+
+
+
+    const handleKeyDown = (e) => {
         if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
           e.preventDefault();
           if (e.key === 'ArrowUp') {
             setSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
-            console.log("selectedIndex",selectedIndex)
           } else if (e.key === 'ArrowDown') {
-            setSelectedIndex(prevIndex => Math.min(prevIndex + 1, filteredData.length - 1));
-            console.log("selectedIndex",selectedIndex)
+            setSelectedIndex(prevIndex => Math.min(prevIndex + 1, lengthData - 1));
           }
         } else if (e.key === 'Enter') {
-        //   handleSelectItem(filteredData[selectedIndex], selectedIndex);
           inputRef.current.blur();
           setShowList(false);
         }
@@ -297,7 +318,7 @@ const filteredData = table.getRowModel()
 
 
 
-      const handelGlobalFilterOnChange = (value) => {
+    const handelGlobalFilterOnChange = (value) => {
         let updatedFilter = { ...globalFilter };
         updatedFilter.filterGlobalValue = value
         // Set the global filter with the updated object
@@ -354,7 +375,7 @@ const filteredData = table.getRowModel()
                     onChange={handelGlobalFilterOnChange}
                     placeholder={`Search All...`}
                     type="text"
-                    value={(globalFilter.checkboxvalue ?? '') as string}
+                    value={(globalFilter.filterGlobalValue ?? '') as string}
                     onKeyDown={handleKeyDown}
                 // debounce = {800}
                 />
@@ -422,8 +443,9 @@ const filteredData = table.getRowModel()
                                         const row = rows[virtualRow.index]
                                         return (
                                             <tr
-                                                className={[styles.table_body_tr, index === selectedIndex ? styles.table_body_highlightkeymove : '']}
+                                                className={`${styles.table_body_tr} ${rows.indexOf(row) === selectedIndex ? styles.table_body_highlightkeymove : ''}`}
                                                 key={row.id}
+                                                data-key={row.id}
                                                 onDoubleClick={() => handleRowClick(row.original)}
                                             >
                                                 <td className={styles.table_body_td_checkbox}>
