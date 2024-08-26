@@ -88,7 +88,7 @@ function ReactTableExample() {
                     </ReactTableFull>
                 </div> */}
 
-                <div className={styles.div3}>
+                {/* <div className={styles.div3}>
                   
                   <ReactTableBasicArrowkey 
                   data={Data} 
@@ -102,7 +102,7 @@ function ReactTableExample() {
                   isGlobalFilter = {true}
                   >
                   </ReactTableBasicArrowkey>
-              </div>
+              </div> */}
 
 
                 {/* <div className={styles.div4}>
@@ -135,7 +135,7 @@ function ReactTableExample() {
                     </ReactTablePages>
                 </div> */}
 
-            <div className={styles.div5}>
+            {/* <div className={styles.div5}>
 
                     <ReactTableFullArrowkey
                         data={Data}
@@ -149,7 +149,7 @@ function ReactTableExample() {
                         isGlobalFilter={true}
                     >
                     </ReactTableFullArrowkey>
-                </div>
+                </div> */}
 
 
 
