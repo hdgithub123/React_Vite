@@ -245,36 +245,73 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
     const listRef = useRef(null); // Ref for list element
     const [selectedIndex, setSelectedIndex] = useState(-1); // Lưu trạng thái hàng được chọn
     
-    useEffect(() => {
-        if (selectedIndex !== -1 && listRef.current) {
-          const listItem = listRef.current.querySelector(`tr:nth-child(${selectedIndex + 1})`);
-          if (listItem) {
-            const listItemRect = listItem.getBoundingClientRect();
-            const listContainerRect = listRef.current.getBoundingClientRect();
-            // Tính toán chiều cao của header
-            const theadHeight = listRef.current.querySelector('thead').getBoundingClientRect().height;
-            setHeaderHeight(theadHeight);
+    // useEffect(() => {
+    //     if (selectedIndex !== -1 && parentRef.current) {
+    //       const listItem = parentRef.current.querySelector(`tr:nth-child(${selectedIndex + 1})`);
+    //       if (listItem) {
+    //         const listItemRect = listItem.getBoundingClientRect();
+    //         const listContainerRect = parentRef.current.getBoundingClientRect();
+    //         // Tính toán chiều cao của header
+    //         const theadHeight = parentRef.current.querySelector('thead').getBoundingClientRect().height;
+    //         setHeaderHeight(theadHeight);
     
-            // Tính toán vị trí của dòng được highlight trong phần hiển thị trừ đi chiều cao của header
-            const relativeTop = listItemRect.top - listContainerRect.top - headerHeight;
-            if (relativeTop < 0 || relativeTop + listItemRect.height > listContainerRect.height - headerHeight) {
-              listRef.current.scrollTop = listRef.current.scrollTop + relativeTop;
+    //         // Tính toán vị trí của dòng được highlight trong phần hiển thị trừ đi chiều cao của header
+    //         const relativeTop = listItemRect.top - listContainerRect.top - headerHeight;
+    //         // console.log("listItemRect.top",listItemRect.top)
+    //         // console.log("listContainerRect.top",listContainerRect.top)
+    //         console.log("relativeTop",relativeTop)
+    //         if (relativeTop < 0 || relativeTop + listItemRect.height > listContainerRect.height - headerHeight) {
+    //             parentRef.current.scrollTop = parentRef.current.scrollTop + relativeTop;
+    //         }
+    //       }
+    //     }
+    //   }, [selectedIndex, headerHeight]);
+
+
+    useEffect(() => {
+        const checkAndScroll = () => {
+          if (selectedIndex !== -1 && parentRef.current) {
+            const listItem = parentRef.current.querySelector(`tr:nth-child(${selectedIndex + 1})`);
+            if (listItem) {
+              // Giả sử bạn muốn sử dụng hàng liền kề phía trên
+              const adjacentRow = parentRef.current.querySelector(`tr:nth-child(${selectedIndex})`);
+              if (adjacentRow) {
+                const adjacentRowRect = adjacentRow.getBoundingClientRect();
+                const listContainerRect = parentRef.current.getBoundingClientRect();
+                const theadHeight = parentRef.current.querySelector('thead').getBoundingClientRect().height;
+                setHeaderHeight(theadHeight);
+      
+                const relativeTop = adjacentRowRect.top - listContainerRect.top - headerHeight;
+                if (relativeTop < 0 || relativeTop + adjacentRowRect.height > listContainerRect.height - headerHeight) {
+                  parentRef.current.scrollTop = parentRef.current.scrollTop + relativeTop;
+                }
+              }
             }
           }
-        }
+        };
+      
+        // Sử dụng setTimeout để đảm bảo hàng ảo đã được render
+        const timeoutId = setTimeout(checkAndScroll, 0);
+      
+        return () => clearTimeout(timeoutId);
       }, [selectedIndex, headerHeight]);
+      
+      
 
 
-const filteredData = table.getRowModel()
-
+const filteredData = table.getRowModel().rows.length
+// console.log("filteredData",filteredData)
+  
       const handleKeyDown = (e) => {
         if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
           e.preventDefault();
           if (e.key === 'ArrowUp') {
+            // setSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
             setSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
             console.log("selectedIndex",selectedIndex)
           } else if (e.key === 'ArrowDown') {
-            setSelectedIndex(prevIndex => Math.min(prevIndex + 1, filteredData.length - 1));
+            setSelectedIndex(prevIndex => Math.min(prevIndex + 1, filteredData));
+            // setSelectedIndex(prevIndex => prevIndex+1 );
             console.log("selectedIndex",selectedIndex)
           }
         } else if (e.key === 'Enter') {
@@ -330,7 +367,7 @@ const filteredData = table.getRowModel()
     });
 
     const items = virtualizer.getVirtualItems();
-
+    // const filteredData = items.length
 
     const [before, after] =
         items.length > 0
@@ -354,7 +391,7 @@ const filteredData = table.getRowModel()
                     onChange={handelGlobalFilterOnChange}
                     placeholder={`Search All...`}
                     type="text"
-                    value={(globalFilter.checkboxvalue ?? '') as string}
+                    value={(globalFilter.filterGlobalValue ?? '') as string}
                     onKeyDown={handleKeyDown}
                 // debounce = {800}
                 />
@@ -371,7 +408,6 @@ const filteredData = table.getRowModel()
                         ref={parentRef}
                         className={styles.div_table_container}
                     >
-
                         {/* Bắt đầu render table */}
                         <table id={'React_table_id'} className={styles.table_container}>
                             <thead className={styles.table_head}>
@@ -422,7 +458,8 @@ const filteredData = table.getRowModel()
                                         const row = rows[virtualRow.index]
                                         return (
                                             <tr
-                                                className={[styles.table_body_tr, index === selectedIndex ? styles.table_body_highlightkeymove : '']}
+                                                // className={styles.table_body_tr}
+                                                className={`${styles.table_body_tr} ${row.index === selectedIndex ? styles.table_body_highlightkeymove : ''}`}
                                                 key={row.id}
                                                 onDoubleClick={() => handleRowClick(row.original)}
                                             >

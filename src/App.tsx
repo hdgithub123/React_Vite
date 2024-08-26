@@ -9,7 +9,7 @@
 // import DropdownComponent from './components/DropdownComponent/DropdownComponent';
 
 // import CheckSearchBox from './components/SeachboxComponent/CheckSearchBox';
-// import SearchTableDropdownEx from './components/SearchTableDropdown/SearchTableDropdownEx'
+ import SearchTableDropdownEx from './commons/SearchTableDropdown/SearchTableDropdownEx'
  // import ReactTableEx from './components/ReactTable/ReactTableEx';
 // //import FilteringTable from './components/ReactTable/FilteringTable/FilteringTable';
 //import RowSelection from './components/ReactTable/RowSelection/RowSelection';

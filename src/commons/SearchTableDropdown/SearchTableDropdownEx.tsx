@@ -38,7 +38,7 @@ const SearchTableDropdownEx = () => {
     { id: 12, name: 'Kate', age: 75, email: 'kate@example.com', address: '777 Oak St' }
   ];
 
-  const columnDisplay = { name: 'Tên', age: 'Tuổi', address: 'Địa chỉ', email: 'Email',yearbirth:"Năm sinh"};
+  const columnDisplay = {id:'ID', name: 'Tên', age: 'Tuổi', address: 'Địa chỉ', email: 'Email',yearbirth:"Năm sinh"};
   const columnSearch = ['name', 'email'];
 
   // State variable to hold the selected item
