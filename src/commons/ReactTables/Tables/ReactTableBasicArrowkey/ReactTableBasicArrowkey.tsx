@@ -245,7 +245,16 @@ function ReactTableBasicArrowkey({ data, columns, onDataChange, onRowSelect, onR
 
     useEffect(() => {
         if (selectedIndex !== -1 && parentRef.current) {
-            const listItem = parentRef.current.querySelector(`tr[data-key="${selectedIndex}"]`);
+            const listItemSelect = parentRef.current.querySelector(`tr[data-key="${selectedIndex}"]`);
+            const firstItem = parentRef.current.querySelector('tbody tr:nth-child(2)');
+            const dataKey = firstItem.getAttribute('data-key');
+            let listItem = null
+            if (listItemSelect){
+                listItem = listItemSelect
+            } else{
+                listItem = firstItem
+                setSelectedIndex(+dataKey);
+            }
             if (listItem) {
                 const listItemRectTop = listItem.getBoundingClientRect().top;// vị tri top cua dòng được chọn
                 const listItemRectHeight = listItem.getBoundingClientRect().height // chiều cao của dòng được chọn
@@ -258,18 +267,19 @@ function ReactTableBasicArrowkey({ data, columns, onDataChange, onRowSelect, onR
                 // Tính toán vị trí của dòng được highlight trong phần hiển thị trừ đi chiều cao của header
                 const relativeTop = listItemRectTop - listContainerRectTop - headerHeight; // khoảng cách từ dòng hiện tại đến cuối header
                 const relativefooter = tfootTop - listItemRectTop + listItemRectHeight - tfootheight;
-                if (relativefooter < tfootheight) {   
-                    parentRef.current.scrollTop = parentRef.current.scrollTop - relativefooter + tfootheight;
+                if (relativeTop < 0) {
+                    parentRef.current.scrollTop = parentRef.current.scrollTop + relativeTop;
+                    // parentRef.current.scrollTop = parentRef.current.scrollTop - relativefooter + tfootheight; // nếu dùng cái này thì sẽ scoll lên top
                 } else {
-                    if (relativeTop < 0 ){
-                        parentRef.current.scrollTop = parentRef.current.scrollTop + relativeTop;
+                    if ( relativefooter < tfootheight) {
+                        // parentRef.current.scrollTop = parentRef.current.scrollTop + relativeTop; // nếu dùng cái này thì sẽ scoll xuống bottom
+                        parentRef.current.scrollTop = parentRef.current.scrollTop - relativefooter + tfootheight;
                     }
                 }
 
             }
         }
     }, [selectedIndex]);
-
 
     const lengthData = table.getRowModel().rows.length
     const updateSelectedIndex = useMemo(()=>{
