@@ -242,48 +242,34 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
     // thu enter o day
     const [headerHeight, setHeaderHeight] = useState(0); // Chiều cao của header
     const inputRef = useRef(null); // Ref for input element
-    const listRef = useRef(null); // Ref for list element
     const [selectedIndex, setSelectedIndex] = useState(-1); // Lưu trạng thái hàng được chọn
-    const numberRowshidden = 10
 
     useEffect(() => {
         if (selectedIndex !== -1 && parentRef.current) {
-        const listItem = parentRef.current.querySelector(`tr[data-key="${selectedIndex}"]`);
-          if (listItem) {
-            const listItemRectTop = listItem.getBoundingClientRect().top;// vị tri top cua dòng được chọn
-            const listItemRectHeight = listItem.getBoundingClientRect().height // chiều cao của dòng được chọn
-
-            const listContainerRectTop = parentRef.current.getBoundingClientRect().top; // vi tri top tọa độ table
-            const listContainerRectHeight = parentRef.current.getBoundingClientRect().height;
-
-            // Tính toán chiều cao của header
-            const theadHeight = parentRef.current.querySelector('thead').getBoundingClientRect().height; // chiều cao của phần header
-            const tfootheight = parentRef.current.querySelector('tfoot').getBoundingClientRect().height;
-            const tfootTop = parentRef.current.querySelector('tfoot').getBoundingClientRect().top; // vị trí top của footer
-            setHeaderHeight(theadHeight);
-            // Tính toán vị trí của dòng được highlight trong phần hiển thị trừ đi chiều cao của header
-            const relativeTop = listItemRectTop - listContainerRectTop - headerHeight; // khoảng cách từ dòng hiện tại đến cuối header
-            console.log("relativeTop",relativeTop)
-            console.log("tfootTop",tfootTop)
-            // if (relativeTop < 0 || relativeTop + listItemRectHeight +tfootheight  > listContainerRectHeight - headerHeight) {
-            if (relativeTop + listItemRectHeight +tfootheight  > listContainerRectHeight - headerHeight) {
-                parentRef.current.scrollTop = parentRef.current.scrollTop + relativeTop;
-            } else {
-                // const relativefooter = tfootTop - listItemRectTop + listItemRectHeight;
-                const relativefooter = -listItemRectTop + listContainerRectTop + listContainerRectHeight- 1* listItemRectHeight
-                console.log("relativefooter",relativefooter)
-                console.log("tfootTop - listItemRectTop",(tfootTop - listContainerRectTop - headerHeight -listItemRectHeight))
-                if ( relativeTop <= listItemRectHeight) {
-                    // parentRef.current.scrollTop = parentRef.current.scrollTop + (listContainerRectTop - headerHeight - tfootTop) + 6* listItemRectHeight;
-                    // parentRef.current.scrollTop = tfootTop - listContainerRectTop - headerHeight
-                    parentRef.current.scrollTop = parentRef.current.scrollTop - relativefooter;
-                    console.log("parentRef.current.scrollTop",parentRef.current.scrollTop)
+            const listItem = parentRef.current.querySelector(`tr[data-key="${selectedIndex}"]`);
+            if (listItem) {
+                const listItemRectTop = listItem.getBoundingClientRect().top;// vị tri top cua dòng được chọn
+                const listItemRectHeight = listItem.getBoundingClientRect().height // chiều cao của dòng được chọn
+                const listContainerRectTop = parentRef.current.getBoundingClientRect().top; // vi tri top tọa độ table
+                // Tính toán chiều cao của header
+                const theadHeight = parentRef.current.querySelector('thead').getBoundingClientRect().height; // chiều cao của phần header
+                const tfootheight = parentRef.current.querySelector('tfoot').getBoundingClientRect().height;
+                const tfootTop = parentRef.current.querySelector('tfoot').getBoundingClientRect().top; // vị trí top của footer
+                setHeaderHeight(theadHeight);
+                // Tính toán vị trí của dòng được highlight trong phần hiển thị trừ đi chiều cao của header
+                const relativeTop = listItemRectTop - listContainerRectTop - headerHeight; // khoảng cách từ dòng hiện tại đến cuối header
+                const relativefooter = tfootTop - listItemRectTop + listItemRectHeight - tfootheight;
+                if (relativefooter < tfootheight) {   
+                    parentRef.current.scrollTop = parentRef.current.scrollTop - relativefooter + tfootheight;
+                } else {
+                    if (relativeTop < 0 ){
+                        parentRef.current.scrollTop = parentRef.current.scrollTop + relativeTop;
+                    }
                 }
+
             }
-            
-          }
         }
-      }, [selectedIndex]);
+    }, [selectedIndex]);
 
 
     const lengthData = table.getRowModel().rows.length
@@ -293,30 +279,18 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
     const handleKeyDown = (e) => {
         if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-          e.preventDefault();
-          if (e.key === 'ArrowUp') {
-            // setSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
-            setSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
-          } else if (e.key === 'ArrowDown') {
-            setSelectedIndex(prevIndex => Math.min(prevIndex + 1, lengthData - 1));
-          }
+            e.preventDefault();
+            if (e.key === 'ArrowUp') {
+                // setSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
+                setSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
+            } else if (e.key === 'ArrowDown') {
+                setSelectedIndex(prevIndex => Math.min(prevIndex + 1, lengthData - 1));
+            }
         } else if (e.key === 'Enter') {
-          inputRef.current.blur();
-          setShowList(false);
+            inputRef.current.blur();
+            setShowList(false);
         }
-      };
-
-    //   const handleSelectItem = (item, index) => {
-    //     // setSearchTerm(item[displayValue]);
-    //     // setSelectedIndex(index);
-    //     if (onItemSelect) {
-    //       onItemSelect(item);
-    //     }
-    //     setShowList(false);
-    //   };
-
-
-
+    };
 
 
     const handelGlobalFilterOnChange = (value) => {
@@ -325,8 +299,6 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         // Set the global filter with the updated object
         setGlobalFilter(updatedFilter);
     }
-
-
 
 
     // bắt đầu render Virtual
@@ -352,7 +324,6 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
     });
 
     const items = virtualizer.getVirtualItems();
-    // const filteredData = items.length
 
     const [before, after] =
         items.length > 0

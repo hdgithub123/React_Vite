@@ -149,9 +149,6 @@
 }
 
 
-
-
-
 .table_body_highlightkeymove {
-  background-color: #e42020; /* Màu nền highlight */
+  background-color:  var(--HoverColour); /* Màu nền highlight */
 }
