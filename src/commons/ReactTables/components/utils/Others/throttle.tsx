@@ -1,4 +1,4 @@
-export const throttle = (func, delay) => {
+export const throttle = (func, delay = 200) => {
     let lastCall = 0;
     return (...args) => {
       const now = new Date().getTime();
