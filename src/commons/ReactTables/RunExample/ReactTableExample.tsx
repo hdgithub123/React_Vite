@@ -179,12 +179,13 @@ function ReactTableExample() {
             {selectedData && (
                 <div style={{ display: 'flex', }}>
                     <h2>Selected Data</h2>
-                    <p>ID: {selectedData.firstName}</p>
-                    <p>Name: {selectedData.lastName}</p>
-                    <p>Age: {selectedData.age}</p>
-                    <p>visits: {formatDate(selectedData.visits)}</p>
-                    <p>progress: {selectedData.progress}</p>
-                    <p>status: {selectedData.status}</p>
+                    <p> ID: {selectedData.firstName}</p>
+                    <p> Name: {selectedData.lastName}</p>
+                    <p> Age: {selectedData.age}</p>
+                    <p> visits: {formatDate(selectedData.visits)}</p>
+                    <p> progress: {selectedData.progress}</p>
+                    <p> status: {selectedData.status}</p>
+                    <p> type of row: {selectedData._typeofRow}</p>
                 </div>
             )}
         </div>
