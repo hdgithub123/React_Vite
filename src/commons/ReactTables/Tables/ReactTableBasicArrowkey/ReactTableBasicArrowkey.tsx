@@ -17,6 +17,7 @@ import {
 import {
     DndContext,
     KeyboardSensor,
+    closestCenter,
     MouseSensor,
     TouchSensor,
     DragEndEvent,
@@ -29,8 +30,9 @@ import {
     horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
+import { restrictToHorizontalAxis } from '@dnd-kit/modifiers'
 
-import styles from './ReactTable_mau.module.css';
+import styles from './ReactTableBasicArrowkey.module.css';
 import { useVirtualizer, notUndefined } from "@tanstack/react-virtual";
 import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
 import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
@@ -46,9 +48,10 @@ import { getDataVisibleColumn } from '../../components/MainComponent/Others/getD
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
 import { DebouncedInput } from '../../components/utils/Others/DebouncedInput';
+import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
 
 
-function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
+function ReactTableBasicArrowkey({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -217,9 +220,10 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
     }, [grouping, columnFilters]);
 
     const handleRowClick = (rowData) => {
-        if (onRowSelect) {
-            onRowSelect(rowData);
-        }
+        const rowClick = getOneRowData(rowData)     
+            if (onRowSelect) {
+                onRowSelect(rowClick);
+            }
     };
 
     const handleTriStateCheckboxSelectChange = (value) => {
@@ -241,7 +245,6 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
     // arrow key
     const [headerHeight, setHeaderHeight] = useState(0); // Chiều cao của header
-    const inputRef = useRef(null); // Ref for input element
     const [selectedIndex, setSelectedIndex] = useState(-1); // Lưu trạng thái hàng được chọn
 
     useEffect(() => {
@@ -335,7 +338,8 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
                 </div>): null}
                 {/* Tạo Drop Group Area */}
                 <DndContext
-                    collisionDetection={customCollisionDetection}
+                    collisionDetection={closestCenter}
+                    modifiers={[restrictToHorizontalAxis]}
                     onDragEnd={handleDragEnd}
                     autoScroll={false}
                     sensors={sensors}
@@ -396,9 +400,9 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
                                         return (
                                             <tr
                                                 className={`${styles.table_body_tr} ${rows.indexOf(row) === selectedIndex ? styles.table_body_highlightkeymove : ''}`}
+                                                data-key={rows.indexOf(row)}
                                                 key={row.id}
-                                                data-key={row.id}
-                                                onDoubleClick={() => handleRowClick(row.original)}
+                                                onDoubleClick={() => handleRowClick(row)}
                                             >
                                                 <td className={styles.table_body_td_checkbox}>
                                                     <IndeterminateCheckbox
@@ -453,4 +457,4 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
     );
 }
-export default ReactTable_mau;
+export default ReactTableBasicArrowkey;

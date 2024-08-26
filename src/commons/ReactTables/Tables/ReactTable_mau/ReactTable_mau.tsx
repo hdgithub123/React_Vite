@@ -45,8 +45,8 @@ import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/B
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
-import { DebouncedInput } from '../../components/utils/Others/DebouncedInput';
-
+import { getRowModelData } from '../../components/MainComponent/Others/getRowModelData';
+import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
 
 function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
@@ -90,7 +90,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
     };
 
     const table = useReactTable({
-        data: data,
+        data: dataDef,
         columns,
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
@@ -186,13 +186,11 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
             columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
     }, [columns]);
 
-
     useEffect(() => {
         if (onDataChange) {
             onDataChange(dataDef);
         }
     }, [dataDef]);
-
 
     useEffect(() => {
         const filteredUndefinedData = getSelectedData(table);
@@ -210,16 +208,16 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         }
     }, [table.getState().rowSelection, table.getState().columnVisibility]);
 
-
     // sử dụng để expanded all
     useEffect(() => {
         table.setExpanded(true);
     }, [grouping, columnFilters]);
 
     const handleRowClick = (rowData) => {
-        if (onRowSelect) {
-            onRowSelect(rowData);
-        }
+        const rowClick = getOneRowData(rowData)     
+            if (onRowSelect) {
+                onRowSelect(rowClick);
+            }
     };
 
     const handleTriStateCheckboxSelectChange = (value) => {
@@ -238,10 +236,8 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         setGlobalFilter(updatedFilter);
     };
 
-
     // arrow key
     const [headerHeight, setHeaderHeight] = useState(0); // Chiều cao của header
-    const inputRef = useRef(null); // Ref for input element
     const [selectedIndex, setSelectedIndex] = useState(-1); // Lưu trạng thái hàng được chọn
 
     useEffect(() => {
@@ -259,10 +255,10 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
                 // Tính toán vị trí của dòng được highlight trong phần hiển thị trừ đi chiều cao của header
                 const relativeTop = listItemRectTop - listContainerRectTop - headerHeight; // khoảng cách từ dòng hiện tại đến cuối header
                 const relativefooter = tfootTop - listItemRectTop + listItemRectHeight - tfootheight;
-                if (relativefooter < tfootheight) {   
+                if (relativefooter < tfootheight) {
                     parentRef.current.scrollTop = parentRef.current.scrollTop - relativefooter + tfootheight;
                 } else {
-                    if (relativeTop < 0 ){
+                    if (relativeTop < 0) {
                         parentRef.current.scrollTop = parentRef.current.scrollTop + relativeTop;
                     }
                 }
@@ -271,7 +267,7 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         }
     }, [selectedIndex]);
 
-
+    const rowsGroup = getRowModelData(table)
     const lengthData = table.getRowModel().rows.length
     const handleKeyDown = (e) => {
         if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
@@ -283,12 +279,12 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
             }
         } else if (e.key === 'Enter') {
             if (onRowSelect) {
-                onRowSelect(rows[selectedIndex].original);
+                onRowSelect(rowsGroup[selectedIndex]);
             }
         }
     };
 
-    const handleonBlur =() => {
+    const handleonBlur = () => {
         setSelectedIndex(-1);
     }
 
@@ -324,15 +320,14 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
             ]
             : [0, 0];
 
-
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
             <div className={styles.container}>
                 {/* Tạo Global Filter */}
                 {isGlobalFilter === true ? (<div className={styles.globalFilter}>
-                    <GlobalFilter globalFilter= {globalFilter} setGlobalFilter= {setGlobalFilter} onhandleKeyDown={handleKeyDown}></GlobalFilter>
-                </div>): null}
+                    <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} onhandleKeyDown={handleKeyDown}></GlobalFilter>
+                </div>) : null}
                 {/* Tạo Drop Group Area */}
                 <DndContext
                     collisionDetection={customCollisionDetection}
@@ -340,11 +335,30 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
                     autoScroll={false}
                     sensors={sensors}
                 >
+                    <div className={styles.Dropable_Container_Group}>
 
+                        {/* Phần thả group column */}
+                        <DropableContainerGroup >
+                            <div className={styles.botton_dot}>
+                                <ButtonPanel table={table} exportFile={exportFile}></ButtonPanel>
+                            </div>
+                            {/* <h1>Thả vào đây</h1> */}
+                            {grouping.length > 0 ? (
+                                grouping.map((id) => (
+                                    <RenderHeaderByID key={id} columnID={id} columns={columns} setGrouping={setGrouping} grouping={grouping} />
+                                ))
+                            ) : (
+                                <div style={{ padding: '10px', fontSize: '14px', color: '#999', userSelect: 'none' }}>
+                                    Drag header to group
+                                </div>
+                            )}
+                        </DropableContainerGroup>
+                    </div>
                     <div
                         ref={parentRef}
                         className={styles.div_table_container}
                     >
+
                         {/* Bắt đầu render table */}
                         <table id={'React_table_id'} className={styles.table_container} onKeyDown={handleKeyDown} onBlur={handleonBlur}>
                             <thead className={styles.table_head}>
@@ -356,9 +370,6 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
                                                 <div title="Select All/ Unselect All">
                                                     <IndeterminateCheckbox
                                                         {...{
-                                                            // checked: table.getIsAllRowsSelected(),
-                                                            // indeterminate: table.getIsSomeRowsSelected(),
-                                                            // onChange: table.getToggleAllRowsSelectedHandler(),
                                                             checked: getIsAllRowsSelected(table),
                                                             indeterminate: table.getIsSomeRowsSelected(),
                                                             onChange: getToggleAllRowsSelectedHandler(table),
@@ -396,9 +407,9 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
                                         return (
                                             <tr
                                                 className={`${styles.table_body_tr} ${rows.indexOf(row) === selectedIndex ? styles.table_body_highlightkeymove : ''}`}
+                                                data-key={rows.indexOf(row)}
                                                 key={row.id}
-                                                data-key={row.id}
-                                                onDoubleClick={() => handleRowClick(row.original)}
+                                                onDoubleClick={() => handleRowClick(row)}
                                             >
                                                 <td className={styles.table_body_td_checkbox}>
                                                     <IndeterminateCheckbox

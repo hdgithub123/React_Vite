@@ -30,7 +30,7 @@ import {
 } from '@dnd-kit/sortable';
 
 
-import styles from './ReactTableFull.module.css';
+import styles from './ReactTableFullArrowkey.module.css';
 import { useVirtualizer, notUndefined } from "@tanstack/react-virtual";
 import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
 import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
@@ -44,10 +44,11 @@ import { getSelectedData } from '../../components/MainComponent/Others/getSelect
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
-import {GlobalFilter} from '../../components/MainComponent/GlobalFilter/GlobalFilter';
+import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
+import { getRowModelData } from '../../components/MainComponent/Others/getRowModelData';
 import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
 
-function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null },isGlobalFilter = false }) {
+function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -81,7 +82,7 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
             checkboxCheck = true;
         }
 
-        if  (checkboxCheck && globalValueCheck) {
+        if (checkboxCheck && globalValueCheck) {
             return true
         } else {
             return false
@@ -212,7 +213,6 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
         table.setExpanded(true);
     }, [grouping, columnFilters]);
 
-
     const handleRowClick = (rowData) => {
         const rowClick = getOneRowData(rowData)     
             if (onRowSelect) {
@@ -231,10 +231,63 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
         } else {
             updatedFilter.checkboxvalue = 'none';
         }
-    
+
         // Set the global filter with the updated object
         setGlobalFilter(updatedFilter);
     };
+
+    // arrow key
+    const [headerHeight, setHeaderHeight] = useState(0); // Chiều cao của header
+    const [selectedIndex, setSelectedIndex] = useState(-1); // Lưu trạng thái hàng được chọn
+
+    useEffect(() => {
+        if (selectedIndex !== -1 && parentRef.current) {
+            const listItem = parentRef.current.querySelector(`tr[data-key="${selectedIndex}"]`);
+            if (listItem) {
+                const listItemRectTop = listItem.getBoundingClientRect().top;// vị tri top cua dòng được chọn
+                const listItemRectHeight = listItem.getBoundingClientRect().height // chiều cao của dòng được chọn
+                const listContainerRectTop = parentRef.current.getBoundingClientRect().top; // vi tri top tọa độ table
+                // Tính toán chiều cao của header
+                const theadHeight = parentRef.current.querySelector('thead').getBoundingClientRect().height; // chiều cao của phần header
+                const tfootheight = parentRef.current.querySelector('tfoot').getBoundingClientRect().height;
+                const tfootTop = parentRef.current.querySelector('tfoot').getBoundingClientRect().top; // vị trí top của footer
+                setHeaderHeight(theadHeight);
+                // Tính toán vị trí của dòng được highlight trong phần hiển thị trừ đi chiều cao của header
+                const relativeTop = listItemRectTop - listContainerRectTop - headerHeight; // khoảng cách từ dòng hiện tại đến cuối header
+                const relativefooter = tfootTop - listItemRectTop + listItemRectHeight - tfootheight;
+                if (relativefooter < tfootheight) {
+                    parentRef.current.scrollTop = parentRef.current.scrollTop - relativefooter + tfootheight;
+                } else {
+                    if (relativeTop < 0) {
+                        parentRef.current.scrollTop = parentRef.current.scrollTop + relativeTop;
+                    }
+                }
+
+            }
+        }
+    }, [selectedIndex]);
+
+    const rowsGroup = getRowModelData(table)
+    const lengthData = table.getRowModel().rows.length
+    const handleKeyDown = (e) => {
+        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (e.key === 'ArrowUp') {
+                setSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
+            } else if (e.key === 'ArrowDown') {
+                setSelectedIndex(prevIndex => Math.min(prevIndex + 1, lengthData - 1));
+            }
+        } else if (e.key === 'Enter') {
+            if (onRowSelect) {
+                onRowSelect(rowsGroup[selectedIndex]);
+            }
+        }
+    };
+
+    const handleonBlur = () => {
+        setSelectedIndex(-1);
+    }
+
     // bắt đầu render Virtual
 
     const { rows } = table.getRowModel()
@@ -259,7 +312,6 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
     const items = virtualizer.getVirtualItems();
 
-
     const [before, after] =
         items.length > 0
             ? [
@@ -268,16 +320,14 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
             ]
             : [0, 0];
 
-
-
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
             <div className={styles.container}>
                 {/* Tạo Global Filter */}
                 {isGlobalFilter === true ? (<div className={styles.globalFilter}>
-                    <GlobalFilter globalFilter= {globalFilter} setGlobalFilter= {setGlobalFilter}></GlobalFilter>
-                </div>): null}
+                    <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} onhandleKeyDown={handleKeyDown}></GlobalFilter>
+                </div>) : null}
                 {/* Tạo Drop Group Area */}
                 <DndContext
                     collisionDetection={customCollisionDetection}
@@ -310,7 +360,7 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
                     >
 
                         {/* Bắt đầu render table */}
-                        <table className={styles.table_container}>
+                        <table id={'React_table_id'} className={styles.table_container} onKeyDown={handleKeyDown} onBlur={handleonBlur}>
                             <thead className={styles.table_head}>
                                 {table.getHeaderGroups().map((headerGroup, rowIndex) => (
                                     <tr className={styles.table_head_tr} key={headerGroup.id}>
@@ -356,7 +406,8 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
                                         const row = rows[virtualRow.index]
                                         return (
                                             <tr
-                                                className={styles.table_body_tr}
+                                                className={`${styles.table_body_tr} ${rows.indexOf(row) === selectedIndex ? styles.table_body_highlightkeymove : ''}`}
+                                                data-key={rows.indexOf(row)}
                                                 key={row.id}
                                                 onDoubleClick={() => handleRowClick(row)}
                                             >
@@ -413,6 +464,4 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
     );
 }
-export default ReactTableFull;
-
-
+export default ReactTableFullArrowkey;

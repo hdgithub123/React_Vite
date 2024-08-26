@@ -18,6 +18,8 @@ import ReactTableFull from '../Tables/ReactTableFull/ReactTableFull';
 import ReactTableBasic from '../Tables/ReactTableBasic/ReactTableBasic';
 import ReactTable_mau from '../Tables/ReactTable_mau/ReactTable_mau';
 import ReactTablePages from '../Tables/ReactTablePages/ReactTablePages';
+import ReactTableBasicArrowkey from '../Tables/ReactTableBasicArrowkey/ReactTableBasicArrowkey';
+import ReactTableFullArrowkey from '../Tables/ReactTableFullArrowkey/ReactTableFullArrowkey';
 
 
 function ReactTableExample() {
@@ -81,10 +83,27 @@ function ReactTableExample() {
                     exportFile= {{name:'day la file cua toi.xlsx', sheetName:'My Sheet' , title :"mỳile", description:'mo ta day nay'}}
                     onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
                     //grouped={['firstName','age']}
-                    isGlobalFilter = {false}
+                    isGlobalFilter = {true}
                     >
                     </ReactTableFull>
                 </div> */}
+
+                {/* <div className={styles.div3}>
+                  
+                  <ReactTableBasicArrowkey 
+                  data={Data} 
+                  columns={columns} 
+                  onRowSelect={handleRowSelect} 
+                  onRowsSelect={handleRowsSelect}
+                  onDataChange={handleDataChange}
+                  exportFile= {{name:'day la file cua toi.xlsx', sheetName:'My Sheet' , title :"mỳile", description:'mo ta day nay'}}
+                  onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
+                  //grouped={['firstName','age']}
+                  isGlobalFilter = {true}
+                  >
+                  </ReactTableBasicArrowkey>
+              </div> */}
+
 
                 {/* <div className={styles.div4}>
                     <h1>ReactTableBasic</h1>
@@ -116,8 +135,25 @@ function ReactTableExample() {
                     </ReactTablePages>
                 </div> */}
 
+            <div className={styles.div5}>
 
-                <div className={styles.div5}>
+                    <ReactTableFullArrowkey
+                        data={Data}
+                        columns={cl}
+                        onRowSelect={handleRowSelect}
+                        onRowsSelect={handleRowsSelect}
+                        onDataChange={handleDataChange}
+                        onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
+                        exportFile={{ name: 'day la file cua toi.xlsx', sheetName: 'My Sheet', title: "mỳile", description: 'mo ta day nay' }}
+                        //grouped={['firstName','age']}
+                        isGlobalFilter={true}
+                    >
+                    </ReactTableFullArrowkey>
+                </div>
+
+
+
+                {/* <div className={styles.div5}>
 
                     <ReactTable_mau
                         data={Data}
@@ -131,7 +167,7 @@ function ReactTableExample() {
                         isGlobalFilter={true}
                     >
                     </ReactTable_mau>
-                </div>
+                </div> */} 
 
 
             </div>

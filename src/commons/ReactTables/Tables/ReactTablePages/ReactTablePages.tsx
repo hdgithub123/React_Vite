@@ -47,6 +47,7 @@ import { getDataVisibleColumn } from '../../components/MainComponent/Others/getD
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
 import {Pages} from './Pages'
+import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
 
 function ReactTablePages({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
@@ -224,9 +225,10 @@ function ReactTablePages({ data, columns, onDataChange, onRowSelect, onRowsSelec
     }, [grouping, columnFilters]);
 
     const handleRowClick = (rowData) => {
-        if (onRowSelect) {
-            onRowSelect(rowData);
-        }
+        const rowClick = getOneRowData(rowData)     
+            if (onRowSelect) {
+                onRowSelect(rowClick);
+            }
     };
 
     const handleTriStateCheckboxSelectChange = (value) => {
@@ -370,7 +372,7 @@ function ReactTablePages({ data, columns, onDataChange, onRowSelect, onRowsSelec
                                             <tr
                                                 className={styles.table_body_tr}
                                                 key={row.id}
-                                                onDoubleClick={() => handleRowClick(row.original)}
+                                                onDoubleClick={() => handleRowClick(row)}
                                             >
                                                 <td className={styles.table_body_td_checkbox}>
                                                     <IndeterminateCheckbox
