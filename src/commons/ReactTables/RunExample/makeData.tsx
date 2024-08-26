@@ -301,5 +301,5 @@ type Person = {
   const makeData2 = generateRandomObjectiveArray(5000)
   // makeData1: data thuong, makeData2: 500 data thuong, 
   //makeDataSubrows1: 1000 subrow thuong, makeDataSubrows2 : subrow chi chi dinh
-export const makeData = makeData1
+export const makeData = makeDataSubrows2
 export const makeDataphhu = makeDataSubrows2

@@ -391,7 +391,7 @@ const columnssubrowf = [
     },
 ]
 // columnscof : co footer, columnskof: columns1headercof, khong co footer, columnssubrowf: subrow co footer, 
-export const columns = columnscof
+export const columns = columnssubrowf
 export const columns2 = columnskof
 
 
