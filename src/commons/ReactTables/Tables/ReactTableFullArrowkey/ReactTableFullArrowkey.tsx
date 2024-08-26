@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import React from 'react'
 
 import {
@@ -47,6 +47,7 @@ import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../com
 import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
 import { getRowModelData } from '../../components/MainComponent/Others/getRowModelData';
 import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
+import { throttle } from '../../components/utils/Others/throttle';
 
 function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
@@ -269,13 +270,19 @@ function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRo
 
     const rowsGroup = getRowModelData(table)
     const lengthData = table.getRowModel().rows.length
+    const updateSelectedIndex = useMemo(()=>{
+        return throttle((newIndex) => {
+            setSelectedIndex(newIndex);
+          }, 200);
+    },[])
+    
     const handleKeyDown = (e) => {
         if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
             e.preventDefault();
             if (e.key === 'ArrowUp') {
-                setSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
+                updateSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
             } else if (e.key === 'ArrowDown') {
-                setSelectedIndex(prevIndex => Math.min(prevIndex + 1, lengthData - 1));
+                updateSelectedIndex(prevIndex => Math.min(prevIndex + 1, lengthData - 1));
             }
         } else if (e.key === 'Enter') {
             if (onRowSelect) {

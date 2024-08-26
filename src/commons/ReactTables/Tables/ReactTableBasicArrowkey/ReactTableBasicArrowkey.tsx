@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import React from 'react'
 
 import {
@@ -37,18 +37,14 @@ import { useVirtualizer, notUndefined } from "@tanstack/react-virtual";
 import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
 import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
 import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
-import { customCollisionDetection } from '../../components/MainComponent/Others/customCollisionDetection';
-import { DropableContainerGroup } from '../../components/MainComponent/Others/DropableContainerGroup/DropableContainerGroup';
-import { RenderHeaderByID } from '../../components/MainComponent/Others/DropableContainerGroup/RenderHeaderByID';
 import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
 import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
-import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
-import { DebouncedInput } from '../../components/utils/Others/DebouncedInput';
 import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
+import { throttle } from '../../components/utils/Others/throttle';
 
 
 function ReactTableBasicArrowkey({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
@@ -276,13 +272,20 @@ function ReactTableBasicArrowkey({ data, columns, onDataChange, onRowSelect, onR
 
 
     const lengthData = table.getRowModel().rows.length
+    const updateSelectedIndex = useMemo(()=>{
+        return throttle((newIndex) => {
+            setSelectedIndex(newIndex);
+          }, 200);
+    },[])
+
+
     const handleKeyDown = (e) => {
         if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
             e.preventDefault();
             if (e.key === 'ArrowUp') {
-                setSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
+                updateSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
             } else if (e.key === 'ArrowDown') {
-                setSelectedIndex(prevIndex => Math.min(prevIndex + 1, lengthData - 1));
+                updateSelectedIndex(prevIndex => Math.min(prevIndex + 1, lengthData - 1));
             }
         } else if (e.key === 'Enter') {
             if (onRowSelect) {
