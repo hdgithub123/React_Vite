@@ -17,6 +17,7 @@ import {
 import {
     DndContext,
     KeyboardSensor,
+    closestCenter,
     MouseSensor,
     TouchSensor,
     DragEndEvent,
@@ -29,27 +30,21 @@ import {
     horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 
+import { restrictToHorizontalAxis } from '@dnd-kit/modifiers'
 
-import styles from './ReactTableFullArrowkey.module.css';
+import styles from './SearchDropDown.module.css';
 import { useVirtualizer, notUndefined } from "@tanstack/react-virtual";
 import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
 import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
 import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
-import { customCollisionDetection } from '../../components/MainComponent/Others/customCollisionDetection';
-import { DropableContainerGroup } from '../../components/MainComponent/Others/DropableContainerGroup/DropableContainerGroup';
-import { RenderHeaderByID } from '../../components/MainComponent/Others/DropableContainerGroup/RenderHeaderByID';
-import { IndeterminateCheckbox } from '../../components/MainComponent/Others/IndeterminateCheckbox';
-import { TriStateCheckbox } from '../../components/MainComponent/Others/TriStateCheckbox';
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
-import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
-import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
-import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
-import { getRowModelData } from '../../components/MainComponent/Others/getRowModelData';
 import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
 import { throttle } from '../../components/utils/Others/throttle';
+import { SearchFilter } from './SearchFilter';
 
-function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
+
+function SearchDropDown({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -91,7 +86,7 @@ function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRo
     };
 
     const table = useReactTable({
-        data: dataDef,
+        data: data,
         columns,
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
@@ -187,18 +182,12 @@ function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRo
             columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
     }, [columns]);
 
+
     useEffect(() => {
         if (onDataChange) {
             onDataChange(dataDef);
         }
     }, [dataDef]);
-
-    useEffect(() => {
-        const filteredUndefinedData = getSelectedData(table);
-        if (onRowsSelect) {
-            onRowsSelect(filteredUndefinedData);
-        }
-    }, [table.getState().rowSelection]);
 
     // chi lay ra cac o column khong bi an
     useEffect(() => {
@@ -209,39 +198,26 @@ function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRo
         }
     }, [table.getState().rowSelection, table.getState().columnVisibility]);
 
+
     // sử dụng để expanded all
     useEffect(() => {
         table.setExpanded(true);
     }, [grouping, columnFilters]);
 
     const handleRowClick = (rowData) => {
-        const rowClick = getOneRowData(rowData)     
-            if (onRowSelect) {
-                onRowSelect(rowClick);
-            }
-    };
-
-    const handleTriStateCheckboxSelectChange = (value) => {
-        // Create a copy of the globalFilter object
-        let updatedFilter = { ...globalFilter };
-        // Update the checkboxvalue key based on the value
-        if (value === true) {
-            updatedFilter.checkboxvalue = 'checked';
-        } else if (value === false) {
-            updatedFilter.checkboxvalue = 'unchecked';
-        } else {
-            updatedFilter.checkboxvalue = 'none';
+        const rowClick = getOneRowData(rowData)
+        if (onRowSelect) {
+            onRowSelect(rowClick);
         }
-
-        // Set the global filter with the updated object
-        setGlobalFilter(updatedFilter);
     };
+
 
     // arrow key
     const [headerHeight, setHeaderHeight] = useState(0); // Chiều cao của header
     const [selectedIndex, setSelectedIndex] = useState(-1); // Lưu trạng thái hàng được chọn
 
     useEffect(() => {
+        console.log("selectedIndex",selectedIndex)
         if (selectedIndex !== -1 && parentRef.current) {
             const listItemSelect = parentRef.current.querySelector(`tr[data-key="${selectedIndex}"]`);
             const listContainerRectTop = parentRef.current.getBoundingClientRect().top; // vi tri top tọa độ table
@@ -293,15 +269,16 @@ function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRo
         }
     }, [selectedIndex]);
 
-    const rowsGroup = getRowModelData(table)
     const lengthData = table.getRowModel().rows.length
-    const updateSelectedIndex = useMemo(()=>{
+    const updateSelectedIndex = useMemo(() => {
         return throttle((newIndex) => {
             setSelectedIndex(newIndex);
-          }, 200);
-    },[])
-    
+        }, 200);
+    }, [])
+
+
     const handleKeyDown = (e) => {
+        setisDropDown(true)
         if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
             e.preventDefault();
             if (e.key === 'ArrowUp') {
@@ -311,8 +288,9 @@ function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRo
             }
         } else if (e.key === 'Enter') {
             if (onRowSelect) {
-                const rowEnter = getOneRowData(rows[selectedIndex])   
+                const rowEnter = getOneRowData(rows[selectedIndex])
                 onRowSelect(rowEnter);
+                setisDropDown(false)
             }
         }
     };
@@ -320,6 +298,9 @@ function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRo
     const handleonBlur = () => {
         setSelectedIndex(-1);
     }
+
+
+
 
     // bắt đầu render Virtual
 
@@ -353,148 +334,117 @@ function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRo
             ]
             : [0, 0];
 
+    const [isDropDown, setisDropDown] = useState(false);
+
+
+    const searchFilterOnBlur = () =>{
+        setisDropDown(false)
+    }
+    const searchFilterOnFocus = () =>{
+        if(globalFilter.filterGlobalValue !== '' || globalFilter.filterGlobalValue)
+        setisDropDown(true)
+    }
+    
+
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
             <div className={styles.container}>
                 {/* Tạo Global Filter */}
                 {isGlobalFilter === true ? (<div className={styles.globalFilter}>
-                    <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} onhandleKeyDown={handleKeyDown}></GlobalFilter>
+                    <SearchFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} onhandleKeyDown={handleKeyDown} onhandleOnBlur={searchFilterOnBlur} onhandleonFocus={searchFilterOnFocus}></SearchFilter>
                 </div>) : null}
-                {/* Tạo Drop Group Area */}
-                <DndContext
-                    collisionDetection={customCollisionDetection}
-                    onDragEnd={handleDragEnd}
-                    autoScroll={false}
-                    sensors={sensors}
-                >
-                    <div className={styles.Dropable_Container_Group}>
-
-                        {/* Phần thả group column */}
-                        <DropableContainerGroup >
-                            <div className={styles.botton_dot}>
-                                <ButtonPanel table={table} exportFile={exportFile}></ButtonPanel>
-                            </div>
-                            {/* <h1>Thả vào đây</h1> */}
-                            {grouping.length > 0 ? (
-                                grouping.map((id) => (
-                                    <RenderHeaderByID key={id} columnID={id} columns={columns} setGrouping={setGrouping} grouping={grouping} />
-                                ))
-                            ) : (
-                                <div style={{ padding: '10px', fontSize: '14px', color: '#999', userSelect: 'none' }}>
-                                    Drag header to group
-                                </div>
-                            )}
-                        </DropableContainerGroup>
-                    </div>
-                    <div
-                        ref={parentRef}
-                        className={styles.div_table_container}
+                {isDropDown === true ? (<div className={styles.div_table_container}>
+                    <DndContext
+                        collisionDetection={closestCenter}
+                        modifiers={[restrictToHorizontalAxis]}
+                        onDragEnd={handleDragEnd}
+                        autoScroll={false}
+                        sensors={sensors}
                     >
 
-                        {/* Bắt đầu render table */}
-                        <table id={'React_table_id'} className={styles.table_container} onKeyDown={handleKeyDown} onBlur={handleonBlur}>
-                            <thead className={styles.table_head}>
-                                {table.getHeaderGroups().map((headerGroup, rowIndex) => (
-                                    <tr className={styles.table_head_tr} key={headerGroup.id}>
-                                        {rowIndex === leafHeaderGroupIndex
-                                            ?
-                                            (<th className={styles.table_head_tr_th_checkbox}>
-                                                <div title="Select All/ Unselect All">
-                                                    <IndeterminateCheckbox
-                                                        {...{
-                                                            checked: getIsAllRowsSelected(table),
-                                                            indeterminate: table.getIsSomeRowsSelected(),
-                                                            onChange: getToggleAllRowsSelectedHandler(table),
-                                                        }}
-                                                    />
-                                                </div>
-                                                <div title="Filter Select">
-                                                    <TriStateCheckbox onChange={handleTriStateCheckboxSelectChange}></TriStateCheckbox>
-                                                </div>
-                                            </th>) : (
-                                                <th></th>
-                                            )
-                                        }
-                                        <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
-                                            {headerGroup.headers.map((header) =>
-                                                isLeafColumn(header) ? (
-                                                    <DraggableTableHeader key={header.id} header={header} />
-                                                ) : (
-                                                    <StaticTableHeader key={header.id} header={header} />
-                                                )
-                                            )}
-                                        </SortableContext>
-                                    </tr>
-                                ))}
-                            </thead>
-                            {table.getRowModel().rows.length > 0 ? (
-                                <tbody className={styles.table_body}>
-                                    {before > 0 && (
-                                        <tr className={styles.table_body_tr}>
-                                            <td style={{ height: `${before}px` }}></td>
-                                        </tr>
-                                    )}
-                                    {items.map((virtualRow, index) => {
-                                        const row = rows[virtualRow.index]
-                                        return (
-                                            <tr
-                                                className={`${styles.table_body_tr} ${rows.indexOf(row) === selectedIndex ? styles.table_body_highlightkeymove : ''}`}
-                                                data-key={rows.indexOf(row)}
-                                                key={row.id}
-                                                onDoubleClick={() => handleRowClick(row)}
-                                            >
-                                                <td className={styles.table_body_td_checkbox}>
-                                                    <IndeterminateCheckbox
-                                                        {...{
-                                                            checked: row.getIsSelected(),
-                                                            disabled: !row.getCanSelect(),
-                                                            indeterminate: row.getIsSomeSelected(),
-                                                            onChange: row.getToggleSelectedHandler(),
-                                                        }}
-                                                    />
-                                                </td>
-                                                {row.getVisibleCells().map((cell) => {
-                                                    return (
-                                                        <DragACell key={cell.id} cell={cell} />
+                        <div
+                            ref={parentRef}
+                            className={styles.div_table_container}
+                        >
+                            {/* Bắt đầu render table */}
+                            <table id={'React_table_id'} className={styles.table_container} onKeyDown={handleKeyDown} onBlur={handleonBlur}>
+                                <thead className={styles.table_head}>
+                                    {table.getHeaderGroups().map((headerGroup, rowIndex) => (
+                                        <tr className={styles.table_head_tr} key={headerGroup.id}>
+                                            <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
+                                                {headerGroup.headers.map((header) =>
+                                                    isLeafColumn(header) ? (
+                                                        <DraggableTableHeader key={header.id} header={header} />
+                                                    ) : (
+                                                        <StaticTableHeader key={header.id} header={header} />
                                                     )
-                                                })}
-                                            </tr>
-                                        )
-                                    })}
-                                    <tr className={styles.table_body_td_empty}>
-                                        <td></td>
-                                    </tr>
-                                    {after > 0 && (
-                                        <tr className={styles.table_body_tr}>
-                                            <td style={{ height: `${after}px` }}></td>
+                                                )}
+                                            </SortableContext>
                                         </tr>
-                                    )}
-                                </tbody>
-                            ) : (
-                                <tbody>
-                                    <tr className={styles.table_body}>
-                                        <td></td>
-                                        <td colSpan={countLeafColumns(columns)} style={{ textAlign: 'center' }}>
-                                            No data available
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            )}
-                            {shouldRenderFooter && <tfoot className={styles.table_footer}>
-                                <tr className={styles.table_footer_tr}>
-                                    <td className={styles.footer_checkbox}></td>
-                                    {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
-                                        <DraggableTablefooter key={header.id} header={header} />
                                     ))}
-                                </tr>
-                            </tfoot>}
-                        </table>
-                    </div>
-                </DndContext>
+                                </thead>
+                                {table.getRowModel().rows.length > 0 ? (
+                                    <tbody className={styles.table_body}>
+                                        {before > 0 && (
+                                            <tr className={styles.table_body_tr}>
+                                                <td style={{ height: `${before}px` }}></td>
+                                            </tr>
+                                        )}
+                                        {items.map((virtualRow, index) => {
+                                            const row = rows[virtualRow.index]
+                                            return (
+                                                <tr
+                                                    className={`${styles.table_body_tr} ${rows.indexOf(row) === selectedIndex ? styles.table_body_highlightkeymove : ''}`}
+                                                    data-key={rows.indexOf(row)}
+                                                    key={row.id}
+                                                    onDoubleClick={() => handleRowClick(row)}
+                                                >
+                                                    {row.getVisibleCells().map((cell) => {
+                                                        return (
+                                                            <DragACell key={cell.id} cell={cell} />
+                                                        )
+                                                    })}
+                                                </tr>
+                                            )
+                                        })}
+                                        <tr className={styles.table_body_td_empty}>
+                                            <td></td>
+                                        </tr>
+                                        {after > 0 && (
+                                            <tr className={styles.table_body_tr}>
+                                                <td style={{ height: `${after}px` }}></td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                ) : (
+                                    <tbody>
+                                        <tr className={styles.table_body}>
+                                            <td></td>
+                                            <td colSpan={countLeafColumns(columns)} style={{ textAlign: 'center' }}>
+                                                No data available
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                )}
+                                {shouldRenderFooter && <tfoot className={styles.table_footer}>
+                                    <tr className={styles.table_footer_tr}>
+                                        {/* <td className={styles.footer_checkbox}></td> */}
+                                        {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
+                                            <DraggableTablefooter key={header.id} header={header} />
+                                        ))}
+                                    </tr>
+                                </tfoot>}
+                            </table>
+                        </div>
+                    </DndContext>
+
+                </div>) : null}
+
+
             </div>
         </div>
 
     );
 }
-export default ReactTableFullArrowkey;
+export default SearchDropDown;

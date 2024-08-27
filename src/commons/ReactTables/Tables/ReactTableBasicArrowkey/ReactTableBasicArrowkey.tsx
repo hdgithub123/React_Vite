@@ -255,9 +255,13 @@ function ReactTableBasicArrowkey({ data, columns, onDataChange, onRowSelect, onR
             let firstKey = 1
             for (let i = 1; i < 1000; i++) {
                 let firstCheck = parentRef.current.querySelector(`tbody tr:nth-child(${i})`);
-                const firstCheckTop = firstCheck.getBoundingClientRect().top;// vị tri top cua dòng được chọn
-                if (firstCheckTop > listContainerRectTop + theadHeight && i > 2) {
-                    firstKey = i - 1
+                if (firstCheck) {
+                    const firstCheckTop = firstCheck.getBoundingClientRect().top;// vị tri top cua dòng được chọn
+                    if (firstCheckTop > listContainerRectTop + theadHeight && i > 2) {
+                        firstKey = i - 1
+                        break;
+                    }
+                } else {
                     break;
                 }
             }

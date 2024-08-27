@@ -21,6 +21,7 @@ import ReactTablePages from '../Tables/ReactTablePages/ReactTablePages';
 import ReactTableBasicArrowkey from '../Tables/ReactTableBasicArrowkey/ReactTableBasicArrowkey';
 import ReactTableFullArrowkey from '../Tables/ReactTableFullArrowkey/ReactTableFullArrowkey';
 import ReactTableNomalArrowkey from '../Tables/ReactTableNomalArrowkey/ReactTableNomalArrowkey';
+import SearchDropDown from '../Tables/SearchDropDown/SearchDropDown';
 
 
 function ReactTableExample() {
@@ -55,7 +56,7 @@ function ReactTableExample() {
     }
 
     const btnclick2 = () => {
-        setData(generateRandomObjectiveArray(5000))
+        setData(generateRandomObjectiveArray(500))
         // setData(makeDataphhu)
         // console.log("Data",Data)
         // var d = new Date();
@@ -104,7 +105,7 @@ function ReactTableExample() {
                   >
                   </ReactTableBasicArrowkey>
               </div> */}
-
+{/* 
                 <div className={styles.div3}>
                   
                   <ReactTableNomalArrowkey 
@@ -119,6 +120,22 @@ function ReactTableExample() {
                   isGlobalFilter = {true}
                   >
                   </ReactTableNomalArrowkey>
+              </div> */}
+
+              <div className={styles.div3}>
+                  
+                  <SearchDropDown 
+                  data={Data} 
+                  columns={columns} 
+                  onRowSelect={handleRowSelect} 
+                  onRowsSelect={handleRowsSelect}
+                  onDataChange={handleDataChange}
+                  exportFile= {{name:'day la file cua toi.xlsx', sheetName:'My Sheet' , title :"mỳile", description:'mo ta day nay'}}
+                  onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
+                  //grouped={['firstName','age']}
+                  isGlobalFilter = {true}
+                  >
+                  </SearchDropDown>
               </div>
 
 
