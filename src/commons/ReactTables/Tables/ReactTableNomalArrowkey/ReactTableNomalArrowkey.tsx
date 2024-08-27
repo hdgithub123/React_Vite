@@ -86,7 +86,7 @@ function ReactTableNomalArrowkey({ data, columns, onDataChange, onRowSelect, onR
     };
 
     const table = useReactTable({
-        data: data,
+        data: dataDef,
         columns,
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),

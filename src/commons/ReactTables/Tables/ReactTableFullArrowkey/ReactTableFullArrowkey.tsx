@@ -293,7 +293,6 @@ function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRo
         }
     }, [selectedIndex]);
 
-    const rowsGroup = getRowModelData(table)
     const lengthData = table.getRowModel().rows.length
     const updateSelectedIndex = useMemo(()=>{
         return throttle((newIndex) => {

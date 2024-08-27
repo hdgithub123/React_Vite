@@ -1,7 +1,7 @@
-import { useState, } from 'react';
+import { useEffect, useState, } from 'react';
 import { DebouncedInput } from '../../components/utils/Others/DebouncedInput';
 
-export function SearchFilter({ globalFilter, setGlobalFilter , onhandleKeyDown = null, onhandleOnBlur = null, onhandleonFocus = null }) {
+export function SearchFilter({ globalFilter, setGlobalFilter , onhandleKeyDown = null, onhandleOnBlur = null, onhandleonFocus = null, onhandleonDoubleClick = null }) {
     const [globalFilterValue, setGlobalFilterValue] = useState('');
     const handelGlobalFilterOnChange = (value) => {
         setGlobalFilterValue(value)
@@ -10,6 +10,10 @@ export function SearchFilter({ globalFilter, setGlobalFilter , onhandleKeyDown =
         // Set the global filter with the updated object
         setGlobalFilter(updatedFilter);
     }
+
+    useEffect(() => {
+        setGlobalFilterValue(globalFilter.filterGlobalValue)
+    }, [globalFilter.filterGlobalValue]);
 
     const handleKeyDown = (value) => {
         if(onhandleKeyDown){
@@ -29,8 +33,14 @@ export function SearchFilter({ globalFilter, setGlobalFilter , onhandleKeyDown =
         }
     }
 
+    const handleonDoubleClick = (value)=>{
+        if(onhandleonDoubleClick){
+            onhandleonDoubleClick(value)
+        }
+    }
+
     return <DebouncedInput
-        style={{ width: 'calc(100% - 6px)', marginRight: '2px' }}
+        // style={{ width: 'calc(100%)', marginRight: '2px' }}
         onChange={handelGlobalFilterOnChange}
         placeholder={`Search All...`}
         type="text"
@@ -38,6 +48,7 @@ export function SearchFilter({ globalFilter, setGlobalFilter , onhandleKeyDown =
         onKeyDown={handleKeyDown}
         onBlur={handleOnBlur}
         onFocus={handleonFocus}
+        onDoubleClick={handleonDoubleClick}
         debounce = {50}
     />
 }

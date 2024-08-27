@@ -1,4 +1,5 @@
 export function getOneRowData(row) {
+  if(row){
     let selectRow = {}
     let typeofRow = { _typeofRow: 'nomal' }
     // Skip processing group rows
@@ -23,4 +24,8 @@ export function getOneRowData(row) {
     }
 
     return selectRow
+  } else {
+    return null
+  }
+    
 }

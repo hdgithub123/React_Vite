@@ -37,14 +37,12 @@ import { useVirtualizer, notUndefined } from "@tanstack/react-virtual";
 import { DraggableTableHeader, StaticTableHeader } from '../../components/MainComponent/Header/Header';
 import { DragAlongCell } from '../../components/MainComponent/Body/DragAlongCell';
 import { DraggableTablefooter } from '../../components/MainComponent/Footer/Footer';
-import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
-import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
 import { throttle } from '../../components/utils/Others/throttle';
 import { SearchFilter } from './SearchFilter';
 
 
-function SearchDropDown({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
+function SearchDropDown({ data, columns, onRowSelect, grouped = [], columnDisplay  }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -52,7 +50,7 @@ function SearchDropDown({ data, columns, onDataChange, onRowSelect, onRowsSelect
     );
     const [grouping, setGrouping] = useState<GroupingState>(grouped)
     const [globalFilter, setGlobalFilter] = useState({ checkboxvalue: 'none', filterGlobalValue: '' })
-
+    const [isDropDown, setisDropDown] = useState(false);
     const GlobalFilterFn: FilterFn<any> = (rows, columnIds, filterValue) => {
         const valueInColumnId = String(rows.original[columnIds])
         const valueGlobalFilter = String(filterValue.filterGlobalValue)
@@ -86,16 +84,14 @@ function SearchDropDown({ data, columns, onDataChange, onRowSelect, onRowsSelect
     };
 
     const table = useReactTable({
-        data: data,
+        data: dataDef,
         columns,
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
-
         getSubRows: row => row.subRows,
         filterFromLeafRows: true,
         enableSubRowSelection: false, // click on subrow not auto select
-
         getFilteredRowModel: getFilteredRowModel(),
         filterFns: {
             GlobalFilterFn, // Register the custom filter function
@@ -182,23 +178,6 @@ function SearchDropDown({ data, columns, onDataChange, onRowSelect, onRowsSelect
             columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
     }, [columns]);
 
-
-    useEffect(() => {
-        if (onDataChange) {
-            onDataChange(dataDef);
-        }
-    }, [dataDef]);
-
-    // chi lay ra cac o column khong bi an
-    useEffect(() => {
-        const filteredUndefinedData = getDataVisibleColumn(getSelectedData(table), table.getState().columnVisibility);
-
-        if (onVisibleColumnDataSelect) {
-            onVisibleColumnDataSelect(filteredUndefinedData);
-        }
-    }, [table.getState().rowSelection, table.getState().columnVisibility]);
-
-
     // sử dụng để expanded all
     useEffect(() => {
         table.setExpanded(true);
@@ -208,6 +187,11 @@ function SearchDropDown({ data, columns, onDataChange, onRowSelect, onRowsSelect
         const rowClick = getOneRowData(rowData)
         if (onRowSelect) {
             onRowSelect(rowClick);
+            let updatedFilter = { ...globalFilter };
+            updatedFilter.filterGlobalValue = rowClick[columnDisplay]
+            // Set the global filter with the updated object
+            setGlobalFilter(updatedFilter);
+            setisDropDown(false)
         }
     };
 
@@ -217,7 +201,6 @@ function SearchDropDown({ data, columns, onDataChange, onRowSelect, onRowsSelect
     const [selectedIndex, setSelectedIndex] = useState(-1); // Lưu trạng thái hàng được chọn
 
     useEffect(() => {
-        console.log("selectedIndex",selectedIndex)
         if (selectedIndex !== -1 && parentRef.current) {
             const listItemSelect = parentRef.current.querySelector(`tr[data-key="${selectedIndex}"]`);
             const listContainerRectTop = parentRef.current.getBoundingClientRect().top; // vi tri top tọa độ table
@@ -288,9 +271,13 @@ function SearchDropDown({ data, columns, onDataChange, onRowSelect, onRowsSelect
             }
         } else if (e.key === 'Enter') {
             if (onRowSelect) {
-                const rowEnter = getOneRowData(rows[selectedIndex])
-                onRowSelect(rowEnter);
-                setisDropDown(false)
+                    const rowEnter = getOneRowData(rows[selectedIndex])
+                    onRowSelect(rowEnter);
+                    let updatedFilter = { ...globalFilter };
+                    updatedFilter.filterGlobalValue = rowEnter[columnDisplay]
+                    // Set the global filter with the updated object
+                    setGlobalFilter(updatedFilter);
+                    setisDropDown(false)
             }
         }
     };
@@ -298,10 +285,17 @@ function SearchDropDown({ data, columns, onDataChange, onRowSelect, onRowsSelect
     const handleonBlur = () => {
         setSelectedIndex(-1);
     }
+    
 
+    const handleDivonMouseLeave = () => {
+        setisDropDown(false)
+    }
+    
+    const handleonhandleonFilterDoubleClick = () => {
+        setisDropDown(true)
+    }
 
-
-
+    
     // bắt đầu render Virtual
 
     const { rows } = table.getRowModel()
@@ -334,26 +328,15 @@ function SearchDropDown({ data, columns, onDataChange, onRowSelect, onRowsSelect
             ]
             : [0, 0];
 
-    const [isDropDown, setisDropDown] = useState(false);
-
-
-    const searchFilterOnBlur = () =>{
-        setisDropDown(false)
-    }
-    const searchFilterOnFocus = () =>{
-        if(globalFilter.filterGlobalValue !== '' || globalFilter.filterGlobalValue)
-        setisDropDown(true)
-    }
-    
 
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
-            <div className={styles.container}>
+            <div className={styles.container} onMouseLeave={handleDivonMouseLeave}>
                 {/* Tạo Global Filter */}
-                {isGlobalFilter === true ? (<div className={styles.globalFilter}>
-                    <SearchFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} onhandleKeyDown={handleKeyDown} onhandleOnBlur={searchFilterOnBlur} onhandleonFocus={searchFilterOnFocus}></SearchFilter>
-                </div>) : null}
+                <div className={styles.globalFilter}>
+                    <SearchFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} onhandleKeyDown={handleKeyDown} onhandleonDoubleClick={handleonhandleonFilterDoubleClick}></SearchFilter>
+                </div>
                 {isDropDown === true ? (<div className={styles.div_table_container}>
                     <DndContext
                         collisionDetection={closestCenter}
@@ -362,7 +345,6 @@ function SearchDropDown({ data, columns, onDataChange, onRowSelect, onRowsSelect
                         autoScroll={false}
                         sensors={sensors}
                     >
-
                         <div
                             ref={parentRef}
                             className={styles.div_table_container}
@@ -438,10 +420,7 @@ function SearchDropDown({ data, columns, onDataChange, onRowSelect, onRowsSelect
                             </table>
                         </div>
                     </DndContext>
-
                 </div>) : null}
-
-
             </div>
         </div>
 

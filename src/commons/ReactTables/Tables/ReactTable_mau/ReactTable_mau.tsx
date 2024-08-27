@@ -293,7 +293,6 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         }
     }, [selectedIndex]);
 
-    const rowsGroup = getRowModelData(table)
     const lengthData = table.getRowModel().rows.length
 
     const updateSelectedIndex = useMemo(()=>{
