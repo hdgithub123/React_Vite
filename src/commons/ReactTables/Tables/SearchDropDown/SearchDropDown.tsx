@@ -42,7 +42,7 @@ import { throttle } from '../../components/utils/Others/throttle';
 import { SearchFilter } from './SearchFilter';
 
 
-function SearchDropDown({ data, columns, onRowSelect, grouped = [], columnDisplay  }) {
+function SearchDropDown({ data, columns, onRowSelect, grouped = [], columnDisplay, sizeStyleTable = { width:'100%',  maxHeight: '200px'}, }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -337,7 +337,8 @@ function SearchDropDown({ data, columns, onRowSelect, grouped = [], columnDispla
                 <div className={styles.globalFilter}>
                     <SearchFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} onhandleKeyDown={handleKeyDown} onhandleonDoubleClick={handleonhandleonFilterDoubleClick}></SearchFilter>
                 </div>
-                {isDropDown === true ? (<div className={styles.div_table_container}>
+                {isDropDown === true ? (
+                     <div className={styles.div_table_container} style={sizeStyleTable}>
                     <DndContext
                         collisionDetection={closestCenter}
                         modifiers={[restrictToHorizontalAxis]}
@@ -390,9 +391,6 @@ function SearchDropDown({ data, columns, onRowSelect, grouped = [], columnDispla
                                                 </tr>
                                             )
                                         })}
-                                        <tr className={styles.table_body_td_empty}>
-                                            <td></td>
-                                        </tr>
                                         {after > 0 && (
                                             <tr className={styles.table_body_tr}>
                                                 <td style={{ height: `${after}px` }}></td>
