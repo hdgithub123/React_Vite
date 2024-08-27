@@ -20,6 +20,7 @@ import ReactTable_mau from '../Tables/ReactTable_mau/ReactTable_mau';
 import ReactTablePages from '../Tables/ReactTablePages/ReactTablePages';
 import ReactTableBasicArrowkey from '../Tables/ReactTableBasicArrowkey/ReactTableBasicArrowkey';
 import ReactTableFullArrowkey from '../Tables/ReactTableFullArrowkey/ReactTableFullArrowkey';
+import ReactTableNomalArrowkey from '../Tables/ReactTableNomalArrowkey/ReactTableNomalArrowkey';
 
 
 function ReactTableExample() {
@@ -104,6 +105,24 @@ function ReactTableExample() {
                   </ReactTableBasicArrowkey>
               </div> */}
 
+                <div className={styles.div3}>
+                  
+                  <ReactTableNomalArrowkey 
+                  data={Data} 
+                  columns={columns} 
+                  onRowSelect={handleRowSelect} 
+                  onRowsSelect={handleRowsSelect}
+                  onDataChange={handleDataChange}
+                  exportFile= {{name:'day la file cua toi.xlsx', sheetName:'My Sheet' , title :"mỳile", description:'mo ta day nay'}}
+                  onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
+                  //grouped={['firstName','age']}
+                  isGlobalFilter = {true}
+                  >
+                  </ReactTableNomalArrowkey>
+              </div>
+
+
+
 
                 {/* <div className={styles.div4}>
                     <h1>ReactTableBasic</h1>
@@ -153,7 +172,7 @@ function ReactTableExample() {
 
 
 
-              <div className={styles.div5}>
+              {/* <div className={styles.div5}>
                     <ReactTable_mau
                         data={Data}
                         columns={cl}
@@ -166,7 +185,7 @@ function ReactTableExample() {
                         isGlobalFilter={true}
                     >
                     </ReactTable_mau>
-                </div>
+                </div> */}
 
 
             </div>

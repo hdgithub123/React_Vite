@@ -246,23 +246,33 @@ function ReactTableBasicArrowkey({ data, columns, onDataChange, onRowSelect, onR
     useEffect(() => {
         if (selectedIndex !== -1 && parentRef.current) {
             const listItemSelect = parentRef.current.querySelector(`tr[data-key="${selectedIndex}"]`);
-            const firstItem = parentRef.current.querySelector('tbody tr:nth-child(2)');
+            const listContainerRectTop = parentRef.current.getBoundingClientRect().top; // vi tri top tọa độ table
+            // Tính toán chiều cao của header
+            const theadHeight = parentRef.current.querySelector('thead').getBoundingClientRect().height; // chiều cao của phần header
+            const tfootheight = parentRef.current.querySelector('tfoot').getBoundingClientRect().height;
+            const tfootTop = parentRef.current.querySelector('tfoot').getBoundingClientRect().top; // vị trí top của footer
+
+            let firstKey = 1
+            for (let i = 1; i < 1000; i++) {
+                let firstCheck = parentRef.current.querySelector(`tbody tr:nth-child(${i})`);
+                const firstCheckTop = firstCheck.getBoundingClientRect().top;// vị tri top cua dòng được chọn
+                if (firstCheckTop > listContainerRectTop + theadHeight && i > 2) {
+                    firstKey = i - 1
+                    break;
+                }
+            }
+            const firstItem = parentRef.current.querySelector(`tbody tr:nth-child(${firstKey})`);
             const dataKey = firstItem.getAttribute('data-key');
             let listItem = null
-            if (listItemSelect){
+            if (listItemSelect) {
                 listItem = listItemSelect
-            } else{
+            } else {
                 listItem = firstItem
                 setSelectedIndex(+dataKey);
             }
             if (listItem) {
                 const listItemRectTop = listItem.getBoundingClientRect().top;// vị tri top cua dòng được chọn
                 const listItemRectHeight = listItem.getBoundingClientRect().height // chiều cao của dòng được chọn
-                const listContainerRectTop = parentRef.current.getBoundingClientRect().top; // vi tri top tọa độ table
-                // Tính toán chiều cao của header
-                const theadHeight = parentRef.current.querySelector('thead').getBoundingClientRect().height; // chiều cao của phần header
-                const tfootheight = parentRef.current.querySelector('tfoot').getBoundingClientRect().height;
-                const tfootTop = parentRef.current.querySelector('tfoot').getBoundingClientRect().top; // vị trí top của footer
                 setHeaderHeight(theadHeight);
                 // Tính toán vị trí của dòng được highlight trong phần hiển thị trừ đi chiều cao của header
                 const relativeTop = listItemRectTop - listContainerRectTop - headerHeight; // khoảng cách từ dòng hiện tại đến cuối header
@@ -271,7 +281,7 @@ function ReactTableBasicArrowkey({ data, columns, onDataChange, onRowSelect, onR
                     parentRef.current.scrollTop = parentRef.current.scrollTop + relativeTop;
                     // parentRef.current.scrollTop = parentRef.current.scrollTop - relativefooter + tfootheight; // nếu dùng cái này thì sẽ scoll lên top
                 } else {
-                    if ( relativefooter < tfootheight) {
+                    if (relativefooter < tfootheight) {
                         // parentRef.current.scrollTop = parentRef.current.scrollTop + relativeTop; // nếu dùng cái này thì sẽ scoll xuống bottom
                         parentRef.current.scrollTop = parentRef.current.scrollTop - relativefooter + tfootheight;
                     }
@@ -299,7 +309,8 @@ function ReactTableBasicArrowkey({ data, columns, onDataChange, onRowSelect, onR
             }
         } else if (e.key === 'Enter') {
             if (onRowSelect) {
-                onRowSelect(rows[selectedIndex].original);
+                const rowEnter = getOneRowData(rows[selectedIndex])   
+                onRowSelect(rowEnter);
             }
         }
     };
