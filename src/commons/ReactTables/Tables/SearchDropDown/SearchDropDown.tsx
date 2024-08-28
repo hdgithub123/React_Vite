@@ -3,8 +3,6 @@ import React from 'react'
 
 import {
     FilterFn,
-    GroupingState,
-    getGroupedRowModel,
     getExpandedRowModel,
     getCoreRowModel,
     useReactTable,
@@ -42,13 +40,12 @@ import { throttle } from '../../components/utils/Others/throttle';
 import { SearchFilter } from './SearchFilter';
 
 
-function SearchDropDown({ data, columns, onRowSelect, grouped = [], columnDisplay, sizeStyleTable = null, }) {
+function SearchDropDown({ data, columns, onRowSelect, columnDisplay, sizeStyleTable = null, sizeStyleTextFilter = null, }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!])
     );
-    const [grouping, setGrouping] = useState<GroupingState>(grouped)
     const [globalFilter, setGlobalFilter] = useState({ checkboxvalue: 'none', filterGlobalValue: '' })
     const [isDropDown, setisDropDown] = useState(false);
     const GlobalFilterFn: FilterFn<any> = (rows, columnIds, filterValue) => {
@@ -96,12 +93,10 @@ function SearchDropDown({ data, columns, onRowSelect, grouped = [], columnDispla
         filterFns: {
             GlobalFilterFn, // Register the custom filter function
         },
-        state: { columnOrder, columnFilters, grouping, globalFilter, },
+        state: { columnOrder, columnFilters, globalFilter, },
         onColumnFiltersChange: setColumnFilters,
         onColumnOrderChange: setColumnOrder,
-        onGroupingChange: setGrouping,
         getExpandedRowModel: getExpandedRowModel(),
-        getGroupedRowModel: getGroupedRowModel(),
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues(),
         onGlobalFilterChange: setGlobalFilter,
@@ -151,7 +146,6 @@ function SearchDropDown({ data, columns, onRowSelect, grouped = [], columnDispla
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
-        if (over.id !== "DropableContainerGroupID") {
             if (active && over && active.id !== over.id) {
                 setColumnOrder(columnOrder => {
                     const oldIndex = columnOrder.indexOf(active.id as string);
@@ -160,14 +154,8 @@ function SearchDropDown({ data, columns, onRowSelect, grouped = [], columnDispla
 
                 });
             }
-        } else {
-
-            if (active && !grouping.includes(active.id)) {
-                setGrouping([...grouping, active.id]);
-            }
-        }
-
     };
+
 
     useEffect(() => {
         setDataDef(data)
@@ -181,7 +169,7 @@ function SearchDropDown({ data, columns, onRowSelect, grouped = [], columnDispla
     // sử dụng để expanded all
     useEffect(() => {
         table.setExpanded(true);
-    }, [grouping, columnFilters]);
+    }, [columnFilters]);
 
     const handleRowClick = (rowData) => {
         const rowClick = getOneRowData(rowData)
@@ -333,9 +321,9 @@ function SearchDropDown({ data, columns, onRowSelect, grouped = [], columnDispla
     return (
         <div className={styles.general_table}>
             <div className={styles.container} onMouseLeave={handleDivonMouseLeave}>
-                {/* Tạo Global Filter */}
+                {/* Tạo Global Filter */} 
                 <div className={styles.globalFilter}>
-                    <SearchFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} onhandleKeyDown={handleKeyDown} onhandleonDoubleClick={handleonhandleonFilterDoubleClick}></SearchFilter>
+                    <SearchFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} onhandleKeyDown={handleKeyDown} onhandleonDoubleClick={handleonhandleonFilterDoubleClick} sizeStyleTextFilter={sizeStyleTextFilter} ></SearchFilter>
                 </div>
                 {isDropDown === true ? (
                      <div className={styles.div_table_container}>

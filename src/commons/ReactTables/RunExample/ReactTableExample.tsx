@@ -64,7 +64,7 @@ function ReactTableExample() {
         // setcl(columns2)
         // console.log("Data",Data)
     }
-
+console.log("styles.size",styles.size)
     return (
         <div>
             <div>
@@ -122,14 +122,16 @@ function ReactTableExample() {
                   </ReactTableNomalArrowkey>
               </div> */}
 
+               
               <div className={styles.SearchDropDown}>
                   <SearchDropDown 
                   data={Data} 
                   columns={columns} 
                   onRowSelect={handleRowSelect} 
-                  //grouped={['firstName','age']}
+                //   grouped={['firstName','age']}
                   columnDisplay={'firstName'}
-                //   sizeStyleTable = {{ width:'800px', height: '300px' }}
+                  sizeStyleTable = {{ width:'800px', maxHeight: '300px' }}
+                  sizeStyleTextFilter={{fontSize: '20px'}}
                   >
                   </SearchDropDown>
               </div>
