@@ -1,5 +1,6 @@
 import { useEffect, useState, } from 'react';
 import { DebouncedInput } from '../../components/utils/Others/DebouncedInput';
+import styles from './SearchFilter.module.css';
 
 export function SearchFilter({ globalFilter, setGlobalFilter , onhandleKeyDown = null, onhandleOnBlur = null, onhandleonFocus = null, onhandleonDoubleClick = null }) {
     const [globalFilterValue, setGlobalFilterValue] = useState('');
@@ -40,9 +41,9 @@ export function SearchFilter({ globalFilter, setGlobalFilter , onhandleKeyDown =
     }
 
     return <DebouncedInput
-        style={{ width: '100%', height: 'auto', padding:'2px', borderRadius:'4px' }}
+        className={styles.textbox}
         onChange={handelGlobalFilterOnChange}
-        placeholder={`Search All...`}
+        placeholder={`Search...`}
         type="text"
         value={(globalFilterValue ?? '') as string}
         onKeyDown={handleKeyDown}

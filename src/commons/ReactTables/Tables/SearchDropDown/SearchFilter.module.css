@@ -1,0 +1,17 @@
+.textbox{
+  width: 100%; 
+  height: auto; 
+  padding: 4px; 
+  border:none;
+  /* outline: none; */
+}
+
+
+.textbox:hover {
+  background-color: rgb(241, 234, 179);
+}
+
+/* input[type=text]:focus {
+  border: 8px solid #33cf0c;
+  outline: 3px solid #090a09;
+} */
