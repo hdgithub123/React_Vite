@@ -40,7 +40,7 @@ export function SearchFilter({ globalFilter, setGlobalFilter , onhandleKeyDown =
     }
 
     return <DebouncedInput
-        // style={{ width: 'calc(100%)', marginRight: '2px' }}
+        style={{ width: '100%', height: 'auto', padding:'2px', borderRadius:'4px' }}
         onChange={handelGlobalFilterOnChange}
         placeholder={`Search All...`}
         type="text"

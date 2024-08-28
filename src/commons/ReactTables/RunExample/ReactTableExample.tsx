@@ -129,7 +129,7 @@ function ReactTableExample() {
                   onRowSelect={handleRowSelect} 
                   //grouped={['firstName','age']}
                   columnDisplay={'firstName'}
-                  sizeStyleTable = {{ width:'70%',  maxHeight: '400px'}}
+                  sizeStyleTable = {{ Width:'70%',  Height: '300px'}}
                   >
                   </SearchDropDown>
               </div>

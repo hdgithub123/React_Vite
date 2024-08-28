@@ -42,7 +42,7 @@ import { throttle } from '../../components/utils/Others/throttle';
 import { SearchFilter } from './SearchFilter';
 
 
-function SearchDropDown({ data, columns, onRowSelect, grouped = [], columnDisplay, sizeStyleTable = { width:'100%',  maxHeight: '200px'}, }) {
+function SearchDropDown({ data, columns, onRowSelect, grouped = [], columnDisplay, sizeStyleTable = null, }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -338,7 +338,7 @@ function SearchDropDown({ data, columns, onRowSelect, grouped = [], columnDispla
                     <SearchFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} onhandleKeyDown={handleKeyDown} onhandleonDoubleClick={handleonhandleonFilterDoubleClick}></SearchFilter>
                 </div>
                 {isDropDown === true ? (
-                     <div className={styles.div_table_container} style={sizeStyleTable}>
+                     <div className={styles.div_table_container}>
                     <DndContext
                         collisionDetection={closestCenter}
                         modifiers={[restrictToHorizontalAxis]}
@@ -348,7 +348,8 @@ function SearchDropDown({ data, columns, onRowSelect, grouped = [], columnDispla
                     >
                         <div
                             ref={parentRef}
-                            className={styles.div_table_container}
+                            className={styles.div_table_container_dnd}
+                            style={sizeStyleTable}
                         >
                             {/* Bắt đầu render table */}
                             <table id={'React_table_id'} className={styles.table_container} onKeyDown={handleKeyDown} onBlur={handleonBlur}>
