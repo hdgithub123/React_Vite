@@ -40,7 +40,7 @@ import { throttle } from '../../components/utils/Others/throttle';
 import { SearchFilter } from './SearchFilter';
 
 
-function SearchDropDown({ data, columns, onRowSelect, columnDisplay, sizeStyleTable = null, sizeStyleTextFilter = null, }) {
+function SearchDropDown({ data, columns, onRowSelect, columnDisplay, cssStyleTable = null, cssStyleTextFilter = null, }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -323,7 +323,7 @@ function SearchDropDown({ data, columns, onRowSelect, columnDisplay, sizeStyleTa
             <div className={styles.container} onMouseLeave={handleDivonMouseLeave}>
                 {/* Tạo Global Filter */} 
                 <div className={styles.globalFilter}>
-                    <SearchFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} onhandleKeyDown={handleKeyDown} onhandleonDoubleClick={handleonhandleonFilterDoubleClick} sizeStyleTextFilter={sizeStyleTextFilter} ></SearchFilter>
+                    <SearchFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} onhandleKeyDown={handleKeyDown} onhandleonDoubleClick={handleonhandleonFilterDoubleClick} cssStyleTextFilter={cssStyleTextFilter} ></SearchFilter>
                 </div>
                 {isDropDown === true ? (
                      <div className={styles.div_table_container}>
@@ -337,7 +337,7 @@ function SearchDropDown({ data, columns, onRowSelect, columnDisplay, sizeStyleTa
                         <div
                             ref={parentRef}
                             className={styles.div_table_container_dnd}
-                            style={sizeStyleTable}
+                            style={cssStyleTable}
                         >
                             {/* Bắt đầu render table */}
                             <table id={'React_table_id'} className={styles.table_container} onKeyDown={handleKeyDown} onBlur={handleonBlur}>

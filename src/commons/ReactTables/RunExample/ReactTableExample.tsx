@@ -10,18 +10,26 @@ import EditableCell from '../components/utils/cells/edit/EditableCell'
 import { makeData, makeDataphhu, generateRandomObjectiveArray } from './makeData';
 import { columns, columns2 } from './columns';
 
-import ReactTableNomal from './Tables/ReactTableBase/ReactTableNomal/ReactTableNomal';
-//import ReactTableSelect from './Tables/ReactTableBase/ReactTableSelect/ReactTableSelect';
-import ReactTableSelect from './Tables/ReactTableBase/ReactTableSelect_mau/ReactTableSelect_mau';
-import DndAndGroupTableWithCheckboxFilter from './DndAndGroupTableWithCheckboxFilter';
-import ReactTableFull from '../Tables/ReactTableFull/ReactTableFull';
-import ReactTableBasic from '../Tables/ReactTableBasic/ReactTableBasic';
-import ReactTable_mau from '../Tables/ReactTable_mau/ReactTable_mau';
-import ReactTablePages from '../Tables/ReactTablePages/ReactTablePages';
-import ReactTableBasicArrowkey from '../Tables/ReactTableBasicArrowkey/ReactTableBasicArrowkey';
-import ReactTableFullArrowkey from '../Tables/ReactTableFullArrowkey/ReactTableFullArrowkey';
-import ReactTableNomalArrowkey from '../Tables/ReactTableNomalArrowkey/ReactTableNomalArrowkey';
-import SearchDropDown from '../Tables/SearchDropDown/SearchDropDown';
+// import ReactTableNomal from './Tables/ReactTableBase/ReactTableNomal/ReactTableNomal';
+// //import ReactTableSelect from './Tables/ReactTableBase/ReactTableSelect/ReactTableSelect';
+// import ReactTableSelect from './Tables/ReactTableBase/ReactTableSelect_mau/ReactTableSelect_mau';
+// import DndAndGroupTableWithCheckboxFilter from './DndAndGroupTableWithCheckboxFilter';
+// import ReactTableFull from '../Tables/ReactTableFull/ReactTableFull';
+// import ReactTableBasic from '../Tables/ReactTableBasic/ReactTableBasic';
+// import ReactTable_mau from '../Tables/ReactTable_mau/ReactTable_mau';
+// import ReactTablePages from '../Tables/ReactTablePages/ReactTablePages';
+// import ReactTableBasicArrowkey from '../Tables/ReactTableBasicArrowkey/ReactTableBasicArrowkey';
+// import ReactTableFullArrowkey from '../Tables/ReactTableFullArrowkey/ReactTableFullArrowkey';
+// import ReactTableNomalArrowkey from '../Tables/ReactTableNomalArrowkey/ReactTableNomalArrowkey';
+// import SearchDropDown from '../Tables/SearchDropDown/SearchDropDown';
+import {ReactTableBasic,
+    ReactTableBasicArrowkey,
+    ReactTableFull,
+    ReactTableFullArrowkey,
+    ReactTableNomalArrowkey,
+    ReactTablePages,
+    SearchDropDown,
+    ReactTable_mau,} from '../Tables/index'
 
 
 function ReactTableExample() {
@@ -130,8 +138,8 @@ console.log("styles.size",styles.size)
                   onRowSelect={handleRowSelect} 
                 //   grouped={['firstName','age']}
                   columnDisplay={'firstName'}
-                  sizeStyleTable = {{ width:'800px', maxHeight: '300px' }}
-                  sizeStyleTextFilter={{fontSize: '20px'}}
+                  cssStyleTextFilter={{fontSize: '20px'}}
+                  cssStyleTable = {{ width:'800px', maxHeight: '300px' }} // đưa maxHeight vào các dòng có thể co dãn
                   >
                   </SearchDropDown>
               </div>
