@@ -3,7 +3,7 @@ import { DateTimeCell, DateTimeUsCell, DateTimeVnCell } from "./orinal/DateTimeC
 import { NumberCell,NumberUsCell,NumberVnCell } from "./orinal/NumberCell";
 import { TextCell,TextGroupCell } from "./orinal/TextCell";
 import { ExplandingDateCell } from "./orinal/ExplandingDateCell";
-import { ExplandingTextCell, TextCellExplanding } from "./orinal/ExplandingTextCell";
+import { ExplandingTextCell } from "./orinal/ExplandingTextCell";
 import {EditableCell} from './edit/EditableCell'
 
 export {
@@ -21,5 +21,4 @@ export {
     TextGroupCell,
     ExplandingDateCell,
     ExplandingTextCell,
-    TextCellExplanding,
   };

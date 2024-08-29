@@ -12,6 +12,7 @@
 
   2. cách sử dụng
   Các components
+   {
     ReactTableBasic,
     ReactTableBasicArrowkey,
     ReactTableFull,
@@ -19,6 +20,8 @@
     ReactTableNomalArrowkey,
     ReactTablePages,
     SearchDropDown,
+   } 
+    
 
 Input:
 { 
@@ -32,6 +35,21 @@ grouped = [],
 exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, 
 isGlobalFilter = false 
 } 
+
+
+SearchDropDown(
+    {
+    data,
+    columns,
+    onRowSelect,
+    columnDisplay, 
+    cssStyleTable = null, 
+    cssStyleTextFilter = null, 
+    }
+    )
+
+
+
 
 1.0 data: Dữ liệu được đưa vào có dạng
 1.1[{key: value,...},...]
@@ -65,16 +83,46 @@ column = [
         id: 'key of data', // bắt buộc phải có
         filterType: 'text of type filter', // có các dạng filter  (text, NumberFilter, DateFilter, DateTimeFilter, RangeFilter, CheckboxFilter)
         footer: info => `Count: ${CountFooter(info.table)}`, // có 3 loại footer (SumFooter, AverageFooter,CountFooter )
-        cell: TextCell, // có thể lựa chọn các cell có sẵn ( TextCell,EditableCell,DateCell,DateUsCell,DateVnCell,DateTimeCell,DateTimeUsCell,DateTimeVnCell,NumberCell,NumberUsCell,NumberVnCell,TextCell,ExplandingDateCell,ExplandingTextCell,TextCellExplanding, ) hoặc tự xây dựng
-        getGroupingValue: TextGroupCell,
+        cell: TextCell, // có thể lựa chọn các cell có sẵn ( TextCell,EditableCell,DateCell,DateUsCell,DateVnCell,DateTimeCell,DateTimeUsCell,DateTimeVnCell,NumberCell,NumberUsCell,NumberVnCell,ExplandingDateCell,ExplandingTextCell,TextCellExplanding, ) hoặc tự xây dựng
+        groupCell: TextGroupCell,
         aggregatedCell:
-        aggregationFn: // có các giá trị ('sum','min','mean')'count'
+        aggregationFn: // có các giá trị ('sum','min','mean'...)
+        enableGlobalFilter: false, // khong cho GlobalFilter thì thêm thuộc tính này
     },
     ...
 ]
 
+filter:  (text, NumberFilter, DateFilter, DateTimeFilter, RangeFilter, CheckboxFilter) //CheckboxFilter cho các  giá trị true/false
+footer: (
+    SumFooter: info => {`Sum: ${SumFooter(info.column, info.table,0,2)}`} 
+    AverageFooter: info => {`Average: ${AverageFooter(info.column, info.table,1,2)}`}
+    CountFooter:  info => `Count: ${CountFooter(info.table)}`
+)
 
-The following aggregation functions are built-in to the table core:
+
+cell: ( 
+  TextCell,
+  EditableCell,
+  DateCell,
+  DateUsCell,
+  DateVnCell,
+  DateTimeCell,
+  DateTimeUsCell,
+  DateTimeVnCell,
+  NumberCell,
+  NumberUsCell,
+  NumberVnCell,
+)
+groupCell và aggregatedCell có thể dùng các cell trên và dùng các Cell có tính chất riêng biệt cho từng loại
+groupCell:(
+  TextGroupCell // bổ sung số lượng subRows
+)
+
+aggregatedCell:(
+  ExplandingDateCell,
+  ExplandingTextCell, // bổ sung nút Expland
+)
+
 aggregationFn:(
   sum -Sums the values of a group of rows
   min -Finds the minimum value of a group of rows

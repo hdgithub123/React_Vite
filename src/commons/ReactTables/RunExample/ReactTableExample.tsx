@@ -72,7 +72,7 @@ function ReactTableExample() {
         // setcl(columns2)
         // console.log("Data",Data)
     }
-console.log("styles.size",styles.size)
+
     return (
         <div>
             <div>

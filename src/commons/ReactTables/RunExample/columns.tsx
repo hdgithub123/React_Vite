@@ -17,7 +17,6 @@ import {
     TextGroupCell,
     ExplandingDateCell,
     ExplandingTextCell,
-    TextCellExplanding,
 } from '../components/utils/cells'
 
 
@@ -309,7 +308,7 @@ const columnssubrowf = [
                 filterType: 'text',
                 // footer: info => `Count: ${CountFooter(info.table)}`,
                 footer: info => `Count: ${CountFooter(info.table)}`,
-                cell: TextCellExplanding,
+                cell: TextCell,
                 aggregatedCell: ExplandingTextCell,
                 // aggregationFn: 'count',
                 //cell: (info) => info.getValue(),
@@ -317,7 +316,7 @@ const columnssubrowf = [
                  * override the value used for row grouping
                  * (otherwise, defaults to the value derived from accessorKey / accessorFn)
                  */
-                getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
+                // getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
             },
             {
                 accessorFn: (row) => row.lastName,
