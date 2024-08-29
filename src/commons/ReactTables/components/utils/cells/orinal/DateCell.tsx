@@ -1,4 +1,4 @@
-import {formatUsDate,formatVnDate,formatDate } from './fomatCell'
+import {formatUsDate,formatVnDate,formatDate } from '../../Others/fomatCell'
 
 export const DateUsCell = ({ getValue, row, column, table }) => {
   const dateValue = getValue();

@@ -1,6 +1,6 @@
 import { SumFooter, AverageFooter, CountFooter } from '../components/utils/Footer/FooterColumn'
 import { TextCell,TextGroupCell } from '../components/utils/cells/orinal/TextCell';
-import { formatNumber, formatVnNumber, formatUsNumber, formatDate } from '../components/utils/cells/orinal/fomatCell'
+import { formatNumber, formatVnNumber, formatUsNumber, formatDate } from '../components/utils/Others/fomatCell'
 import { NumberUsCell, NumberVnCell, NumberCell } from '../components/utils/cells/orinal/NumberCell';
 import { DateVnCell, DateUsCell, DateCell } from '../components/utils/cells/orinal/DateCell';
 import { DateTimeCell, DateTimeVnCell } from '../components/utils/cells/orinal/DateTimeCell';
@@ -329,13 +329,14 @@ const columnssubrowf = [
                 header: () => 'Age',
                 footer: (info) => <div style={{
                     textAlign: 'right',
-                }}>{`Sum: ${formatNumber(SumFooter(info.column, info.table), 0, 2)}`}</div>,
+            }}>{`Sum: ${SumFooter(info.column, info.table,1,2)}`}</div>,
                 filterType: 'number',
                 cell: ({ cell }) => (
                     <NumberCell
                         initialValue={cell.getValue()}
                         minFractionDigits={0}
                         maxFractionDigits={4}
+                        option={{style: 'percent'}}
                     />),
 
 

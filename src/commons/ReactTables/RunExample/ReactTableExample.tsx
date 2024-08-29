@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef, useMemo, CSSProperties } from
 import React from 'react'
 import styles from './ReactTableExample.module.css';
 
-import { formatDate } from '../components/utils/cells/orinal/fomatCell';
+import { formatDate } from '../components/utils/Others/fomatCell';
 import EditableCell from '../components/utils/cells/edit/EditableCell'
 
 
@@ -131,7 +131,7 @@ console.log("styles.size",styles.size)
               </div> */}
 
                
-              <div className={styles.SearchDropDown}>
+              {/* <div className={styles.SearchDropDown}>
                   <SearchDropDown 
                   data={Data} 
                   columns={columns} 
@@ -142,7 +142,7 @@ console.log("styles.size",styles.size)
                   cssStyleTable = {{ width:'800px', maxHeight: '300px' }} // đưa maxHeight vào các dòng có thể co dãn
                   >
                   </SearchDropDown>
-              </div>
+              </div> */}
 
 
 
@@ -194,7 +194,7 @@ console.log("styles.size",styles.size)
 
 
 
-              {/* <div className={styles.div5}>
+              <div className={styles.div5}>
                     <ReactTable_mau
                         data={Data}
                         columns={cl}
@@ -207,7 +207,7 @@ console.log("styles.size",styles.size)
                         isGlobalFilter={true}
                     >
                     </ReactTable_mau>
-                </div> */}
+                </div>
 
 
             </div>

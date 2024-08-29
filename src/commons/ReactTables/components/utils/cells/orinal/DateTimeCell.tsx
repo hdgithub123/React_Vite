@@ -1,4 +1,4 @@
-import {formatVnDateTime,formatUsDateTime,formatDateTime} from './fomatCell'
+import {formatVnDateTime,formatUsDateTime,formatDateTime} from '../../Others/fomatCell'
 
 
 export const DateTimeVnCell = ({ getValue, row, column, table }) => {
