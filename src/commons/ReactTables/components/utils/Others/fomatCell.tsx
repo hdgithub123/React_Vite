@@ -1,4 +1,4 @@
-export const formatDate = (date) => {
+export const formatDate = (date, locale = null ) => {
   if (!date || date === "") {
     return '';
   }
@@ -6,8 +6,14 @@ export const formatDate = (date) => {
   if (isNaN(parsedDate)) {
     return 'Invalid date';
   }
-  const locale = navigator.language;
-  return new Intl.DateTimeFormat(locale, {
+  let localechange= ''
+  if(locale){
+     localechange = locale;
+  } else {
+    localechange = navigator.language;
+  }
+
+  return new Intl.DateTimeFormat(localechange, {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
@@ -46,7 +52,7 @@ export const formatUsDate = (date) => {
 };
 
 
-export const formatDateTime = (date) => {
+export const formatDateTime = (date, locale= null) => {
   if (!date || date === "") {
     return '';
   }
@@ -55,7 +61,12 @@ export const formatDateTime = (date) => {
     return 'Invalid date';
   }
 
-  const locale = navigator.language; // Lấy ngôn ngữ và thiết lập khu vực của máy tính
+  let localechange= ''
+  if(locale){
+     localechange = locale;
+  } else {
+    localechange = navigator.language;
+  }
 
   const datePart = new Intl.DateTimeFormat(locale, {
     day: '2-digit',

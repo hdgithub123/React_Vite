@@ -1,12 +1,25 @@
 import { SumFooter, AverageFooter, CountFooter } from '../components/utils/Footer/FooterColumn'
-import { TextCell,TextGroupCell } from '../components/utils/cells/orinal/TextCell';
+
 import { formatNumber, formatVnNumber, formatUsNumber, formatDate } from '../components/utils/Others/fomatCell'
-import { NumberUsCell, NumberVnCell, NumberCell } from '../components/utils/cells/orinal/NumberCell';
-import { DateVnCell, DateUsCell, DateCell } from '../components/utils/cells/orinal/DateCell';
-import { DateTimeCell, DateTimeVnCell } from '../components/utils/cells/orinal/DateTimeCell';
-import EditableCell from '../components/utils/cells/edit/EditableCell';
-import { ExplandingTextCell, TextCellExplanding, } from '../components/utils/cells/orinal/ExplandingTextCell';
-import { ExplandingDateCell } from '../components/utils/cells/orinal/ExplandingDateCell';
+
+import {
+    EditableCell,
+    DateCell,
+    DateUsCell,
+    DateVnCell,
+    DateTimeCell,
+    DateTimeUsCell,
+    DateTimeVnCell,
+    NumberCell,
+    NumberUsCell,
+    NumberVnCell,
+    TextCell,
+    TextGroupCell,
+    ExplandingDateCell,
+    ExplandingTextCell,
+    TextCellExplanding,
+} from '../components/utils/cells'
+
 
 
 
@@ -72,10 +85,6 @@ const columnscof = [
                         minFractionDigits={0}
                         maxFractionDigits={4}
                     />),
-
-
-                // aggregatedCell: ({ getValue }) =>
-                //     Math.round(getValue<number>() * 100) / 100,
                 aggregationFn: 'mean',
             },
             {
@@ -360,7 +369,7 @@ const columnssubrowf = [
                         accessorKey: 'visits',
                         id: 'visits',
                         header: () => <span>Visits</span>,
-                        cell: DateVnCell,
+                        cell: DateCell,
                         filterType: 'date',
                         // aggregationFn: 'sum',
                         // aggregationFn: 'count',

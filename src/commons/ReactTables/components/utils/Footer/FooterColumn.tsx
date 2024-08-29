@@ -1,27 +1,5 @@
 import { formatNumber } from "../Others/fomatCell";
 
-// // tính tổng trên từng cột
-// export const SumFooter = (column, table) => {
-//   // Recursive function to sum all rows, including sub-rows
-//   const calculateSum = (rows) => {
-//     return rows.reduce((sum, row) => {
-//       const cellValue = row.getValue(column.id);
-//       // If the cell value is a number, add it to the sum
-//       let rowSum = typeof cellValue === 'number' ? cellValue : 0;
-
-//       // Recursively sum the sub-rows if they exist
-//       if (row.subRows && row.subRows.length > 0) {
-//         rowSum += calculateSum(row.subRows);
-//       }
-
-//       return sum + rowSum;
-//     }, 0);
-//   };
-
-//   // Start the calculation with the filtered row model
-//   return calculateSum(table.getFilteredRowModel ().rows);
-// };
-
 // tính tổng trên từng cột
 export const SumFooter = (column, table , minFractionDigits = 0, maxFractionDigits = 20,option = {}, locale = null) => {
   // Recursive function to sum all rows, including sub-rows
