@@ -136,7 +136,30 @@ aggregationFn:(
 )
 
 
+Với colum có parent header
+mẫu
+columnhaveHeader = [
+    {   header: 'Grand Parent Name',
+        [{ header: 'Parent Name',
+            [{
+                (child colum)
+            },
+            {
+                (child colum)
+            }]
+        },
+        {
+            (child colum)
+        }],
 
+    },
+    {
+
+    },
+    {
+
+    }
+]
 
 
 ví dụ: colum không có parent header
@@ -215,5 +238,119 @@ const columns1headercof = [
         aggregationFn: 'mean',
         aggregatedCell: ({ getValue }) =>
             Math.round(getValue<number>() * 100) / 100 + '%',
+    },
+]
+
+
+ví dụ colum có parent header
+
+const column = [
+    {
+        header: 'Name',
+        columns: [
+            {
+                accessorKey: 'firstName',
+                header: 'First Name',
+                id: 'firstName',
+                filterType: 'text',
+                footer: info => `Count: ${formatNumber(CountFooter(info.table),0,2)}`,
+                // footer: CountFooter,
+                cell: TextCell,
+                groupCell: TextGroupCell, // bo sung group cell
+                //cell: (info) => info.getValue(),
+                /**
+                 * override the value used for row grouping
+                 * (otherwise, defaults to the value derived from accessorKey / accessorFn)
+                 */
+                // enableGlobalFilter: false,
+            },
+            {
+                accessorFn: (row) => row.lastName,
+                id: 'lastName',
+                header: () => <span>Last Name</span>,
+                filterType: 'text',
+                cell: (info) =>  info.getValue(),
+                groupCell: TextGroupCell,
+            },
+        ],
+    },
+    {
+        header: 'Info',
+        columns: [
+            {
+                accessorKey: 'age',
+                id: 'age',
+                // header: () => 'Age',
+                header: 'Age',
+
+                footer: (info) => <div style={{
+                    textAlign: 'right',
+                }}>{`Sum: ${formatNumber(SumFooter(info.column, info.table), 0, 2)}`}</div>,
+
+
+                // footer: SumFooter,
+
+
+                 filterType: 'number',
+                cell: ({ cell }) => (
+                    <NumberCell
+                        initialValue={cell.getValue()}
+                        minFractionDigits={0}
+                        maxFractionDigits={4}
+                    />),
+
+
+                aggregatedCell: ({ cell }) => (
+                    <NumberCell
+                        initialValue={cell.getValue()}
+                        minFractionDigits={0}
+                        maxFractionDigits={4}
+                    />),
+                aggregationFn: 'mean',
+            },
+            {
+                header: 'More Info',
+
+                columns: [
+                    {
+                        accessorKey: 'visits',
+                        id: 'visits',
+                        // header: () => <span>Visits</span>,
+                        header: 'Visits',
+                        cell: DateCell,
+                        filterType: 'date',
+                        // aggregationFn: 'sum',
+                        aggregationFn: 'count',
+                        aggregatedCell: ({ cell }) => (
+                            <NumberCell
+                                initialValue={cell.getValue()}
+                                minFractionDigits={0}
+                                maxFractionDigits={4}
+                            />),
+                        //aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
+                    },
+                    {
+                        accessorKey: 'status',
+                        id: 'status',
+                        header: 'Status',
+                        cell: TextCell,
+                        filterType: 'range',
+                    },
+                    {
+                        accessorKey: 'progress',
+                        id: 'progress',
+                        header: 'Profile Progress',
+                        filterType: 'number',
+                        footer: (info) => `Average: ${formatNumber(AverageFooter(info.column, info.table), 0, 2)}`,
+                        // footer: AverageFooter,
+                        cell: ({ getValue }) =>
+                            Math.round(getValue<number>() * 100) / 100 + '%',
+                        aggregationFn: 'mean',
+                        aggregatedCell: ({ getValue }) =>
+                            Math.round(getValue<number>() * 100) / 100 + '%',
+                    },
+                ],
+            },
+        ],
     },
 ]
