@@ -114,21 +114,19 @@ function ReactTableExample() {
                   </ReactTableBasicArrowkey>
               </div> */}
 
-                {/* <div className={styles.div3}>
+                <div className={styles.div3}>
                   
                   <ReactTableNomalArrowkey 
                   data={Data} 
                   columns={columns} 
                   onRowSelect={handleRowSelect} 
-                  onRowsSelect={handleRowsSelect}
                   onDataChange={handleDataChange}
-                  exportFile= {{name:'day la file cua toi.xlsx', sheetName:'My Sheet' , title :"mỳile", description:'mo ta day nay'}}
                   onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
                   //grouped={['firstName','age']}
                   isGlobalFilter = {true}
                   >
                   </ReactTableNomalArrowkey>
-              </div> */}
+              </div>
 
                
               {/* <div className={styles.SearchDropDown}>
@@ -202,7 +200,7 @@ function ReactTableExample() {
                         onRowsSelect={handleRowsSelect}
                         onDataChange={handleDataChange}
                         onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
-                        exportFile={{ name: 'day la file cua toi.xlsx', sheetName: 'My Sheet', title: "mỳile", description: 'mo ta day nay' }}
+                        //exportFile={{ name: 'day la file cua toi.xlsx', sheetName: 'My Sheet', title: "mỳile", description: 'mo ta day nay' }}
                         //grouped={['firstName','age']}
                         isGlobalFilter={true}
                     >

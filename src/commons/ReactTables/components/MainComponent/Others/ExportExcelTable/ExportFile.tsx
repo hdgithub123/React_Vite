@@ -5,7 +5,7 @@ import { ExportExcelTable } from "./ExportExcelTable";
 import { getSelectedData } from "../getSelectedData";
 import styles from './ExportFile.module.css';
 
-export const ExportFile = ({ table, exportFile = {name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null } }) => {
+export const ExportFile = ({ table, exportFile = null }) => {
     const filteredUndefinedData = getDataVisibleColumn(getSelectedData(table), table.getState().columnVisibility);
     const filterData = getDataVisibleColumn(getRowModelData(table), table.getState().columnVisibility);
     return <>

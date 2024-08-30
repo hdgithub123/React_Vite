@@ -49,7 +49,7 @@ import { getRowModelData } from '../../components/MainComponent/Others/getRowMod
 import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
 import { throttle } from '../../components/utils/Others/throttle';
 
-function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
+function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = null, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>

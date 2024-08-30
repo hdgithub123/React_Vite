@@ -47,7 +47,7 @@ import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../com
 import {GlobalFilter} from '../../components/MainComponent/GlobalFilter/GlobalFilter';
 import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
 
-function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null },isGlobalFilter = false }) {
+function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = null,isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>

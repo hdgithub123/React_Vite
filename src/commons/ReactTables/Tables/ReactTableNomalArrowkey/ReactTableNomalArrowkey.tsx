@@ -44,7 +44,7 @@ import { getOneRowData } from '../../components/MainComponent/Others/getOneRowDa
 import { throttle } from '../../components/utils/Others/throttle';
 
 
-function ReactTableNomalArrowkey({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
+function ReactTableNomalArrowkey({ data, columns, onDataChange, onRowSelect, onVisibleColumnDataSelect, grouped = [], isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>

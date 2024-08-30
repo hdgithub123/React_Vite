@@ -45,9 +45,10 @@ import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../com
 import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
 import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
 import { throttle } from '../../components/utils/Others/throttle';
+import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 
 
-function ReactTableBasicArrowkey({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
+function ReactTableBasicArrowkey({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = null, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -360,10 +361,17 @@ function ReactTableBasicArrowkey({ data, columns, onDataChange, onRowSelect, onR
     return (
         <div className={styles.general_table}>
             <div className={styles.container}>
+                <div style={{display:'flex', alignItems: 'center', width:'100%'}}>
+                {/* Render các nút điều khiển */}
+                <div className={styles.botton_dot}>
+                    <ButtonPanel table={table} exportFile={exportFile}></ButtonPanel>
+                </div>
                 {/* Tạo Global Filter */}
-                {isGlobalFilter === true ? (<div className={styles.globalFilter}>
-                    <GlobalFilter globalFilter= {globalFilter} setGlobalFilter= {setGlobalFilter} onhandleKeyDown={handleKeyDown}></GlobalFilter>
-                </div>): null}
+                {isGlobalFilter === true ? (<div style={{display:'flex', alignItems: 'center', width:'100%'}}>
+                <GlobalFilter globalFilter= {globalFilter} setGlobalFilter= {setGlobalFilter} onhandleKeyDown={handleKeyDown}></GlobalFilter>
+                </div>) : null}
+            </div>
+
                 {/* Tạo Drop Group Area */}
                 <DndContext
                     collisionDetection={closestCenter}
