@@ -114,7 +114,7 @@ function ReactTableExample() {
                   </ReactTableBasicArrowkey>
               </div> */}
 
-                <div className={styles.div3}>
+                {/* <div className={styles.div3}>
                   
                   <ReactTableNomalArrowkey 
                   data={Data} 
@@ -126,10 +126,10 @@ function ReactTableExample() {
                   isGlobalFilter = {true}
                   >
                   </ReactTableNomalArrowkey>
-              </div>
+              </div> */}
 
                
-              {/* <div className={styles.SearchDropDown}>
+              <div className={styles.SearchDropDown}>
                   <SearchDropDown 
                   data={Data} 
                   columns={columns} 
@@ -140,7 +140,7 @@ function ReactTableExample() {
                   cssStyleTable = {{ width:'800px', maxHeight: '300px' }} // đưa maxHeight vào các dòng có thể co dãn
                   >
                   </SearchDropDown>
-              </div> */}
+              </div>
 
 
 
@@ -191,7 +191,7 @@ function ReactTableExample() {
                 </div> */}
 
 
-
+{/* 
               <div className={styles.div5}>
                     <ReactTable_mau
                         data={Data}
@@ -205,7 +205,7 @@ function ReactTableExample() {
                         isGlobalFilter={true}
                     >
                     </ReactTable_mau>
-                </div>
+                </div> */}
 
 
             </div>
