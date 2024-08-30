@@ -52,7 +52,7 @@ export function SearchFilter({ globalFilter, setGlobalFilter ,cssStyleTextFilter
         onBlur={handleOnBlur}
         onFocus={handleonFocus}
         onDoubleClick={handleonDoubleClick}
-        debounce = {50}
+        debounce = {200}
     />
 }
 
