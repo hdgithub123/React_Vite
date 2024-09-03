@@ -9,7 +9,7 @@
 // import DropdownComponent from './components/DropdownComponent/DropdownComponent';
 
 // import CheckSearchBox from './components/SeachboxComponent/CheckSearchBox';
-// import SearchTableDropdownEx from './components/SearchTableDropdown/SearchTableDropdownEx'
+ import SearchTableDropdownEx from './commons/SearchTableDropdown/SearchTableDropdownEx'
  // import ReactTableEx from './components/ReactTable/ReactTableEx';
 // //import FilteringTable from './components/ReactTable/FilteringTable/FilteringTable';
 //import RowSelection from './components/ReactTable/RowSelection/RowSelection';
@@ -22,7 +22,7 @@
 
 
 //import TableComponent from './components/TableReactFull/TableUI/TableComponent';
-import ReactTableExample from './components/ReactTables/RunExample/ReactTableExample';
+import ReactTableExample from './commons/ReactTables/RunExample/ReactTableExample';
 import {DropableSelectExample} from './components/Z_Nhap/DropableSelectExample';
 
 //import GroupTable from './components/TableReactFull/GroupTable/GroupTable';

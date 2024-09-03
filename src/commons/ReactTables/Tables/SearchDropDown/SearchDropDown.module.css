@@ -1,0 +1,138 @@
+:root {
+  --HoverColour: aqua;
+  --BackgroundColour: white;
+  --BorderTableColour: 2px solid gray;
+  --OutlineHeaderColour: 1px solid lightgray;
+  --OutlineBodyColour: 0.3px dotted lightgray;
+  --OutlineFooterColour: 1px solid lightgray;
+  --BorderFooterColour: 2px solid gray;
+}
+
+.general_table{
+  height: 100%;
+  width: 100%;
+  /* border: 1px rgb(61, 205, 17) solid; */
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.globalFilter{
+  display: flex;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  outline: 1px black solid;
+}
+/* .globalFilter:hover{
+    border: 2px black solid;
+    background-color: gray;
+} */
+.div_table_container {
+  position: absolute;
+  width: auto;
+  top: 100%;
+  left: 0%;
+  z-index: 4;
+  overflow-y: auto;
+  overflow-x: auto;
+  background-color: var(--BackgroundColour);
+  border: var(--BorderTableColour);
+  border-radius: 4px;
+}
+
+.div_table_container_dnd{
+  position: relative;
+  overflow-y: auto;
+  overflow-x: auto;
+  max-height: 70vh;
+  height: auto;
+  max-width: 70vw;
+  width: 70vw;
+  background-color: var(--BackgroundColour);
+}
+.div_table_container table {
+  /* min-width: 100%; */
+  width: 100%;
+  /* border-collapse: collapse; */
+}
+
+.div_table_container thead {
+  position: sticky; /* make the table heads sticky */
+  top: 0px; /* table head will be placed from the top of the table and sticks to it */
+  background-color: var(--BackgroundColour);
+}
+
+.table_container{
+  height: 100%;
+}
+
+/* .table_container tr.table_body_td_empty td {
+  border: none;
+  height: 100%;
+} */
+
+.table_head tr{
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.table_head th{
+  outline: var(--OutlineHeaderColour);
+  padding: 2px;
+}
+
+.table_head td{
+  outline: var(--OutlineHeaderColour);
+}
+
+
+.table_body td{
+  outline: var(--OutlineBodyColour);
+  max-width: 0; /* khong bi gioi han keo */
+}
+
+
+.table_body tr:hover {
+  background-color: var(--HoverColour);
+}
+
+.table_footer{
+  position: sticky; /* make the table heads sticky */
+  bottom: 0px; /* table head will be placed from the top of the table and sticks to it */
+  background-color: var(--BackgroundColour);
+}
+
+.table_footer_tr td{
+  outline: var(--OutlineFooterColour);
+  border-Top: var(--BorderFooterColour);
+  border-Bottom: var(--BorderFooterColour);
+  font-Weight: bold;
+}
+
+
+.table_body_highlightkeymove {
+  background-color:  var(--HoverColour); /* Màu nền highlight */
+}
+
+/* Custom Scrollbar for tbody */
+.div_table_container_dnd::-webkit-scrollbar {
+  height: 5px; /* Chiều cao của thanh scrollbar ngang */
+  width: 5px; /* Adjust the width as needed */
+}
+
+
+.div_table_container_dnd::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color of the track */
+}
+
+.div_table_container_dnd::-webkit-scrollbar-thumb {
+  background: #888; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners for the thumb */
+}
+
+.div_table_container_dnd::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Color of the thumb on hover */
+}
