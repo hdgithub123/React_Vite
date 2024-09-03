@@ -43,13 +43,9 @@ import { TriStateCheckbox } from '../../components/MainComponent/Others/TriState
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
-import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
-import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
-import { getRowModelData } from '../../components/MainComponent/Others/getRowModelData';
-import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
-import { throttle } from '../../components/utils/Others/throttle';
+import {getIsAllRowsSelected, getToggleAllRowsSelectedHandler} from '../../components/MainComponent/Others/RowsSelected'
 
-function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = null, isGlobalFilter = false }) {
+function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = {name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description:null  } }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -83,15 +79,10 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
             checkboxCheck = true;
         }
 
-        if (checkboxCheck && globalValueCheck) {
-            return true
-        } else {
-            return false
-        }
     };
 
     const table = useReactTable({
-        data: dataDef,
+        data: data,
         columns,
         columnResizeMode: 'onChange',
         getCoreRowModel: getCoreRowModel(),
@@ -178,14 +169,6 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
     };
 
-    useEffect(() => {
-        setDataDef(data)
-    }, [data]);
-
-    useEffect(() => {
-        setColumnOrder(() =>
-            columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
-    }, [columns]);
 
     useEffect(() => {
         if (onDataChange) {
@@ -230,106 +213,9 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         } else if (value === false) {
             updatedFilter.checkboxvalue = 'unchecked';
         } else {
-            updatedFilter.checkboxvalue = 'none';
-        }
-
-        // Set the global filter with the updated object
-        setGlobalFilter(updatedFilter);
-    };
-
-    // arrow key
-    const [headerHeight, setHeaderHeight] = useState(0); // Chiều cao của header
-    const [selectedIndex, setSelectedIndex] = useState(-1); // Lưu trạng thái hàng được chọn
-
-    useEffect(() => {
-        if (selectedIndex !== -1 && parentRef.current) {
-            const listItemSelect = parentRef.current.querySelector(`tr[data-key="${selectedIndex}"]`);
-            const listContainerRectTop = parentRef.current.getBoundingClientRect().top; // vi tri top tọa độ table
-            // Tính toán chiều cao của header
-            const theadHeight = parentRef.current.querySelector('thead').getBoundingClientRect().height; // chiều cao của phần header
-            const tfootheight = parentRef.current.querySelector('tfoot').getBoundingClientRect().height;
-            const tfootTop = parentRef.current.querySelector('tfoot').getBoundingClientRect().top; // vị trí top của footer
-
-            let firstKey = 1
-            for (let i = 1; i < 1000; i++) {
-                let firstCheck = parentRef.current.querySelector(`tbody tr:nth-child(${i})`);
-                if (firstCheck) {
-                    const firstCheckTop = firstCheck.getBoundingClientRect().top;// vị tri top cua dòng được chọn
-                    if (firstCheckTop > listContainerRectTop + theadHeight && i > 2) {
-                        firstKey = i - 1
-                        break;
-                    }
-                } else {
-                    break;
-                }
-            }
-            const firstItem = parentRef.current.querySelector(`tbody tr:nth-child(${firstKey})`);
-            const dataKey = firstItem.getAttribute('data-key');
-            let listItem = null
-            if (listItemSelect) {
-                listItem = listItemSelect
-            } else {
-                listItem = firstItem
-                setSelectedIndex(+dataKey);
-            }
-            if (listItem) {
-                const listItemRectTop = listItem.getBoundingClientRect().top;// vị tri top cua dòng được chọn
-                const listItemRectHeight = listItem.getBoundingClientRect().height // chiều cao của dòng được chọn
-                setHeaderHeight(theadHeight);
-                // Tính toán vị trí của dòng được highlight trong phần hiển thị trừ đi chiều cao của header
-                const relativeTop = listItemRectTop - listContainerRectTop - headerHeight; // khoảng cách từ dòng hiện tại đến cuối header
-                const relativefooter = tfootTop - listItemRectTop + listItemRectHeight - tfootheight;
-                if (relativeTop < 0) {
-                    parentRef.current.scrollTop = parentRef.current.scrollTop + relativeTop;
-                    // parentRef.current.scrollTop = parentRef.current.scrollTop - relativefooter + tfootheight; // nếu dùng cái này thì sẽ scoll lên top
-                } else {
-                    if (relativefooter < tfootheight) {
-                        // parentRef.current.scrollTop = parentRef.current.scrollTop + relativeTop; // nếu dùng cái này thì sẽ scoll xuống bottom
-                        parentRef.current.scrollTop = parentRef.current.scrollTop - relativefooter + tfootheight;
-                    }
-                }
-
-            }
-        }
-    }, [selectedIndex]);
-
-    const lengthData = table.getRowModel().rows.length
-
-    const updateSelectedIndex = useMemo(()=>{
-        return throttle((newIndex) => {
-            setSelectedIndex(newIndex);
-          }, 200);
-    },[])
-
-
-    const handleKeyDown = (e) => {
-        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-            e.preventDefault();
-            if (e.key === 'ArrowUp') {
-                updateSelectedIndex(prevIndex => Math.max(prevIndex - 1, 0));
-            } else if (e.key === 'ArrowDown') {
-                updateSelectedIndex(prevIndex => Math.min(prevIndex + 1, lengthData - 1));
-            }
-        } else if (e.key === 'Enter') {
-            if (onRowSelect) {
-                const rowEnter = getOneRowData(rows[selectedIndex])   
-                onRowSelect(rowEnter);
-            }
+            table.setGlobalFilter('none')
         }
     };
-
-    useEffect(() => {
-        window.addEventListener('keydown', handleKeyDown);
-        return () => {
-          window.removeEventListener('keydown', handleKeyDown);
-        };
-      }, [handleKeyDown]);
-
-
-    const handleonBlur = () => {
-        setSelectedIndex(-1);
-    }
-
     // bắt đầu render Virtual
 
     const { rows } = table.getRowModel()
@@ -362,14 +248,12 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
             ]
             : [0, 0];
 
+
+
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
             <div className={styles.container}>
-                {/* Tạo Global Filter */}
-                {isGlobalFilter === true ? (<div className={styles.globalFilter}>
-                    <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} onhandleKeyDown={handleKeyDown}></GlobalFilter>
-                </div>) : null}
                 {/* Tạo Drop Group Area */}
                 <DndContext
                     collisionDetection={customCollisionDetection}

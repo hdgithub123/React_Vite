@@ -18,6 +18,7 @@
   max-height: 200px;
   overflow-x: auto;
   overflow-y: auto; /* Enable vertical scrolling */
+  z-index: 9;
 }
 .dropdown-style {
   background-color: white;
