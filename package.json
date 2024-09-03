@@ -17,6 +17,7 @@
     "@tanstack/react-table": "^8.20.1",
     "@tanstack/react-virtual": "^3.8.1",
     "axios": "^1.6.8",
+    "draft-js": "^0.11.7",
     "react": "^18.2.0",
     "react-cookie": "^7.1.0",
     "react-dom": "^18.2.0",
