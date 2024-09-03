@@ -8,7 +8,6 @@
 // import DropdownComponent from './components/DropdownComponent/DropdownComponent';
 
 // import CheckSearchBox from './components/SeachboxComponent/CheckSearchBox';
-// import SearchTableDropdownEx from './components/SearchTableDropdown/SearchTableDropdownEx'
  // import ReactTableEx from './components/ReactTable/ReactTableEx';
 // //import FilteringTable from './components/ReactTable/FilteringTable/FilteringTable';
 //import RowSelection from './components/ReactTable/RowSelection/RowSelection';
@@ -34,10 +33,7 @@ function App() {
 
   return (
       <>
-      <div style={{zIndex:'5', }}>
-      <SearchTableDropdownEx></SearchTableDropdownEx>
-      <p> end seach table</p>
-      </div>
+
       
 
       {/* <GroupTable></GroupTable> */}
