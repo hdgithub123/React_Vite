@@ -20,6 +20,7 @@
 
 
 //import TableComponent from './components/TableReactFull/TableUI/TableComponent';
+import ReactRichTextEditorExample from './commons/ReactRichTextEditor/RunExample/ReactRichTextEditorExample';
 import ReactTableExample from './commons/ReactTables/RunExample/ReactTableExample';
 import {DropableSelectExample} from './components/Z_Nhap/DropableSelectExample';
 
@@ -38,36 +39,16 @@ function App() {
 
       {/* <GroupTable></GroupTable> */}
 
-      {/* <DndTableRectFull></DndTableRectFull> */}
-      <p> ReactTableExample</p>
+
+      {/* <p> ReactTableExample</p>
       <div style={{zIndex:'3'}}>
         <ReactTableExample></ReactTableExample>
-      </div>
+      </div> */}
      
 
-      {/* <TableComponent></TableComponent> */}
-     {/* <MutipleContainers></MutipleContainers> */}
-      {/* <GeneralTableEX></GeneralTableEX> */}
+     <ReactRichTextEditorExample></ReactRichTextEditorExample>
 
-      {/* <GeneralTableTanStack></GeneralTableTanStack>
-      <FiltersFaceted></FiltersFaceted> */}
-      {/* <RowSelection></RowSelection> */}
-      {/* <SortingTable></SortingTable> */}
 
-     {/* <ReactTableEx></ReactTableEx>
-      <p> end seach table</p> */}
-  
-      {/* <FilteringTable></FilteringTable>
-      <p> end seach FilteringTable</p> */}
-
-        {/* <h1>hello</h1>
-      <RouterComponent></RouterComponent> */}
-      {/* <TableComponent></TableComponent> */}
-      {/* <TableComponentNoSelect></TableComponentNoSelect> */}
-
-    {/* <DropdownComponent></DropdownComponent> */}
-
-        {/* <DropableSelectExample></DropableSelectExample> */}
 
 
       </>
