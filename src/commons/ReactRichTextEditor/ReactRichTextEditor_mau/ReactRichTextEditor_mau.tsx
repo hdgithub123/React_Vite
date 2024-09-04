@@ -1,160 +1,164 @@
-import React, { useState, useRef } from "react";
-import { Editor, EditorState, RichUtils, getDefaultKeyBinding } from "draft-js";
-// import "draft-js/dist/Draft.css";
-import './ReactRichTextEditor.css';
+import React, { useState, useRef, useEffect } from 'react';
+import Editor, { createEditorStateWithText } from '@draft-js-plugins/editor';
+import { EditorState } from 'draft-js';
+// Import các plugin cần thiết
+import createToolbarPlugin, { Separator } from '@draft-js-plugins/static-toolbar';
+import createEmojiPlugin from '@draft-js-plugins/emoji';
+import createHashtagPlugin from '@draft-js-plugins/hashtag';
+import createTextAlignmentPlugin from '@draft-js-plugins/text-alignment';
+import createImagePlugin from '@draft-js-plugins/image';
+import {
+  ItalicButton,
+  BoldButton,
+  UnderlineButton,
+  CodeButton,
+  HeadlineOneButton,
+  HeadlineTwoButton,
+  HeadlineThreeButton,
+  UnorderedListButton,
+  OrderedListButton,
+  BlockquoteButton,
+  CodeBlockButton,
+} from '@draft-js-plugins/buttons';
+
+import '@draft-js-plugins/emoji/lib/plugin.css';
+import '@draft-js-plugins/hashtag/lib/plugin.css';
+import '@draft-js-plugins/text-alignment/lib/plugin.css';
+import editorStyles from './ReactRichTextEditor.module.css';
+
+// Components HeadlinesPicker và HeadlinesButton như trên
+const HeadlinesPicker = ({ onOverrideContent }) => {
+  useEffect(() => {
+    const onWindowClick = () => onOverrideContent(undefined);
+    window.addEventListener('click', onWindowClick);
+
+    return () => {
+      window.removeEventListener('click', onWindowClick);
+    };
+  }, [onOverrideContent]);
+
+  const buttons = [HeadlineOneButton, HeadlineTwoButton, HeadlineThreeButton];
+
+  return (
+    <div>
+      {buttons.map((Button, i) => (
+        <Button key={i} {...this.props} />
+      ))}
+    </div>
+  );
+};
+
+const HeadlinesButton = ({ onOverrideContent }) => {
+  const onClick = () => onOverrideContent(HeadlinesPicker);
+
+  return (
+    <div className={editorStyles.headlineButtonWrapper}>
+      <button onClick={onClick} className={editorStyles.headlineButton}>
+        H
+      </button>
+    </div>
+  );
+};
+
+// Khởi tạo plugin
+const toolbarPlugin = createToolbarPlugin();
+const emojiPlugin = createEmojiPlugin();
+const hashtagPlugin = createHashtagPlugin();
+const textAlignmentPlugin = createTextAlignmentPlugin();
+const imagePlugin = createImagePlugin();
+
+const { EmojiSuggestions, EmojiSelect } = emojiPlugin;
+const { Toolbar } = toolbarPlugin;
+// const { AlignmentTool } = textAlignmentPlugin;
+
+
+
+
+
+
+
+
+// Sử dụng các plugin
+const plugins = [toolbarPlugin, emojiPlugin, hashtagPlugin, textAlignmentPlugin,imagePlugin];
+
+const text = 'In this editor a toolbar shows up once you select part of the text …';
 
 const ReactRichTextEditor_mau = () => {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const editorRef = useRef(null);
+  const [editorState, setEditorState] = useState(() => createEditorStateWithText(text));
+  const editor = useRef(null);
 
-  const focus = () => editorRef.current.focus();
 
-  const handleKeyCommand = (command, editorState) => {
-    const newState = RichUtils.handleKeyCommand(editorState, command);
-    if (newState) {
-      setEditorState(newState);
-      return true;
+  const [editorImgState, setEditorImgState] = useState(EditorState.createEmpty());
+
+  const onChange = (newEditorState) => {
+    setEditorState(newEditorState);
+  };
+
+  const focus = () => {
+    editor.current.focus();
+  };
+
+  useEffect(() => {
+    setEditorState(createEditorStateWithText(text));
+  }, []);
+
+  const insertImage = (editorImgState, url) => {
+    const contentState = editorImgState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity('IMAGE', 'IMMUTABLE', { src: url });
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    const newEditorState = EditorState.set(editorImgState, {
+      currentContent: contentStateWithEntity,
+    });
+    return EditorState.forceSelection(
+      newEditorState,
+      newEditorState.getCurrentContent().getSelectionAfter()
+    );
+  };
+
+
+  const addImage = () => {
+    const url = window.prompt('Nhập URL hình ảnh');
+    if (url) {
+      const newState = insertImage(editorImgState, url);
+      setEditorImgState(newState);
     }
-    return false;
   };
 
-  const mapKeyToEditorCommand = (e) => {
-    if (e.keyCode === 9 /* TAB */) {
-      const newEditorState = RichUtils.onTab(e, editorState, 4 /* maxDepth */);
-      if (newEditorState !== editorState) {
-        setEditorState(newEditorState);
-      }
-      return;
-    }
-    return getDefaultKeyBinding(e);
-  };
-
-  const toggleBlockType = (blockType) => {
-    setEditorState(RichUtils.toggleBlockType(editorState, blockType));
-  };
-
-  const toggleInlineStyle = (inlineStyle) => {
-    setEditorState(RichUtils.toggleInlineStyle(editorState, inlineStyle));
-  };
-
-  // Check if the editor has any content
-  let className = 'RichEditor-editor';
-  const contentState = editorState.getCurrentContent();
-  if (!contentState.hasText()) {
-    if (contentState.getBlockMap().first().getType() !== 'unstyled') {
-      className += ' RichEditor-hidePlaceholder';
-    }
-  }
 
   return (
-    <div className="RichEditor-root">
-      <BlockStyleControls editorState={editorState} onToggle={toggleBlockType} />
-      <InlineStyleControls editorState={editorState} onToggle={toggleInlineStyle} />
-      <div className={className} onClick={focus}>
+    <div>
+      <div className={editorStyles.editor} onClick={focus}>
         <Editor
-          blockStyleFn={getBlockStyle}
-          customStyleMap={styleMap}
           editorState={editorState}
-          handleKeyCommand={handleKeyCommand}
-          keyBindingFn={mapKeyToEditorCommand}
-          onChange={setEditorState}
-          placeholder="Tell a story..."
-          ref={editorRef}
-          spellCheck={true}
+          onChange={onChange}
+          plugins={plugins}
+          ref={editor}
         />
+        {/* Toolbar */}
+        <Toolbar>
+          {(externalProps) => (
+            <div className={editorStyles.toolbar}>
+              <BoldButton {...externalProps} />
+              <ItalicButton {...externalProps} />
+              <UnderlineButton {...externalProps} />
+              <CodeButton {...externalProps} />
+              {/* <Separator {...externalProps} /> */}
+              {/* <HeadlinesButton {...externalProps} /> */}
+              <UnorderedListButton {...externalProps} />
+              <OrderedListButton {...externalProps} />
+              <BlockquoteButton {...externalProps} />
+              <CodeBlockButton {...externalProps} />
+              <textAlignmentPlugin.TextAlignment {...externalProps} />
+              <button onClick={addImage}>Thêm Hình Ảnh</button>
+            </div>
+          )}
+        </Toolbar>
+        {/* Emoji Suggestions and Picker */}
+        <EmojiSuggestions />
       </div>
-    </div>
-  );
-};
+      {/* Emoji Selector */}
+      <EmojiSelect />
 
-// Custom overrides for "code" style.
-const styleMap = {
-  CODE: {
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
-    fontFamily: '"Inconsolata", "Menlo", "Consolas", monospace',
-    fontSize: 16,
-    padding: 2,
-  },
-};
-
-function getBlockStyle(block) {
-  switch (block.getType()) {
-    case 'blockquote': return 'RichEditor-blockquote';
-    default: return null;
-  }
-}
-
-const StyleButton = ({ onToggle, active, label, style }) => {
-  const onToggleHandler = (e) => {
-    e.preventDefault();
-    onToggle(style);
-  };
-
-  let className = 'RichEditor-styleButton';
-  if (active) {
-    className += ' RichEditor-activeButton';
-  }
-
-  return (
-    <span className={className} onMouseDown={onToggleHandler}>
-      {label}
-    </span>
-  );
-};
-
-const BLOCK_TYPES = [
-  { label: 'H1', style: 'header-one' },
-  { label: 'H2', style: 'header-two' },
-  { label: 'H3', style: 'header-three' },
-  { label: 'H4', style: 'header-four' },
-  { label: 'H5', style: 'header-five' },
-  { label: 'H6', style: 'header-six' },
-  { label: 'Blockquote', style: 'blockquote' },
-  { label: 'UL', style: 'unordered-list-item' },
-  { label: 'OL', style: 'ordered-list-item' },
-  { label: 'Code Block', style: 'code-block' },
-];
-
-const BlockStyleControls = ({ editorState, onToggle }) => {
-  const selection = editorState.getSelection();
-  const blockType = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType();
-
-  return (
-    <div className="RichEditor-controls">
-      {BLOCK_TYPES.map((type) => (
-        <StyleButton
-          key={type.label}
-          active={type.style === blockType}
-          label={type.label}
-          onToggle={onToggle}
-          style={type.style}
-        />
-      ))}
-    </div>
-  );
-};
-
-const INLINE_STYLES = [
-  { label: 'Bold', style: 'BOLD' },
-  { label: 'Italic', style: 'ITALIC' },
-  { label: 'Underline', style: 'UNDERLINE' },
-  { label: 'Monospace', style: 'CODE' },
-];
-
-const InlineStyleControls = ({ editorState, onToggle }) => {
-  const currentStyle = editorState.getCurrentInlineStyle();
-
-  return (
-    <div className="RichEditor-controls">
-      {INLINE_STYLES.map((type) => (
-        <StyleButton
-          key={type.label}
-          active={currentStyle.has(type.style)}
-          label={type.label}
-          onToggle={onToggle}
-          style={type.style}
-        />
-      ))}
     </div>
   );
 };
