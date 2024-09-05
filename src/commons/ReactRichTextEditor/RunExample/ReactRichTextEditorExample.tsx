@@ -1,9 +1,13 @@
-import {ReactRichTextEditor_mau} from "../index";
+import {CustomMentionEditor,SimpleEmojiEditor,AddImageEditor,CustomAddVideoVideoEditor,CustomStickerEditor} from "../index";
 
 function ReactRichTextEditorExample() {
     return (
         <div>
-            <ReactRichTextEditor_mau></ReactRichTextEditor_mau>
+            {/* <CustomMentionEditor></CustomMentionEditor> */}
+            <SimpleEmojiEditor></SimpleEmojiEditor>
+            <AddImageEditor></AddImageEditor>
+            <CustomAddVideoVideoEditor></CustomAddVideoVideoEditor>
+            <CustomStickerEditor></CustomStickerEditor>
         </div>
     )
 
