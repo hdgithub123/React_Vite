@@ -15,47 +15,48 @@ import {
   BlockquoteButton,
   CodeBlockButton,
 } from '@draft-js-plugins/buttons';
+import '@draft-js-plugins/inline-toolbar/lib/plugin.css';
 import editorStyles from './editorStyles.module.css';
 
-const HeadlinesPicker = ({ onOverrideContent, ...props }) => {
-  useEffect(() => {
-    const onWindowClick = () => {
-      onOverrideContent(undefined);
-    };
-    window.addEventListener('click', onWindowClick);
-    return () => {
-      window.removeEventListener('click', onWindowClick);
-    };
-  }, [onOverrideContent]);
+// const HeadlinesPicker = ({ onOverrideContent, ...props }) => {
+//   useEffect(() => {
+//     const onWindowClick = () => {
+//       onOverrideContent(undefined);
+//     };
+//     window.addEventListener('click', onWindowClick);
+//     return () => {
+//       window.removeEventListener('click', onWindowClick);
+//     };
+//   }, [onOverrideContent]);
 
-  const buttons = [HeadlineOneButton, HeadlineTwoButton, HeadlineThreeButton];
-  return (
-    <div>
-      {buttons.map((Button, i) => (
-        <Button key={i} {...props} />
-      ))}
-    </div>
-  );
-};
+//   const buttons = [HeadlineOneButton, HeadlineTwoButton, HeadlineThreeButton];
+//   return (
+//     <div>
+//       {buttons.map((Button, i) => (
+//         <Button key={i} {...props} />
+//       ))}
+//     </div>
+//   );
+// };
 
-const HeadlinesButton = ({ onOverrideContent }) => {
-  const onMouseDown = (event) => event.preventDefault();
+// const HeadlinesButton = ({ onOverrideContent }) => {
+//   const onMouseDown = (event) => event.preventDefault();
 
-  const onClick = () => {
-    onOverrideContent(HeadlinesPicker);
-  };
+//   const onClick = () => {
+//     // onOverrideContent(HeadlinesPicker);
+//   };
 
-  return (
-    <div
-      onMouseDown={onMouseDown}
-      className={editorStyles.headlineButtonWrapper}
-    >
-      <button onClick={onClick} className={editorStyles.headlineButton}>
-        H
-      </button>
-    </div>
-  );
-};
+//   return (
+//     <div
+//       onMouseDown={onMouseDown}
+//       className={editorStyles.headlineButtonWrapper}
+//     >
+//       <button onClick={onClick} className={editorStyles.headlineButton}>
+//         H
+//       </button>
+//     </div>
+//   );
+// };
 
 const inlineToolbarPlugin = createInlineToolbarPlugin();
 const { InlineToolbar } = inlineToolbarPlugin;
@@ -91,6 +92,10 @@ const CustomInlineToolbarEditor = () => {
             <CodeButton {...externalProps} />
             <Separator {...externalProps} />
             <HeadlinesButton {...externalProps} />
+            <HeadlineOneButton {...externalProps} />
+            <HeadlineTwoButton {...externalProps} />
+            <HeadlineThreeButton {...externalProps} />
+
             <UnorderedListButton {...externalProps} />
             <OrderedListButton {...externalProps} />
             <BlockquoteButton {...externalProps} />
@@ -103,3 +108,47 @@ const CustomInlineToolbarEditor = () => {
 };
 
 export default CustomInlineToolbarEditor;
+
+
+
+const HeadlinesPicker = ({ onOverrideContent }) => {
+  useEffect(() => {
+    const onWindowClick = () => {
+      onOverrideContent(undefined);
+    };
+    window.addEventListener('click', onWindowClick);
+    return () => {
+      window.removeEventListener('click', onWindowClick);
+    };
+  }, [onOverrideContent]);
+
+  return (
+    <div>
+      {/* <HeadlineOneButton />
+      <HeadlineTwoButton />
+      <HeadlineThreeButton /> */}
+      <p>1</p>
+      <p>2</p>
+      <p>3</p>
+
+    </div>
+  );
+};
+
+const HeadlinesButton = ({ onOverrideContent }) => {
+  const onClick = (event) => {
+    event.preventDefault();
+    onOverrideContent(() => <HeadlinesPicker onOverrideContent={onOverrideContent} />);
+  };
+
+  return (
+    <div
+      onMouseDown={(e) => e.preventDefault()}
+      className={editorStyles.headlineButtonWrapper}
+    >
+      <button onClick={onClick} className={editorStyles.headlineButton}>
+        H
+      </button>
+    </div>
+  );
+};
