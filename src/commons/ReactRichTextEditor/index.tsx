@@ -7,6 +7,7 @@ import CustomHashtagEditor from './ReactRichTextEditor_mau/CustomHashtagEditor/C
 import CustomUndoEditor from './ReactRichTextEditor_mau/CustomUndoEditor/CustomUndoEditor';
 import CustomLinkPluginEditor from './ReactRichTextEditor_mau/CustomLinkPluginEditor/CustomLinkPluginEditor';
 import CustomInlineToolbarEditor from './ReactRichTextEditor_mau/CustomInlineToolbarEditor/CustomInlineToolbarEditor';
+import ThemedToolbarEditor from './ReactRichTextEditor_mau/CustomToolbarEditor/ThemedToolbarEditor';
 
 
 
@@ -20,4 +21,5 @@ export {
   CustomUndoEditor,
   CustomLinkPluginEditor,
   CustomInlineToolbarEditor,
+  ThemedToolbarEditor,
   };

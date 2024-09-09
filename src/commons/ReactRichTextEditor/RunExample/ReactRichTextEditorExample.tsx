@@ -3,12 +3,14 @@ import {CustomMentionEditor,SimpleEmojiEditor,AddImageEditor,
     CustomHashtagEditor,CustomUndoEditor,
     CustomLinkPluginEditor,
     CustomInlineToolbarEditor,
+    ThemedToolbarEditor,
+
 } from "../index";
 
 function ReactRichTextEditorExample() {
     return (
         <div>
-            {/* <CustomMentionEditor></CustomMentionEditor> */}
+            <CustomMentionEditor></CustomMentionEditor>
             {/* <SimpleEmojiEditor></SimpleEmojiEditor>
             <AddImageEditor></AddImageEditor>
             <CustomAddVideoVideoEditor></CustomAddVideoVideoEditor>
@@ -17,6 +19,7 @@ function ReactRichTextEditorExample() {
             <CustomUndoEditor></CustomUndoEditor> */}
             {/* <CustomLinkPluginEditor></CustomLinkPluginEditor> */}
             <CustomInlineToolbarEditor></CustomInlineToolbarEditor>
+            <ThemedToolbarEditor></ThemedToolbarEditor>
         </div>
     )
 
