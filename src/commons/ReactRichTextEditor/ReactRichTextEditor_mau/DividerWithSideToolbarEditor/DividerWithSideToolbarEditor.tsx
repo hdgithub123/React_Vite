@@ -3,6 +3,11 @@ import { convertFromRaw, EditorState } from 'draft-js';
 import Editor, { composeDecorators } from '@draft-js-plugins/editor';
 import createFocusPlugin from '@draft-js-plugins/focus';
 import createSideToolbarPlugin from '@draft-js-plugins/side-toolbar';
+
+import createInlineToolbarPlugin from '@draft-js-plugins/inline-toolbar';
+
+import createToolbarPlugin from '@draft-js-plugins/static-toolbar';
+
 import createDividerPlugin from '@draft-js-plugins/divider';
 import editorStyles from './editorStyles.module.css';
 import '@draft-js-plugins/side-toolbar/lib/plugin.css';
@@ -14,10 +19,16 @@ const decorator = composeDecorators(focusPlugin.decorator);
 const dividerPlugin = createDividerPlugin({ decorator });
 const { DividerButton } = dividerPlugin;
 
-const sideToolbarPlugin = createSideToolbarPlugin();
-const { SideToolbar } = sideToolbarPlugin;
+const toolbarPlugin = createToolbarPlugin();
+const { Toolbar } = toolbarPlugin;
 
-const plugins = [focusPlugin, dividerPlugin, sideToolbarPlugin];
+
+
+
+// const inlineToolbarPlugin = createInlineToolbarPlugin();
+// const { InlineToolbar } = inlineToolbarPlugin;
+
+const plugins = [focusPlugin, dividerPlugin, toolbarPlugin];
 
 /* eslint-disable */
 const initialState = {
@@ -84,7 +95,7 @@ const DividerWithSideToolbarEditor = () => {
         ref={editor}
       />
 
-      <SideToolbar>
+      <Toolbar>
         {
           // Use React.Fragment to avoid unnecessary div
           (externalProps) => (
@@ -93,7 +104,7 @@ const DividerWithSideToolbarEditor = () => {
             </>
           )
         }
-      </SideToolbar>
+      </Toolbar>
     </div>
   );
 };
