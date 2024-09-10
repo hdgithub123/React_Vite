@@ -8,6 +8,12 @@ import CustomUndoEditor from './ReactRichTextEditor_mau/CustomUndoEditor/CustomU
 import CustomLinkPluginEditor from './ReactRichTextEditor_mau/CustomLinkPluginEditor/CustomLinkPluginEditor';
 import CustomInlineToolbarEditor from './ReactRichTextEditor_mau/CustomInlineToolbarEditor/CustomInlineToolbarEditor';
 import ThemedToolbarEditor from './ReactRichTextEditor_mau/CustomToolbarEditor/ThemedToolbarEditor';
+import GeneralEditor from './ReactRichTextEditor_mau/GeneralEditor/GeneralEditor';
+import ThemedAlignmentEditor from './ReactRichTextEditor_mau/ThemedAlignmentEditor/ThemedAlignmentEditor';
+import TextAlignmentPlugin from './ReactRichTextEditor_mau/TextAlignmentPluginEditor/TextAlignmentPlugin';
+import ResizeableEditor from './ReactRichTextEditor_mau/ResizeableEditor/ResizeableEditor';
+import DndPlugin from './ReactRichTextEditor_mau/DndPlugin/DndPlugin';
+import DividerWithSideToolbarEditor from './ReactRichTextEditor_mau/DividerWithSideToolbarEditor/DividerWithSideToolbarEditor';
 
 
 
@@ -22,4 +28,10 @@ export {
   CustomLinkPluginEditor,
   CustomInlineToolbarEditor,
   ThemedToolbarEditor,
+  GeneralEditor,
+  ThemedAlignmentEditor,
+  TextAlignmentPlugin,
+  ResizeableEditor,
+  DndPlugin,
+  DividerWithSideToolbarEditor,
   };

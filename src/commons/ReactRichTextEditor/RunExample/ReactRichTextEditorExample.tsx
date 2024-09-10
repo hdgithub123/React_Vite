@@ -4,6 +4,12 @@ import {CustomMentionEditor,SimpleEmojiEditor,AddImageEditor,
     CustomLinkPluginEditor,
     CustomInlineToolbarEditor,
     ThemedToolbarEditor,
+    GeneralEditor,
+    ThemedAlignmentEditor,
+    TextAlignmentPlugin,
+    ResizeableEditor,
+    DndPlugin,
+    DividerWithSideToolbarEditor,
 
 } from "../index";
 
@@ -19,7 +25,13 @@ function ReactRichTextEditorExample() {
             <CustomUndoEditor></CustomUndoEditor> */}
             {/* <CustomLinkPluginEditor></CustomLinkPluginEditor> */}
             <CustomInlineToolbarEditor></CustomInlineToolbarEditor>
-            <ThemedToolbarEditor></ThemedToolbarEditor>
+            {/* <ThemedToolbarEditor></ThemedToolbarEditor> */}
+            <GeneralEditor></GeneralEditor>
+            <ThemedAlignmentEditor></ThemedAlignmentEditor>
+            <TextAlignmentPlugin></TextAlignmentPlugin>
+            <ResizeableEditor></ResizeableEditor>
+            <DndPlugin></DndPlugin>
+            <DividerWithSideToolbarEditor></DividerWithSideToolbarEditor>
         </div>
     )
 
