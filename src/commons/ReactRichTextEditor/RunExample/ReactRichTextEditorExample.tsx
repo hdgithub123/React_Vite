@@ -10,6 +10,7 @@ import {CustomMentionEditor,SimpleEmojiEditor,AddImageEditor,
     ResizeableEditor,
     DndPlugin,
     DividerWithSideToolbarEditor,
+    CustomCounterEditor,
 
 } from "../index";
 
@@ -24,14 +25,15 @@ function ReactRichTextEditorExample() {
             <CustomHashtagEditor></CustomHashtagEditor>
             <CustomUndoEditor></CustomUndoEditor> */}
             {/* <CustomLinkPluginEditor></CustomLinkPluginEditor> */}
-            <CustomInlineToolbarEditor></CustomInlineToolbarEditor>
+            {/* <CustomInlineToolbarEditor></CustomInlineToolbarEditor> */}
             {/* <ThemedToolbarEditor></ThemedToolbarEditor> */}
             <GeneralEditor></GeneralEditor>
-            <ThemedAlignmentEditor></ThemedAlignmentEditor>
+            {/* <ThemedAlignmentEditor></ThemedAlignmentEditor>
             <TextAlignmentPlugin></TextAlignmentPlugin>
             <ResizeableEditor></ResizeableEditor>
             <DndPlugin></DndPlugin>
-            <DividerWithSideToolbarEditor></DividerWithSideToolbarEditor>
+            <DividerWithSideToolbarEditor></DividerWithSideToolbarEditor> */}
+            {/* <CustomCounterEditor></CustomCounterEditor> */}
         </div>
     )
 

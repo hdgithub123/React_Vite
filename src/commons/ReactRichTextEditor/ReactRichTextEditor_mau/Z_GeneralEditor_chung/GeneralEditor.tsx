@@ -6,8 +6,6 @@ import buttonStyles from './buttonStyles.module.css';
 import toolbarStyles from './toolbarStyles.module.css';
 
 
-
-
 import {
     ItalicButton,
     BoldButton,
@@ -23,21 +21,37 @@ import {
   } from '@draft-js-plugins/buttons';
 
 
+  // Text Aligment
+
+  import createTextAlignmentPlugin from '@draft-js-plugins/text-alignment';
+  import alignmentStyles from './alignmentStyles.module.css';
+
+  // Initialize plugins
+  const textAlignmentPlugin = createTextAlignmentPlugin({
+    theme: { alignmentStyles },
+  });
+
+   // Text Aligment End
 
 
-
-
+  //  Add ImageEditor
+  // Tạo plugin hình ảnh
+  import createImagePlugin from '@draft-js-plugins/image';
+const imagePlugin = createImagePlugin();
+  
 const toolbarPlugin = createToolbarPlugin({
   theme: { buttonStyles, toolbarStyles },
 });
 const { Toolbar } = toolbarPlugin;
-const plugins = [toolbarPlugin];
+const plugins = [toolbarPlugin, textAlignmentPlugin, imagePlugin];
 const text =
   'In this editor a toolbar with a lot more options shows up once you select part of the text …';
 
 const GeneralEditor = () => {
   const [editorState, setEditorState] = useState(createEditorStateWithText(text));
   const editorRef = useRef(null);
+
+  console.log("editorState",editorState)
 
   const focus = () => {
     if (editorRef.current) {
@@ -65,6 +79,12 @@ const GeneralEditor = () => {
             <OrderedListButton {...externalProps} />
             <BlockquoteButton {...externalProps} />
             <CodeBlockButton {...externalProps} />
+            <textAlignmentPlugin.TextAlignment {...externalProps} />
+            <ImageAdd
+        editorState={editorState}
+        onChange={setEditorState}
+        modifier={imagePlugin.addImage}
+      />
           </>
         )}
         </Toolbar>
@@ -86,7 +106,6 @@ export default GeneralEditor;
 
 
   const HeadlinesButton = ({ ...externalProps }) => {
-    console.log("externalProps",externalProps)
         return <>
             <HeadlineOneButton {...externalProps} />
             <HeadlineTwoButton {...externalProps} />
@@ -141,3 +160,97 @@ export default GeneralEditor;
       </button>
     );
   };
+
+
+
+  // const ImageAdd = ({ editorState, onChange, modifier }) => {
+  //   const [url, setUrl] = useState('');
+  
+  //   const onURLChange = (e) => setUrl(e.target.value);
+  
+  //   const onAddImage = (e) => {
+  //     e.preventDefault();
+  //     if (url) {
+  //       const newEditorState = modifier(editorState, url);
+  //       onChange(newEditorState);
+  //       setUrl(''); // Clear the input field after adding the image
+  //     }
+  //   };
+  
+  //   return (
+  //     <div>
+  //       <input
+  //         type="text"
+  //         placeholder="Enter image URL"
+  //         value={url}
+  //         onChange={onURLChange}
+  //       />
+  //       <button onClick={onAddImage}>Add Image</button>
+  //     </div>
+  //   );
+  // };
+
+  const ImageAdd = ({ editorState, onChange, modifier }) => {
+    const [url, setUrl] = useState('');
+    const [width, setWidth] = useState('');
+    const [height, setHeight] = useState('');
+  
+    const onURLChange = (e) => setUrl(e.target.value);
+    const onWidthChange = (e) => setWidth(e.target.value);
+    const onHeightChange = (e) => setHeight(e.target.value);
+  
+    const onAddImage = (e) => {
+      e.preventDefault();
+      if (url) {
+        console.log("url",url)
+        // Create an object for the image data
+        const imageData = {
+          src: url,
+          // width: width ? `${width}px` : '100px',
+          // height: height ? `${height}px` : '100px',
+          width: '100px',
+          height: '100px',
+        };
+  
+        // Pass the image data to the modifier function
+        const newEditorState = modifier(editorState, imageData);
+        onChange(newEditorState);
+        
+        // Clear the input fields after adding the image
+        setUrl('');
+        setWidth('');
+        setHeight('');
+      }
+    };
+  
+    return (
+      <div>
+        <input
+          type="text"
+          placeholder="Enter image URL"
+          value={url}
+          onChange={onURLChange}
+        />
+        <input
+          type="text"
+          placeholder="Width (px)"
+          value={width}
+          onChange={onWidthChange}
+        />
+        <input
+          type="text"
+          placeholder="Height (px)"
+          value={height}
+          onChange={onHeightChange}
+        />
+        <button onClick={onAddImage}>Add Image</button>
+      </div>
+    );
+  };
+
+
+
+
+// Ghi chú: 
+//     Đã thêm textAlignmentPlugin
+//     Đã thêm ImageAdd
