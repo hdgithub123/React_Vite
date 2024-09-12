@@ -11,13 +11,14 @@ import {CustomMentionEditor,SimpleEmojiEditor,AddImageEditor,
     DndPlugin,
     DividerWithSideToolbarEditor,
     CustomCounterEditor,
+    RawDraftjs,
 
 } from "../index";
 
 function ReactRichTextEditorExample() {
     return (
         <div>
-            <CustomMentionEditor></CustomMentionEditor>
+            {/* <CustomMentionEditor></CustomMentionEditor> */}
             {/* <SimpleEmojiEditor></SimpleEmojiEditor>
             <AddImageEditor></AddImageEditor>
             <CustomAddVideoVideoEditor></CustomAddVideoVideoEditor>
@@ -27,13 +28,17 @@ function ReactRichTextEditorExample() {
             {/* <CustomLinkPluginEditor></CustomLinkPluginEditor> */}
             {/* <CustomInlineToolbarEditor></CustomInlineToolbarEditor> */}
             {/* <ThemedToolbarEditor></ThemedToolbarEditor> */}
-            <GeneralEditor></GeneralEditor>
+           
             {/* <ThemedAlignmentEditor></ThemedAlignmentEditor>
             <TextAlignmentPlugin></TextAlignmentPlugin>
             <ResizeableEditor></ResizeableEditor>
             <DndPlugin></DndPlugin>
             <DividerWithSideToolbarEditor></DividerWithSideToolbarEditor> */}
             {/* <CustomCounterEditor></CustomCounterEditor> */}
+             
+             <GeneralEditor></GeneralEditor>
+
+            {/* <RawDraftjs></RawDraftjs> */}
         </div>
     )
 

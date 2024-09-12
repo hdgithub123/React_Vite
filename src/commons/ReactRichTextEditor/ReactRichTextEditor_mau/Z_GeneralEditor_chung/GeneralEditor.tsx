@@ -51,7 +51,7 @@ const GeneralEditor = () => {
   const [editorState, setEditorState] = useState(createEditorStateWithText(text));
   const editorRef = useRef(null);
 
-  console.log("editorState",editorState)
+  console.log("editorState.getCurrentContent",editorState.getCurrentContent())
 
   const focus = () => {
     if (editorRef.current) {
