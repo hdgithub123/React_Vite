@@ -12,6 +12,7 @@ import {CustomMentionEditor,SimpleEmojiEditor,AddImageEditor,
     DividerWithSideToolbarEditor,
     CustomCounterEditor,
     RawDraftjs,
+    ImageComponentjs,
 
 } from "../index";
 
@@ -36,9 +37,10 @@ function ReactRichTextEditorExample() {
             <DividerWithSideToolbarEditor></DividerWithSideToolbarEditor> */}
             {/* <CustomCounterEditor></CustomCounterEditor> */}
              
-             <GeneralEditor></GeneralEditor>
+             {/* <GeneralEditor></GeneralEditor> */}
 
-            {/* <RawDraftjs></RawDraftjs> */}
+            <RawDraftjs></RawDraftjs>
+            {/* <ImageComponentjs></ImageComponentjs> */}
         </div>
     )
 

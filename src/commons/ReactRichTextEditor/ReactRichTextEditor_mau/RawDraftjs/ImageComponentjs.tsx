@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Editor, EditorState, AtomicBlockUtils } from 'draft-js';
 
-const RawDraftjs = () => {
+const ImageComponentjs = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
   const insertImage = () => {
@@ -64,6 +64,8 @@ const RawDraftjs = () => {
   );
 };
 
-export default RawDraftjs;
+export default ImageComponentjs;
 
+
+// thu dang hoạt dong
 
