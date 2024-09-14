@@ -40,8 +40,8 @@ function ReactRichTextEditorExample() {
              
              {/* <GeneralEditor></GeneralEditor> */}
 
-            <RawDraftjs></RawDraftjs>
-            {/* <ImageComponentjs></ImageComponentjs> */}
+            {/* <RawDraftjs></RawDraftjs> */}
+            <ImageComponentjs></ImageComponentjs>
             {/* <TableEditor></TableEditor> */}
         </div>
     )
