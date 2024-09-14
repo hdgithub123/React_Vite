@@ -19,6 +19,7 @@ import CustomCounterEditor from './ReactRichTextEditor_mau/CustomCounterEditor/C
 import GeneralEditor from './ReactRichTextEditor_mau/Z_GeneralEditor_chung/GeneralEditor';
 import RawDraftjs from './ReactRichTextEditor_mau/RawDraftjs/RawDraftjs';
 import ImageComponentjs from './ReactRichTextEditor_mau/RawDraftjs/ImageComponentjs';
+import TableEditor from './ReactRichTextEditor_mau/RawDraftjs/TableDraftJs';
 
 
 
@@ -43,4 +44,5 @@ export {
   GeneralEditor,
   RawDraftjs,
   ImageComponentjs,
+  TableEditor,
   };
