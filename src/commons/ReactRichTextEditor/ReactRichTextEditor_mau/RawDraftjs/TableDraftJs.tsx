@@ -118,6 +118,11 @@ const TableEditor = () => {
     }
   };
 
+
+const TableBlock = (block)=>{
+    blockRendererFn(block, editorState, handleEditorChange)
+}
+
   return (
     <div>
       <button onClick={handleInsertTable}>Insert Table</button>
@@ -128,7 +133,7 @@ const TableEditor = () => {
         <Editor
           editorState={editorState}
           onChange={handleEditorChange}
-          blockRendererFn={(block) => blockRendererFn(block, editorState, handleEditorChange)}
+          blockRendererFn={TableBlock}
           ref={editorRef} // Attach the ref to the Editor
         />
       </div>
