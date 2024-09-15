@@ -20,7 +20,7 @@ import GeneralEditor from './ReactRichTextEditor_mau/Z_GeneralEditor_chung/Gener
 import RawDraftjs from './ReactRichTextEditor_mau/RawDraftjs/RawDraftjs';
 import ImageComponentjs from './ReactRichTextEditor_mau/RawDraftjs/ImageComponentjs';
 import TableEditor from './ReactRichTextEditor_mau/RawDraftjs/TableDraftJs';
-
+import MycustomCreateImagePlugin from './ReactRichTextEditor_mau/CustomPlugin/MycustomCreateImagePlugin';
 
 
 export {
@@ -45,4 +45,6 @@ export {
   RawDraftjs,
   ImageComponentjs,
   TableEditor,
+  MycustomCreateImagePlugin,
+  
   };
