@@ -213,7 +213,6 @@ const ImageComponent = ({ block, contentState}) => {
 
   const entity = contentState.getEntity(entityKey);
   const { imageInfo } = entity.getData();
-  console.log("imageInfo",imageInfo)
   return (
     <div>
       <img
@@ -226,16 +225,11 @@ const ImageComponent = ({ block, contentState}) => {
 };
 
 
-
-
-
-
-
 // Component chính
 const MycustomCreateImagePlugin = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const imagePlugin = customCreateImagePlugin();
-  const plugins = [imagePlugin,]
+  const plugins = [imagePlugin]
   return (
     <div>
       <ButtoncustomCreateImagePlugin editorState={editorState} setEditorState={setEditorState} imagePlugin={imagePlugin} ></ButtoncustomCreateImagePlugin>
