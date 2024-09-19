@@ -1,0 +1,99 @@
+/* General editor container styling */
+.editor_container {
+    border: 1px solid #ddd;
+    padding: 10px;
+    min-height: 200px;
+    cursor: text;
+    background-color: #fff;
+  }
+  
+  /* Focus plugin: Highlight the focused block */
+  .DraftEditor-root .focused-block {
+    outline: 2px solid #3b99fc;
+  }
+  
+  /* Alignment plugin: Flexbox for horizontal alignment */
+  .alignment-left {
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .alignment-center {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .alignment-right {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  /* Resizeable plugin: Resize handles for images */
+  .resizeable-image-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .resize-handle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #3b99fc;
+    z-index: 10;
+    cursor: nwse-resize;
+  }
+  
+  .resize-handle.top-left {
+    top: -5px;
+    left: -5px;
+  }
+  
+  .resize-handle.top-right {
+    top: -5px;
+    right: -5px;
+  }
+  
+  .resize-handle.bottom-left {
+    bottom: -5px;
+    left: -5px;
+  }
+  
+  .resize-handle.bottom-right {
+    bottom: -5px;
+    right: -5px;
+  }
+  
+  /* Drag and drop plugin: Highlight block when dragging */
+  .drag-block {
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 2px dashed #3b99fc;
+  }
+  
+  /* Styling for the image inside the editor */
+  .editor-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Custom button styles (optional) */
+  .editor-button {
+    padding: 5px 10px;
+    background-color: #3b99fc;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 3px;
+    margin: 10px 0;
+  }
+  
+  .editor-button:hover {
+    background-color: #327dc2;
+  }
+  
+  /* Disable resizing on atomic blocks like images */
+  .editor-block-atomic {
+    pointer-events: none;
+  }
+  

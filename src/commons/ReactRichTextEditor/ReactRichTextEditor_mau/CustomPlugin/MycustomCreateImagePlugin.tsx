@@ -203,7 +203,7 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
 
 
 
-
+// component sẽ được Render ra editor
 
 const ImageComponent = ({ block, contentState}) => {
   const entityKey = block.getEntityAt(0);
@@ -217,7 +217,7 @@ const ImageComponent = ({ block, contentState}) => {
     <div>
       <img
         src={imageInfo.url}
-        alt="editor-img"
+        alt="Error Image!"
         style={{ maxWidth: '100%', width: imageInfo.width || 'auto', height: imageInfo.height || 'auto' }}
       />
     </div>

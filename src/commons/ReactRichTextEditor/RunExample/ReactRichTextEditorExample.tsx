@@ -32,11 +32,11 @@ function ReactRichTextEditorExample() {
             {/* <CustomInlineToolbarEditor></CustomInlineToolbarEditor> */}
             {/* <ThemedToolbarEditor></ThemedToolbarEditor> */}
            
-            {/* <ThemedAlignmentEditor></ThemedAlignmentEditor>
-            <TextAlignmentPlugin></TextAlignmentPlugin>
+            {/* <ThemedAlignmentEditor></ThemedAlignmentEditor> */}
+            {/* <TextAlignmentPlugin></TextAlignmentPlugin> */}
             <ResizeableEditor></ResizeableEditor>
-            <DndPlugin></DndPlugin>
-            <DividerWithSideToolbarEditor></DividerWithSideToolbarEditor> */}
+            {/* <DndPlugin></DndPlugin> */}
+            {/* <DividerWithSideToolbarEditor></DividerWithSideToolbarEditor> */}
             {/* <CustomCounterEditor></CustomCounterEditor> */}
              
              {/* <GeneralEditor></GeneralEditor> */}
