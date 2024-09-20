@@ -1,11 +1,46 @@
 import React, { useState, useRef } from 'react';
-import Editor, { createEditorStateWithText } from '@draft-js-plugins/editor';
+import Editor, { composeDecorators, createEditorStateWithText } from '@draft-js-plugins/editor';
 import createImagePlugin from '@draft-js-plugins/image';
 import editorStyles from './AddImageEditor.module.css';
 
+
+
+
+import createAlignmentPlugin from '@draft-js-plugins/alignment';
+
+import createFocusPlugin from '@draft-js-plugins/focus';
+
+import createResizeablePlugin from '@draft-js-plugins/resizeable';
+
+import createBlockDndPlugin from '@draft-js-plugins/drag-n-drop';
+
+import createDragNDropUploadPlugin from '@draft-js-plugins/drag-n-drop-upload';
+
+const focusPlugin = createFocusPlugin();
+const resizeablePlugin = createResizeablePlugin();
+const blockDndPlugin = createBlockDndPlugin();
+const alignmentPlugin = createAlignmentPlugin();
+const { AlignmentTool } = alignmentPlugin;
+
+const decorator = composeDecorators(
+  resizeablePlugin.decorator,
+  alignmentPlugin.decorator,
+  focusPlugin.decorator,
+  blockDndPlugin.decorator
+);
+
+
+
+
 // Tạo plugin hình ảnh
-const imagePlugin = createImagePlugin();
-const plugins = [imagePlugin];
+const imagePlugin = createImagePlugin({ decorator });
+const plugins = [
+  blockDndPlugin,
+  focusPlugin,
+  alignmentPlugin,
+  resizeablePlugin,
+  imagePlugin,
+];
 
 const text =
   'Click on the + button below and insert "/images/canada-landscape-small.jpg" to add the landscape image. Alternativly you can use any image url on the web.';

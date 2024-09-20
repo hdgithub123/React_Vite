@@ -22,12 +22,12 @@ function ReactRichTextEditorExample() {
     return (
         <div>
             {/* <CustomMentionEditor></CustomMentionEditor> */}
-            {/* <SimpleEmojiEditor></SimpleEmojiEditor>
+            {/* <SimpleEmojiEditor></SimpleEmojiEditor> */}
             <AddImageEditor></AddImageEditor>
-            <CustomAddVideoVideoEditor></CustomAddVideoVideoEditor>
-            <CustomStickerEditor></CustomStickerEditor>
-            <CustomHashtagEditor></CustomHashtagEditor>
-            <CustomUndoEditor></CustomUndoEditor> */}
+            {/* <CustomAddVideoVideoEditor></CustomAddVideoVideoEditor> */}
+            {/* <CustomStickerEditor></CustomStickerEditor> */}
+            {/* <CustomHashtagEditor></CustomHashtagEditor> */}
+            {/* <CustomUndoEditor></CustomUndoEditor> */}
             {/* <CustomLinkPluginEditor></CustomLinkPluginEditor> */}
             {/* <CustomInlineToolbarEditor></CustomInlineToolbarEditor> */}
             {/* <ThemedToolbarEditor></ThemedToolbarEditor> */}
