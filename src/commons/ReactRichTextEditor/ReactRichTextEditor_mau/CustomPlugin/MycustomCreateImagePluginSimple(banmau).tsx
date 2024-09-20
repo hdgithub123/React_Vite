@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { EditorState, AtomicBlockUtils } from 'draft-js';
 import Editor from '@draft-js-plugins/editor'
 
@@ -49,7 +49,7 @@ function customCreateImagePlugin() {
 // Component thao tác của user
 
 const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugin }) => {
-  const imageInfoInnit = { 
+  const imageInfoInnit = {
     url: '',
     width: '',
     height: '',
@@ -205,7 +205,28 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
 
 // component sẽ được Render ra editor
 
-const ImageComponent = ({ block, contentState}) => {
+const ImageComponent = forwardRef(
+  ({
+    block, // eslint-disable-line no-unused-vars
+    blockProps, // eslint-disable-line no-unused-vars
+    customStyleMap, // eslint-disable-line no-unused-vars
+    customStyleFn, // eslint-disable-line no-unused-vars
+    decorator, // eslint-disable-line no-unused-vars
+    forceSelection, // eslint-disable-line no-unused-vars
+    offsetKey, // eslint-disable-line no-unused-vars
+    selection, // eslint-disable-line no-unused-vars
+    tree, // eslint-disable-line no-unused-vars
+    contentState, // eslint-disable-line no-unused-vars
+    blockStyleFn, // eslint-disable-line no-unused-vars
+    preventScroll, // eslint-disable-line no-unused-vars
+    style,
+    ...elementProps
+  }, 
+
+    
+    ref
+
+  ) => {
   const entityKey = block.getEntityAt(0);
   if (!entityKey) {
     return <div>Error: Invalid image entity.</div>;
@@ -214,30 +235,73 @@ const ImageComponent = ({ block, contentState}) => {
   const entity = contentState.getEntity(entityKey);
   const { imageInfo } = entity.getData();
   return (
-    <div>
-      <img
-        src={imageInfo.url}
-        alt="Error Image!"
-        style={{ maxWidth: '100%', width: imageInfo.width || 'auto', height: imageInfo.height || 'auto' }}
-      />
-    </div>
+
+    <img
+      ref={ref}
+      {...elementProps}
+      src={imageInfo.url ? imageInfo.url : ''}
+      alt="Error Image!"
+      style={{ width: imageInfo.width || 'auto', height: imageInfo.height || 'auto', ...style }}
+    />
+
   );
-};
+});
+
+
+import { composeDecorators } from '@draft-js-plugins/editor';
+import createFocusPlugin from '@draft-js-plugins/focus';
+import createAlignmentPlugin from '@draft-js-plugins/alignment';
+import createResizeablePlugin from '@draft-js-plugins/resizeable';
+import createBlockDndPlugin from '@draft-js-plugins/drag-n-drop';
+import createImagePlugin from '@draft-js-plugins/image';
+
+
+
+import editorStyles from './editorStyles.module.css';
+import '@draft-js-plugins/alignment/lib/plugin.css';
+import '@draft-js-plugins/focus/lib/plugin.css';
+import '@draft-js-plugins/image/lib/plugin.css';
+
+const focusPlugin = createFocusPlugin();
+const alignmentPlugin = createAlignmentPlugin();
+const resizeablePlugin = createResizeablePlugin();
+const blockDndPlugin = createBlockDndPlugin();
+
+
+const decorator = composeDecorators(
+  alignmentPlugin.decorator,
+  resizeablePlugin.decorator,
+  focusPlugin.decorator,
+  blockDndPlugin.decorator
+);
+
 
 
 // Component chính
 const MycustomCreateImagePlugin = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const imagePlugin = customCreateImagePlugin();
-  const plugins = [imagePlugin]
+  const imagePlugin = customCreateImagePlugin(decorator);
+  const plugins = [
+    blockDndPlugin,
+    focusPlugin,
+    alignmentPlugin,
+    resizeablePlugin,
+    imagePlugin,
+  ];
+  const { AlignmentTool } = alignmentPlugin;
+
   return (
     <div>
       <ButtoncustomCreateImagePlugin editorState={editorState} setEditorState={setEditorState} imagePlugin={imagePlugin} ></ButtoncustomCreateImagePlugin>
-      <Editor
-        editorState={editorState}
-        onChange={setEditorState}
-        plugins={plugins} // Sử dụng plugin hình ảnh
-      />
+      <div className={editorStyles.editor}>
+        <Editor
+          editorState={editorState}
+          onChange={setEditorState}
+          plugins={plugins} // Sử dụng plugin hình ảnh
+        />
+        <AlignmentTool></AlignmentTool>
+      </div>
+
     </div>
   );
 };
