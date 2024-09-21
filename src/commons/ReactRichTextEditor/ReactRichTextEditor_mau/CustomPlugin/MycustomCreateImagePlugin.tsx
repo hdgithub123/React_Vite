@@ -5,48 +5,7 @@ import Editor from '@draft-js-plugins/editor'
 
 
 // Hàm khởi tạo plugin
-// function customCreateImagePlugin() {
-//   return {
-//     addImage: (editorState, imageInfo) => {
-//       const contentState = editorState.getCurrentContent();
-//       const contentStateWithEntity = contentState.createEntity(
-//         'IMAGE',
-//         'IMMUTABLE',
-//         { imageInfo }  // Thêm imageInfo (bao gồm src, width, height)
-//       );
-
-//       const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-//       if (!entityKey) {
-//         console.error("Error: Entity creation failed.");
-//         return editorState;
-//       }
-
-//       const newEditorState = AtomicBlockUtils.insertAtomicBlock(
-//         editorState,
-//         entityKey,
-//         ' '
-//       );
-//       return EditorState.forceSelection(
-//         newEditorState,
-//         newEditorState.getCurrentContent().getSelectionAfter()
-//       );
-//     },
-
-//     blockRendererFn: (contentBlock, { getEditorState, setEditorState }) => {
-//       const type = contentBlock.getType();
-//       if (type === 'atomic') {
-//         return {
-//           component: ImageComponent,
-//           editable: false,
-//           props: { getEditorState, setEditorState },
-//         };
-//       }
-//       return null;
-//     },
-//   };
-// }
-
-function customCreateImagePlugin(decorator) {
+function customCreateImagePlugin() {
   return {
     addImage: (editorState, imageInfo) => {
       const contentState = editorState.getCurrentContent();
@@ -73,14 +32,12 @@ function customCreateImagePlugin(decorator) {
       );
     },
 
-    // Custom block renderer function for rendering image components
     blockRendererFn: (contentBlock, { getEditorState, setEditorState }) => {
       const type = contentBlock.getType();
       if (type === 'atomic') {
-        // Render the image using the custom ImageComponent and handle focus/alignment
         return {
-          component: decorator ? decorator(ImageComponent) : ImageComponent,
-          editable: false,  // Prevent editing inside the image block
+          component: ImageComponent,
+          editable: false,
           props: { getEditorState, setEditorState },
         };
       }
@@ -248,26 +205,6 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
 
 // component sẽ được Render ra editor
 
-// const ImageComponent = ({ block, contentState}) => {
-//   const entityKey = block.getEntityAt(0);
-//   if (!entityKey) {
-//     return <div>Error: Invalid image entity.</div>;
-//   }
-
-//   const entity = contentState.getEntity(entityKey);
-//   const { imageInfo } = entity.getData();
-//   return (
-//     <div style={{ maxWidth: '100%', width: imageInfo.width || 'auto', height: imageInfo.height || 'auto' }}>
-//       <img
-//         src={imageInfo.url}
-//         alt="Error Image!"
-
-//       />
-//     </div>
-//   );
-// };
-
-
 const ImageComponent = forwardRef(
   ({
     block, // eslint-disable-line no-unused-vars
@@ -344,7 +281,6 @@ const decorator = composeDecorators(
 const MycustomCreateImagePlugin = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const imagePlugin = customCreateImagePlugin(decorator);
-  // const plugins = [imagePlugin]
   const plugins = [
     blockDndPlugin,
     focusPlugin,
