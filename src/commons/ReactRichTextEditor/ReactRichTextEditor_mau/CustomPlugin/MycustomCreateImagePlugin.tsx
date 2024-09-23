@@ -4,8 +4,14 @@ import Editor from '@draft-js-plugins/editor'
 
 
 
+
+
+
+
+
 // Hàm khởi tạo plugin
 function customCreateImagePlugin() {
+
   return {
     addImage: (editorState, imageInfo) => {
       const contentState = editorState.getCurrentContent();
@@ -31,6 +37,12 @@ function customCreateImagePlugin() {
         newEditorState.getCurrentContent().getSelectionAfter()
       );
     },
+    resizeImage: (entityKey, editorState, imageInfo) => {
+      const contentState = editorState.getCurrentContent();
+      const contentStateWithEntity = contentState.mergeEntityData(entityKey, { imageInfo });
+      const newEditorState = EditorState.push(editorState, contentStateWithEntity, 'apply-entity');
+      return newEditorState;
+    },
 
     blockRendererFn: (contentBlock, { getEditorState, setEditorState }) => {
       const type = contentBlock.getType();
@@ -45,6 +57,7 @@ function customCreateImagePlugin() {
     },
   };
 }
+
 
 // Component thao tác của user
 
@@ -205,28 +218,49 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
 
 // component sẽ được Render ra editor
 
-const ImageComponent = forwardRef(
-  ({
-    block, // eslint-disable-line no-unused-vars
-    blockProps, // eslint-disable-line no-unused-vars
-    customStyleMap, // eslint-disable-line no-unused-vars
-    customStyleFn, // eslint-disable-line no-unused-vars
-    decorator, // eslint-disable-line no-unused-vars
-    forceSelection, // eslint-disable-line no-unused-vars
-    offsetKey, // eslint-disable-line no-unused-vars
-    selection, // eslint-disable-line no-unused-vars
-    tree, // eslint-disable-line no-unused-vars
-    contentState, // eslint-disable-line no-unused-vars
-    blockStyleFn, // eslint-disable-line no-unused-vars
-    preventScroll, // eslint-disable-line no-unused-vars
-    style,
-    ...elementProps
-  }, 
+// const ImageComponent = forwardRef(
+//   ({
+//     block, // eslint-disable-line no-unused-vars
+//     blockProps, // eslint-disable-line no-unused-vars
+//     customStyleMap, // eslint-disable-line no-unused-vars
+//     customStyleFn, // eslint-disable-line no-unused-vars
+//     decorator, // eslint-disable-line no-unused-vars
+//     forceSelection, // eslint-disable-line no-unused-vars
+//     offsetKey, // eslint-disable-line no-unused-vars
+//     selection, // eslint-disable-line no-unused-vars
+//     tree, // eslint-disable-line no-unused-vars
+//     contentState, // eslint-disable-line no-unused-vars
+//     blockStyleFn, // eslint-disable-line no-unused-vars
+//     preventScroll, // eslint-disable-line no-unused-vars
+//     style,
+//     ...elementProps
+//   },
 
-    
-    ref
 
-  ) => {
+//     ref
+
+//   ) => {
+//     const entityKey = block.getEntityAt(0);
+//     if (!entityKey) {
+//       return <div>Error: Invalid image entity.</div>;
+//     }
+
+//     const entity = contentState.getEntity(entityKey);
+//     const { imageInfo } = entity.getData();
+//     return (
+
+//       <img
+//         ref={ref}
+//         {...elementProps}
+//         src={imageInfo.url ? imageInfo.url : ''}
+//         alt="Error Image!"
+//         style={{ width: imageInfo.width || 'auto', height: imageInfo.height || 'auto', ...style }}
+//       />
+
+//     );
+//   });
+
+const ImageComponent = ({ block, contentState, onClick}) => {
   const entityKey = block.getEntityAt(0);
   if (!entityKey) {
     return <div>Error: Invalid image entity.</div>;
@@ -234,18 +268,20 @@ const ImageComponent = forwardRef(
 
   const entity = contentState.getEntity(entityKey);
   const { imageInfo } = entity.getData();
+  const handleOnclick = () => {
+    onClick(entityKey)
+  }
   return (
-
-    <img
-      ref={ref}
-      {...elementProps}
-      src={imageInfo.url ? imageInfo.url : ''}
-      alt="Error Image!"
-      style={{ width: imageInfo.width || 'auto', height: imageInfo.height || 'auto', ...style }}
-    />
-
+    <div>
+      <img
+        src={imageInfo.url}
+        alt="Error Image!"
+        onClick={handleOnclick}
+        style={{ cursor: 'pointer', width: imageInfo.width || 'auto', height: imageInfo.height || 'auto' }}
+      />
+    </div>
   );
-});
+};
 
 
 import { composeDecorators } from '@draft-js-plugins/editor';

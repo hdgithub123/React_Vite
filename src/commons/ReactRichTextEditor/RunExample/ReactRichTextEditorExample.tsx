@@ -15,6 +15,7 @@ import {CustomMentionEditor,SimpleEmojiEditor,AddImageEditor,
     ImageComponentjs,
     TableEditor,
     MycustomCreateImagePlugin,
+    MycustomResizeImage,
 
 } from "../index";
 
@@ -45,6 +46,7 @@ function ReactRichTextEditorExample() {
             {/* <ImageComponentjs></ImageComponentjs> */}
             {/* <TableEditor></TableEditor> */}
             <MycustomCreateImagePlugin></MycustomCreateImagePlugin>
+            <MycustomResizeImage></MycustomResizeImage>
         </div>
     )
 

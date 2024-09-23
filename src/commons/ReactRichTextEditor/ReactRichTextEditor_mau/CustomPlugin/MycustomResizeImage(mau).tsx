@@ -19,6 +19,8 @@ const ImageComponent = ({ block, contentState, onClick }) => {
   );
 };
 
+
+
 // Plugin tùy chỉnh cho hình ảnh
 const createCustomImagePlugin = (config = {}) => {
   const component = (props) => (
@@ -31,10 +33,9 @@ const createCustomImagePlugin = (config = {}) => {
         const contentState = getEditorState().getCurrentContent();
         const entity = contentState.getEntity(block.getEntityAt(0));
         const type = entity.getType();
-
         if (type === 'IMAGE') {
           return {
-            component,
+            component: component,
             editable: false,
           };
         }
@@ -45,7 +46,7 @@ const createCustomImagePlugin = (config = {}) => {
   };
 };
 
-const MycustomCreateImagePlugin = () => {
+const MycustomResizeImage = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [currentEntityKey, setCurrentEntityKey] = useState(null);
 
@@ -55,34 +56,38 @@ const MycustomCreateImagePlugin = () => {
 
   const plugins = [imagePlugin];
 
-  const addImage = (url) => {
-    const contentState = editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity('IMAGE', 'IMMUTABLE', { src: url, width: 150, height: 150 });
-    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-    const newEditorState = AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
-    setEditorState(newEditorState);
-  };
 
-  const resizeImage = (entityKey, width, height) => {
-    const contentState = editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.mergeEntityData(entityKey, { width, height });
-    const newEditorState = EditorState.push(editorState, contentStateWithEntity, 'apply-entity');
-    setEditorState(newEditorState);
-  };
 
   return (
     <div>
-      <button onClick={() => addImage('https://via.placeholder.com/150')}>Add Image</button>
+      <button onClick={() => addImage('https://images.pexels.com/photos/157757/wedding-dresses-fashion-character-bride-157757.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',editorState,setEditorState)}>Add Image</button>
       <Editor
         editorState={editorState}
         onChange={setEditorState}
         plugins={plugins}
       />
       {currentEntityKey && (
-        <button onClick={() => resizeImage(currentEntityKey, 300, 300)}>Resize Image</button>
+        <button onClick={() => resizeImage(currentEntityKey,editorState, 300, 300)}>Resize Image</button>
       )}
     </div>
   );
 };
 
-export default MycustomCreateImagePlugin;
+export default MycustomResizeImage;
+
+
+
+const addImage = (url,editorState,setEditorState) => {
+  const contentState = editorState.getCurrentContent();
+  const contentStateWithEntity = contentState.createEntity('IMAGE', 'IMMUTABLE', { src: url, width: 150, height: 150 });
+  const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+  const newEditorState = AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
+  setEditorState(newEditorState);
+};
+
+const resizeImage = (entityKey,editorState,setEditorState, width, height) => {
+  const contentState = editorState.getCurrentContent();
+  const contentStateWithEntity = contentState.mergeEntityData(entityKey, { width, height });
+  const newEditorState = EditorState.push(editorState, contentStateWithEntity, 'apply-entity');
+  setEditorState(newEditorState);
+};

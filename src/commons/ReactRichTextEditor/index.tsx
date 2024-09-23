@@ -21,6 +21,7 @@ import RawDraftjs from './ReactRichTextEditor_mau/RawDraftjs/RawDraftjs';
 import ImageComponentjs from './ReactRichTextEditor_mau/RawDraftjs/ImageComponentjs';
 import TableEditor from './ReactRichTextEditor_mau/RawDraftjs/TableDraftJs';
 import MycustomCreateImagePlugin from './ReactRichTextEditor_mau/CustomPlugin/MycustomCreateImagePlugin';
+import MycustomResizeImage from './ReactRichTextEditor_mau/CustomPlugin/MycustomResizeImage(mau)';
 
 
 export {
@@ -46,5 +47,5 @@ export {
   ImageComponentjs,
   TableEditor,
   MycustomCreateImagePlugin,
-  
+  MycustomResizeImage,
   };
