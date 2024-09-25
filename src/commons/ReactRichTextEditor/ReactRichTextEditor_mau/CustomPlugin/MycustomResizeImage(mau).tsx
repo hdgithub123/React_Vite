@@ -56,8 +56,6 @@ const MycustomResizeImage = () => {
 
   const plugins = [imagePlugin];
 
-
-
   return (
     <div>
       <button onClick={() => addImage('https://images.pexels.com/photos/157757/wedding-dresses-fashion-character-bride-157757.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',editorState,setEditorState)}>Add Image</button>
@@ -67,7 +65,7 @@ const MycustomResizeImage = () => {
         plugins={plugins}
       />
       {currentEntityKey && (
-        <button onClick={() => resizeImage(currentEntityKey,editorState, 300, 300)}>Resize Image</button>
+        <button onClick={() => resizeImage(currentEntityKey,editorState,setEditorState, 300, 300)}>Resize Image</button>
       )}
     </div>
   );
@@ -85,9 +83,9 @@ const addImage = (url,editorState,setEditorState) => {
   setEditorState(newEditorState);
 };
 
-const resizeImage = (entityKey,editorState,setEditorState, width, height) => {
+const resizeImage = (entityKey, editorState, setEditorState, width, height) => {
   const contentState = editorState.getCurrentContent();
-  const contentStateWithEntity = contentState.mergeEntityData(entityKey, { width, height });
+  const contentStateWithEntity = contentState.mergeEntityData(entityKey, { width, height});
   const newEditorState = EditorState.push(editorState, contentStateWithEntity, 'apply-entity');
   setEditorState(newEditorState);
 };

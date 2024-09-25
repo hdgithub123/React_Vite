@@ -277,7 +277,7 @@ const ImageComponent = ({ block, contentState, onClick}) => {
         src={imageInfo.url}
         alt="Error Image!"
         onClick={handleOnclick}
-        style={{ cursor: 'pointer', width: imageInfo.width || 'auto', height: imageInfo.height || 'auto' }}
+        style={{ cursor: 'pointer', width: imageInfo.width || 'auto', height: imageInfo.height || 'auto', display:'flex' , justifyContent: 'center' }}
       />
     </div>
   );
@@ -325,6 +325,30 @@ const MycustomCreateImagePlugin = () => {
     imagePlugin,
   ];
   const { AlignmentTool } = alignmentPlugin;
+
+
+// Giả sử bạn đã có editorState
+const contentState = editorState.getCurrentContent();
+
+// Lấy danh sách các block dưới dạng mảng
+const blocksArray = contentState.getBlocksAsArray();
+
+// Hoặc lấy danh sách các block dưới dạng bản đồ
+const blocksMap = contentState.getBlockMap();
+
+
+const selectionState = editorState.getSelection();
+
+// Lấy key của block đang được chọn
+const anchorKey = selectionState.getAnchorKey();
+// Lấy block đang được chọn
+const selectedBlock = contentState.getBlockForKey(anchorKey);
+
+
+console.log(selectedBlock.getKey(), selectedBlock.getType(), selectedBlock.getText());
+console.log("contentState",contentState)
+console.log("blocksArray",blocksArray)
+console.log("blocksMap",blocksMap)
 
   return (
     <div>

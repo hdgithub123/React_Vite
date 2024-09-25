@@ -35,7 +35,7 @@ function ReactRichTextEditorExample() {
            
             {/* <ThemedAlignmentEditor></ThemedAlignmentEditor> */}
             {/* <TextAlignmentPlugin></TextAlignmentPlugin> */}
-            <ResizeableEditor></ResizeableEditor>
+            {/* <ResizeableEditor></ResizeableEditor> */}
             {/* <DndPlugin></DndPlugin> */}
             {/* <DividerWithSideToolbarEditor></DividerWithSideToolbarEditor> */}
             {/* <CustomCounterEditor></CustomCounterEditor> */}
