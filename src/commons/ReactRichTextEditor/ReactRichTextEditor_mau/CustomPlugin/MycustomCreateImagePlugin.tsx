@@ -10,8 +10,72 @@ import Editor from '@draft-js-plugins/editor'
 
 
 // Hàm khởi tạo plugin
-function customCreateImagePlugin() {
+// function customCreateImagePlugin() {
 
+//   return {
+//     addImage: (editorState, imageInfo) => {
+//       const contentState = editorState.getCurrentContent();
+//       const contentStateWithEntity = contentState.createEntity(
+//         'IMAGE',
+//         'IMMUTABLE',
+//         { imageInfo }  // Thêm imageInfo (bao gồm src, width, height)
+//       );
+
+//       const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+//       if (!entityKey) {
+//         console.error("Error: Entity creation failed.");
+//         return editorState;
+//       }
+
+//       const newEditorState = AtomicBlockUtils.insertAtomicBlock(
+//         editorState,
+//         entityKey,
+//         ' '
+//       );
+//       return EditorState.forceSelection(
+//         newEditorState,
+//         newEditorState.getCurrentContent().getSelectionAfter()
+//       );
+//     },
+//     // blockRendererFn: (contentBlock, { getEditorState, setEditorState }) => {
+//     //   const type = contentBlock.getType();
+//     //   if (type === 'atomic') {
+//     //     return {
+//     //       component: ImageComponent,
+//     //       editable: false,
+//     //       props: { getEditorState, setEditorState },
+//     //     };
+//     //   }
+//     //   return null;
+//     // },
+
+//     blockRendererFn: (block, { getEditorState, setEditorState }) => {
+//       if (block.getType() === 'atomic') {
+//         const contentState = getEditorState().getCurrentContent();
+//         const entity = contentState.getEntity(block.getEntityAt(0));
+//         const type = entity.getType();
+
+//         if (type === 'IMAGE') {
+//           return {
+//             component: ImageComponent,
+//             editable: false,
+//             props: {
+//               updateData: (newData) => {
+//                 const contentState = getEditorState().getCurrentContent();
+//                 const updatedContentState = contentState.mergeEntityData(block.getEntityAt(0), newData);
+//                 const newEditorState = EditorState.push(getEditorState(), updatedContentState, 'apply-entity');
+//                 setEditorState(newEditorState);
+//               },
+//             },
+//           };
+//         }
+//       }
+//       return null;
+//     },
+//   };
+// }
+
+function customCreateImagePlugin() {
   return {
     addImage: (editorState, imageInfo) => {
       const contentState = editorState.getCurrentContent();
@@ -22,41 +86,60 @@ function customCreateImagePlugin() {
       );
 
       const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-      if (!entityKey) {
-        console.error("Error: Entity creation failed.");
+
+      // Kiểm tra nếu entityKey là null hoặc không hợp lệ
+      if (!entityKey || entityKey === 'null') {
+        console.error("Error: Entity creation failed or entityKey is null.");
         return editorState;
       }
 
+      // Chèn block kiểu atomic với entityKey hợp lệ
       const newEditorState = AtomicBlockUtils.insertAtomicBlock(
         editorState,
         entityKey,
-        ' '
+        ' '  // Thêm một khoảng trắng để hiển thị ảnh
       );
+
       return EditorState.forceSelection(
         newEditorState,
         newEditorState.getCurrentContent().getSelectionAfter()
       );
     },
-    resizeImage: (entityKey, editorState, imageInfo) => {
-      const contentState = editorState.getCurrentContent();
-      const contentStateWithEntity = contentState.mergeEntityData(entityKey, { imageInfo });
-      const newEditorState = EditorState.push(editorState, contentStateWithEntity, 'apply-entity');
-      return newEditorState;
-    },
 
-    blockRendererFn: (contentBlock, { getEditorState, setEditorState }) => {
-      const type = contentBlock.getType();
-      if (type === 'atomic') {
-        return {
-          component: ImageComponent,
-          editable: false,
-          props: { getEditorState, setEditorState },
-        };
+    blockRendererFn: (block, { getEditorState, setEditorState }) => {
+      if (block.getType() === 'atomic') {
+        const contentState = getEditorState().getCurrentContent();
+        const entityKey = block.getEntityAt(0);
+
+        // Kiểm tra entityKey trước khi sử dụng
+        if (!entityKey || entityKey === 'null') {
+          console.error("Error: Entity key is null for atomic block.");
+          return null;
+        }
+
+        const entity = contentState.getEntity(entityKey);
+        const type = entity.getType();
+
+        if (type === 'IMAGE') {
+          return {
+            component: ImageComponent,
+            editable: false,
+            props: {
+              updateData: (newData) => {
+                const contentState = getEditorState().getCurrentContent();
+                const updatedContentState = contentState.mergeEntityData(entityKey, newData);
+                const newEditorState = EditorState.push(getEditorState(), updatedContentState, 'apply-entity');
+                setEditorState(newEditorState);
+              },
+            },
+          };
+        }
       }
       return null;
     },
   };
 }
+
 
 
 // Component thao tác của user
@@ -260,28 +343,104 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
 //     );
 //   });
 
-const ImageComponent = ({ block, contentState, onClick}) => {
-  const entityKey = block.getEntityAt(0);
-  if (!entityKey) {
-    return <div>Error: Invalid image entity.</div>;
-  }
+// const ImageComponent = ({ block, contentState, onClick}) => {
+//   const entityKey = block.getEntityAt(0);
+//   if (!entityKey) {
+//     return <div>Error: Invalid image entity.</div>;
+//   }
 
-  const entity = contentState.getEntity(entityKey);
-  const { imageInfo } = entity.getData();
-  const handleOnclick = () => {
-    onClick(entityKey)
-  }
+//   const entity = contentState.getEntity(entityKey);
+//   const { imageInfo } = entity.getData();
+//   const handleOnclick = () => {
+//     onClick(entityKey)
+//   }
+//   return (
+//     <div>
+//       <img
+//         src={imageInfo.url}
+//         alt="Error Image!"
+//         onClick={handleOnclick}
+//         style={{ cursor: 'pointer', width: imageInfo.width || 'auto', height: imageInfo.height || 'auto', display:'flex' , justifyContent: 'center' }}
+//       />
+//     </div>
+//   );
+// };
+
+
+
+const ImageComponent = ({ block, contentState, blockProps }) => {
+  const entity = contentState.getEntity(block.getEntityAt(0));
+  // const { src, width, height, alignment } = entity.getData();  // Thêm thuộc tính alignment
+  const { imageInfo } = entity.getData();  // Thêm thuộc tính alignment
+  const [showEditPanel, setShowEditPanel] = useState(false);
+  const [imageWidth, setImageWidth] = useState(imageInfo.width || '100%');
+  const [imageHeight, setImageHeight] = useState(imageInfo.height || 'auto');
+  const [imageAlignment, setImageAlignment] = useState(imageInfo.alignment || 'center');  // Mặc định là căn giữa
+
+
+  // console.log("imageInfo.width", imageInfo.width)
+  // console.log("imageInfo.height", imageInfo.height)
+  // console.log("imageInfo.alignment", imageInfo.alignment)
+  // Hàm xử lý khi double-click vào ảnh
+  const handleDoubleClick = () => {
+    setShowEditPanel(!showEditPanel);
+  };
+
+  const handleWidthChange = (e) => {
+    const newWidth = e.target.value + 'px';
+    setImageWidth(newWidth);
+    blockProps.updateData({ width: newWidth });
+  };
+
+  const handleHeightChange = (e) => {
+    const newHeight = e.target.value + 'px';
+    setImageHeight(newHeight);
+    blockProps.updateData({ height: newHeight });
+  };
+
+  const handleAlignmentChange = (alignment) => {
+    setImageAlignment(alignment);
+    blockProps.updateData({ alignment });
+  };
+
+
+
   return (
-    <div>
+    <div style={{ textAlign: imageAlignment }}>
       <img
         src={imageInfo.url}
-        alt="Error Image!"
-        onClick={handleOnclick}
-        style={{ cursor: 'pointer', width: imageInfo.width || 'auto', height: imageInfo.height || 'auto', display:'flex' , justifyContent: 'center' }}
+        width={imageWidth}
+        height={imageHeight}
+        onDoubleClick={handleDoubleClick}
+        alt="Draft.js Image"
+        style={{ cursor: 'pointer' }}
       />
+
+      {/* Bảng chỉnh sửa khi double click */}
+      {showEditPanel && (
+        <div className="edit-panel" style={{ marginTop: '10px', border: '1px solid #ccc', padding: '10px' }}>
+          {/* <label>Width (%): </label>
+          <input type="range" min="10" max="100" value={parseInt(imageWidth)} onChange={handleWidthChange} /> */}
+
+          <label style={{ marginLeft: '10px' }}>Width (px): </label>
+          <input type="number" value={parseInt(imageWidth)} onChange={handleWidthChange} />
+
+          <label style={{ marginLeft: '10px' }}>Height (px): </label>
+          <input type="number" value={parseInt(imageHeight)} onChange={handleHeightChange} />
+
+          {/* Chỉnh căn lề */}
+          <div style={{ marginTop: '10px' }}>
+            <label>Alignment: </label>
+            <button onClick={() => handleAlignmentChange('left')}>Left</button>
+            <button onClick={() => handleAlignmentChange('center')}>Center</button>
+            <button onClick={() => handleAlignmentChange('right')}>Right</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
 
 
 import { composeDecorators } from '@draft-js-plugins/editor';
@@ -327,28 +486,28 @@ const MycustomCreateImagePlugin = () => {
   const { AlignmentTool } = alignmentPlugin;
 
 
-// Giả sử bạn đã có editorState
-const contentState = editorState.getCurrentContent();
+  // Giả sử bạn đã có editorState
+  const contentState = editorState.getCurrentContent();
 
-// Lấy danh sách các block dưới dạng mảng
-const blocksArray = contentState.getBlocksAsArray();
+  // Lấy danh sách các block dưới dạng mảng
+  const blocksArray = contentState.getBlocksAsArray();
 
-// Hoặc lấy danh sách các block dưới dạng bản đồ
-const blocksMap = contentState.getBlockMap();
-
-
-const selectionState = editorState.getSelection();
-
-// Lấy key của block đang được chọn
-const anchorKey = selectionState.getAnchorKey();
-// Lấy block đang được chọn
-const selectedBlock = contentState.getBlockForKey(anchorKey);
+  // Hoặc lấy danh sách các block dưới dạng bản đồ
+  const blocksMap = contentState.getBlockMap();
 
 
-console.log(selectedBlock.getKey(), selectedBlock.getType(), selectedBlock.getText());
-console.log("contentState",contentState)
-console.log("blocksArray",blocksArray)
-console.log("blocksMap",blocksMap)
+  const selectionState = editorState.getSelection();
+
+  // Lấy key của block đang được chọn
+  const anchorKey = selectionState.getAnchorKey();
+  // Lấy block đang được chọn
+  const selectedBlock = contentState.getBlockForKey(anchorKey);
+
+
+  // console.log(selectedBlock.getKey(), selectedBlock.getType(), selectedBlock.getText());
+  // console.log("contentState",contentState)
+  // console.log("blocksArray",blocksArray)
+  // console.log("blocksMap",blocksMap)
 
   return (
     <div>
@@ -359,7 +518,7 @@ console.log("blocksMap",blocksMap)
           onChange={setEditorState}
           plugins={plugins} // Sử dụng plugin hình ảnh
         />
-        <AlignmentTool></AlignmentTool>
+        {/* <AlignmentTool></AlignmentTool> */}
       </div>
 
     </div>
