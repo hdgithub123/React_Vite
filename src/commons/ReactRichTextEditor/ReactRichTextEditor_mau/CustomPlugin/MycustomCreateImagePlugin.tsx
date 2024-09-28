@@ -377,6 +377,9 @@ const ImageComponent = ({ block, contentState, blockProps }) => {
   const [imageHeight, setImageHeight] = useState(imageInfo.height || 'auto');
   const [imageAlignment, setImageAlignment] = useState(imageInfo.alignment || 'center');  // Mặc định là căn giữa
 
+  let imageNewInfo = {
+        ...imageInfo
+  }
 
   // console.log("imageInfo.width", imageInfo.width)
   // console.log("imageInfo.height", imageInfo.height)
@@ -389,19 +392,35 @@ const ImageComponent = ({ block, contentState, blockProps }) => {
   const handleWidthChange = (e) => {
     const newWidth = e.target.value + 'px';
     setImageWidth(newWidth);
-    blockProps.updateData({ width: newWidth });
+    imageNewInfo = {
+      ...imageNewInfo,
+      width: newWidth
+    }
+    blockProps.updateData({ imageInfo: imageNewInfo });
+    // blockProps.updateData({ width: newWidth });
   };
 
   const handleHeightChange = (e) => {
     const newHeight = e.target.value + 'px';
     setImageHeight(newHeight);
-    blockProps.updateData({ height: newHeight });
+    imageNewInfo = {
+      ...imageNewInfo,
+      height: newHeight,
+    }
+    console.log("imageNewInfo",imageNewInfo)
+    blockProps.updateData({ imageInfo: imageNewInfo });
+    // blockProps.updateData({ height: newHeight });
   };
 
   const handleAlignmentChange = (alignment) => {
     setImageAlignment(alignment);
     blockProps.updateData({ alignment });
   };
+
+
+// const handleUpdateWidthHeight = () =>{
+//   blockProps.updateData({ imageInfo: imageNewInfo });
+// }
 
 
 
@@ -430,6 +449,7 @@ const ImageComponent = ({ block, contentState, blockProps }) => {
 
           {/* Chỉnh căn lề */}
           <div style={{ marginTop: '10px' }}>
+          {/* <button onClick={handleUpdateWidthHeight}>Update</button> */}
             <label>Alignment: </label>
             <button onClick={() => handleAlignmentChange('left')}>Left</button>
             <button onClick={() => handleAlignmentChange('center')}>Center</button>
@@ -483,31 +503,8 @@ const MycustomCreateImagePlugin = () => {
     resizeablePlugin,
     imagePlugin,
   ];
-  const { AlignmentTool } = alignmentPlugin;
 
 
-  // Giả sử bạn đã có editorState
-  const contentState = editorState.getCurrentContent();
-
-  // Lấy danh sách các block dưới dạng mảng
-  const blocksArray = contentState.getBlocksAsArray();
-
-  // Hoặc lấy danh sách các block dưới dạng bản đồ
-  const blocksMap = contentState.getBlockMap();
-
-
-  const selectionState = editorState.getSelection();
-
-  // Lấy key của block đang được chọn
-  const anchorKey = selectionState.getAnchorKey();
-  // Lấy block đang được chọn
-  const selectedBlock = contentState.getBlockForKey(anchorKey);
-
-
-  // console.log(selectedBlock.getKey(), selectedBlock.getType(), selectedBlock.getText());
-  // console.log("contentState",contentState)
-  // console.log("blocksArray",blocksArray)
-  // console.log("blocksMap",blocksMap)
 
   return (
     <div>
