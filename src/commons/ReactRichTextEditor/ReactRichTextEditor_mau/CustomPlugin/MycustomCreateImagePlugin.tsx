@@ -75,7 +75,11 @@ import Editor from '@draft-js-plugins/editor'
 //   };
 // }
 
-function customCreateImagePlugin() {
+function customCreateImagePlugin(config = {}) {
+  const component = (props) => (
+    <ImageComponent {...props} onClick={config.onClick} />
+  );
+
   return {
     addImage: (editorState, imageInfo) => {
       const contentState = editorState.getCurrentContent();
@@ -123,7 +127,7 @@ function customCreateImagePlugin() {
 
         if (type === 'IMAGE') {
           return {
-            component: ImageComponent,
+            component: component,
             editable: false,
             props: {
               updateData: (newData) => {
@@ -465,103 +469,127 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
 // };
 
 
-const ImageComponent = ({ block, contentState, blockProps }) => {
+// const ImageComponent = ({ block, contentState, blockProps }) => {
+//   const entity = contentState.getEntity(block.getEntityAt(0));
+//   const { imageInfo } = entity.getData();
+//   const [showEditPanel, setShowEditPanel] = useState(false);
+//   const [imageWidth, setImageWidth] = useState(imageInfo.width || '100%');
+//   const [imageHeight, setImageHeight] = useState(imageInfo.height || 'auto');
+//   const [imageAlignment, setImageAlignment] = useState(imageInfo.alignment || 'center');
+//   const editPanelRef = useRef(null);
+
+//   let imageNewInfo = {
+//     ...imageInfo
+//   };
+
+
+//   const handleDoubleClick = () => {
+//     setShowEditPanel(true);
+//   };
+
+//   const handleWidthChange = (e) => {
+//     const newWidth = e.target.value + 'px';
+//     setImageWidth(newWidth);
+//     imageNewInfo = {
+//       ...imageNewInfo,
+//       width: newWidth
+//     };
+//     blockProps.updateData({ imageInfo: imageNewInfo });
+  
+//   };
+
+//   const handleHeightChange = (e) => {
+//     const newHeight = e.target.value + 'px';
+//     setImageHeight(newHeight);
+//     imageNewInfo = {
+//       ...imageNewInfo,
+//       height: newHeight,
+//     };
+//     blockProps.updateData({ imageInfo: imageNewInfo });
+//   };
+
+//   const handleAlignmentChange = (alignment) => {
+//     setImageAlignment(alignment);
+//     imageNewInfo = {
+//       ...imageNewInfo,
+//       textAlign: alignment,
+//     };
+
+//     blockProps.updateData({ imageInfo: imageNewInfo });
+//   };
+
+//   const handleBlur = (e) => {
+//     if (editPanelRef.current && !editPanelRef.current.contains(e.relatedTarget)) {
+//       setShowEditPanel(false);
+//     }
+//     blockProps.updateData({ imageInfo: imageNewInfo });
+//   };
+
+//   return (
+//     <div style={{ textAlign: imageAlignment }}>
+//       <img
+//         src={imageInfo.url}
+//         width={imageWidth}
+//         height={imageHeight}
+//         onDoubleClick={handleDoubleClick}
+//         alt="Draft.js Image"
+//         style={{ cursor: 'pointer' }}
+//       />
+
+//       {showEditPanel && (
+//         <div
+//           className="edit-panel"
+//           style={{ marginTop: '10px', border: '1px solid #ccc', padding: '10px' }}
+//           tabIndex={-1}
+//           ref={editPanelRef}
+//           onBlur={handleBlur}
+//         >
+//           <label style={{ marginLeft: '10px' }}>Width (px): </label>
+//           <input type="number" value={parseInt(imageWidth)} onChange={handleWidthChange} />
+
+//           <label style={{ marginLeft: '10px' }}>Height (px): </label>
+//           <input type="number" value={parseInt(imageHeight)} onChange={handleHeightChange} />
+
+//           <div style={{ marginTop: '10px' }}>
+//             <label>Alignment: </label>
+//             <button onClick={() => handleAlignmentChange('left')}>Left</button>
+//             <button onClick={() => handleAlignmentChange('center')}>Center</button>
+//             <button onClick={() => handleAlignmentChange('right')}>Right</button>
+//             <button onClick={handleBlur}>Hide</button>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+
+const ImageComponent = ({ block, contentState , onClick }) => {
   const entity = contentState.getEntity(block.getEntityAt(0));
   const { imageInfo } = entity.getData();
-  const [showEditPanel, setShowEditPanel] = useState(false);
-  const [imageWidth, setImageWidth] = useState(imageInfo.width || '100%');
-  const [imageHeight, setImageHeight] = useState(imageInfo.height || 'auto');
-  const [imageAlignment, setImageAlignment] = useState(imageInfo.alignment || 'center');
-  const editPanelRef = useRef(null);
-
-  let imageNewInfo = {
-    ...imageInfo
-  };
 
 
-  updateData: (newData) => {
-        const contentState = getEditorState().getCurrentContent();
-        const updatedContentState = contentState.mergeEntityData(entityKey, newData);
-        const newEditorState = EditorState.push(getEditorState(), updatedContentState, 'apply-entity');
-        setEditorState(newEditorState);
-      }
+const handleOnClick = () =>{
+  onClick(block.getEntityAt(0))
+  console.log("block.getEntityAt(0)",block.getEntityAt(0))
+}
 
-  const handleDoubleClick = () => {
-    setShowEditPanel(true);
-  };
 
-  const handleWidthChange = (e) => {
-    const newWidth = e.target.value + 'px';
-    setImageWidth(newWidth);
-    imageNewInfo = {
-      ...imageNewInfo,
-      width: newWidth
-    };
-    blockProps.updateData({ imageInfo: imageNewInfo });
-  
-  };
 
-  const handleHeightChange = (e) => {
-    const newHeight = e.target.value + 'px';
-    setImageHeight(newHeight);
-    imageNewInfo = {
-      ...imageNewInfo,
-      height: newHeight,
-    };
-    blockProps.updateData({ imageInfo: imageNewInfo });
-  };
 
-  const handleAlignmentChange = (alignment) => {
-    setImageAlignment(alignment);
-    imageNewInfo = {
-      ...imageNewInfo,
-      textAlign: alignment,
-    };
 
-    blockProps.updateData({ imageInfo: imageNewInfo });
-  };
 
-  const handleBlur = (e) => {
-    if (editPanelRef.current && !editPanelRef.current.contains(e.relatedTarget)) {
-      setShowEditPanel(false);
-    }
-    blockProps.updateData({ imageInfo: imageNewInfo });
-  };
 
   return (
-    <div style={{ textAlign: imageAlignment }}>
+    <div style={{ textAlign: imageInfo.textAlign }}>
       <img
         src={imageInfo.url}
-        width={imageWidth}
-        height={imageHeight}
-        onDoubleClick={handleDoubleClick}
+        width={imageInfo.width}
+        height={imageInfo.height}
+        onClick={handleOnClick}
         alt="Draft.js Image"
         style={{ cursor: 'pointer' }}
       />
-
-      {showEditPanel && (
-        <div
-          className="edit-panel"
-          style={{ marginTop: '10px', border: '1px solid #ccc', padding: '10px' }}
-          tabIndex={-1}
-          ref={editPanelRef}
-          onBlur={handleBlur}
-        >
-          <label style={{ marginLeft: '10px' }}>Width (px): </label>
-          <input type="number" value={parseInt(imageWidth)} onChange={handleWidthChange} />
-
-          <label style={{ marginLeft: '10px' }}>Height (px): </label>
-          <input type="number" value={parseInt(imageHeight)} onChange={handleHeightChange} />
-
-          <div style={{ marginTop: '10px' }}>
-            <label>Alignment: </label>
-            <button onClick={() => handleAlignmentChange('left')}>Left</button>
-            <button onClick={() => handleAlignmentChange('center')}>Center</button>
-            <button onClick={() => handleAlignmentChange('right')}>Right</button>
-            <button onClick={handleBlur}>Hide</button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
@@ -600,7 +628,8 @@ const decorator = composeDecorators(
 // Component chính
 const MycustomCreateImagePlugin = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const imagePlugin = customCreateImagePlugin(decorator);
+  const [currentEntityKey, setCurrentEntityKey] = useState(null);
+  const imagePlugin = customCreateImagePlugin({onClick: (entityKey) => setCurrentEntityKey(entityKey)});
   const plugins = [
     blockDndPlugin,
     focusPlugin,
@@ -611,6 +640,21 @@ const MycustomCreateImagePlugin = () => {
 
 
 
+  const resizeImage = (entityKey, info) => {
+    const contentState = editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.mergeEntityData(entityKey, {info});
+    console.log("contentStateWithEntity",contentStateWithEntity)
+    const newEditorState = EditorState.push(editorState, contentStateWithEntity, 'apply-entity');
+    console.log("newEditorState",newEditorState)
+    setEditorState(newEditorState);
+  };
+
+
+  const infoIMG = {
+    width: '300px', 
+    height: '300', 
+    textAlign: 'left'
+  }
   return (
     <div>
       <ButtoncustomCreateImagePlugin editorState={editorState} setEditorState={setEditorState} imagePlugin={imagePlugin} ></ButtoncustomCreateImagePlugin>
@@ -622,7 +666,7 @@ const MycustomCreateImagePlugin = () => {
         />
         {/* <AlignmentTool></AlignmentTool> */}
       </div>
-
+      <button onClick={() => resizeImage(currentEntityKey, infoIMG)}>Resize Image</button>
     </div>
   );
 };
