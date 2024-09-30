@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useRef, useState } from 'react';
 import { EditorState, AtomicBlockUtils } from 'draft-js';
 import Editor from '@draft-js-plugins/editor'
 
@@ -107,10 +107,11 @@ function customCreateImagePlugin() {
     },
 
     blockRendererFn: (block, { getEditorState, setEditorState }) => {
+      console.log("block",block)
       if (block.getType() === 'atomic') {
         const contentState = getEditorState().getCurrentContent();
         const entityKey = block.getEntityAt(0);
-
+        console.log("entityKey",entityKey)
         // Kiểm tra entityKey trước khi sử dụng
         if (!entityKey || entityKey === 'null') {
           console.error("Error: Entity key is null for atomic block.");
@@ -368,25 +369,115 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
 
 
 
+// const ImageComponent = ({ block, contentState, blockProps }) => {
+//   const entity = contentState.getEntity(block.getEntityAt(0));
+//   // const { src, width, height, alignment } = entity.getData();  // Thêm thuộc tính alignment
+//   const { imageInfo } = entity.getData();  // Thêm thuộc tính alignment
+//   const [showEditPanel, setShowEditPanel] = useState(false);
+//   const [imageWidth, setImageWidth] = useState(imageInfo.width || '100%');
+//   const [imageHeight, setImageHeight] = useState(imageInfo.height || 'auto');
+//   const [imageAlignment, setImageAlignment] = useState(imageInfo.alignment || 'center');  // Mặc định là căn giữa
+
+//   let imageNewInfo = {
+//         ...imageInfo
+//   }
+
+//   // console.log("imageInfo.width", imageInfo.width)
+//   // console.log("imageInfo.height", imageInfo.height)
+//   // console.log("imageInfo.alignment", imageInfo.alignment)
+//   // Hàm xử lý khi double-click vào ảnh
+//   const handleDoubleClick = () => {
+//     setShowEditPanel(!showEditPanel);
+//   };
+
+//   const handleWidthChange = (e) => {
+//     const newWidth = e.target.value + 'px';
+//     setImageWidth(newWidth);
+//     imageNewInfo = {
+//       ...imageNewInfo,
+//       width: newWidth
+//     }
+//     blockProps.updateData({ imageInfo: imageNewInfo });
+//     // blockProps.updateData({ width: newWidth });
+//   };
+
+//   const handleHeightChange = (e) => {
+//     const newHeight = e.target.value + 'px';
+//     setImageHeight(newHeight);
+//     imageNewInfo = {
+//       ...imageNewInfo,
+//       height: newHeight,
+//     }
+//     console.log("imageNewInfo",imageNewInfo)
+//     blockProps.updateData({ imageInfo: imageNewInfo });
+//     // blockProps.updateData({ height: newHeight });
+//   };
+
+//   const handleAlignmentChange = (alignment) => {
+//     setImageAlignment(alignment);
+//     blockProps.updateData({ alignment });
+//   };
+
+
+// // const handleUpdateWidthHeight = () =>{
+// //   blockProps.updateData({ imageInfo: imageNewInfo });
+// // }
+
+
+
+//   return (
+//     <div style={{ textAlign: imageAlignment }}>
+//       <img
+//         src={imageInfo.url}
+//         width={imageWidth}
+//         height={imageHeight}
+//         onDoubleClick={handleDoubleClick}
+//         alt="Draft.js Image"
+//         style={{ cursor: 'pointer' }}
+//       />
+
+//       {/* Bảng chỉnh sửa khi double click */}
+//       {showEditPanel && (
+//         <div className="edit-panel" style={{ marginTop: '10px', border: '1px solid #ccc', padding: '10px' }}>
+//           {/* <label>Width (%): </label>
+//           <input type="range" min="10" max="100" value={parseInt(imageWidth)} onChange={handleWidthChange} /> */}
+
+//           <label style={{ marginLeft: '10px' }}>Width (px): </label>
+//           <input type="number" value={parseInt(imageWidth)} onChange={handleWidthChange} />
+
+//           <label style={{ marginLeft: '10px' }}>Height (px): </label>
+//           <input type="number" value={parseInt(imageHeight)} onChange={handleHeightChange} />
+
+//           {/* Chỉnh căn lề */}
+//           <div style={{ marginTop: '10px' }}>
+//           {/* <button onClick={handleUpdateWidthHeight}>Update</button> */}
+//             <label>Alignment: </label>
+//             <button onClick={() => handleAlignmentChange('left')}>Left</button>
+//             <button onClick={() => handleAlignmentChange('center')}>Center</button>
+//             <button onClick={() => handleAlignmentChange('right')}>Right</button>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+
 const ImageComponent = ({ block, contentState, blockProps }) => {
   const entity = contentState.getEntity(block.getEntityAt(0));
-  // const { src, width, height, alignment } = entity.getData();  // Thêm thuộc tính alignment
-  const { imageInfo } = entity.getData();  // Thêm thuộc tính alignment
+  const { imageInfo } = entity.getData();
   const [showEditPanel, setShowEditPanel] = useState(false);
   const [imageWidth, setImageWidth] = useState(imageInfo.width || '100%');
   const [imageHeight, setImageHeight] = useState(imageInfo.height || 'auto');
-  const [imageAlignment, setImageAlignment] = useState(imageInfo.alignment || 'center');  // Mặc định là căn giữa
+  const [imageAlignment, setImageAlignment] = useState(imageInfo.alignment || 'center');
+  const editPanelRef = useRef(null);
 
   let imageNewInfo = {
-        ...imageInfo
-  }
+    ...imageInfo
+  };
 
-  // console.log("imageInfo.width", imageInfo.width)
-  // console.log("imageInfo.height", imageInfo.height)
-  // console.log("imageInfo.alignment", imageInfo.alignment)
-  // Hàm xử lý khi double-click vào ảnh
   const handleDoubleClick = () => {
-    setShowEditPanel(!showEditPanel);
+    setShowEditPanel(true);
   };
 
   const handleWidthChange = (e) => {
@@ -395,9 +486,8 @@ const ImageComponent = ({ block, contentState, blockProps }) => {
     imageNewInfo = {
       ...imageNewInfo,
       width: newWidth
-    }
+    };
     blockProps.updateData({ imageInfo: imageNewInfo });
-    // blockProps.updateData({ width: newWidth });
   };
 
   const handleHeightChange = (e) => {
@@ -406,10 +496,8 @@ const ImageComponent = ({ block, contentState, blockProps }) => {
     imageNewInfo = {
       ...imageNewInfo,
       height: newHeight,
-    }
-    console.log("imageNewInfo",imageNewInfo)
+    };
     blockProps.updateData({ imageInfo: imageNewInfo });
-    // blockProps.updateData({ height: newHeight });
   };
 
   const handleAlignmentChange = (alignment) => {
@@ -417,12 +505,12 @@ const ImageComponent = ({ block, contentState, blockProps }) => {
     blockProps.updateData({ alignment });
   };
 
-
-// const handleUpdateWidthHeight = () =>{
-//   blockProps.updateData({ imageInfo: imageNewInfo });
-// }
-
-
+  const handleBlur = (e) => {
+    if (editPanelRef.current && !editPanelRef.current.contains(e.relatedTarget)) {
+      setShowEditPanel(false);
+    }
+    blockProps.updateData({ imageInfo: imageNewInfo });
+  };
 
   return (
     <div style={{ textAlign: imageAlignment }}>
@@ -435,25 +523,26 @@ const ImageComponent = ({ block, contentState, blockProps }) => {
         style={{ cursor: 'pointer' }}
       />
 
-      {/* Bảng chỉnh sửa khi double click */}
       {showEditPanel && (
-        <div className="edit-panel" style={{ marginTop: '10px', border: '1px solid #ccc', padding: '10px' }}>
-          {/* <label>Width (%): </label>
-          <input type="range" min="10" max="100" value={parseInt(imageWidth)} onChange={handleWidthChange} /> */}
-
+        <div
+          className="edit-panel"
+          style={{ marginTop: '10px', border: '1px solid #ccc', padding: '10px' }}
+          tabIndex={-1}
+          ref={editPanelRef}
+          // onBlur={handleBlur}
+        >
           <label style={{ marginLeft: '10px' }}>Width (px): </label>
           <input type="number" value={parseInt(imageWidth)} onChange={handleWidthChange} />
 
           <label style={{ marginLeft: '10px' }}>Height (px): </label>
           <input type="number" value={parseInt(imageHeight)} onChange={handleHeightChange} />
 
-          {/* Chỉnh căn lề */}
           <div style={{ marginTop: '10px' }}>
-          {/* <button onClick={handleUpdateWidthHeight}>Update</button> */}
             <label>Alignment: </label>
             <button onClick={() => handleAlignmentChange('left')}>Left</button>
             <button onClick={() => handleAlignmentChange('center')}>Center</button>
             <button onClick={() => handleAlignmentChange('right')}>Right</button>
+            <button onClick={handleBlur}>Hide</button>
           </div>
         </div>
       )}
