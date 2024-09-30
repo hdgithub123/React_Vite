@@ -151,6 +151,7 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
     width: '',
     height: '',
     unit: 'px', // Default unit
+    textAlign: 'center',
   };
   const [imageInfo, setImageInfo] = useState(imageInfoInnit);
   const [locked, setLocked] = useState(true); // State for lock
@@ -163,6 +164,7 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
         ...imageInfo,
         width: `${imageInfo.width}${imageInfo.unit}`, // Combine width with unit
         height: `${imageInfo.height}${imageInfo.unit}`, // Combine height with unit
+        textAlign: `${imageInfo.textAlign}${imageInfo.unit}`
       };
       const newEditorState = imagePlugin.addImage(editorState, updatedImageInfo);
       setEditorState(newEditorState);
@@ -476,6 +478,14 @@ const ImageComponent = ({ block, contentState, blockProps }) => {
     ...imageInfo
   };
 
+
+  updateData: (newData) => {
+        const contentState = getEditorState().getCurrentContent();
+        const updatedContentState = contentState.mergeEntityData(entityKey, newData);
+        const newEditorState = EditorState.push(getEditorState(), updatedContentState, 'apply-entity');
+        setEditorState(newEditorState);
+      }
+
   const handleDoubleClick = () => {
     setShowEditPanel(true);
   };
@@ -488,6 +498,7 @@ const ImageComponent = ({ block, contentState, blockProps }) => {
       width: newWidth
     };
     blockProps.updateData({ imageInfo: imageNewInfo });
+  
   };
 
   const handleHeightChange = (e) => {
@@ -502,7 +513,12 @@ const ImageComponent = ({ block, contentState, blockProps }) => {
 
   const handleAlignmentChange = (alignment) => {
     setImageAlignment(alignment);
-    blockProps.updateData({ alignment });
+    imageNewInfo = {
+      ...imageNewInfo,
+      textAlign: alignment,
+    };
+
+    blockProps.updateData({ imageInfo: imageNewInfo });
   };
 
   const handleBlur = (e) => {
@@ -529,7 +545,7 @@ const ImageComponent = ({ block, contentState, blockProps }) => {
           style={{ marginTop: '10px', border: '1px solid #ccc', padding: '10px' }}
           tabIndex={-1}
           ref={editPanelRef}
-          // onBlur={handleBlur}
+          onBlur={handleBlur}
         >
           <label style={{ marginLeft: '10px' }}>Width (px): </label>
           <input type="number" value={parseInt(imageWidth)} onChange={handleWidthChange} />
