@@ -76,17 +76,25 @@ import Editor from '@draft-js-plugins/editor'
 // }
 
 function customCreateImagePlugin(config = {}) {
+  
   const component = (props) => (
     <ImageComponent {...props} onClick={config.onClick} />
   );
+  
 
   return {
-    addImage: (editorState, imageInfo) => {
+    addImage: (editorState, {url,width, height,textAlign}) => {
       const contentState = editorState.getCurrentContent();
       const contentStateWithEntity = contentState.createEntity(
         'IMAGE',
         'IMMUTABLE',
-        { imageInfo }  // Thêm imageInfo (bao gồm src, width, height)
+        // { imageInfo }  // Thêm imageInfo (bao gồm src, width, height)
+        {
+        url,
+        width,
+        height,
+        textAlign
+      }
       );
 
       const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
@@ -110,42 +118,56 @@ function customCreateImagePlugin(config = {}) {
       );
     },
 
-    blockRendererFn: (block, { getEditorState, setEditorState }) => {
-      console.log("block",block)
+    // blockRendererFn: (block, { getEditorState, setEditorState }) => {
+    //   console.log("block",block)
+    //   if (block.getType() === 'atomic') {
+    //     const contentState = getEditorState().getCurrentContent();
+    //     const entityKey = block.getEntityAt(0);
+    //     console.log("entityKey",entityKey)
+    //     // Kiểm tra entityKey trước khi sử dụng
+    //     if (!entityKey || entityKey === 'null') {
+    //       console.error("Error: Entity key is null for atomic block.");
+    //       return null;
+    //     }
+
+    //     const entity = contentState.getEntity(entityKey);
+    //     const type = entity.getType();
+
+    //     if (type === 'IMAGE') {
+    //       return {
+    //         component: component,
+    //         editable: false,
+    //         // props: {
+    //         //   updateData: (newData) => {
+    //         //     const contentState = getEditorState().getCurrentContent();
+    //         //     const updatedContentState = contentState.mergeEntityData(entityKey, newData);
+    //         //     const newEditorState = EditorState.push(getEditorState(), updatedContentState, 'apply-entity');
+    //         //     setEditorState(newEditorState);
+    //         //   },
+    //         // },
+    //       };
+    //     }
+    //   }
+    //   return null;
+    // },
+    blockRendererFn: (block, { getEditorState }) => {
       if (block.getType() === 'atomic') {
         const contentState = getEditorState().getCurrentContent();
-        const entityKey = block.getEntityAt(0);
-        console.log("entityKey",entityKey)
-        // Kiểm tra entityKey trước khi sử dụng
-        if (!entityKey || entityKey === 'null') {
-          console.error("Error: Entity key is null for atomic block.");
-          return null;
-        }
-
-        const entity = contentState.getEntity(entityKey);
+        const entity = contentState.getEntity(block.getEntityAt(0));
         const type = entity.getType();
 
         if (type === 'IMAGE') {
           return {
-            component: component,
+            component,
             editable: false,
-            props: {
-              updateData: (newData) => {
-                const contentState = getEditorState().getCurrentContent();
-                const updatedContentState = contentState.mergeEntityData(entityKey, newData);
-                const newEditorState = EditorState.push(getEditorState(), updatedContentState, 'apply-entity');
-                setEditorState(newEditorState);
-              },
-            },
           };
         }
       }
+
       return null;
     },
   };
 }
-
-
 
 // Component thao tác của user
 
@@ -495,7 +517,7 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
 //       width: newWidth
 //     };
 //     blockProps.updateData({ imageInfo: imageNewInfo });
-  
+
 //   };
 
 //   const handleHeightChange = (e) => {
@@ -564,28 +586,26 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
 // };
 
 
-const ImageComponent = ({ block, contentState , onClick }) => {
+const ImageComponent =
+(
+
+  { block, contentState, onClick }
+  
+) => {
   const entity = contentState.getEntity(block.getEntityAt(0));
-  const { imageInfo } = entity.getData();
-
-
-const handleOnClick = () =>{
-  onClick(block.getEntityAt(0))
-  console.log("block.getEntityAt(0)",block.getEntityAt(0))
-}
-
-
-
-
-
-
-
+  const { url,width, height,textAlign } = entity.getData();
+  const handleOnClick = () => {
+    onClick(block.getEntityAt(0))
+  }
   return (
-    <div style={{ textAlign: imageInfo.textAlign }}>
+    <div 
+    style={{ textAlign: textAlign }}
+    >
       <img
-        src={imageInfo.url}
-        width={imageInfo.width}
-        height={imageInfo.height}
+      
+        src={url}
+        width={width}
+        height={height}
         onClick={handleOnClick}
         alt="Draft.js Image"
         style={{ cursor: 'pointer' }}
@@ -629,7 +649,10 @@ const decorator = composeDecorators(
 const MycustomCreateImagePlugin = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [currentEntityKey, setCurrentEntityKey] = useState(null);
-  const imagePlugin = customCreateImagePlugin({onClick: (entityKey) => setCurrentEntityKey(entityKey)});
+  const imagePlugin = customCreateImagePlugin({ onClick: (entityKey) => setCurrentEntityKey(entityKey) });
+
+
+  
   const plugins = [
     blockDndPlugin,
     focusPlugin,
@@ -642,19 +665,21 @@ const MycustomCreateImagePlugin = () => {
 
   const resizeImage = (entityKey, info) => {
     const contentState = editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.mergeEntityData(entityKey, {info});
-    console.log("contentStateWithEntity",contentStateWithEntity)
+    const contentStateWithEntity = contentState.mergeEntityData(entityKey, { width: info.width, height: info.height, textAlign: info.textAlign });
+    console.log("contentStateWithEntity", contentStateWithEntity)
     const newEditorState = EditorState.push(editorState, contentStateWithEntity, 'apply-entity');
-    console.log("newEditorState",newEditorState)
+    console.log("newEditorState", newEditorState)
     setEditorState(newEditorState);
+    console.log("editorState", editorState)
   };
 
 
   const infoIMG = {
-    width: '300px', 
-    height: '300', 
-    textAlign: 'left'
+    width: '400px',
+    height: '300px',
+    textAlign: 'center'
   }
+
   return (
     <div>
       <ButtoncustomCreateImagePlugin editorState={editorState} setEditorState={setEditorState} imagePlugin={imagePlugin} ></ButtoncustomCreateImagePlugin>
@@ -666,7 +691,7 @@ const MycustomCreateImagePlugin = () => {
         />
         {/* <AlignmentTool></AlignmentTool> */}
       </div>
-      <button onClick={() => resizeImage(currentEntityKey, infoIMG)}>Resize Image</button>
+      <button onClick={() => resizeImage(currentEntityKey, infoIMG)}>Change Image</button>
     </div>
   );
 };
