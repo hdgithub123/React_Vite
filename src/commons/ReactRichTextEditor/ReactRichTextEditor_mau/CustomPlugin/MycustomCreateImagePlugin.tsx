@@ -5,10 +5,16 @@ import Editor from '@draft-js-plugins/editor'
 
 function customCreateImagePlugin(config = {}) {
   
-  const component = (props) => (
+
+  const component2 = (props) => (
     <ImageComponent {...props} onClick={config.onClick} />
   );
-  
+
+
+  const component = config.decorator
+    ? config.decorator(component2)
+    : component2;
+
 
   return {
     addImage: (editorState, {url,width, height,textAlign}) => {
@@ -225,34 +231,86 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
 
 
 
-const ImageComponent =
-(
+// const ImageComponent =
+// (
 
-  { block, contentState, onClick }
+//   { block, contentState, onClick }
   
-) => {
-  const entity = contentState.getEntity(block.getEntityAt(0));
-  const { url,width, height,textAlign } = entity.getData();
+// ) => {
+//   const entity = contentState.getEntity(block.getEntityAt(0));
+//   const { url,width, height,textAlign } = entity.getData();
+//   const handleOnClick = () => {
+//     onClick(block.getEntityAt(0))
+//     console.log("block.getEntityAt(0)",block.getEntityAt(0))
+//   }
+//   return (
+//     <div 
+//     style={{ textAlign: textAlign }}
+//     >
+//       <img
+      
+//         src={url}
+//         width={width}
+//         height={height}
+//         onClick={handleOnClick}
+//         alt="Draft.js Image"
+//         style={{ cursor: 'pointer' }}
+//       />
+//     </div>
+//   );
+// };
+
+
+
+const ImageComponent = forwardRef(
+  ({
+    block, // eslint-disable-line no-unused-vars
+    blockProps, // eslint-disable-line no-unused-vars
+    customStyleMap, // eslint-disable-line no-unused-vars
+    customStyleFn, // eslint-disable-line no-unused-vars
+    decorator, // eslint-disable-line no-unused-vars
+    forceSelection, // eslint-disable-line no-unused-vars
+    offsetKey, // eslint-disable-line no-unused-vars
+    selection, // eslint-disable-line no-unused-vars
+    tree, // eslint-disable-line no-unused-vars
+    contentState, // eslint-disable-line no-unused-vars
+    blockStyleFn, // eslint-disable-line no-unused-vars
+    preventScroll, // eslint-disable-line no-unused-vars
+    style,
+    onClick,
+    ...elementProps
+  }, 
+
+    
+    ref
+
+  ) => {
+  const entityKey = block.getEntityAt(0);
+  if (!entityKey) {
+    return <div>Error: Invalid image entity.</div>;
+  }
+
   const handleOnClick = () => {
     onClick(block.getEntityAt(0))
     console.log("block.getEntityAt(0)",block.getEntityAt(0))
   }
+
+
+  const entity = contentState.getEntity(entityKey);
+  const { url,width, height,textAlign } = entity.getData();
   return (
-    <div 
-    style={{ textAlign: textAlign }}
-    >
-      <img
-      
-        src={url}
-        width={width}
-        height={height}
-        onClick={handleOnClick}
-        alt="Draft.js Image"
-        style={{ cursor: 'pointer' }}
-      />
-    </div>
+
+    <img
+      ref={ref}
+      {...elementProps}
+      onClick={handleOnClick}
+      src={url ? url : ''}
+      alt="Error Image!"
+      style={{ width: width || 'auto', height: height || 'auto', textAlign: textAlign, ...style }}
+    />
+
   );
-};
+});
 
 
 
@@ -289,7 +347,8 @@ const decorator = composeDecorators(
 const MycustomCreateImagePlugin = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [currentEntityKey, setCurrentEntityKey] = useState(null);
-  const imagePlugin = customCreateImagePlugin({ onClick: (entityKey) => setCurrentEntityKey(entityKey) });
+  // const imagePlugin = customCreateImagePlugin({ onClick: (entityKey) => setCurrentEntityKey(entityKey) });
+  const imagePlugin = customCreateImagePlugin({ decorator, onClick: (entityKey) => setCurrentEntityKey(entityKey)  });
 
 
   
