@@ -3,78 +3,6 @@ import { EditorState, AtomicBlockUtils } from 'draft-js';
 import Editor from '@draft-js-plugins/editor'
 
 
-
-
-
-
-
-
-// Hàm khởi tạo plugin
-// function customCreateImagePlugin() {
-
-//   return {
-//     addImage: (editorState, imageInfo) => {
-//       const contentState = editorState.getCurrentContent();
-//       const contentStateWithEntity = contentState.createEntity(
-//         'IMAGE',
-//         'IMMUTABLE',
-//         { imageInfo }  // Thêm imageInfo (bao gồm src, width, height)
-//       );
-
-//       const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-//       if (!entityKey) {
-//         console.error("Error: Entity creation failed.");
-//         return editorState;
-//       }
-
-//       const newEditorState = AtomicBlockUtils.insertAtomicBlock(
-//         editorState,
-//         entityKey,
-//         ' '
-//       );
-//       return EditorState.forceSelection(
-//         newEditorState,
-//         newEditorState.getCurrentContent().getSelectionAfter()
-//       );
-//     },
-//     // blockRendererFn: (contentBlock, { getEditorState, setEditorState }) => {
-//     //   const type = contentBlock.getType();
-//     //   if (type === 'atomic') {
-//     //     return {
-//     //       component: ImageComponent,
-//     //       editable: false,
-//     //       props: { getEditorState, setEditorState },
-//     //     };
-//     //   }
-//     //   return null;
-//     // },
-
-//     blockRendererFn: (block, { getEditorState, setEditorState }) => {
-//       if (block.getType() === 'atomic') {
-//         const contentState = getEditorState().getCurrentContent();
-//         const entity = contentState.getEntity(block.getEntityAt(0));
-//         const type = entity.getType();
-
-//         if (type === 'IMAGE') {
-//           return {
-//             component: ImageComponent,
-//             editable: false,
-//             props: {
-//               updateData: (newData) => {
-//                 const contentState = getEditorState().getCurrentContent();
-//                 const updatedContentState = contentState.mergeEntityData(block.getEntityAt(0), newData);
-//                 const newEditorState = EditorState.push(getEditorState(), updatedContentState, 'apply-entity');
-//                 setEditorState(newEditorState);
-//               },
-//             },
-//           };
-//         }
-//       }
-//       return null;
-//     },
-//   };
-// }
-
 function customCreateImagePlugin(config = {}) {
   
   const component = (props) => (
@@ -118,38 +46,7 @@ function customCreateImagePlugin(config = {}) {
       );
     },
 
-    // blockRendererFn: (block, { getEditorState, setEditorState }) => {
-    //   console.log("block",block)
-    //   if (block.getType() === 'atomic') {
-    //     const contentState = getEditorState().getCurrentContent();
-    //     const entityKey = block.getEntityAt(0);
-    //     console.log("entityKey",entityKey)
-    //     // Kiểm tra entityKey trước khi sử dụng
-    //     if (!entityKey || entityKey === 'null') {
-    //       console.error("Error: Entity key is null for atomic block.");
-    //       return null;
-    //     }
 
-    //     const entity = contentState.getEntity(entityKey);
-    //     const type = entity.getType();
-
-    //     if (type === 'IMAGE') {
-    //       return {
-    //         component: component,
-    //         editable: false,
-    //         // props: {
-    //         //   updateData: (newData) => {
-    //         //     const contentState = getEditorState().getCurrentContent();
-    //         //     const updatedContentState = contentState.mergeEntityData(entityKey, newData);
-    //         //     const newEditorState = EditorState.push(getEditorState(), updatedContentState, 'apply-entity');
-    //         //     setEditorState(newEditorState);
-    //         //   },
-    //         // },
-    //       };
-    //     }
-    //   }
-    //   return null;
-    // },
     blockRendererFn: (block, { getEditorState }) => {
       if (block.getType() === 'atomic') {
         const contentState = getEditorState().getCurrentContent();
@@ -328,264 +225,6 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
 
 
 
-// component sẽ được Render ra editor
-
-// const ImageComponent = forwardRef(
-//   ({
-//     block, // eslint-disable-line no-unused-vars
-//     blockProps, // eslint-disable-line no-unused-vars
-//     customStyleMap, // eslint-disable-line no-unused-vars
-//     customStyleFn, // eslint-disable-line no-unused-vars
-//     decorator, // eslint-disable-line no-unused-vars
-//     forceSelection, // eslint-disable-line no-unused-vars
-//     offsetKey, // eslint-disable-line no-unused-vars
-//     selection, // eslint-disable-line no-unused-vars
-//     tree, // eslint-disable-line no-unused-vars
-//     contentState, // eslint-disable-line no-unused-vars
-//     blockStyleFn, // eslint-disable-line no-unused-vars
-//     preventScroll, // eslint-disable-line no-unused-vars
-//     style,
-//     ...elementProps
-//   },
-
-
-//     ref
-
-//   ) => {
-//     const entityKey = block.getEntityAt(0);
-//     if (!entityKey) {
-//       return <div>Error: Invalid image entity.</div>;
-//     }
-
-//     const entity = contentState.getEntity(entityKey);
-//     const { imageInfo } = entity.getData();
-//     return (
-
-//       <img
-//         ref={ref}
-//         {...elementProps}
-//         src={imageInfo.url ? imageInfo.url : ''}
-//         alt="Error Image!"
-//         style={{ width: imageInfo.width || 'auto', height: imageInfo.height || 'auto', ...style }}
-//       />
-
-//     );
-//   });
-
-// const ImageComponent = ({ block, contentState, onClick}) => {
-//   const entityKey = block.getEntityAt(0);
-//   if (!entityKey) {
-//     return <div>Error: Invalid image entity.</div>;
-//   }
-
-//   const entity = contentState.getEntity(entityKey);
-//   const { imageInfo } = entity.getData();
-//   const handleOnclick = () => {
-//     onClick(entityKey)
-//   }
-//   return (
-//     <div>
-//       <img
-//         src={imageInfo.url}
-//         alt="Error Image!"
-//         onClick={handleOnclick}
-//         style={{ cursor: 'pointer', width: imageInfo.width || 'auto', height: imageInfo.height || 'auto', display:'flex' , justifyContent: 'center' }}
-//       />
-//     </div>
-//   );
-// };
-
-
-
-// const ImageComponent = ({ block, contentState, blockProps }) => {
-//   const entity = contentState.getEntity(block.getEntityAt(0));
-//   // const { src, width, height, alignment } = entity.getData();  // Thêm thuộc tính alignment
-//   const { imageInfo } = entity.getData();  // Thêm thuộc tính alignment
-//   const [showEditPanel, setShowEditPanel] = useState(false);
-//   const [imageWidth, setImageWidth] = useState(imageInfo.width || '100%');
-//   const [imageHeight, setImageHeight] = useState(imageInfo.height || 'auto');
-//   const [imageAlignment, setImageAlignment] = useState(imageInfo.alignment || 'center');  // Mặc định là căn giữa
-
-//   let imageNewInfo = {
-//         ...imageInfo
-//   }
-
-//   // console.log("imageInfo.width", imageInfo.width)
-//   // console.log("imageInfo.height", imageInfo.height)
-//   // console.log("imageInfo.alignment", imageInfo.alignment)
-//   // Hàm xử lý khi double-click vào ảnh
-//   const handleDoubleClick = () => {
-//     setShowEditPanel(!showEditPanel);
-//   };
-
-//   const handleWidthChange = (e) => {
-//     const newWidth = e.target.value + 'px';
-//     setImageWidth(newWidth);
-//     imageNewInfo = {
-//       ...imageNewInfo,
-//       width: newWidth
-//     }
-//     blockProps.updateData({ imageInfo: imageNewInfo });
-//     // blockProps.updateData({ width: newWidth });
-//   };
-
-//   const handleHeightChange = (e) => {
-//     const newHeight = e.target.value + 'px';
-//     setImageHeight(newHeight);
-//     imageNewInfo = {
-//       ...imageNewInfo,
-//       height: newHeight,
-//     }
-//     console.log("imageNewInfo",imageNewInfo)
-//     blockProps.updateData({ imageInfo: imageNewInfo });
-//     // blockProps.updateData({ height: newHeight });
-//   };
-
-//   const handleAlignmentChange = (alignment) => {
-//     setImageAlignment(alignment);
-//     blockProps.updateData({ alignment });
-//   };
-
-
-// // const handleUpdateWidthHeight = () =>{
-// //   blockProps.updateData({ imageInfo: imageNewInfo });
-// // }
-
-
-
-//   return (
-//     <div style={{ textAlign: imageAlignment }}>
-//       <img
-//         src={imageInfo.url}
-//         width={imageWidth}
-//         height={imageHeight}
-//         onDoubleClick={handleDoubleClick}
-//         alt="Draft.js Image"
-//         style={{ cursor: 'pointer' }}
-//       />
-
-//       {/* Bảng chỉnh sửa khi double click */}
-//       {showEditPanel && (
-//         <div className="edit-panel" style={{ marginTop: '10px', border: '1px solid #ccc', padding: '10px' }}>
-//           {/* <label>Width (%): </label>
-//           <input type="range" min="10" max="100" value={parseInt(imageWidth)} onChange={handleWidthChange} /> */}
-
-//           <label style={{ marginLeft: '10px' }}>Width (px): </label>
-//           <input type="number" value={parseInt(imageWidth)} onChange={handleWidthChange} />
-
-//           <label style={{ marginLeft: '10px' }}>Height (px): </label>
-//           <input type="number" value={parseInt(imageHeight)} onChange={handleHeightChange} />
-
-//           {/* Chỉnh căn lề */}
-//           <div style={{ marginTop: '10px' }}>
-//           {/* <button onClick={handleUpdateWidthHeight}>Update</button> */}
-//             <label>Alignment: </label>
-//             <button onClick={() => handleAlignmentChange('left')}>Left</button>
-//             <button onClick={() => handleAlignmentChange('center')}>Center</button>
-//             <button onClick={() => handleAlignmentChange('right')}>Right</button>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-
-// const ImageComponent = ({ block, contentState, blockProps }) => {
-//   const entity = contentState.getEntity(block.getEntityAt(0));
-//   const { imageInfo } = entity.getData();
-//   const [showEditPanel, setShowEditPanel] = useState(false);
-//   const [imageWidth, setImageWidth] = useState(imageInfo.width || '100%');
-//   const [imageHeight, setImageHeight] = useState(imageInfo.height || 'auto');
-//   const [imageAlignment, setImageAlignment] = useState(imageInfo.alignment || 'center');
-//   const editPanelRef = useRef(null);
-
-//   let imageNewInfo = {
-//     ...imageInfo
-//   };
-
-
-//   const handleDoubleClick = () => {
-//     setShowEditPanel(true);
-//   };
-
-//   const handleWidthChange = (e) => {
-//     const newWidth = e.target.value + 'px';
-//     setImageWidth(newWidth);
-//     imageNewInfo = {
-//       ...imageNewInfo,
-//       width: newWidth
-//     };
-//     blockProps.updateData({ imageInfo: imageNewInfo });
-
-//   };
-
-//   const handleHeightChange = (e) => {
-//     const newHeight = e.target.value + 'px';
-//     setImageHeight(newHeight);
-//     imageNewInfo = {
-//       ...imageNewInfo,
-//       height: newHeight,
-//     };
-//     blockProps.updateData({ imageInfo: imageNewInfo });
-//   };
-
-//   const handleAlignmentChange = (alignment) => {
-//     setImageAlignment(alignment);
-//     imageNewInfo = {
-//       ...imageNewInfo,
-//       textAlign: alignment,
-//     };
-
-//     blockProps.updateData({ imageInfo: imageNewInfo });
-//   };
-
-//   const handleBlur = (e) => {
-//     if (editPanelRef.current && !editPanelRef.current.contains(e.relatedTarget)) {
-//       setShowEditPanel(false);
-//     }
-//     blockProps.updateData({ imageInfo: imageNewInfo });
-//   };
-
-//   return (
-//     <div style={{ textAlign: imageAlignment }}>
-//       <img
-//         src={imageInfo.url}
-//         width={imageWidth}
-//         height={imageHeight}
-//         onDoubleClick={handleDoubleClick}
-//         alt="Draft.js Image"
-//         style={{ cursor: 'pointer' }}
-//       />
-
-//       {showEditPanel && (
-//         <div
-//           className="edit-panel"
-//           style={{ marginTop: '10px', border: '1px solid #ccc', padding: '10px' }}
-//           tabIndex={-1}
-//           ref={editPanelRef}
-//           onBlur={handleBlur}
-//         >
-//           <label style={{ marginLeft: '10px' }}>Width (px): </label>
-//           <input type="number" value={parseInt(imageWidth)} onChange={handleWidthChange} />
-
-//           <label style={{ marginLeft: '10px' }}>Height (px): </label>
-//           <input type="number" value={parseInt(imageHeight)} onChange={handleHeightChange} />
-
-//           <div style={{ marginTop: '10px' }}>
-//             <label>Alignment: </label>
-//             <button onClick={() => handleAlignmentChange('left')}>Left</button>
-//             <button onClick={() => handleAlignmentChange('center')}>Center</button>
-//             <button onClick={() => handleAlignmentChange('right')}>Right</button>
-//             <button onClick={handleBlur}>Hide</button>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-
 const ImageComponent =
 (
 
@@ -596,6 +235,7 @@ const ImageComponent =
   const { url,width, height,textAlign } = entity.getData();
   const handleOnClick = () => {
     onClick(block.getEntityAt(0))
+    console.log("block.getEntityAt(0)",block.getEntityAt(0))
   }
   return (
     <div 
@@ -662,22 +302,15 @@ const MycustomCreateImagePlugin = () => {
   ];
 
 
-
-  const resizeImage = (entityKey, info) => {
-    const contentState = editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.mergeEntityData(entityKey, { width: info.width, height: info.height, textAlign: info.textAlign });
-    console.log("contentStateWithEntity", contentStateWithEntity)
-    const newEditorState = EditorState.push(editorState, contentStateWithEntity, 'apply-entity');
-    console.log("newEditorState", newEditorState)
-    setEditorState(newEditorState);
-    console.log("editorState", editorState)
-  };
-
-
   const infoIMG = {
     width: '400px',
     height: '300px',
     textAlign: 'center'
+  }
+  const infoIMG2 = {
+    width: '100px',
+    height: '200px',
+    textAlign: 'left'
   }
 
   return (
@@ -691,9 +324,35 @@ const MycustomCreateImagePlugin = () => {
         />
         {/* <AlignmentTool></AlignmentTool> */}
       </div>
-      <button onClick={() => resizeImage(currentEntityKey, infoIMG)}>Change Image</button>
+      {/* <button onClick={() => resizeImage(currentEntityKey, infoIMG)}>Change Image</button> */}
+      <button onClick={()=>resizeImage(currentEntityKey, infoIMG,editorState,setEditorState )}>Change Image</button>
+      <button onClick={()=>resizeImage(currentEntityKey, infoIMG2,editorState,setEditorState )}>Change Image 2</button>
     </div>
   );
 };
 
 export default MycustomCreateImagePlugin;
+
+
+
+const resizeImage = (entityKey, info, editorState, setEditorState) => {
+  const contentState = editorState.getCurrentContent();
+  const contentStateWithEntity = contentState.mergeEntityData(entityKey, {
+    width: info.width,
+    height: info.height,
+    textAlign: info.textAlign,
+  });
+
+  const newEditorState = EditorState.push(
+    editorState,
+    contentStateWithEntity,
+    'apply-entity'
+  );
+
+  // Buộc editor render lại
+  const selectionState = newEditorState.getSelection();
+  const forcedEditorState = EditorState.forceSelection(newEditorState, selectionState);
+
+  // Cập nhật editorState mới
+  setEditorState(forcedEditorState);
+};
