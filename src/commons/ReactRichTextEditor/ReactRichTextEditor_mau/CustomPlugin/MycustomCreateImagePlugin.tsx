@@ -335,8 +335,8 @@ const blockDndPlugin = createBlockDndPlugin();
 
 
 const decorator = composeDecorators(
-  alignmentPlugin.decorator,
-  resizeablePlugin.decorator,
+  // alignmentPlugin.decorator,
+  // resizeablePlugin.decorator,
   focusPlugin.decorator,
   blockDndPlugin.decorator
 );
@@ -355,8 +355,8 @@ const MycustomCreateImagePlugin = () => {
   const plugins = [
     blockDndPlugin,
     focusPlugin,
-    alignmentPlugin,
-    resizeablePlugin,
+    // alignmentPlugin,
+    // resizeablePlugin,
     imagePlugin,
   ];
 
@@ -386,6 +386,7 @@ const MycustomCreateImagePlugin = () => {
       {/* <button onClick={() => resizeImage(currentEntityKey, infoIMG)}>Change Image</button> */}
       <button onClick={()=>resizeImage(currentEntityKey, infoIMG,editorState,setEditorState )}>Change Image</button>
       <button onClick={()=>resizeImage(currentEntityKey, infoIMG2,editorState,setEditorState )}>Change Image 2</button>
+      <button onClick={()=> console.log("currentEntityKey",currentEntityKey)}>console</button>
     </div>
   );
 };
