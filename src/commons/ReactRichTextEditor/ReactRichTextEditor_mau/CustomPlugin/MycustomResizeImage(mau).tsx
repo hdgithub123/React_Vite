@@ -4,20 +4,22 @@ import Editor from '@draft-js-plugins/editor';
 
 // Component hiển thị hình ảnh với sự kiện click
 const ImageComponent = ({ block, contentState, onClick }) => {
-  const entity = contentState.getEntity(block.getEntityAt(0));
+  const entityKey = block.getEntityAt(0);
+  if (!entityKey) return null; // Ensure entity exists
+  const entity = contentState.getEntity(entityKey);
   const { src, width, height } = entity.getData();
-
   return (
     <img
       src={src}
       width={width}
       height={height}
-      onClick={() => onClick(block.getEntityAt(0))}
+      onClick={() => onClick(entityKey)}
       alt=""
       style={{ cursor: 'pointer' }}
     />
   );
 };
+
 
 
 
@@ -75,13 +77,18 @@ export default MycustomResizeImage;
 
 
 
-const addImage = (url,editorState,setEditorState) => {
-  const contentState = editorState.getCurrentContent();
-  const contentStateWithEntity = contentState.createEntity('IMAGE', 'IMMUTABLE', { src: url, width: 150, height: 150 });
-  const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-  const newEditorState = AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
-  setEditorState(newEditorState);
-};
+// const addImage = (url,editorState,setEditorState) => {
+//   const contentState = editorState.getCurrentContent();
+//   const contentStateWithEntity = contentState.createEntity('IMAGE', 'IMMUTABLE', { src: url, width: 150, height: 150 });
+//   const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+//   if (!entityKey) return; // Check for valid entity key
+
+//   console.log("entityKey", entityKey)
+
+//   const newEditorState = AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
+//   console.log("newEditorState", newEditorState)
+//   setEditorState(newEditorState);
+// };
 
 const resizeImage = (entityKey, editorState, setEditorState, width, height) => {
   const contentState = editorState.getCurrentContent();
@@ -89,3 +96,92 @@ const resizeImage = (entityKey, editorState, setEditorState, width, height) => {
   const newEditorState = EditorState.push(editorState, contentStateWithEntity, 'apply-entity');
   setEditorState(newEditorState);
 };
+
+
+// const addImage = (url, editorState, setEditorState) => {
+//   const contentState = editorState.getCurrentContent();
+//   const contentStateWithEntity = contentState.createEntity('IMAGE', 'IMMUTABLE', {
+//     src: url,
+//     width: 150,
+//     height: 150,
+//   });
+//   const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+//   if (!entityKey) return; // Check for valid entity key
+
+//   console.log("entityKey", entityKey);
+
+//   // Đảm bảo chọn vị trí hợp lý để chèn hình ảnh
+//   const selectionState = editorState.getSelection();
+//   const newEditorState = AtomicBlockUtils.insertAtomicBlock(
+//     EditorState.acceptSelection(editorState, selectionState), 
+//     entityKey, 
+//     ' ' // Insert a space after the image
+//   );
+
+//   console.log("newEditorState", newEditorState);
+//   setEditorState(EditorState.forceSelection(newEditorState, newEditorState.getSelection()));
+// };
+
+
+
+// const addImage = (url, editorState, setEditorState) => {
+//   const contentState = editorState.getCurrentContent();
+  
+//   // Kiểm tra selection hiện tại có phải là valid hay không
+//   const selectionState = editorState.getSelection();
+//   if (!selectionState || selectionState.isCollapsed()) {
+//     console.error("selectionState",selectionState);
+//     // console.error("Invalid selection state");
+//     return;
+//   }
+
+//   // Tạo entity mới cho ảnh
+//   const contentStateWithEntity = contentState.createEntity('IMAGE', 'IMMUTABLE', {
+//     src: url,
+//     width: 150,
+//     height: 150,
+//   });
+
+//   // Lấy entityKey từ entity vừa tạo
+//   const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+//   if (!entityKey) {
+//     console.error("Failed to create entity for image.");
+//     return; // Dừng nếu không có entityKey hợp lệ
+//   }
+
+//   // Thay đổi editorState với entity mới
+//   const newContentState = editorState.getCurrentContent();
+//   const newEditorState = AtomicBlockUtils.insertAtomicBlock(
+//     EditorState.push(editorState, newContentState, 'apply-entity'),
+//     entityKey,
+//     ' '
+//   );
+
+//   // Cập nhật lại editorState với lựa chọn mới
+//   setEditorState(EditorState.forceSelection(newEditorState, newEditorState.getSelection()));
+// };
+
+
+
+const addImage = (url, editorState, setEditorState) => {
+  const contentState = editorState.getCurrentContent();
+  const selectionState = editorState.getSelection();
+  const blockKey = selectionState.getAnchorKey();
+  const block = contentState.getBlockForKey(blockKey);
+
+  // Kiểm tra nếu block hiện tại là AtomicBlock
+  if (block.getType() === 'atomic') {
+    console.log("Selection is inside an atomic block. Cancelling image insert.");
+    return;  // Nếu đang chọn vào một AtomicBlock, return mà không thêm ảnh
+  }
+
+  // Tiếp tục thêm ảnh nếu không ở trong AtomicBlock
+  const contentStateWithEntity = contentState.createEntity('IMAGE', 'IMMUTABLE', { src: url, width: 150, height: 150 });
+  const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+  
+  if (!entityKey) return;  // Check for valid entity key
+
+  const newEditorState = AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
+  setEditorState(newEditorState);
+};
+

@@ -4,7 +4,7 @@ import Editor from '@draft-js-plugins/editor'
 
 
 function customCreateImagePlugin(config = {}) {
-  
+
 
   const component2 = (props) => (
     <ImageComponent {...props} onClick={config.onClick} />
@@ -17,41 +17,88 @@ function customCreateImagePlugin(config = {}) {
 
 
   return {
-    addImage: (editorState, {url,width, height,textAlign}) => {
+    // addImage: (editorState, { url, width, height, textAlign }) => {
+    //   const contentState = editorState.getCurrentContent();
+    //   const contentStateWithEntity = contentState.createEntity(
+    //     'IMAGE',
+    //     'IMMUTABLE',
+    //     // { imageInfo }  // Thêm imageInfo (bao gồm src, width, height)
+    //     {
+    //       url,
+    //       width,
+    //       height,
+    //       textAlign
+    //     }
+    //   );
+
+    //   const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+
+    //   // Kiểm tra nếu entityKey là null hoặc không hợp lệ
+    //   if (!entityKey || entityKey === 'null') {
+    //     console.error("Error: Entity creation failed or entityKey is null.");
+    //     return editorState;
+    //   }
+
+    //   // Chèn block kiểu atomic với entityKey hợp lệ
+    //   const newEditorState = AtomicBlockUtils.insertAtomicBlock(
+    //     editorState,
+    //     entityKey,
+    //     ' '  // Thêm một khoảng trắng để hiển thị ảnh
+    //   );
+
+    //   return EditorState.forceSelection(
+    //     newEditorState,
+    //     newEditorState.getCurrentContent().getSelectionAfter()
+    //   );
+    // },
+
+
+    addImage: (editorState, { url, width, height, textAlign }) => {
       const contentState = editorState.getCurrentContent();
+      const selectionState = editorState.getSelection();
+      const blockKey = selectionState.getAnchorKey();
+      const block = contentState.getBlockForKey(blockKey);
+    
+      // Kiểm tra nếu block hiện tại là AtomicBlock
+      if (block.getType() === 'atomic') {
+        console.log("Selection another loaction!");
+        return editorState;  // Nếu đang chọn vào một AtomicBlock, return mà không thêm ảnh
+      }
+      
+      // Tạo entity mới cho ảnh
       const contentStateWithEntity = contentState.createEntity(
         'IMAGE',
         'IMMUTABLE',
-        // { imageInfo }  // Thêm imageInfo (bao gồm src, width, height)
         {
-        url,
-        width,
-        height,
-        textAlign
-      }
+          url,
+          width,
+          height,
+          textAlign
+        }
       );
-
+    
       const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-
+    
       // Kiểm tra nếu entityKey là null hoặc không hợp lệ
       if (!entityKey || entityKey === 'null') {
         console.error("Error: Entity creation failed or entityKey is null.");
         return editorState;
       }
-
+    
       // Chèn block kiểu atomic với entityKey hợp lệ
       const newEditorState = AtomicBlockUtils.insertAtomicBlock(
         editorState,
         entityKey,
         ' '  // Thêm một khoảng trắng để hiển thị ảnh
       );
-
+    
+      // Cập nhật selectionState sau khi thêm ảnh
       return EditorState.forceSelection(
         newEditorState,
         newEditorState.getCurrentContent().getSelectionAfter()
       );
     },
-
+    
 
     blockRendererFn: (block, { getEditorState }) => {
       if (block.getType() === 'atomic') {
@@ -235,7 +282,7 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
 // (
 
 //   { block, contentState, onClick }
-  
+
 // ) => {
 //   const entity = contentState.getEntity(block.getEntityAt(0));
 //   const { url,width, height,textAlign } = entity.getData();
@@ -248,7 +295,7 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
 //     style={{ textAlign: textAlign }}
 //     >
 //       <img
-      
+
 //         src={url}
 //         width={width}
 //         height={height}
@@ -279,38 +326,42 @@ const ImageComponent = forwardRef(
     style,
     onClick,
     ...elementProps
-  }, 
+  },
 
-    
+
     ref
 
   ) => {
-  const entityKey = block.getEntityAt(0);
-  if (!entityKey) {
-    return <div>Error: Invalid image entity.</div>;
-  }
+    const entityKey = block.getEntityAt(0);
+    if (!entityKey) {
+      return <div>Error: Invalid image entity.</div>;
+    }
 
-  const handleOnClick = () => {
-    onClick(block.getEntityAt(0))
-    console.log("block.getEntityAt(0)",block.getEntityAt(0))
-  }
+    const handleOnClick = () => {
+      onClick(block.getEntityAt(0))
+      console.log("block.getEntityAt(0)", block.getEntityAt(0))
+    }
 
 
-  const entity = contentState.getEntity(entityKey);
-  const { url,width, height,textAlign } = entity.getData();
-  return (
+    const entity = contentState.getEntity(entityKey);
+    const { url, width, height, textAlign } = entity.getData();
+    return (
+      <div 
+      style={{ width: '100%', height: '100%', textAlign: textAlign, border: '1px solid #ddd'}}
+      >
+        <img
+          ref={ref}
+          {...elementProps}
+          onClick={handleOnClick}
+          src={url ? url : ''}
+          alt="Error Image!"
+          style={{ width: width || 'auto', height: height || 'auto',  ...style }}
+        />
+      </div>
 
-    <img
-      ref={ref}
-      {...elementProps}
-      onClick={handleOnClick}
-      src={url ? url : ''}
-      alt="Error Image!"
-      style={{ width: width || 'auto', height: height || 'auto', textAlign: textAlign, ...style }}
-    />
 
-  );
-});
+    );
+  });
 
 
 
@@ -348,10 +399,10 @@ const MycustomCreateImagePlugin = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [currentEntityKey, setCurrentEntityKey] = useState(null);
   // const imagePlugin = customCreateImagePlugin({ onClick: (entityKey) => setCurrentEntityKey(entityKey) });
-  const imagePlugin = customCreateImagePlugin({ decorator, onClick: (entityKey) => setCurrentEntityKey(entityKey)  });
+  const imagePlugin = customCreateImagePlugin({ decorator, onClick: (entityKey) => setCurrentEntityKey(entityKey) });
 
 
-  
+
   const plugins = [
     blockDndPlugin,
     focusPlugin,
@@ -384,9 +435,9 @@ const MycustomCreateImagePlugin = () => {
         {/* <AlignmentTool></AlignmentTool> */}
       </div>
       {/* <button onClick={() => resizeImage(currentEntityKey, infoIMG)}>Change Image</button> */}
-      <button onClick={()=>resizeImage(currentEntityKey, infoIMG,editorState,setEditorState )}>Change Image</button>
-      <button onClick={()=>resizeImage(currentEntityKey, infoIMG2,editorState,setEditorState )}>Change Image 2</button>
-      <button onClick={()=> console.log("currentEntityKey",currentEntityKey)}>console</button>
+      <button onClick={() => resizeImage(currentEntityKey, infoIMG, editorState, setEditorState)}>Change Image</button>
+      <button onClick={() => resizeImage(currentEntityKey, infoIMG2, editorState, setEditorState)}>Change Image 2</button>
+      <button onClick={() => console.log("currentEntityKey", currentEntityKey)}>console</button>
     </div>
   );
 };
