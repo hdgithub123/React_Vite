@@ -17,42 +17,6 @@ function customCreateImagePlugin(config = {}) {
 
 
   return {
-    // addImage: (editorState, { url, width, height, textAlign }) => {
-    //   const contentState = editorState.getCurrentContent();
-    //   const contentStateWithEntity = contentState.createEntity(
-    //     'IMAGE',
-    //     'IMMUTABLE',
-    //     // { imageInfo }  // Thêm imageInfo (bao gồm src, width, height)
-    //     {
-    //       url,
-    //       width,
-    //       height,
-    //       textAlign
-    //     }
-    //   );
-
-    //   const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-
-    //   // Kiểm tra nếu entityKey là null hoặc không hợp lệ
-    //   if (!entityKey || entityKey === 'null') {
-    //     console.error("Error: Entity creation failed or entityKey is null.");
-    //     return editorState;
-    //   }
-
-    //   // Chèn block kiểu atomic với entityKey hợp lệ
-    //   const newEditorState = AtomicBlockUtils.insertAtomicBlock(
-    //     editorState,
-    //     entityKey,
-    //     ' '  // Thêm một khoảng trắng để hiển thị ảnh
-    //   );
-
-    //   return EditorState.forceSelection(
-    //     newEditorState,
-    //     newEditorState.getCurrentContent().getSelectionAfter()
-    //   );
-    // },
-
-
     addImage: (editorState, { url, width, height, textAlign }) => {
       const contentState = editorState.getCurrentContent();
       const selectionState = editorState.getSelection();
@@ -61,7 +25,7 @@ function customCreateImagePlugin(config = {}) {
     
       // Kiểm tra nếu block hiện tại là AtomicBlock
       if (block.getType() === 'atomic') {
-        console.log("Selection another loaction!");
+        console.log("Please select another location!");
         return editorState;  // Nếu đang chọn vào một AtomicBlock, return mà không thêm ảnh
       }
       
