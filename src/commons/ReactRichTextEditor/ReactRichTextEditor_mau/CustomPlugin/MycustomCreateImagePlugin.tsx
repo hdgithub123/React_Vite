@@ -297,18 +297,28 @@ const ImageComponent = forwardRef(
 
   ) => {
     const entityKey = block.getEntityAt(0);
+    const entity = contentState.getEntity(entityKey);
+    const { url, width, height, textAlign } = entity.getData();
+
+    
     if (!entityKey) {
       return <div>Error: Invalid image entity.</div>;
     }
 
     const handleOnClick = () => {
-      onClick(block.getEntityAt(0))
-      console.log("block.getEntityAt(0)", block.getEntityAt(0))
+      const blockInfo = {
+        EntityKey: block.getEntityAt(0),
+        url: url,
+        width: width,
+        height: height,
+        textAlign: textAlign,
+      }
+      // onClick(block.getEntityAt(0))
+      onClick(blockInfo)
     }
 
 
-    const entity = contentState.getEntity(entityKey);
-    const { url, width, height, textAlign } = entity.getData();
+
     return (
       <div 
       style={{ width: '100%', height: '100%', textAlign: textAlign, border: '1px solid #ddd'}}
@@ -362,8 +372,10 @@ const decorator = composeDecorators(
 const MycustomCreateImagePlugin = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [currentEntityKey, setCurrentEntityKey] = useState(null);
+  const [currentInfoBlock, setCurrentInfoBlock] = useState(null);
   // const imagePlugin = customCreateImagePlugin({ onClick: (entityKey) => setCurrentEntityKey(entityKey) });
-  const imagePlugin = customCreateImagePlugin({ decorator, onClick: (entityKey) => setCurrentEntityKey(entityKey) });
+  // const imagePlugin = customCreateImagePlugin({ decorator, onClick: (entityKey) => setCurrentEntityKey(entityKey) });
+  const imagePlugin = customCreateImagePlugin({ decorator, onClick: (info) => setCurrentInfoBlock(info) });
 
 
 
@@ -399,9 +411,9 @@ const MycustomCreateImagePlugin = () => {
         {/* <AlignmentTool></AlignmentTool> */}
       </div>
       {/* <button onClick={() => resizeImage(currentEntityKey, infoIMG)}>Change Image</button> */}
-      <button onClick={() => resizeImage(currentEntityKey, infoIMG, editorState, setEditorState)}>Change Image</button>
-      <button onClick={() => resizeImage(currentEntityKey, infoIMG2, editorState, setEditorState)}>Change Image 2</button>
-      <button onClick={() => console.log("currentEntityKey", currentEntityKey)}>console</button>
+      <button onClick={() => resizeImage(currentInfoBlock.EntityKey, infoIMG, editorState, setEditorState)}>Change Image</button>
+      <button onClick={() => resizeImage(currentInfoBlock.EntityKey, infoIMG2, editorState, setEditorState)}>Change Image 2</button>
+      <button onClick={() => console.log("currentEntityKey", currentInfoBlock.EntityKey)}>console</button>
     </div>
   );
 };
