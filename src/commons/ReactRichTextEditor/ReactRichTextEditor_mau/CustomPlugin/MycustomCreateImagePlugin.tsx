@@ -321,7 +321,7 @@ const ImageComponent = forwardRef(
 
     return (
       <div 
-      style={{ width: '100%', height: '100%', textAlign: textAlign, border: '1px solid #ddd'}}
+      style={{ width: '100%', height: '100%', textAlign: textAlign}}
       >
         <img
           ref={ref}
@@ -362,7 +362,7 @@ const blockDndPlugin = createBlockDndPlugin();
 const decorator = composeDecorators(
   // alignmentPlugin.decorator,
   //resizeablePlugin.decorator,
-  // focusPlugin.decorator,
+  focusPlugin.decorator,
   blockDndPlugin.decorator
 );
 
@@ -381,7 +381,7 @@ const MycustomCreateImagePlugin = () => {
 
   const plugins = [
     blockDndPlugin,
-    // focusPlugin,
+    focusPlugin,
     // alignmentPlugin,
     // resizeablePlugin,
     imagePlugin,
