@@ -1,5 +1,5 @@
 import React, { forwardRef, useRef, useState } from 'react';
-import { EditorState, AtomicBlockUtils } from 'draft-js';
+import { EditorState, AtomicBlockUtils, convertToRaw } from 'draft-js';
 import Editor from '@draft-js-plugins/editor'
 
 
@@ -361,8 +361,8 @@ const blockDndPlugin = createBlockDndPlugin();
 
 const decorator = composeDecorators(
   // alignmentPlugin.decorator,
-  // resizeablePlugin.decorator,
-  focusPlugin.decorator,
+  //resizeablePlugin.decorator,
+  // focusPlugin.decorator,
   blockDndPlugin.decorator
 );
 
@@ -381,7 +381,7 @@ const MycustomCreateImagePlugin = () => {
 
   const plugins = [
     blockDndPlugin,
-    focusPlugin,
+    // focusPlugin,
     // alignmentPlugin,
     // resizeablePlugin,
     imagePlugin,
@@ -399,6 +399,18 @@ const MycustomCreateImagePlugin = () => {
     textAlign: 'left'
   }
 
+  const viewEditorContent = () => {
+    const contentState = editorState.getCurrentContent();
+    const rawContent = convertToRaw(contentState);
+    console.log("Raw Content: ", JSON.stringify(rawContent));
+    
+    // Giả sử gửi rawContent qua API
+    // api.saveContent(JSON.stringify(rawContent));
+  };
+
+
+
+
   return (
     <div>
       <ButtoncustomCreateImagePlugin editorState={editorState} setEditorState={setEditorState} imagePlugin={imagePlugin} ></ButtoncustomCreateImagePlugin>
@@ -414,6 +426,7 @@ const MycustomCreateImagePlugin = () => {
       <button onClick={() => resizeImage(currentInfoBlock.EntityKey, infoIMG, editorState, setEditorState)}>Change Image</button>
       <button onClick={() => resizeImage(currentInfoBlock.EntityKey, infoIMG2, editorState, setEditorState)}>Change Image 2</button>
       <button onClick={() => console.log("currentEntityKey", currentInfoBlock.EntityKey)}>console</button>
+      <button onClick={viewEditorContent}>Raw</button>
     </div>
   );
 };
