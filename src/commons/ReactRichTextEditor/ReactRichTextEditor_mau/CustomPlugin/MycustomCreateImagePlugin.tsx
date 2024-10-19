@@ -104,7 +104,7 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
         ...imageInfo,
         width: `${imageInfo.width}${imageInfo.unit}`, // Combine width with unit
         height: `${imageInfo.height}${imageInfo.unit}`, // Combine height with unit
-        textAlign: `${imageInfo.textAlign}${imageInfo.unit}`
+        textAlign: `${imageInfo.textAlign}`
       };
       const newEditorState = imagePlugin.addImage(editorState, updatedImageInfo);
       setEditorState(newEditorState);
@@ -338,7 +338,7 @@ const ImageComponent = forwardRef(
   });
 
 
-
+  import draftToHtml from 'draftjs-to-html';  // Import thư viện
 import { composeDecorators } from '@draft-js-plugins/editor';
 import createFocusPlugin from '@draft-js-plugins/focus';
 import createAlignmentPlugin from '@draft-js-plugins/alignment';
@@ -409,6 +409,13 @@ const MycustomCreateImagePlugin = () => {
   };
 
 
+  const convertToHtml = () => {
+    const contentState = editorState.getCurrentContent();
+    const rawContent = convertToRaw(contentState); // Chuyển đổi thành định dạng thô
+    const htmlContent = draftToHtml(rawContent);   // Chuyển đổi thành HTML
+    console.log("HTML Content: ", htmlContent);
+  };
+
 
 
   return (
@@ -426,7 +433,8 @@ const MycustomCreateImagePlugin = () => {
       <button onClick={() => resizeImage(currentInfoBlock.EntityKey, infoIMG, editorState, setEditorState)}>Change Image</button>
       <button onClick={() => resizeImage(currentInfoBlock.EntityKey, infoIMG2, editorState, setEditorState)}>Change Image 2</button>
       <button onClick={() => console.log("currentEntityKey", currentInfoBlock.EntityKey)}>console</button>
-      <button onClick={viewEditorContent}>Raw</button>
+      <button onClick={viewEditorContent}>ViewRaw</button>
+      <button onClick={convertToHtml}>ViewHTML</button>
     </div>
   );
 };
