@@ -28,7 +28,7 @@ const ImageComponent = forwardRef(
     ) => {
         const entityKey = block.getEntityAt(0);
         const entity = contentState.getEntity(entityKey);
-        const { url, width, height, textAlign } = entity.getData();
+        const { url, width, height,unit, textAlign } = entity.getData();
 
 
         if (!entityKey) {
@@ -41,6 +41,7 @@ const ImageComponent = forwardRef(
                 url: url,
                 width: width,
                 height: height,
+                unit:unit,
                 textAlign: textAlign,
             }
             onClick(blockInfo)
@@ -50,7 +51,7 @@ const ImageComponent = forwardRef(
 
         return (
             <div
-                style={{ width: '100%', height: '100%', textAlign: textAlign }}
+                style={{ width: '100%', height: '100%', textAlign: textAlign, border: 'black 1px solid' }}
             >
                 <img
                     ref={ref}
@@ -58,7 +59,7 @@ const ImageComponent = forwardRef(
                     onClick={handleOnClick}
                     src={url ? url : ''}
                     alt="Error Image!"
-                    style={{ width: width || 'auto', height: height || 'auto', ...style }}
+                    style={{ width: `${width}${unit}` || 'auto', height: `${height}${unit}` || 'auto', ...style }}
                 />
             </div>
 

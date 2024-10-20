@@ -17,7 +17,7 @@ function createImagePlugin(config = {}) {
 
 
   return {
-    addImage: (editorState, { url, width, height, textAlign }) => {
+    addImage: (editorState, { url, width, height,unit, textAlign }) => {
       const contentState = editorState.getCurrentContent();
       const selectionState = editorState.getSelection();
       const blockKey = selectionState.getAnchorKey();
@@ -37,6 +37,7 @@ function createImagePlugin(config = {}) {
           url,
           width,
           height,
+          unit,
           textAlign
         }
       );

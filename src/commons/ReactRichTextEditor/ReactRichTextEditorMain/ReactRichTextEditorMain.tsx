@@ -40,12 +40,10 @@ const ReactRichTextEditorMain = () => {
     const [currentInfoBlock, setCurrentInfoBlock] = useState(null);
 
     const handleImageOnclick = (info) => {
-      console.log("info",info)
       setCurrentEntityKey(info.EntityKey)
       setCurrentInfoBlock(info)
     }
 
-    // const imagePlugin = createImagePlugin({ decorator, onClick: (info) => setCurrentEntityKey(info.EntityKey) });
     const imagePlugin = createImagePlugin({ decorator, onClick: handleImageOnclick });
     
     const plugins = [
@@ -60,9 +58,6 @@ const ReactRichTextEditorMain = () => {
       const contentState = editorState.getCurrentContent();
       const rawContent = convertToRaw(contentState);
       console.log("Raw Content: ", JSON.stringify(rawContent));
-      
-      // Giả sử gửi rawContent qua API
-      // api.saveContent(JSON.stringify(rawContent));
     };
   
   
@@ -83,9 +78,8 @@ const ReactRichTextEditorMain = () => {
           <Editor
             editorState={editorState}
             onChange={setEditorState}
-            plugins={plugins} // Sử dụng plugin hình ảnh
+            plugins={plugins}
           />
-          {/* <AlignmentTool></AlignmentTool> */}
         </div>
         
         <button onClick={viewEditorContent}>ViewRaw</button>

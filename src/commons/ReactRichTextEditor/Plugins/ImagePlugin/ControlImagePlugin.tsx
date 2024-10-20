@@ -22,9 +22,10 @@ const ControlImagePlugin = ({ editorState, setEditorState, imagePlugin }) => {
       if (imageInfo.url && imageInfo.width && imageInfo.height) {
         const updatedImageInfo = {
           ...imageInfo,
-          width: `${imageInfo.width}${imageInfo.unit}`, // Combine width with unit
-          height: `${imageInfo.height}${imageInfo.unit}`, // Combine height with unit
-          textAlign: `${imageInfo.textAlign}`
+          width: imageInfo.width, // Combine width with unit
+          height: imageInfo.height, // Combine height with unit
+          unit:imageInfo.unit,
+          textAlign: imageInfo.textAlign,
         };
         const newEditorState = imagePlugin.addImage(editorState, updatedImageInfo);
         setEditorState(newEditorState);
