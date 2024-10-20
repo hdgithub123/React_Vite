@@ -1,71 +1,108 @@
 import React, { useState } from 'react';
-import { Editor, EditorState, AtomicBlockUtils, convertToRaw } from 'draft-js';
-
-import editorStyles from './TryCustomImage.module.css';
-
-// Image Component
-const ImageComponent = ({ block, contentState }) => {
-  const entity = contentState.getEntity(block.getEntityAt(0));
-  const { src, alt } = entity.getData();
-  return <img src={src} alt={alt} style={{ maxWidth: '100%' }} />;
-};
-
-// Block Renderer Function
-const blockRendererFn = (block) => {
-  if (block.getType() === 'atomic') {
-    return {
-      component: ImageComponent,
-      editable: false,
-    };
-  }
-  return null;
-};
+import {Editor, EditorState, Modifier, CompositeDecorator, convertToRaw } from 'draft-js';
+// import { EditorState, Modifier, CompositeDecorator, convertToRaw } from 'draft-js';
+// import Editor from '@draft-js-plugins/editor'
 
 // Add Image Function
 const addImage = (editorState, setEditorState, src, alt) => {
   const contentState = editorState.getCurrentContent();
-  const contentStateWithEntity = contentState.createEntity('IMAGE', 'IMMUTABLE', { src, alt });
+  const contentStateWithEntity = contentState.createEntity(
+    'IMAGE',
+    'MUTABLE',
+    { src, alt }
+  );
   const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+  const selectionState = editorState.getSelection();
+  
+  // Add a space before the image
+  let contentStateWithSpace = Modifier.insertText(
+    contentState,
+    selectionState,
+    ' '
+  );
+  
+  // Update selection state to be after the added space
+  const selectionAfterSpace = contentStateWithSpace.getSelectionAfter();
+  
+  // Insert the image
+  let contentStateWithImage = Modifier.insertText(
+    contentStateWithSpace,
+    selectionAfterSpace,
+    ' ', // Placeholder for the image
+    null,
+    entityKey
+  );
 
-  const newEditorState = AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
+  // Add a space after the image
+  const imageTextSelection = contentStateWithImage.getSelectionAfter();
+  contentStateWithImage = Modifier.insertText(
+    contentStateWithImage,
+    imageTextSelection,
+    ' '
+  );
 
-  setEditorState(
-    EditorState.forceSelection(
-      newEditorState,
-      newEditorState.getCurrentContent().getSelectionAfter()
-    )
+  const newEditorState = EditorState.push(
+    editorState,
+    contentStateWithImage,
+    'insert-characters'
+  );
+  setEditorState(newEditorState);
+};
+
+
+
+// Custom Image Component to render the inline image
+const ImageComponent = ({ contentState, entityKey }) => {
+  console.log("sdadas")
+  const { src, alt } = contentState.getEntity(entityKey).getData();
+  return <img src={src} alt={alt} style={{ maxWidth: '100px', verticalAlign: 'middle' }} />;
+};
+
+// Strategy to find entities of type IMAGE
+const findImageEntities = (contentBlock, callback, contentState) => {
+  contentBlock.findEntityRanges(
+    (character) => {
+      const entityKey = character.getEntity();
+      return entityKey !== null && contentState.getEntity(entityKey).getType() === 'IMAGE';
+    },
+    callback
   );
 };
 
-// Block Style Function (override default figure tag styling)
-const blockStyleFn = (block) => {
-  if (block.getType() === 'atomic') {
-    return editorStyles.atomic_block; // Custom class for atomic block
-  }
-  return '';
-};
+// Create a CompositeDecorator
+const decorator = new CompositeDecorator([
+  {
+    strategy: findImageEntities,
+    component: ImageComponent,
+  },
+]);
 
-// Main Component
+// Main component
 const TryCustomImage = () => {
-  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
+  const [editorState, setEditorState] = useState(() => EditorState.createEmpty(decorator));
   const url = 'https://cellphones.com.vn/sforum/wp-content/uploads/2024/02/avatar-anh-meo-cute-11.jpg';
-
+  const url2 = 'https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/04/anh-meo-ngau-35.jpg';
   return (
     <div>
       <button
         onClick={() => addImage(editorState, setEditorState, url, 'Example Image')}
       >
-        Add Image
+        Add Image 1
       </button>
-      <Editor
-        editorState={editorState}
-        onChange={setEditorState}
-        blockRendererFn={blockRendererFn}
-        blockStyleFn={blockStyleFn} // Override the default block style
+      <button
+        onClick={() => addImage(editorState, setEditorState, url2, 'Example Image')}
+      >
+        Add Image 2
+      </button>
+      <div   style={{ border: 'green solid 1px' }}>
+      <Editor 
+      editorState={editorState} 
+      onChange={setEditorState}
       />
+      </div>
+      
       <pre>{JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2)}</pre>
     </div>
   );
 };
-
 export default TryCustomImage;
