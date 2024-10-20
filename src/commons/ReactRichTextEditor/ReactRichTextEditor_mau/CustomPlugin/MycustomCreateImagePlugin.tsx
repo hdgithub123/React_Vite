@@ -240,39 +240,6 @@ const ButtoncustomCreateImagePlugin = ({ editorState, setEditorState, imagePlugi
   );
 };
 
-
-
-// const ImageComponent =
-// (
-
-//   { block, contentState, onClick }
-
-// ) => {
-//   const entity = contentState.getEntity(block.getEntityAt(0));
-//   const { url,width, height,textAlign } = entity.getData();
-//   const handleOnClick = () => {
-//     onClick(block.getEntityAt(0))
-//     console.log("block.getEntityAt(0)",block.getEntityAt(0))
-//   }
-//   return (
-//     <div 
-//     style={{ textAlign: textAlign }}
-//     >
-//       <img
-
-//         src={url}
-//         width={width}
-//         height={height}
-//         onClick={handleOnClick}
-//         alt="Draft.js Image"
-//         style={{ cursor: 'pointer' }}
-//       />
-//     </div>
-//   );
-// };
-
-
-
 const ImageComponent = forwardRef(
   ({
     block, // eslint-disable-line no-unused-vars

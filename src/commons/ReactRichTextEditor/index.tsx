@@ -23,6 +23,7 @@ import TableEditor from './ReactRichTextEditor_mau/RawDraftjs/TableDraftJs';
 import MycustomCreateImagePlugin from './ReactRichTextEditor_mau/CustomPlugin/MycustomCreateImagePlugin';
 import MycustomResizeImage from './ReactRichTextEditor_mau/CustomPlugin/MycustomResizeImage(mau)';
 
+import ReactRichTextEditorMain from './ReactRichTextEditorMain/ReactRichTextEditorMain';
 
 export {
   CustomMentionEditor,
@@ -48,4 +49,8 @@ export {
   TableEditor,
   MycustomCreateImagePlugin,
   MycustomResizeImage,
+
+
+  ReactRichTextEditorMain,
+  
   };

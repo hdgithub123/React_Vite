@@ -16,7 +16,7 @@ import {CustomMentionEditor,SimpleEmojiEditor,AddImageEditor,
     TableEditor,
     MycustomCreateImagePlugin,
     MycustomResizeImage,
-
+    ReactRichTextEditorMain,
 } from "../index";
 
 function ReactRichTextEditorExample() {
@@ -24,7 +24,7 @@ function ReactRichTextEditorExample() {
         <div>
             {/* <CustomMentionEditor></CustomMentionEditor> */}
             {/* <SimpleEmojiEditor></SimpleEmojiEditor> */}
-            <AddImageEditor></AddImageEditor>
+            {/* <AddImageEditor></AddImageEditor> */}
             {/* <CustomAddVideoVideoEditor></CustomAddVideoVideoEditor> */}
             {/* <CustomStickerEditor></CustomStickerEditor> */}
             {/* <CustomHashtagEditor></CustomHashtagEditor> */}
@@ -45,8 +45,9 @@ function ReactRichTextEditorExample() {
             {/* <RawDraftjs></RawDraftjs> */}
             {/* <ImageComponentjs></ImageComponentjs> */}
             {/* <TableEditor></TableEditor> */}
-            <MycustomCreateImagePlugin></MycustomCreateImagePlugin>
-            <MycustomResizeImage></MycustomResizeImage>
+            {/* <MycustomCreateImagePlugin></MycustomCreateImagePlugin>
+            <MycustomResizeImage></MycustomResizeImage> */}
+            <ReactRichTextEditorMain></ReactRichTextEditorMain>
         </div>
     )
 
