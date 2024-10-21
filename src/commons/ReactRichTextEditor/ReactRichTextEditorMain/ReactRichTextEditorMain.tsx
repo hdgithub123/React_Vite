@@ -39,12 +39,12 @@ const ReactRichTextEditorMain = () => {
     const [currentEntityKey, setCurrentEntityKey] = useState(null);
     const [currentInfoBlock, setCurrentInfoBlock] = useState(null);
 
-    const handleImageOnclick = (info) => {
+    const handleImageOnDoubleClick = (info) => {
       setCurrentEntityKey(info.EntityKey)
       setCurrentInfoBlock(info)
     }
 
-    const imagePlugin = createImagePlugin({ decorator, onClick: handleImageOnclick });
+    const imagePlugin = createImagePlugin({ decorator, onDoubleClick: handleImageOnDoubleClick });
     
     const plugins = [
       blockDndPlugin,

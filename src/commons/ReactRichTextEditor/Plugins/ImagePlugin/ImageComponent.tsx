@@ -18,7 +18,7 @@ const ImageComponent = forwardRef(
         blockStyleFn, // eslint-disable-line no-unused-vars
         preventScroll, // eslint-disable-line no-unused-vars
         style,
-        onClick,
+        onDoubleClick,
         ...elementProps
     },
 
@@ -35,7 +35,7 @@ const ImageComponent = forwardRef(
             return <div>Error: Invalid image entity.</div>;
         }
 
-        const handleOnClick = () => {
+        const handleOnDoubleClick = () => {
             const blockInfo = {
                 EntityKey: block.getEntityAt(0),
                 url: url,
@@ -44,7 +44,7 @@ const ImageComponent = forwardRef(
                 unit:unit,
                 textAlign: textAlign,
             }
-            onClick(blockInfo)
+            onDoubleClick(blockInfo)
         }
 
 
@@ -56,7 +56,7 @@ const ImageComponent = forwardRef(
                 <img
                     ref={ref}
                     {...elementProps}
-                    onClick={handleOnClick}
+                    onDoubleClick={handleOnDoubleClick}
                     src={url ? url : ''}
                     alt="Error Image!"
                     style={{ width: `${width}${unit}` || 'auto', height: `${height}${unit}` || 'auto', ...style }}
