@@ -51,7 +51,8 @@ const ImageComponent = forwardRef(
 
         return (
             <div
-                style={{ width: '100%', height: '100%', textAlign: textAlign, border: 'black 1px solid' }}
+                // style={{ width: '100%', height: '100%', textAlign: textAlign, border: 'black 1px solid' }}
+                style={{ width: 'auto', height: 'auto', textAlign: textAlign, border: 'black 1px solid' }}
             >
                 <img
                     ref={ref}
@@ -59,7 +60,7 @@ const ImageComponent = forwardRef(
                     onDoubleClick={handleOnDoubleClick}
                     src={url ? url : ''}
                     alt="Error Image!"
-                    style={{ width: `${width}${unit}` || 'auto', height: `${height}${unit}` || 'auto', ...style }}
+                    style={{ width: `${width}${unit}` || 'auto', height: `${height}${unit}` || 'auto', textAlign: textAlign, ...style }}
                 />
             </div>
 

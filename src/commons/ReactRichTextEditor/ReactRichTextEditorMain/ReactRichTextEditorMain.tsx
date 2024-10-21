@@ -11,6 +11,16 @@ import createBlockDndPlugin from '@draft-js-plugins/drag-n-drop';
 // import createImagePlugin from '@draft-js-plugins/image';
 
 
+import createStaticToolbarPlugin from '@draft-js-plugins/static-toolbar';
+import createTextAlignmentPlugin from '@draft-js-plugins/text-alignment';
+import {
+  ItalicButton,
+  BoldButton,
+  UnderlineButton,
+} from '@draft-js-plugins/buttons';
+
+
+
 
 import editorStyles from './ReactRichTextEditorMain.module.css';
 import '@draft-js-plugins/alignment/lib/plugin.css';
@@ -25,6 +35,24 @@ const blockDndPlugin = createBlockDndPlugin();
 
 import createImagePlugin from '../Plugins/ImagePlugin/createImagePlugin';
 import EditImagePlugin from '../Plugins/ImagePlugin/EditImagePlugin';
+
+
+import buttonStyles from './buttonStyles.module.css';
+import alignmentStyles from './alignmentStyles.module.css';
+import toolbarStyles from './toolbarStyles.module.css';
+
+
+// Initialize plugins
+const textAlignmentPlugin = createTextAlignmentPlugin({
+  theme: { alignmentStyles },
+});
+
+const staticToolbarPlugin = createStaticToolbarPlugin({
+  theme: { buttonStyles, toolbarStyles },
+});
+const { Toolbar } = staticToolbarPlugin;
+
+
 
 const decorator = composeDecorators(
   // alignmentPlugin.decorator,
@@ -52,6 +80,8 @@ const ReactRichTextEditorMain = () => {
       // alignmentPlugin,
       // resizeablePlugin,
       imagePlugin,
+      staticToolbarPlugin,
+      textAlignmentPlugin,
     ];
   
     const viewEditorContent = () => {
@@ -81,6 +111,20 @@ const ReactRichTextEditorMain = () => {
             plugins={plugins}
           />
         </div>
+        <Toolbar>
+        {
+          // React.Fragment is used to improve performance and avoid extra divs
+          (externalProps) => (
+            <>
+              <ItalicButton {...externalProps} />
+              <BoldButton {...externalProps} />
+              <UnderlineButton {...externalProps} />
+              <textAlignmentPlugin.TextAlignment {...externalProps} />
+            </>
+          )
+        }
+      </Toolbar>
+
         
         <button onClick={viewEditorContent}>ViewRaw</button>
         <button onClick={convertToHtml}>ViewHTML</button>
