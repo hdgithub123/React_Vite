@@ -12,3 +12,25 @@
   .editor :global(.public-DraftEditor-content) {
     min-height: 140px;
   }
+
+
+  .atomic_block {
+    /* Custom styles for atomic blocks (images) */
+    margin: 0;
+    padding: 0;
+  }
+
+
+  /* Override default figure styling */
+.DraftEditor-root figure {
+  margin: 0;              /* Remove default margins */
+  display: block;   /* Inline block allows the figure to only take up necessary space */
+  width: 100px;             /* Allow the width to be determined by the content (e.g., the image) */
+}
+
+/* Optional: Target only atomic blocks */
+.DraftEditor-root .public-DraftStyleDefault-block[data-block-type="atomic"] figure {
+  margin: 0;
+  display: block;
+  width: 100px;
+}

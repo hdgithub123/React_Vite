@@ -1,7 +1,4 @@
 import React, { forwardRef, useRef, useState } from 'react';
-import { EditorState, AtomicBlockUtils, convertToRaw } from 'draft-js';
-import Editor from '@draft-js-plugins/editor'
-
 
 const ImageComponent = forwardRef(
     ({
@@ -28,7 +25,7 @@ const ImageComponent = forwardRef(
     ) => {
         const entityKey = block.getEntityAt(0);
         const entity = contentState.getEntity(entityKey);
-        const { url, width, height,unit, textAlign } = entity.getData();
+        const { url, width, height, unit, textAlign } = entity.getData();
 
 
         if (!entityKey) {
@@ -41,18 +38,14 @@ const ImageComponent = forwardRef(
                 url: url,
                 width: width,
                 height: height,
-                unit:unit,
+                unit: unit,
                 textAlign: textAlign,
             }
             onDoubleClick(blockInfo)
         }
-
-
-
         return (
             <div
-                // style={{ width: '100%', height: '100%', textAlign: textAlign, border: 'black 1px solid' }}
-                style={{ width: 'auto', height: 'auto', textAlign: textAlign, border: 'black 1px solid' }}
+                style={{ width: '100%', height: '100%', textAlign: textAlign, border: 'none' }}
             >
                 <img
                     ref={ref}
@@ -67,6 +60,4 @@ const ImageComponent = forwardRef(
 
         );
     });
-
-
 export default ImageComponent;

@@ -17,6 +17,8 @@ import {CustomMentionEditor,SimpleEmojiEditor,AddImageEditor,
     MycustomCreateImagePlugin,
     MycustomResizeImage,
     ReactRichTextEditorMain,
+    TryCustomImage,
+    InlineImageExample,
 } from "../index";
 
 function ReactRichTextEditorExample() {
@@ -34,7 +36,7 @@ function ReactRichTextEditorExample() {
             {/* <ThemedToolbarEditor></ThemedToolbarEditor> */}
            
             {/* <ThemedAlignmentEditor></ThemedAlignmentEditor> */}
-            <TextAlignmentPlugin></TextAlignmentPlugin>
+            {/* <TextAlignmentPlugin></TextAlignmentPlugin> */}
             {/* <ResizeableEditor></ResizeableEditor> */}
             {/* <DndPlugin></DndPlugin> */}
             {/* <DividerWithSideToolbarEditor></DividerWithSideToolbarEditor> */}
@@ -48,6 +50,8 @@ function ReactRichTextEditorExample() {
             {/* <MycustomCreateImagePlugin></MycustomCreateImagePlugin>
             <MycustomResizeImage></MycustomResizeImage> */}
             <ReactRichTextEditorMain></ReactRichTextEditorMain>
+            {/* <TryCustomImage></TryCustomImage>
+            <InlineImageExample></InlineImageExample> */}
         </div>
     )
 

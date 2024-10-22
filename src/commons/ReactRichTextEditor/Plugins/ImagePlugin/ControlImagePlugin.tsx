@@ -182,7 +182,7 @@ const ControlImagePlugin = ({ editorState, setEditorState, imagePlugin }) => {
     // Tạo entity mới cho ảnh
     const contentStateWithEntity = contentState.createEntity(
       'IMAGE',
-      'IMMUTABLE',
+      'MUTABLE',
       {
         url,
         width,

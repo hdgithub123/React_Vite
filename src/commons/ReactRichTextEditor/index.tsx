@@ -24,6 +24,8 @@ import MycustomCreateImagePlugin from './ReactRichTextEditor_mau/CustomPlugin/My
 import MycustomResizeImage from './ReactRichTextEditor_mau/CustomPlugin/MycustomResizeImage(mau)';
 
 import ReactRichTextEditorMain from './ReactRichTextEditorMain/ReactRichTextEditorMain';
+import TryCustomImage from './ReactRichTextEditor_mau/CustomPlugin/TryCustomImage';
+import InlineImageExample from './ReactRichTextEditor_mau/CustomPlugin/InlineImageExample';
 
 export {
   CustomMentionEditor,
@@ -52,5 +54,7 @@ export {
 
 
   ReactRichTextEditorMain,
+  TryCustomImage,
+  InlineImageExample,
   
   };

@@ -61,6 +61,15 @@ const decorator = composeDecorators(
   blockDndPlugin.decorator
 );
 
+const blockStyleFn = (contentBlock) => {
+  const type = contentBlock.getType();
+  if (type === 'atomic') {
+    return editorStyles.atomic_block; // Add a CSS class to atomic blocks (like image or video)
+  }
+  return null;
+};
+
+
 
 const ReactRichTextEditorMain = () => {
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -109,6 +118,7 @@ const ReactRichTextEditorMain = () => {
             editorState={editorState}
             onChange={setEditorState}
             plugins={plugins}
+            blockStyleFn={blockStyleFn}
           />
         </div>
         <Toolbar>
@@ -125,7 +135,7 @@ const ReactRichTextEditorMain = () => {
         }
       </Toolbar>
 
-        
+      <pre>{JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2)}</pre>
         <button onClick={viewEditorContent}>ViewRaw</button>
         <button onClick={convertToHtml}>ViewHTML</button>
       </div>
