@@ -33,8 +33,8 @@ const resizeablePlugin = createResizeablePlugin();
 const blockDndPlugin = createBlockDndPlugin();
 
 
-import createImagePlugin from '../Plugins/ImagePlugin/createImagePlugin';
-import EditImagePlugin from '../Plugins/ImagePlugin/EditImagePlugin';
+import createImagePlugin from '../Plugins/ImagePluginBlock/createImagePlugin';
+import EditImagePlugin from '../Plugins/ImagePluginBlock/EditImagePlugin';
 
 
 import buttonStyles from './buttonStyles.module.css';
