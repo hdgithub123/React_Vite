@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Editor, EditorState, Modifier, CompositeDecorator, convertToRaw } from 'draft-js';
 
+
 // Add Image Function
 const addImage = (editorState, setEditorState, src, alt) => {
   const contentState = editorState.getCurrentContent();
