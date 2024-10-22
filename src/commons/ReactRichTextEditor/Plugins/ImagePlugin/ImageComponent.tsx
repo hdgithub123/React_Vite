@@ -53,11 +53,9 @@ const ImageComponent = forwardRef(
                     onDoubleClick={handleOnDoubleClick}
                     src={url ? url : ''}
                     alt="Error Image!"
-                    style={{ width: `${width}${unit}` || 'auto', height: `${height}${unit}` || 'auto', textAlign: textAlign, ...style }}
+                    style={{ width: `${width}${unit}` || 'auto', height: `${height}${unit}` || 'auto', ...style }}
                 />
             </div>
-
-
         );
     });
 export default ImageComponent;
