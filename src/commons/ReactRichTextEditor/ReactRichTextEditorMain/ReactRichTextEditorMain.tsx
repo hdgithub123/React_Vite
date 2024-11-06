@@ -21,7 +21,7 @@ import {
 
 
 
-
+import createBlockStyleFn from './createBlockStyleFn/createBlockStyleFn';
 import editorStyles from './ReactRichTextEditorMain.module.css';
 import '@draft-js-plugins/alignment/lib/plugin.css';
 import '@draft-js-plugins/focus/lib/plugin.css';
@@ -34,12 +34,15 @@ const blockDndPlugin = createBlockDndPlugin();
 
 
 import createImagePlugin from '../Plugins/ImagePluginBlock/createImagePlugin';
-import EditImagePlugin from '../Plugins/ImagePluginBlock/EditImagePlugin';
+import EditImagePluginBlock from '../Plugins/ImagePluginBlock/EditImagePluginBlock';
 
 
 import buttonStyles from './buttonStyles.module.css';
 import alignmentStyles from './alignmentStyles.module.css';
 import toolbarStyles from './toolbarStyles.module.css';
+
+import createImagePluginInline from '../Plugins/ImagePluginInline/createImagePluginInline';
+import ImagePluginInlineForm  from '../Plugins/ImagePluginInline/ImagePluginInlineForm';
 
 
 // Initialize plugins
@@ -61,15 +64,6 @@ const decorator = composeDecorators(
   blockDndPlugin.decorator
 );
 
-const blockStyleFn = (contentBlock) => {
-  const type = contentBlock.getType();
-  if (type === 'atomic') {
-    return editorStyles.atomic_block; // Add a CSS class to atomic blocks (like image or video)
-  }
-  return null;
-};
-
-
 
 const ReactRichTextEditorMain = () => {
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -82,7 +76,8 @@ const ReactRichTextEditorMain = () => {
     }
 
     const imagePlugin = createImagePlugin({ decorator, onDoubleClick: handleImageOnDoubleClick });
-    
+    const imagePluginInline = createImagePluginInline();
+
     const plugins = [
       blockDndPlugin,
       focusPlugin,
@@ -91,6 +86,7 @@ const ReactRichTextEditorMain = () => {
       imagePlugin,
       staticToolbarPlugin,
       textAlignmentPlugin,
+      imagePluginInline,
     ];
   
     const viewEditorContent = () => {
@@ -108,17 +104,27 @@ const ReactRichTextEditorMain = () => {
     };
   
   
+    const addImageToEditorInline = (imageData) => {
+      const neweditor = imagePluginInline.addImage(editorState, imageData)
+      setEditorState(neweditor);
+    };
+
+
+    const url1 = 'https://cellphones.com.vn/sforum/wp-content/uploads/2024/02/avatar-anh-meo-cute-11.jpg';
+
   
     return (
       <div>
-        <EditImagePlugin infoImage={currentInfoBlock} entityKey = {currentEntityKey} editorState= {editorState} setEditorState= {setEditorState}></EditImagePlugin>
+        <EditImagePluginBlock infoImage={currentInfoBlock} entityKey = {currentEntityKey} editorState= {editorState} setEditorState= {setEditorState}></EditImagePluginBlock>
+        
         <div className={editorStyles.editor}>
 
           <Editor
             editorState={editorState}
             onChange={setEditorState}
             plugins={plugins}
-            blockStyleFn={blockStyleFn}
+            // blockStyleFn={blockStyleFn}
+            blockStyleFn={createBlockStyleFn(editorState)}
           />
         </div>
         <Toolbar>
@@ -134,6 +140,14 @@ const ReactRichTextEditorMain = () => {
           )
         }
       </Toolbar>
+
+
+      <button onClick={() => addImageToEditorInline({ url: url1, width: '100px', height: '100px' })}>
+        Add Inline Image 1
+      </button>
+      
+     <ImagePluginInlineForm editorState={editorState} setEditorState={setEditorState} ></ImagePluginInlineForm>
+   
 
       <pre>{JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2)}</pre>
         <button onClick={viewEditorContent}>ViewRaw</button>

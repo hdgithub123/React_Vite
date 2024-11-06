@@ -20,7 +20,7 @@ function createImagePlugin(config = {}) {
         const entity = contentState.getEntity(block.getEntityAt(0));
         const type = entity.getType();
 
-        if (type === 'IMAGE') {
+        if (type === 'IMAGE_BLOCK') {
           return {
             component,
             editable: false,

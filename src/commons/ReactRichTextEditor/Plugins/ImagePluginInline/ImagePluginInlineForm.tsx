@@ -1,17 +1,16 @@
 import React, { forwardRef, useRef, useState } from 'react';
 import { EditorState, AtomicBlockUtils, convertToRaw } from 'draft-js';
 import Editor from '@draft-js-plugins/editor'
-import addImageBlock from './addImageBlock';
+import addImageInline from './addImageInline';
 
 
 
-const ControlImagePlugin = ({ editorState, setEditorState, imagePlugin }) => {
+const ImagePluginInlineForm = ({ editorState, setEditorState }) => {
     const imageInfoInnit = {
       url: '',
       width: '',
       height: '',
-      unit: 'px', // Default unit
-      textAlign: 'center',
+      unit: 'px',
     };
     const [imageInfo, setImageInfo] = useState(imageInfoInnit);
     const [locked, setLocked] = useState(true); // State for lock
@@ -19,16 +18,17 @@ const ControlImagePlugin = ({ editorState, setEditorState, imagePlugin }) => {
   
     // Hàm để thêm hình ảnh vào editor
     const addImageToEditor = () => {
+      console.log("imageInfo",imageInfo)
       if (imageInfo.url && imageInfo.width && imageInfo.height) {
         const updatedImageInfo = {
           ...imageInfo,
+         
           width: imageInfo.width, // Combine width with unit
           height: imageInfo.height, // Combine height with unit
           unit:imageInfo.unit,
-          textAlign: imageInfo.textAlign,
         };
         // const newEditorState = imagePlugin.addImage(editorState, updatedImageInfo);
-        const newEditorState = addImageBlock(editorState, updatedImageInfo);
+        const newEditorState = addImageInline(editorState, updatedImageInfo);
         setEditorState(newEditorState);
       }
     };
@@ -163,7 +163,7 @@ const ControlImagePlugin = ({ editorState, setEditorState, imagePlugin }) => {
   };
 
 
-  export default ControlImagePlugin;
+  export default ImagePluginInlineForm;
 
 
 

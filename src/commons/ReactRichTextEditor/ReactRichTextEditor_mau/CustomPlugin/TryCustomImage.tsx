@@ -7,7 +7,7 @@ import {Editor, EditorState, Modifier, CompositeDecorator, convertToRaw } from '
 const addImage = (editorState, setEditorState, { url, width, height }) => {
   const contentState = editorState.getCurrentContent();
   const contentStateWithEntity = contentState.createEntity(
-    'IMAGE',
+    'IMAGE_INLINE',
     'MUTABLE',
     // { src, alt }
     { url, width, height }
@@ -63,7 +63,7 @@ const findImageEntities = (contentBlock, callback, contentState) => {
   contentBlock.findEntityRanges(
     (character) => {
       const entityKey = character.getEntity();
-      return entityKey !== null && contentState.getEntity(entityKey).getType() === 'IMAGE';
+      return entityKey !== null && contentState.getEntity(entityKey).getType() === 'IMAGE_INLINE';
     },
     callback
   );
