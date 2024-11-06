@@ -111,7 +111,7 @@ const ReactRichTextEditorMain = () => {
   
     return (
       <div>
-        <EditImagePlugin infoImage={currentInfoBlock} imagePlugin= {imagePlugin} entityKey = {currentEntityKey} editorState= {editorState} setEditorState= {setEditorState}></EditImagePlugin>
+        <EditImagePlugin infoImage={currentInfoBlock} entityKey = {currentEntityKey} editorState= {editorState} setEditorState= {setEditorState}></EditImagePlugin>
         <div className={editorStyles.editor}>
 
           <Editor
