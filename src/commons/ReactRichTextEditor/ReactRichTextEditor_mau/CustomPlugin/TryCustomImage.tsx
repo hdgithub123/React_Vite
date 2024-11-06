@@ -4,12 +4,13 @@ import {Editor, EditorState, Modifier, CompositeDecorator, convertToRaw } from '
 // import Editor from '@draft-js-plugins/editor'
 
 // Add Image Function
-const addImage = (editorState, setEditorState, src, alt) => {
+const addImage = (editorState, setEditorState, { url, width, height }) => {
   const contentState = editorState.getCurrentContent();
   const contentStateWithEntity = contentState.createEntity(
     'IMAGE',
     'MUTABLE',
-    { src, alt }
+    // { src, alt }
+    { url, width, height }
   );
   const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
   const selectionState = editorState.getSelection();
@@ -53,9 +54,8 @@ const addImage = (editorState, setEditorState, src, alt) => {
 
 // Custom Image Component to render the inline image
 const ImageComponent = ({ contentState, entityKey }) => {
-  console.log("sdadas")
-  const { src, alt } = contentState.getEntity(entityKey).getData();
-  return <img src={src} alt={alt} style={{ maxWidth: '100px', verticalAlign: 'middle' }} />;
+  const { url, width, height } = contentState.getEntity(entityKey).getData();
+  return <img src={url} style={{width: width || 'auto',height: height || 'auto'}} />;
 };
 
 // Strategy to find entities of type IMAGE
@@ -85,12 +85,12 @@ const TryCustomImage = () => {
   return (
     <div>
       <button
-        onClick={() => addImage(editorState, setEditorState, url, 'Example Image')}
+        onClick={() => addImage(editorState, setEditorState, { url:url, width:'100px' ,height: '100px' })}
       >
         Add Image 1
       </button>
       <button
-        onClick={() => addImage(editorState, setEditorState, url2, 'Example Image')}
+        onClick={() => addImage(editorState, setEditorState, { url:url2, width:'100px' ,height: '100px' })}
       >
         Add Image 2
       </button>
