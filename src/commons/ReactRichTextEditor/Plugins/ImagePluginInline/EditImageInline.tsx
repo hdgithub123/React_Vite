@@ -3,7 +3,7 @@ import { EditorState } from "draft-js";
 
 const updateImageInline = (entityKey, infoImage, editorState, setEditorState) => {
     const contentState = editorState.getCurrentContent();
-    const { width, height, unit, textAlign } = infoImage;
+    const { width, height, unit } = infoImage;
     const contentStateWithEntity = contentState.mergeEntityData(entityKey, {
         width,
         height, 
