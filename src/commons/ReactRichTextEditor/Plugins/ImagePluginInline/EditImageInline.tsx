@@ -106,6 +106,14 @@ const EditImageInline = ({ entityKey, infoImage, editorState, setEditorState }) 
         setLocked(!locked);
     };
 
+    const onUpdateImageInline = () => {
+        if(entityKey){
+            updateImageInline(entityKey, imageInfo, editorState, setEditorState)
+        }
+        
+    };
+
+
     return (
         <div>
             <div>
@@ -172,13 +180,7 @@ const EditImageInline = ({ entityKey, infoImage, editorState, setEditorState }) 
                 </label>
             </div>
 
-            <button
-                onClick={() =>
-                    updateImageInline(entityKey, imageInfo, editorState, setEditorState)
-                }
-            >
-                Change Image
-            </button>
+            <button onClick={onUpdateImageInline}> Change Image </button>
         </div>
     );
 };

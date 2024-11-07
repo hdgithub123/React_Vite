@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { EditorState } from "draft-js";
 
-const updateImage = (entityKey, infoImage, editorState, setEditorState) => {
+const updateImageBlock = (entityKey, infoImage, editorState, setEditorState) => {
     const contentState = editorState.getCurrentContent();
     const { width, height, unit, textAlign } = infoImage;
     const contentStateWithEntity = contentState.mergeEntityData(entityKey, {
@@ -108,6 +108,13 @@ const EditImage = ({ entityKey, infoImage, editorState, setEditorState }) => {
         setLocked(!locked);
     };
 
+    const onUpdateImageBlock = () => {
+        if(entityKey){
+            updateImageBlock(entityKey, imageInfo, editorState, setEditorState)
+        }
+        
+    };
+
     return (
         <div>
             <div>
@@ -174,13 +181,7 @@ const EditImage = ({ entityKey, infoImage, editorState, setEditorState }) => {
                 </label>
             </div>
 
-            <button
-                onClick={() =>
-                    updateImage(entityKey, imageInfo, editorState, setEditorState)
-                }
-            >
-                Change Image
-            </button>
+            <button onClick={onUpdateImageBlock}> Change Image </button>
         </div>
     );
 };

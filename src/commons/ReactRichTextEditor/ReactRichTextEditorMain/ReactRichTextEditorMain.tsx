@@ -67,11 +67,12 @@ const decorator = composeDecorators(
 
 const ReactRichTextEditorMain = () => {
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
-    const [currentEntityKey, setCurrentEntityKey] = useState(null);
+    const [currentImageBlockEntityKey, setCurrentImageBlockEntityKey] = useState(null);
+    const [currentImageInlineEntityKey, setCurrentImageInlineEntityKey] = useState(null);
     const [currentInfoBlock, setCurrentInfoBlock] = useState(null);
 
     const handleImageOnDoubleClick = (info) => {
-      setCurrentEntityKey(info.EntityKey)
+      setCurrentImageBlockEntityKey(info.EntityKey)
       setCurrentInfoBlock(info)
     }
 
@@ -84,7 +85,7 @@ const ReactRichTextEditorMain = () => {
       // console.log('Double-clicked entityKey:', entityKey);
       // Additional logic (e.g., open a modal to edit image properties)
       console.log('info:', info);
-      setCurrentEntityKey(info.EntityKey)
+      setCurrentImageInlineEntityKey(info.EntityKey)
       setCurrentInfoBlock(info)
     };
 
@@ -120,7 +121,7 @@ const ReactRichTextEditorMain = () => {
   
     return (
       <div>
-        <ImagePluginBlock infoImage={currentInfoBlock} entityKey = {currentEntityKey} editorState= {editorState} setEditorState= {setEditorState}></ImagePluginBlock>
+        <ImagePluginBlock infoImage={currentInfoBlock} entityKey = {currentImageBlockEntityKey} editorState= {editorState} setEditorState= {setEditorState}></ImagePluginBlock>
         
         <div className={editorStyles.editor}>
 
@@ -147,7 +148,7 @@ const ReactRichTextEditorMain = () => {
       </Toolbar>
 
       
-     <ImagePluginInline infoImage={currentInfoBlock} entityKey = {currentEntityKey} editorState={editorState} setEditorState={setEditorState} ></ImagePluginInline>
+     <ImagePluginInline infoImage={currentInfoBlock} entityKey = {currentImageInlineEntityKey} editorState={editorState} setEditorState={setEditorState} ></ImagePluginInline>
    
 
       <pre>{JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2)}</pre>
