@@ -5,7 +5,7 @@ import addImageBlock from './addImageBlock';
 
 
 
-const ControlImagePlugin = ({ editorState, setEditorState, imagePlugin }) => {
+const ImagePluginBlockForm = ({ editorState, setEditorState, imagePlugin }) => {
     const imageInfoInnit = {
       url: '',
       width: '',
@@ -163,7 +163,7 @@ const ControlImagePlugin = ({ editorState, setEditorState, imagePlugin }) => {
   };
 
 
-  export default ControlImagePlugin;
+  export default ImagePluginBlockForm;
 
 
 

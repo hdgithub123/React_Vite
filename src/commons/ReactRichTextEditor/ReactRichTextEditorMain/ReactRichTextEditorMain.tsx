@@ -34,7 +34,7 @@ const blockDndPlugin = createBlockDndPlugin();
 
 
 import createImagePlugin from '../Plugins/ImagePluginBlock/createImagePlugin';
-import EditImagePluginBlock from '../Plugins/ImagePluginBlock/EditImagePluginBlock';
+import ImagePluginBlock from '../Plugins/ImagePluginBlock/ImagePluginBlock';
 
 
 import buttonStyles from './buttonStyles.module.css';
@@ -42,7 +42,7 @@ import alignmentStyles from './alignmentStyles.module.css';
 import toolbarStyles from './toolbarStyles.module.css';
 
 import createImagePluginInline from '../Plugins/ImagePluginInline/createImagePluginInline';
-import ImagePluginInlineForm  from '../Plugins/ImagePluginInline/ImagePluginInlineForm';
+import ImagePluginInline from '../Plugins/ImagePluginInline/ImagePluginInline';
 
 
 // Initialize plugins
@@ -76,7 +76,21 @@ const ReactRichTextEditorMain = () => {
     }
 
     const imagePlugin = createImagePlugin({ decorator, onDoubleClick: handleImageOnDoubleClick });
-    const imagePluginInline = createImagePluginInline();
+    // const imagePluginInline = createImagePluginInline();
+
+
+
+    const handleEntityDoubleClick = (info) => {
+      // console.log('Double-clicked entityKey:', entityKey);
+      // Additional logic (e.g., open a modal to edit image properties)
+      console.log('info:', info);
+      setCurrentEntityKey(info.EntityKey)
+      setCurrentInfoBlock(info)
+    };
+
+    const imagePluginInline = createImagePluginInline({
+      onDoubleClickEntity: handleEntityDoubleClick,
+    });
 
     const plugins = [
       blockDndPlugin,
@@ -104,18 +118,9 @@ const ReactRichTextEditorMain = () => {
     };
   
   
-    const addImageToEditorInline = (imageData) => {
-      const neweditor = imagePluginInline.addImage(editorState, imageData)
-      setEditorState(neweditor);
-    };
-
-
-    const url1 = 'https://cellphones.com.vn/sforum/wp-content/uploads/2024/02/avatar-anh-meo-cute-11.jpg';
-
-  
     return (
       <div>
-        <EditImagePluginBlock infoImage={currentInfoBlock} entityKey = {currentEntityKey} editorState= {editorState} setEditorState= {setEditorState}></EditImagePluginBlock>
+        <ImagePluginBlock infoImage={currentInfoBlock} entityKey = {currentEntityKey} editorState= {editorState} setEditorState= {setEditorState}></ImagePluginBlock>
         
         <div className={editorStyles.editor}>
 
@@ -141,12 +146,8 @@ const ReactRichTextEditorMain = () => {
         }
       </Toolbar>
 
-
-      <button onClick={() => addImageToEditorInline({ url: url1, width: '100px', height: '100px' })}>
-        Add Inline Image 1
-      </button>
       
-     <ImagePluginInlineForm editorState={editorState} setEditorState={setEditorState} ></ImagePluginInlineForm>
+     <ImagePluginInline infoImage={currentInfoBlock} entityKey = {currentEntityKey} editorState={editorState} setEditorState={setEditorState} ></ImagePluginInline>
    
 
       <pre>{JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2)}</pre>

@@ -18,7 +18,6 @@ const ImagePluginInlineForm = ({ editorState, setEditorState }) => {
   
     // Hàm để thêm hình ảnh vào editor
     const addImageToEditor = () => {
-      console.log("imageInfo",imageInfo)
       if (imageInfo.url && imageInfo.width && imageInfo.height) {
         const updatedImageInfo = {
           ...imageInfo,
