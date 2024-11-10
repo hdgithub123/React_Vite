@@ -26,7 +26,7 @@ import MycustomResizeImage from './ReactRichTextEditor_mau/CustomPlugin/Mycustom
 import ReactRichTextEditorMain from './ReactRichTextEditorMain/ReactRichTextEditorMain';
 import TryCustomImage from './ReactRichTextEditor_mau/CustomPlugin/TryCustomImage';
 import InlineImageExample from './ReactRichTextEditor_mau/CustomPlugin/InlineImageExample';
-
+import TableEditorPluginEX from './Plugins/TablePlugin/TableEditorPluginEX';
 export {
   CustomMentionEditor,
   SimpleEmojiEditor,
@@ -56,5 +56,5 @@ export {
   ReactRichTextEditorMain,
   TryCustomImage,
   InlineImageExample,
-  
+  TableEditorPluginEX,
   };
