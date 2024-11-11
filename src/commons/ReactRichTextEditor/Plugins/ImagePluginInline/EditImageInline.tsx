@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { EditorState } from "draft-js";
 
-const updateImageInline = (entityKey, infoImage, editorState, setEditorState) => {
+const updateImageInline = ( infoImage, editorState, setEditorState) => {
     const contentState = editorState.getCurrentContent();
     const { width, height, unit } = infoImage;
-    const contentStateWithEntity = contentState.mergeEntityData(entityKey, {
+    const contentStateWithEntity = contentState.mergeEntityData(infoImage.EntityKey, {
         width,
         height, 
         unit,
@@ -27,7 +27,7 @@ const updateImageInline = (entityKey, infoImage, editorState, setEditorState) =>
 
 
 
-const EditImageInline = ({ entityKey, infoImage, editorState, setEditorState }) => {
+const EditImageInline = ({ infoImage, editorState, setEditorState }) => {
     const [imageInfo, setImageInfo] = useState({
         width: '400',
         height: '300',
@@ -46,7 +46,7 @@ const EditImageInline = ({ entityKey, infoImage, editorState, setEditorState }) 
             setImageInfo(infoImg);
             setAspectRatio(infoImage.width / infoImage.height);
         }
-    }, [entityKey]);
+    }, [infoImage]);
 
     // Function to update width, height, and textAlign
     const handleInputChange = (e) => {
@@ -108,7 +108,7 @@ const EditImageInline = ({ entityKey, infoImage, editorState, setEditorState }) 
 
     const onUpdateImageInline = () => {
         if(entityKey){
-            updateImageInline(entityKey, imageInfo, editorState, setEditorState)
+            updateImageInline(imageInfo, editorState, setEditorState)
         }
         
     };

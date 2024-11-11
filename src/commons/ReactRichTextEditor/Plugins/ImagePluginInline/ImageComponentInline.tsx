@@ -36,6 +36,8 @@ const ImageComponentInline = (props) => {
       style={{
         width: `${width}${unit}` || 'auto',
         height: `${height}${unit}` || 'auto',
+        // marginLeft: '2px',
+        // marginRight: '2px',
         // verticalAlign: 'middle',
       }}
       onDoubleClick={handleDoubleClick}

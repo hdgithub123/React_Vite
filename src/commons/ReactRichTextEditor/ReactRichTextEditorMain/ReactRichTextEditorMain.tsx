@@ -68,7 +68,6 @@ const decorator = composeDecorators(
 const ReactRichTextEditorMain = () => {
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
     const [currentImageBlockEntityKey, setCurrentImageBlockEntityKey] = useState(null);
-    const [currentImageInlineEntityKey, setCurrentImageInlineEntityKey] = useState(null);
     const [currentInfoBlock, setCurrentInfoBlock] = useState(null);
 
     const handleImageOnDoubleClick = (info) => {
@@ -85,7 +84,6 @@ const ReactRichTextEditorMain = () => {
       // console.log('Double-clicked entityKey:', entityKey);
       // Additional logic (e.g., open a modal to edit image properties)
       console.log('info:', info);
-      setCurrentImageInlineEntityKey(info.EntityKey)
       setCurrentInfoBlock(info)
     };
 
@@ -148,7 +146,7 @@ const ReactRichTextEditorMain = () => {
       </Toolbar>
 
       
-     <ImagePluginInline infoImage={currentInfoBlock} entityKey = {currentImageInlineEntityKey} editorState={editorState} setEditorState={setEditorState} ></ImagePluginInline>
+     <ImagePluginInline infoImage={currentInfoBlock} editorState={editorState} setEditorState={setEditorState} ></ImagePluginInline>
    
 
       <pre>{JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2)}</pre>
