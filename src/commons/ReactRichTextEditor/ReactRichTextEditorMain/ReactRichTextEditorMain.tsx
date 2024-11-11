@@ -44,6 +44,7 @@ import toolbarStyles from './toolbarStyles.module.css';
 import createImagePluginInline from '../Plugins/ImagePluginInline/createImagePluginInline';
 import ImagePluginInline from '../Plugins/ImagePluginInline/ImagePluginInline';
 
+import createTableBlockPlugin from '../Plugins/TablePlugin/createTableBlockPlugin'
 
 // Initialize plugins
 const textAlignmentPlugin = createTextAlignmentPlugin({
@@ -65,30 +66,35 @@ const decorator = composeDecorators(
 );
 
 
+import TablePluginBlock from '../Plugins/TablePlugin/TablePluginBlock';
+
+
 const ReactRichTextEditorMain = () => {
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
-    const [currentImageBlockEntityKey, setCurrentImageBlockEntityKey] = useState(null);
-    const [currentInfoBlock, setCurrentInfoBlock] = useState(null);
+    const [currentImageBlock, setCurrentImageBlock] = useState(null);
+    const [currentImageInline, setCurrentImageInline] = useState(null);
+    const [currentTableBlock, setCurrentTableBlock] = useState(null);
 
     const handleImageOnDoubleClick = (info) => {
-      setCurrentImageBlockEntityKey(info.EntityKey)
-      setCurrentInfoBlock(info)
+      setCurrentImageBlock(info)
     }
-
     const imagePlugin = createImagePlugin({ decorator, onDoubleClick: handleImageOnDoubleClick });
-    // const imagePluginInline = createImagePluginInline();
-
-
 
     const handleEntityDoubleClick = (info) => {
-      // console.log('Double-clicked entityKey:', entityKey);
-      // Additional logic (e.g., open a modal to edit image properties)
-      console.log('info:', info);
-      setCurrentInfoBlock(info)
+      setCurrentImageInline(info)
     };
-
     const imagePluginInline = createImagePluginInline({
       onDoubleClickEntity: handleEntityDoubleClick,
+    });
+
+
+
+    const handleTableInput = (info) => {
+      console.log('info:', info);
+      setCurrentTableBlock(info)
+    };
+    const tablePluginBlock = createTableBlockPlugin({
+      onInput: handleTableInput,
     });
 
     const plugins = [
@@ -100,6 +106,7 @@ const ReactRichTextEditorMain = () => {
       staticToolbarPlugin,
       textAlignmentPlugin,
       imagePluginInline,
+      tablePluginBlock,
     ];
   
     const viewEditorContent = () => {
@@ -119,8 +126,7 @@ const ReactRichTextEditorMain = () => {
   
     return (
       <div>
-        <ImagePluginBlock infoImage={currentInfoBlock} entityKey = {currentImageBlockEntityKey} editorState= {editorState} setEditorState= {setEditorState}></ImagePluginBlock>
-        
+        <ImagePluginBlock infoImage={currentImageBlock} editorState= {editorState} setEditorState= {setEditorState}></ImagePluginBlock>
         <div className={editorStyles.editor}>
 
           <Editor
@@ -146,8 +152,10 @@ const ReactRichTextEditorMain = () => {
       </Toolbar>
 
       
-     <ImagePluginInline infoImage={currentInfoBlock} editorState={editorState} setEditorState={setEditorState} ></ImagePluginInline>
+     <ImagePluginInline infoImage={currentImageInline} editorState={editorState} setEditorState={setEditorState} ></ImagePluginInline>
    
+
+      <TablePluginBlock infoTable={currentTableBlock} editorState= {editorState} setEditorState= {setEditorState}></TablePluginBlock>
 
       <pre>{JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2)}</pre>
         <button onClick={viewEditorContent}>ViewRaw</button>

@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { EditorState, Modifier, CompositeDecorator, convertToRaw, Editor } from 'draft-js';
+import {
+  EditorState,
+  AtomicBlockUtils,
+  Modifier,
+  convertToRaw,
+  convertFromRaw,
+} from 'draft-js';
+import Editor from '@draft-js-plugins/editor';
 
 // Add Table Function
 const addTable = (editorState, { rows, cols, initialData = null }) => {
@@ -22,30 +29,36 @@ const addTable = (editorState, { rows, cols, initialData = null }) => {
   });
 
   const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-  const newContentState = Modifier.insertText(
-    contentState,
-    editorState.getSelection(),
-    ' ', // Placeholder
-    null,
-    entityKey
-  );
+  const newEditorState = AtomicBlockUtils.insertAtomicBlock(editorState, entityKey, ' ');
 
-  const newEditorState = EditorState.push(editorState, newContentState, 'insert-characters');
-  return EditorState.forceSelection(newEditorState, newContentState.getSelectionAfter());
+  return newEditorState;
+};
+
+// Update Table Entity Function
+const updateTable = (editorState, entityKey, newData) => {
+  const contentState = editorState.getCurrentContent();
+  const newContentState = contentState.mergeEntityData(entityKey, { data: newData });
+
+  return EditorState.push(editorState, newContentState, 'apply-entity');
 };
 
 // Table Component
-const TableComponent = (props) => {
-  const { data } = props.contentState.getEntity(props.entityKey).getData();
-  const { contentState, setEditorState, editorState, entityKey } = props;
+const TableComponent = ({ block, contentState, onInputTable }) => {
+  const entityKey = block.getEntityAt(0);
+  const { data } = contentState.getEntity(entityKey).getData();
 
-  const handleBlur = (rowIndex, colKey, newValue) => {
-    data[rowIndex][colKey] = newValue;
+  const handleInput = (rowIndex, colKey, newValue) => {
+    const newData = [...data];
+    newData[rowIndex][colKey] = newValue;
 
-    const newContentState = contentState.mergeEntityData(entityKey, { data });
-    const newEditorState = EditorState.push(editorState, newContentState, 'apply-entity');
+    const blockTableInfo = {
+      entityKey,
+      data: newData,
+    };
 
-    setEditorState(newEditorState);
+    if (onInputTable) {
+      onInputTable(blockTableInfo);
+    }
   };
 
   return (
@@ -57,8 +70,8 @@ const TableComponent = (props) => {
               <td
                 key={colIndex}
                 contentEditable
-                suppressContentEditableWarning={true}
-                onBlur={(e) => handleBlur(rowIndex, colKey, e.target.innerText)}
+                suppressContentEditableWarning
+                onInput={(e) => handleInput(rowIndex, colKey, e.target.innerText)}
               >
                 {row[colKey] || ''}
               </td>
@@ -70,49 +83,43 @@ const TableComponent = (props) => {
   );
 };
 
-// Strategy to find TABLE entities
-const findTableEntities = (contentBlock, callback, contentState) => {
-  contentBlock.findEntityRanges(
-    (character) => {
-      const entityKey = character.getEntity();
-      return entityKey !== null && contentState.getEntity(entityKey).getType() === 'TABLE';
-    },
-    callback
-  );
+// blockRendererFn để render Atomic Block
+const blockRendererFn = (block, editorState, onInputTable) => {
+  if (block.getType() === 'atomic') {
+    const entity = editorState.getCurrentContent().getEntity(block.getEntityAt(0));
+    if (entity.getType() === 'TABLE') {
+      return {
+        component: TableComponent,
+        editable: false,
+        props: { onInputTable, contentState: editorState.getCurrentContent() },
+      };
+    }
+  }
+  return null;
 };
-
-// Create Composite Decorator
-const decorator = new CompositeDecorator([
-  {
-    strategy: findTableEntities,
-    component: (props) => (
-      <TableComponent
-        {...props}
-        editorState={props.editorState}
-        setEditorState={props.setEditorState}
-      />
-    ),
-  },
-]);
 
 // Main Editor Component
 const TableEditorPluginEX = ({ initialRawData = null }) => {
   const [editorState, setEditorState] = useState(
     initialRawData
-      ? EditorState.createWithContent(convertFromRaw(initialRawData), decorator)
-      : EditorState.createEmpty(decorator)
+      ? EditorState.createWithContent(convertFromRaw(initialRawData))
+      : EditorState.createEmpty()
   );
 
   const handleAddTable = () => {
-    const rows = 5;
+    const rows = 3;
     const cols = 3;
     const initialData = [
-      { col_1: 'Value1', col_2: 'Value2', col_3: 'Value3' },
-      { col_1: 'Value4', col_2: 'Value5', col_3: 'Value6' },
-      { col_1: 'Value7', col_2: 'Value8', col_3: 'Value9' },
+      { col_1: 'A1', col_2: 'B1', col_3: 'C1' },
+      { col_1: 'A2', col_2: 'B2', col_3: 'C2' },
+      { col_1: 'A3', col_2: 'B3', col_3: 'C3' },
     ];
 
     setEditorState(addTable(editorState, { rows, cols, initialData }));
+  };
+
+  const handleInputTable = ({ entityKey, data }) => {
+    setEditorState(updateTable(editorState, entityKey, data));
   };
 
   return (
@@ -121,16 +128,9 @@ const TableEditorPluginEX = ({ initialRawData = null }) => {
       <Editor
         editorState={editorState}
         onChange={setEditorState}
-        blockRendererFn={(block) => {
-          if (block.getType() === 'atomic') {
-            return {
-              component: TableComponent,
-              editable: false,
-              props: { editorState, setEditorState },
-            };
-          }
-          return null;
-        }}
+        blockRendererFn={(block) =>
+          blockRendererFn(block, editorState, handleInputTable)
+        }
       />
       <pre>{JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2)}</pre>
     </div>

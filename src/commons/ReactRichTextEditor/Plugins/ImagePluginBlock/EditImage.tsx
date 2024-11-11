@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { EditorState } from "draft-js";
 
-const updateImageBlock = (entityKey, infoImage, editorState, setEditorState) => {
+const updateImageBlock = (infoImage, editorState, setEditorState) => {
+    console.log("infoImage",infoImage)
     const contentState = editorState.getCurrentContent();
     const { width, height, unit, textAlign } = infoImage;
-    const contentStateWithEntity = contentState.mergeEntityData(entityKey, {
+    const contentStateWithEntity = contentState.mergeEntityData(infoImage.EntityKey, {
         width,
         height, 
         unit,
@@ -27,7 +28,7 @@ const updateImageBlock = (entityKey, infoImage, editorState, setEditorState) => 
 
 
 
-const EditImage = ({ entityKey, infoImage, editorState, setEditorState }) => {
+const EditImage = ({ infoImage, editorState, setEditorState }) => {
     const [imageInfo, setImageInfo] = useState({
         width: '400',
         height: '300',
@@ -40,6 +41,7 @@ const EditImage = ({ entityKey, infoImage, editorState, setEditorState }) => {
     useEffect(() => {
         if (infoImage) {
             const infoImg = {
+                ...infoImage,
                 width: infoImage.width,
                 height: infoImage.height,
                 unit: infoImage.unit,
@@ -48,7 +50,7 @@ const EditImage = ({ entityKey, infoImage, editorState, setEditorState }) => {
             setImageInfo(infoImg);
             setAspectRatio(infoImage.width / infoImage.height);
         }
-    }, [entityKey]);
+    }, [infoImage]);
 
     // Function to update width, height, and textAlign
     const handleInputChange = (e) => {
@@ -109,8 +111,8 @@ const EditImage = ({ entityKey, infoImage, editorState, setEditorState }) => {
     };
 
     const onUpdateImageBlock = () => {
-        if(entityKey){
-            updateImageBlock(entityKey, imageInfo, editorState, setEditorState)
+        if(imageInfo){
+            updateImageBlock( imageInfo, editorState, setEditorState)
         }
         
     };

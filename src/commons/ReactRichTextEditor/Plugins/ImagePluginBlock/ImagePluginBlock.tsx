@@ -2,10 +2,10 @@ import EditImage from "./EditImage"
 import ImagePluginBlockForm from "./ImagePluginBlockForm"
 
 
-const ImagePluginBlock = ({ infoImage, entityKey, editorState, setEditorState }) => {
+const ImagePluginBlock = ({ infoImage, editorState, setEditorState }) => {
     return <div>
         <ImagePluginBlockForm editorState= {editorState} setEditorState= {setEditorState} ></ImagePluginBlockForm>
-        <EditImage infoImage= {infoImage} entityKey={entityKey} editorState= {editorState} setEditorState= {setEditorState} ></EditImage>
+        <EditImage infoImage= {infoImage} editorState= {editorState} setEditorState= {setEditorState} ></EditImage>
     </div>
 }
 
