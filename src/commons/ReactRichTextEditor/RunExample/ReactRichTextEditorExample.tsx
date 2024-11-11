@@ -19,6 +19,7 @@ import {CustomMentionEditor,SimpleEmojiEditor,AddImageEditor,
     ReactRichTextEditorMain,
     TryCustomImage,
     InlineImageExample,
+    TableEditorPluginEX,
 } from "../index";
 
 function ReactRichTextEditorExample() {
@@ -52,6 +53,7 @@ function ReactRichTextEditorExample() {
             <ReactRichTextEditorMain></ReactRichTextEditorMain>
             <TryCustomImage></TryCustomImage>
             {/* <InlineImageExample></InlineImageExample> */}
+            <TableEditorPluginEX></TableEditorPluginEX>
         </div>
     )
 
