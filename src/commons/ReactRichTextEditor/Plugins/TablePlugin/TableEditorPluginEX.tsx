@@ -61,7 +61,6 @@ const TableComponent = ({ block, contentState, onInputTable }) => {
     }
   };
 
-  
   return (
     <table border="1" style={{ borderCollapse: 'collapse', width: '100%' }}>
       <tbody>
