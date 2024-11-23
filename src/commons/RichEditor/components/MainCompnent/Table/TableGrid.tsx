@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const TableGrid2 = ({ handleSubmit, maxGridSize = 8 }) => {
+const TableGrid = ({ handleSubmit, maxGridSize = 8 }) => {
   const [size, setSize] = useState({ cols: 0, rows: 0 });
 
   const grid = Array.from({ length: maxGridSize }, () => Array(maxGridSize).fill(1));
@@ -49,4 +49,4 @@ const TableGrid2 = ({ handleSubmit, maxGridSize = 8 }) => {
   );
 };
 
-export default TableGrid2;
+export default TableGrid;
