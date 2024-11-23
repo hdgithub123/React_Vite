@@ -23,6 +23,7 @@
 import ReactRichTextEditorExample from './commons/ReactRichTextEditor/RunExample/ReactRichTextEditorExample';
 import ReactTableExample from './commons/ReactTables/RunExample/ReactTableExample';
 import {DropableSelectExample} from './components/Z_Nhap/DropableSelectExample';
+import {TableRichEditor} from './commons/RichEditor/index';
 
 //import GroupTable from './components/TableReactFull/GroupTable/GroupTable';
 
@@ -46,7 +47,8 @@ function App() {
       </div> */}
      
 
-     <ReactRichTextEditorExample></ReactRichTextEditorExample>
+     {/* <ReactRichTextEditorExample></ReactRichTextEditorExample> */}
+     <TableRichEditor></TableRichEditor>
 
 
 
