@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Editor, EditorState, Modifier, SelectionState, ContentBlock, ContentState, genKey,EditorBlock,convertToRaw } from 'draft-js';
+import { Editor, EditorState, Modifier, SelectionState, ContentBlock, ContentState, genKey,EditorBlock,convertToRaw, RichUtils } from 'draft-js';
 import { Map } from 'immutable';
 import { createPortal } from 'react-dom';
 import 'draft-js/dist/Draft.css';
@@ -27,7 +27,6 @@ const Table = props => {
   const tableStyle = Map(data.get('tableStyle')).mapKeys(k => camelCase(k)).toJS();
 
   if (!tableShape) return null;
-  console.log("tableShape", tableShape);
 
 
   return (
@@ -180,7 +179,13 @@ const TableRichEditor = () => {
   };
 
 
-
+  const handleReturn = (e, editorState) => {
+    if (RichUtils.getCurrentBlockType(editorState) === 'table') {
+      onChange(RichUtils.insertSoftNewline(editorState));
+      return 'handled';
+    }
+    return 'not-handled'; // Indicate the event has not been handled
+  };
 
 
 
@@ -193,6 +198,7 @@ const TableRichEditor = () => {
         editorState={editorState}
         blockRendererFn={getBlockRendererFn(editorRef.current, () => editorState, onChange)}
         onChange={onChange}
+        handleReturn={(e, editorState) => handleReturn(e, editorState)}
       />
       <pre>{JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2)}</pre>
     </div>
