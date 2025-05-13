@@ -29,7 +29,7 @@ import {ReactTableBasic,
     ReactTableNomalArrowkey,
     ReactTablePages,
     SearchDropDown,
-    ReactTable_mau,} from '../Tables/index'
+    ReactTable_mau,} from '../../../index'
 
 
 function ReactTableExample() {
