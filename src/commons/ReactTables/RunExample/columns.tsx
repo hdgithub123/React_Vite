@@ -37,6 +37,8 @@ const columnscof = [
                 filterType: 'text',
                 cell: (info) =>  info.getValue(),
                 groupCell: TextGroupCell,
+                enableHiding: true,
+           
             },
         ],
     },

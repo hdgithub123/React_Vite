@@ -44,9 +44,9 @@ import { getSelectedData } from '../../components/MainComponent/Others/getSelect
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
-import {GlobalFilter} from '../../components/MainComponent/GlobalFilter/GlobalFilter';
+import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
 
-function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null },isGlobalFilter = false }) {
+function ReactTableFull({ data, columns,columnsShow = [], onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -80,7 +80,7 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
             checkboxCheck = true;
         }
 
-        if  (checkboxCheck && globalValueCheck) {
+        if (checkboxCheck && globalValueCheck) {
             return true
         } else {
             return false
@@ -179,10 +179,32 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
         setDataDef(data)
     }, [data]);
 
+    // useEffect(() => {
+    //     setColumnOrder(() =>
+    //         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
+    // }, [columns]);
+
     useEffect(() => {
-        setColumnOrder(() =>
-            columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
-    }, [columns]);
+        // kiểm tra xem trong columnOrder mà không chứa trong columnsShow thì thực hiện lệnh table.setColumnVisibility({ key: false });
+        if (columnsShow && columnsShow.length > 0) {
+            const allColumnIds = columnOrder;
+            const columnsShowSet = new Set(columnsShow);
+            const visibility: Record<string, boolean> = {};
+            allColumnIds.forEach((colId) => {
+                visibility[colId] = columnsShowSet.has(colId);
+            });
+            table.setColumnVisibility(visibility);
+            // sắp xếp lại columnOrder theo thứ tự của columnsShow, không có trong columnsShow thì giữ nguyên
+            const sortedColumnOrder = [
+                ...columnsShow,
+                ...columnOrder.filter(colId => !columnsShow.includes(colId))
+            ];
+
+            setColumnOrder(sortedColumnOrder);
+        }
+
+    }, []);
+
 
     useEffect(() => {
         if (onDataChange) {
@@ -228,7 +250,7 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
         } else {
             updatedFilter.checkboxvalue = 'none';
         }
-    
+
         // Set the global filter with the updated object
         setGlobalFilter(updatedFilter);
     };
@@ -273,8 +295,8 @@ function ReactTableFull({ data, columns, onDataChange, onRowSelect, onRowsSelect
             <div className={styles.container}>
                 {/* Tạo Global Filter */}
                 {isGlobalFilter === true ? (<div className={styles.globalFilter}>
-                    <GlobalFilter globalFilter= {globalFilter} setGlobalFilter= {setGlobalFilter}></GlobalFilter>
-                </div>): null}
+                    <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter}></GlobalFilter>
+                </div>) : null}
                 {/* Tạo Drop Group Area */}
                 <DndContext
                     collisionDetection={customCollisionDetection}

@@ -46,7 +46,7 @@ import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../com
 import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
 
 
-function ReactTableBasic({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
+function ReactTableBasic({ data, columns,columnsShow = [], onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -179,10 +179,30 @@ function ReactTableBasic({ data, columns, onDataChange, onRowSelect, onRowsSelec
         setDataDef(data)
     }, [data]);
 
+    // useEffect(() => {
+    //     setColumnOrder(() =>
+    //         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
+    // }, [columns]);
+
     useEffect(() => {
-        setColumnOrder(() =>
-            columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
-    }, [columns]);
+        // kiểm tra xem trong columnOrder mà không chứa trong columnsShow thì thực hiện lệnh table.setColumnVisibility({ key: false });
+        if (columnsShow && columnsShow.length > 0) {
+            const allColumnIds = columnOrder;
+            const columnsShowSet = new Set(columnsShow);
+            const visibility: Record<string, boolean> = {};
+            allColumnIds.forEach((colId) => {
+                visibility[colId] = columnsShowSet.has(colId);
+            });
+            table.setColumnVisibility(visibility);
+                        const sortedColumnOrder = [
+                ...columnsShow,
+                ...columnOrder.filter(colId => !columnsShow.includes(colId))
+            ];
+
+            setColumnOrder(sortedColumnOrder);
+        }
+
+    }, []);
 
     useEffect(() => {
         if (onDataChange) {
@@ -272,14 +292,14 @@ function ReactTableBasic({ data, columns, onDataChange, onRowSelect, onRowsSelec
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
-            <div style={{display:'flex', alignItems: 'center', width:'100%'}}>
+            <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                 {/* Render các nút điều khiển */}
                 <div className={styles.botton_dot}>
                     <ButtonPanel table={table} exportFile={exportFile}></ButtonPanel>
                 </div>
 
                 {/* Tạo Global Filter */}
-                {isGlobalFilter === true ? (<div style={{display:'flex', alignItems: 'center', width:'100%'}}>
+                {isGlobalFilter === true ? (<div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                     <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter}></GlobalFilter>
                 </div>) : null}
             </div>

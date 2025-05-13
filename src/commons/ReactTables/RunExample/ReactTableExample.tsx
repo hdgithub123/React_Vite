@@ -70,11 +70,12 @@ function ReactTableExample() {
             <div className={styles.parent}>
 
 
-                {/* <div className={styles.div3}>
+                <div className={styles.div3}>
                   
                     <ReactTableFull 
                     data={Data} 
-                    columns={columns} 
+                    columns={columns}
+                    //columnsShow={['firstName', 'age', 'lastName','progress', 'status']}  
                     onRowSelect={handleRowSelect} 
                     onRowsSelect={handleRowsSelect}
                     onDataChange={handleDataChange}
@@ -84,13 +85,14 @@ function ReactTableExample() {
                     isGlobalFilter = {false}
                     >
                     </ReactTableFull>
-                </div> */}
+                </div>
 
                 {/* <div className={styles.div4}>
                     <h1>ReactTableBasic</h1>
                     <ReactTableBasic 
                     data={makeData} 
-                    columns={columns} 
+                    columns={columns}
+                    //columnsShow={['firstName', 'age', 'lastName','progress', 'status']} 
                     onRowSelect={handleRowSelect} 
                     onRowsSelect={handleRowsSelect}
                     onDataChange={handleDataChange}
@@ -105,6 +107,7 @@ function ReactTableExample() {
                     <ReactTablePages
                         data={Data}
                         columns={cl}
+                        columnsShow={['firstName', 'age', 'lastName','progress', 'status']}
                         onRowSelect={handleRowSelect}
                         onRowsSelect={handleRowsSelect}
                         onDataChange={handleDataChange}
@@ -122,6 +125,7 @@ function ReactTableExample() {
                     <ReactTable_mau
                         data={Data}
                         columns={cl}
+                        columnsShow={['firstName', 'age', 'lastName','progress', 'status']}
                         onRowSelect={handleRowSelect}
                         onRowsSelect={handleRowsSelect}
                         onDataChange={handleDataChange}

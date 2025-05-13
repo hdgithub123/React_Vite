@@ -46,9 +46,9 @@ import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/B
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
-import {Pages} from './Pages'
+import { Pages } from './Pages'
 
-function ReactTablePages({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
+function ReactTablePages({ data, columns, columnsShow = [], onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -188,11 +188,30 @@ function ReactTablePages({ data, columns, onDataChange, onRowSelect, onRowsSelec
         setDataDef(data)
     }, [data]);
 
-    useEffect(() => {
-        setColumnOrder(() =>
-            columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
-    }, [columns]);
+    // useEffect(() => {
+    //     setColumnOrder(() =>
+    //         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
+    // }, [columns]);
 
+    useEffect(() => {
+        // kiểm tra xem trong columnOrder mà không chứa trong columnsShow thì thực hiện lệnh table.setColumnVisibility({ key: false });
+        if (columnsShow && columnsShow.length > 0) {
+            const allColumnIds = columnOrder;
+            const columnsShowSet = new Set(columnsShow);
+            const visibility: Record<string, boolean> = {};
+            allColumnIds.forEach((colId) => {
+                visibility[colId] = columnsShowSet.has(colId);
+            });
+            table.setColumnVisibility(visibility);
+            const sortedColumnOrder = [
+                ...columnsShow,
+                ...columnOrder.filter(colId => !columnsShow.includes(colId))
+            ];
+
+            setColumnOrder(sortedColumnOrder);
+        }
+
+    }, []);
 
     useEffect(() => {
         if (onDataChange) {
