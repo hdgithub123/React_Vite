@@ -27,6 +27,7 @@ Input:
 { 
 data,
 columns, 
+columnsShow={['firstName', 'age', 'lastName','progress', 'status']} // các trường hiển thị lần đầu render sẽ hiển thị đúng thứ tự
 onDataChange, 
 onRowSelect, 
 onRowsSelect, 
@@ -113,14 +114,28 @@ cell: (
   NumberUsCell,
   NumberVnCell,
 )
+với NumberCell,NumberUsCell,NumberVnCell phải được khai báo  
+            cell: ({ cell }) => (
+                    <NumberCell
+                        initialValue={cell.getValue()}
+                        minFractionDigits={0}
+                        maxFractionDigits={4}
+                        option={{style: 'percent'}} //option có 4 dạng mặc định là decimal { style: 'decimal' }, currency: { style: 'currency', currency: 'USD' }, percent: {style: 'percent'} ,unit: { style: 'unit', unit: 'kg' }
+                    />),
+
+
+
+
 groupCell và aggregatedCell có thể dùng các cell trên và dùng các Cell có tính chất riêng biệt cho từng loại
 groupCell:(
-  TextGroupCell // bổ sung số lượng subRows
+  TextGroupCell, // bổ sung số lượng subRows
+  và các cell của cell, 
 )
 
 aggregatedCell:(
   ExplandingDateCell,
   ExplandingTextCell, // bổ sung nút Expland
+ và các cell của cell, // nhưng không có thêm nút expland
 )
 
 aggregationFn:(
