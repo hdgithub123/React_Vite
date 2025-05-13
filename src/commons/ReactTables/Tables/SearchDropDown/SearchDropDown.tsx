@@ -40,7 +40,7 @@ import { throttle } from '../../components/utils/Others/throttle';
 import { SearchFilter } from './SearchFilter';
 
 
-function SearchDropDown({ data, columns, columnsShow = [] , onRowSelect, columnDisplay, cssStyleTable = null, cssStyleTextFilter = null, }) {
+function SearchDropDown({ data, columns, columnsShow = [] , onRowSelect = ()=>{}, columnDisplay, cssStyleTable = null, cssStyleTextFilter = null, }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
