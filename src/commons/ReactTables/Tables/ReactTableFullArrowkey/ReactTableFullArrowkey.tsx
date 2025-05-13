@@ -49,7 +49,7 @@ import { getRowModelData } from '../../components/MainComponent/Others/getRowMod
 import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
 import { throttle } from '../../components/utils/Others/throttle';
 
-function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = null, isGlobalFilter = false }) {
+function ReactTableFullArrowkey({ data, columns, columnsShow = [], onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = null, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -183,9 +183,25 @@ function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRo
     }, [data]);
 
     useEffect(() => {
-        setColumnOrder(() =>
-            columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
-    }, [columns]);
+        // kiểm tra xem trong columnOrder mà không chứa trong columnsShow thì thực hiện lệnh table.setColumnVisibility({ key: false });
+        if (columnsShow && columnsShow.length > 0) {
+            const allColumnIds = columnOrder;
+            const columnsShowSet = new Set(columnsShow);
+            const visibility: Record<string, boolean> = {};
+            allColumnIds.forEach((colId) => {
+                visibility[colId] = columnsShowSet.has(colId);
+            });
+            table.setColumnVisibility(visibility);
+            // sắp xếp lại columnOrder theo thứ tự của columnsShow, không có trong columnsShow thì giữ nguyên
+            const sortedColumnOrder = [
+                ...columnsShow,
+                ...columnOrder.filter(colId => !columnsShow.includes(colId))
+            ];
+
+            setColumnOrder(sortedColumnOrder);
+        }
+
+    }, []);
 
     useEffect(() => {
         if (onDataChange) {
@@ -215,10 +231,10 @@ function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRo
     }, [grouping, columnFilters]);
 
     const handleRowClick = (rowData) => {
-        const rowClick = getOneRowData(rowData)     
-            if (onRowSelect) {
-                onRowSelect(rowClick);
-            }
+        const rowClick = getOneRowData(rowData)
+        if (onRowSelect) {
+            onRowSelect(rowClick);
+        }
     };
 
     const handleTriStateCheckboxSelectChange = (value) => {
@@ -294,12 +310,12 @@ function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRo
     }, [selectedIndex]);
 
     const lengthData = table.getRowModel().rows.length
-    const updateSelectedIndex = useMemo(()=>{
+    const updateSelectedIndex = useMemo(() => {
         return throttle((newIndex) => {
             setSelectedIndex(newIndex);
-          }, 200);
-    },[])
-    
+        }, 200);
+    }, [])
+
     const handleKeyDown = (e) => {
         if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
             e.preventDefault();
@@ -310,7 +326,7 @@ function ReactTableFullArrowkey({ data, columns, onDataChange, onRowSelect, onRo
             }
         } else if (e.key === 'Enter') {
             if (onRowSelect) {
-                const rowEnter = getOneRowData(rows[selectedIndex])   
+                const rowEnter = getOneRowData(rows[selectedIndex])
                 onRowSelect(rowEnter);
             }
         }

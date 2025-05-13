@@ -46,16 +46,9 @@ import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/B
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
-<<<<<<< HEAD
 import { Pages } from './Pages'
 
 function ReactTablePages({ data, columns, columnsShow = [], onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
-=======
-import {Pages} from './Pages'
-import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
-
-function ReactTablePages({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = null, isGlobalFilter = false }) {
->>>>>>> cd567e977efb9a7979497459e8990e19209050f8
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -195,10 +188,6 @@ function ReactTablePages({ data, columns, onDataChange, onRowSelect, onRowsSelec
         setDataDef(data)
     }, [data]);
 
-    // useEffect(() => {
-    //     setColumnOrder(() =>
-    //         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
-    // }, [columns]);
 
     useEffect(() => {
         // kiểm tra xem trong columnOrder mà không chứa trong columnsShow thì thực hiện lệnh table.setColumnVisibility({ key: false });

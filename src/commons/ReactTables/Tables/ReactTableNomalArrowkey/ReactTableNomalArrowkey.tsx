@@ -44,7 +44,7 @@ import { getOneRowData } from '../../components/MainComponent/Others/getOneRowDa
 import { throttle } from '../../components/utils/Others/throttle';
 
 
-function ReactTableNomalArrowkey({ data, columns, onDataChange, onRowSelect, onVisibleColumnDataSelect, grouped = [], isGlobalFilter = false }) {
+function ReactTableNomalArrowkey({ data, columns, columnsShow = [] , onDataChange, onRowSelect, onVisibleColumnDataSelect, grouped = [], isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -177,10 +177,26 @@ function ReactTableNomalArrowkey({ data, columns, onDataChange, onRowSelect, onV
         setDataDef(data)
     }, [data]);
 
-    useEffect(() => {
-        setColumnOrder(() =>
-            columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
-    }, [columns]);
+     useEffect(() => {
+         // kiểm tra xem trong columnOrder mà không chứa trong columnsShow thì thực hiện lệnh table.setColumnVisibility({ key: false });
+         if (columnsShow && columnsShow.length > 0) {
+             const allColumnIds = columnOrder;
+             const columnsShowSet = new Set(columnsShow);
+             const visibility: Record<string, boolean> = {};
+             allColumnIds.forEach((colId) => {
+                 visibility[colId] = columnsShowSet.has(colId);
+             });
+             table.setColumnVisibility(visibility);
+             // sắp xếp lại columnOrder theo thứ tự của columnsShow, không có trong columnsShow thì giữ nguyên
+             const sortedColumnOrder = [
+                 ...columnsShow,
+                 ...columnOrder.filter(colId => !columnsShow.includes(colId))
+             ];
+ 
+             setColumnOrder(sortedColumnOrder);
+         }
+ 
+     }, []);
 
 
     useEffect(() => {

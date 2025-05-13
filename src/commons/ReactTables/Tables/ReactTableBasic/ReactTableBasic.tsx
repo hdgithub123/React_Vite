@@ -47,11 +47,7 @@ import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/Global
 import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
 
 
-<<<<<<< HEAD
-function ReactTableBasic({ data, columns,columnsShow = [], onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
-=======
-function ReactTableBasic({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, exportFile = null, isGlobalFilter = false }) {
->>>>>>> cd567e977efb9a7979497459e8990e19209050f8
+function ReactTableBasic({ data, columns, columnsShow = [], onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -184,10 +180,6 @@ function ReactTableBasic({ data, columns, onDataChange, onRowSelect, onRowsSelec
         setDataDef(data)
     }, [data]);
 
-    // useEffect(() => {
-    //     setColumnOrder(() =>
-    //         columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
-    // }, [columns]);
 
     useEffect(() => {
         // kiểm tra xem trong columnOrder mà không chứa trong columnsShow thì thực hiện lệnh table.setColumnVisibility({ key: false });
@@ -199,7 +191,7 @@ function ReactTableBasic({ data, columns, onDataChange, onRowSelect, onRowsSelec
                 visibility[colId] = columnsShowSet.has(colId);
             });
             table.setColumnVisibility(visibility);
-                        const sortedColumnOrder = [
+            const sortedColumnOrder = [
                 ...columnsShow,
                 ...columnOrder.filter(colId => !columnsShow.includes(colId))
             ];
@@ -238,10 +230,10 @@ function ReactTableBasic({ data, columns, onDataChange, onRowSelect, onRowsSelec
     }, [grouping, columnFilters]);
 
     const handleRowClick = (rowData) => {
-        const rowClick = getOneRowData(rowData)     
-            if (onRowSelect) {
-                onRowSelect(rowClick);
-            }
+        const rowClick = getOneRowData(rowData)
+        if (onRowSelect) {
+            onRowSelect(rowClick);
+        }
     };
 
     const handleTriStateCheckboxSelectChange = (value) => {

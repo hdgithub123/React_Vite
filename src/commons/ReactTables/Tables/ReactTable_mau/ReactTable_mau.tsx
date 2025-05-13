@@ -43,17 +43,11 @@ import { TriStateCheckbox } from '../../components/MainComponent/Others/TriState
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
-<<<<<<< HEAD
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
 
 
 function ReactTable_mau({ data, columns, columnsShow = [], onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
-=======
-import {getIsAllRowsSelected, getToggleAllRowsSelectedHandler} from '../../components/MainComponent/Others/RowsSelected'
-
-function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = {name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description:null  } }) {
->>>>>>> cd567e977efb9a7979497459e8990e19209050f8
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -88,14 +82,11 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
             checkboxCheck = true;
         }
 
-<<<<<<< HEAD
         if (checkboxCheck && globalValueCheck) {
             return true
         } else {
             return false
         }
-=======
->>>>>>> cd567e977efb9a7979497459e8990e19209050f8
     };
 
     const table = useReactTable({
@@ -186,7 +177,6 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
     };
 
-<<<<<<< HEAD
     useEffect(() => {
         setDataDef(data)
     }, [data]);
@@ -212,8 +202,6 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
 
     }, []);
 
-=======
->>>>>>> cd567e977efb9a7979497459e8990e19209050f8
 
     useEffect(() => {
         if (onDataChange) {
@@ -260,12 +248,9 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
         } else {
             table.setGlobalFilter('none')
         }
-<<<<<<< HEAD
 
         // Set the global filter with the updated object
         setGlobalFilter(updatedFilter);
-=======
->>>>>>> cd567e977efb9a7979497459e8990e19209050f8
     };
     // bắt đầu render Virtual
 
@@ -305,13 +290,10 @@ function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect
     return (
         <div className={styles.general_table}>
             <div className={styles.container}>
-<<<<<<< HEAD
                 {/* Tạo Global Filter */}
                 {isGlobalFilter === true ? (<div className={styles.globalFilter}>
                     <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter}></GlobalFilter>
                 </div>) : null}
-=======
->>>>>>> cd567e977efb9a7979497459e8990e19209050f8
                 {/* Tạo Drop Group Area */}
                 <DndContext
                     collisionDetection={customCollisionDetection}

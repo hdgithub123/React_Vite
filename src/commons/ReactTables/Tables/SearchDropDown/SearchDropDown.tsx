@@ -40,7 +40,7 @@ import { throttle } from '../../components/utils/Others/throttle';
 import { SearchFilter } from './SearchFilter';
 
 
-function SearchDropDown({ data, columns, onRowSelect, columnDisplay, cssStyleTable = null, cssStyleTextFilter = null, }) {
+function SearchDropDown({ data, columns, columnsShow = [] , onRowSelect, columnDisplay, cssStyleTable = null, cssStyleTextFilter = null, }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -162,9 +162,25 @@ function SearchDropDown({ data, columns, onRowSelect, columnDisplay, cssStyleTab
     }, [data]);
 
     useEffect(() => {
-        setColumnOrder(() =>
-            columns.flatMap(c => c.columns ? c.columns.flatMap(subCol => subCol.columns ? subCol.columns.map(subSubCol => subSubCol.id!) : [subCol.id!]) : [c.id!]))
-    }, [columns]);
+        // kiểm tra xem trong columnOrder mà không chứa trong columnsShow thì thực hiện lệnh table.setColumnVisibility({ key: false });
+        if (columnsShow && columnsShow.length > 0) {
+            const allColumnIds = columnOrder;
+            const columnsShowSet = new Set(columnsShow);
+            const visibility: Record<string, boolean> = {};
+            allColumnIds.forEach((colId) => {
+                visibility[colId] = columnsShowSet.has(colId);
+            });
+            table.setColumnVisibility(visibility);
+            // sắp xếp lại columnOrder theo thứ tự của columnsShow, không có trong columnsShow thì giữ nguyên
+            const sortedColumnOrder = [
+                ...columnsShow,
+                ...columnOrder.filter(colId => !columnsShow.includes(colId))
+            ];
+
+            setColumnOrder(sortedColumnOrder);
+        }
+
+    }, []);
 
     // sử dụng để expanded all
     useEffect(() => {
