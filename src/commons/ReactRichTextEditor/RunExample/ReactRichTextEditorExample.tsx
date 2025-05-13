@@ -50,10 +50,10 @@ function ReactRichTextEditorExample() {
             {/* <TableEditor></TableEditor> */}
             {/* <MycustomCreateImagePlugin></MycustomCreateImagePlugin>
             <MycustomResizeImage></MycustomResizeImage> */}
-            <ReactRichTextEditorMain></ReactRichTextEditorMain>
+            {/* <ReactRichTextEditorMain></ReactRichTextEditorMain> */}
             <TryCustomImage></TryCustomImage>
             {/* <InlineImageExample></InlineImageExample> */}
-            <TableEditorPluginEX></TableEditorPluginEX>
+            {/* <TableEditorPluginEX></TableEditorPluginEX> */}
         </div>
     )
 

@@ -47,7 +47,7 @@ function App() {
       </div> */}
      
 
-     {/* <ReactRichTextEditorExample></ReactRichTextEditorExample> */}
+     <ReactRichTextEditorExample></ReactRichTextEditorExample>
      <TableRichEditor></TableRichEditor>
 
 
