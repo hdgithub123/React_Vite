@@ -134,6 +134,7 @@ function ReactTableExample() {
                   <SearchDropDown 
                   data={Data} 
                   columns={columns} 
+                  columnsShow={['firstName', 'lastName','progress', 'status']} 
                   onRowSelect={handleRowSelect} 
                 //   grouped={['firstName','age']}
                   columnDisplay={'firstName'}
@@ -178,7 +179,7 @@ function ReactTableExample() {
                     </ReactTablePages>
                 </div> */}
 
-            {/* <div className={styles.div5}>
+            <div className={styles.div5}>
                     <ReactTableFullArrowkey
                         data={Data}
                         columns={cl}
@@ -192,7 +193,7 @@ function ReactTableExample() {
                         isGlobalFilter={true}
                     >
                     </ReactTableFullArrowkey>
-                </div> */}
+                </div>
 
 
 {/* 
