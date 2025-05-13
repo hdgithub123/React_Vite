@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import React from 'react'
 
 import {
@@ -43,11 +43,17 @@ import { TriStateCheckbox } from '../../components/MainComponent/Others/TriState
 import { getSelectedData } from '../../components/MainComponent/Others/getSelectedData';
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
+<<<<<<< HEAD
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
 
 
 function ReactTable_mau({ data, columns, columnsShow = [], onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
+=======
+import {getIsAllRowsSelected, getToggleAllRowsSelectedHandler} from '../../components/MainComponent/Others/RowsSelected'
+
+function ReactTable_mau({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = {name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description:null  } }) {
+>>>>>>> cd567e977efb9a7979497459e8990e19209050f8
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -82,11 +88,14 @@ function ReactTable_mau({ data, columns, columnsShow = [], onDataChange, onRowSe
             checkboxCheck = true;
         }
 
+<<<<<<< HEAD
         if (checkboxCheck && globalValueCheck) {
             return true
         } else {
             return false
         }
+=======
+>>>>>>> cd567e977efb9a7979497459e8990e19209050f8
     };
 
     const table = useReactTable({
@@ -177,6 +186,7 @@ function ReactTable_mau({ data, columns, columnsShow = [], onDataChange, onRowSe
 
     };
 
+<<<<<<< HEAD
     useEffect(() => {
         setDataDef(data)
     }, [data]);
@@ -202,13 +212,14 @@ function ReactTable_mau({ data, columns, columnsShow = [], onDataChange, onRowSe
 
     }, []);
 
+=======
+>>>>>>> cd567e977efb9a7979497459e8990e19209050f8
 
     useEffect(() => {
         if (onDataChange) {
             onDataChange(dataDef);
         }
     }, [dataDef]);
-
 
     useEffect(() => {
         const filteredUndefinedData = getSelectedData(table);
@@ -226,16 +237,16 @@ function ReactTable_mau({ data, columns, columnsShow = [], onDataChange, onRowSe
         }
     }, [table.getState().rowSelection, table.getState().columnVisibility]);
 
-
     // sử dụng để expanded all
     useEffect(() => {
         table.setExpanded(true);
     }, [grouping, columnFilters]);
 
     const handleRowClick = (rowData) => {
-        if (onRowSelect) {
-            onRowSelect(rowData);
-        }
+        const rowClick = getOneRowData(rowData)     
+            if (onRowSelect) {
+                onRowSelect(rowClick);
+            }
     };
 
     const handleTriStateCheckboxSelectChange = (value) => {
@@ -247,13 +258,15 @@ function ReactTable_mau({ data, columns, columnsShow = [], onDataChange, onRowSe
         } else if (value === false) {
             updatedFilter.checkboxvalue = 'unchecked';
         } else {
-            updatedFilter.checkboxvalue = 'none';
+            table.setGlobalFilter('none')
         }
+<<<<<<< HEAD
 
         // Set the global filter with the updated object
         setGlobalFilter(updatedFilter);
+=======
+>>>>>>> cd567e977efb9a7979497459e8990e19209050f8
     };
-
     // bắt đầu render Virtual
 
     const { rows } = table.getRowModel()
@@ -278,7 +291,6 @@ function ReactTable_mau({ data, columns, columnsShow = [], onDataChange, onRowSe
 
     const items = virtualizer.getVirtualItems();
 
-
     const [before, after] =
         items.length > 0
             ? [
@@ -288,14 +300,18 @@ function ReactTable_mau({ data, columns, columnsShow = [], onDataChange, onRowSe
             : [0, 0];
 
 
+
     // bắt đầu render chính
     return (
         <div className={styles.general_table}>
             <div className={styles.container}>
+<<<<<<< HEAD
                 {/* Tạo Global Filter */}
                 {isGlobalFilter === true ? (<div className={styles.globalFilter}>
                     <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter}></GlobalFilter>
                 </div>) : null}
+=======
+>>>>>>> cd567e977efb9a7979497459e8990e19209050f8
                 {/* Tạo Drop Group Area */}
                 <DndContext
                     collisionDetection={customCollisionDetection}
@@ -328,7 +344,7 @@ function ReactTable_mau({ data, columns, columnsShow = [], onDataChange, onRowSe
                     >
 
                         {/* Bắt đầu render table */}
-                        <table id={'React_table_id'} className={styles.table_container}>
+                        <table id={'React_table_id'} className={styles.table_container} onKeyDown={handleKeyDown} onBlur={handleonBlur}>
                             <thead className={styles.table_head}>
                                 {table.getHeaderGroups().map((headerGroup, rowIndex) => (
                                     <tr className={styles.table_head_tr} key={headerGroup.id}>
@@ -338,9 +354,6 @@ function ReactTable_mau({ data, columns, columnsShow = [], onDataChange, onRowSe
                                                 <div title="Select All/ Unselect All">
                                                     <IndeterminateCheckbox
                                                         {...{
-                                                            // checked: table.getIsAllRowsSelected(),
-                                                            // indeterminate: table.getIsSomeRowsSelected(),
-                                                            // onChange: table.getToggleAllRowsSelectedHandler(),
                                                             checked: getIsAllRowsSelected(table),
                                                             indeterminate: table.getIsSomeRowsSelected(),
                                                             onChange: getToggleAllRowsSelectedHandler(table),
@@ -377,9 +390,10 @@ function ReactTable_mau({ data, columns, columnsShow = [], onDataChange, onRowSe
                                         const row = rows[virtualRow.index]
                                         return (
                                             <tr
-                                                className={styles.table_body_tr}
+                                                className={`${styles.table_body_tr} ${rows.indexOf(row) === selectedIndex ? styles.table_body_highlightkeymove : ''}`}
+                                                data-key={rows.indexOf(row)}
                                                 key={row.id}
-                                                onDoubleClick={() => handleRowClick(row.original)}
+                                                onDoubleClick={() => handleRowClick(row)}
                                             >
                                                 <td className={styles.table_body_td_checkbox}>
                                                     <IndeterminateCheckbox

@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 
-const EditableCell = ({ getValue, row, column, table }) => {
+export const EditableCell = ({ getValue, row, column, table }) => {
     const initialValue = getValue();
     const [value, setValue] = useState(initialValue);
   
@@ -22,5 +22,3 @@ const EditableCell = ({ getValue, row, column, table }) => {
       />
     );
   };
-
-  export default EditableCell;

@@ -1,6 +1,7 @@
+import { formatNumber } from "../Others/fomatCell";
 
 // tính tổng trên từng cột
-export const SumFooter = (column, table) => {
+export const SumFooter = (column, table , minFractionDigits = 0, maxFractionDigits = 20,option = {}, locale = null) => {
   // Recursive function to sum all rows, including sub-rows
   const calculateSum = (rows) => {
     return rows.reduce((sum, row) => {
@@ -18,11 +19,11 @@ export const SumFooter = (column, table) => {
   };
 
   // Start the calculation with the filtered row model
-  return calculateSum(table.getFilteredRowModel ().rows);
+  return formatNumber(calculateSum(table.getFilteredRowModel ().rows),minFractionDigits,maxFractionDigits,option,locale);
 };
 
 
-export const AverageFooter = (column, table) => {
+export const AverageFooter = (column, table, minFractionDigits = 0, maxFractionDigits = 20,option = {}, locale = null) => {
   // Recursive function to calculate sum and count for all rows, including sub-rows
   const calculateSumAndCount = (rows) => {
     return rows.reduce(
@@ -49,12 +50,12 @@ export const AverageFooter = (column, table) => {
   // Start calculation from the filtered row model
   const { sum, count } = calculateSumAndCount(table.getFilteredRowModel().rows);
 
-  return count > 0 ? sum / count : 0;
+  return count > 0 ? formatNumber((sum / count),minFractionDigits,maxFractionDigits,option,locale) : 0;
 };
 
   
 
-export const CountFooter = (table) => {
+export const CountFooter = (table, minFractionDigits = 0, maxFractionDigits = 20,option = {}, locale = null) => {
   // Recursive function to count all rows, including sub-rows
   const countRows = (rows) => {
     return rows.reduce((acc, row) => {
@@ -70,6 +71,6 @@ export const CountFooter = (table) => {
   };
 
   // Start counting from the filtered row model
-  return countRows(table.getFilteredRowModel().rows);
+  return formatNumber(countRows(table.getFilteredRowModel().rows),minFractionDigits,maxFractionDigits,option,locale);
 };
 

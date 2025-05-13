@@ -1,12 +1,24 @@
 import { SumFooter, AverageFooter, CountFooter } from '../components/utils/Footer/FooterColumn'
-import { TextCell,TextGroupCell } from '../components/utils/cells/orinal/TextCell';
-import { formatNumber, formatVnNumber, formatUsNumber, formatDate } from '../components/utils/cells/orinal/fomatCell'
-import { NumberUsCell, NumberVnCell, NumberCell } from '../components/utils/cells/orinal/NumberCell';
-import { DateVnCell, DateUsCell, DateCell } from '../components/utils/cells/orinal/DateCell';
-import { DateTimeCell, DateTimeVnCell } from '../components/utils/cells/orinal/DateTimeCell';
-import EditableCell from '../components/utils/cells/edit/EditableCell';
-import { ExplandingTextCell, TextCellExplanding, } from '../components/utils/cells/orinal/ExplandingTextCell';
-import { ExplandingDateCell } from '../components/utils/cells/orinal/ExplandingDateCell';
+
+import { formatNumber, formatVnNumber, formatUsNumber, formatDate } from '../components/utils/Others/fomatCell'
+
+import {
+    EditableCell,
+    DateCell,
+    DateUsCell,
+    DateVnCell,
+    DateTimeCell,
+    DateTimeUsCell,
+    DateTimeVnCell,
+    NumberCell,
+    NumberUsCell,
+    NumberVnCell,
+    TextCell,
+    TextGroupCell,
+    ExplandingDateCell,
+    ExplandingTextCell,
+} from '../components/utils/cells'
+
 
 
 
@@ -74,10 +86,6 @@ const columnscof = [
                         minFractionDigits={0}
                         maxFractionDigits={4}
                     />),
-
-
-                // aggregatedCell: ({ getValue }) =>
-                //     Math.round(getValue<number>() * 100) / 100,
                 aggregationFn: 'mean',
             },
             {
@@ -302,7 +310,7 @@ const columnssubrowf = [
                 filterType: 'text',
                 // footer: info => `Count: ${CountFooter(info.table)}`,
                 footer: info => `Count: ${CountFooter(info.table)}`,
-                cell: TextCellExplanding,
+                cell: TextCell,
                 aggregatedCell: ExplandingTextCell,
                 // aggregationFn: 'count',
                 //cell: (info) => info.getValue(),
@@ -310,7 +318,7 @@ const columnssubrowf = [
                  * override the value used for row grouping
                  * (otherwise, defaults to the value derived from accessorKey / accessorFn)
                  */
-                getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
+                // getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
             },
             {
                 accessorFn: (row) => row.lastName,
@@ -331,13 +339,14 @@ const columnssubrowf = [
                 header: () => 'Age',
                 footer: (info) => <div style={{
                     textAlign: 'right',
-                }}>{`Sum: ${formatNumber(SumFooter(info.column, info.table), 0, 2)}`}</div>,
+            }}>{`Sum: ${SumFooter(info.column, info.table,1,2)}`}</div>,
                 filterType: 'number',
                 cell: ({ cell }) => (
                     <NumberCell
                         initialValue={cell.getValue()}
                         minFractionDigits={0}
                         maxFractionDigits={4}
+                        option={{style: 'percent'}}
                     />),
 
 
@@ -361,7 +370,7 @@ const columnssubrowf = [
                         accessorKey: 'visits',
                         id: 'visits',
                         header: () => <span>Visits</span>,
-                        cell: DateVnCell,
+                        cell: DateCell,
                         filterType: 'date',
                         // aggregationFn: 'sum',
                         // aggregationFn: 'count',
@@ -393,7 +402,7 @@ const columnssubrowf = [
     },
 ]
 // columnscof : co footer, columnskof: columns1headercof, khong co footer, columnssubrowf: subrow co footer, 
-export const columns = columnscof
+export const columns = columnssubrowf
 export const columns2 = columnskof
 
 

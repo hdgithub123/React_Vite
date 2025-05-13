@@ -46,9 +46,16 @@ import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/B
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
+<<<<<<< HEAD
 import { Pages } from './Pages'
 
 function ReactTablePages({ data, columns, columnsShow = [], onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
+=======
+import {Pages} from './Pages'
+import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
+
+function ReactTablePages({ data, columns, onDataChange, onRowSelect, onRowsSelect, onVisibleColumnDataSelect, grouped = [], exportFile = null, isGlobalFilter = false }) {
+>>>>>>> cd567e977efb9a7979497459e8990e19209050f8
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -243,9 +250,10 @@ function ReactTablePages({ data, columns, columnsShow = [], onDataChange, onRowS
     }, [grouping, columnFilters]);
 
     const handleRowClick = (rowData) => {
-        if (onRowSelect) {
-            onRowSelect(rowData);
-        }
+        const rowClick = getOneRowData(rowData)     
+            if (onRowSelect) {
+                onRowSelect(rowClick);
+            }
     };
 
     const handleTriStateCheckboxSelectChange = (value) => {
@@ -389,7 +397,7 @@ function ReactTablePages({ data, columns, columnsShow = [], onDataChange, onRowS
                                             <tr
                                                 className={styles.table_body_tr}
                                                 key={row.id}
-                                                onDoubleClick={() => handleRowClick(row.original)}
+                                                onDoubleClick={() => handleRowClick(row)}
                                             >
                                                 <td className={styles.table_body_td_checkbox}>
                                                     <IndeterminateCheckbox
