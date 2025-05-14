@@ -77,6 +77,7 @@
 .table_head th{
   outline: var(--OutlineHeaderColour);
   padding: 2px;
+  font-weight: bold;
 }
 
 .table_head td{

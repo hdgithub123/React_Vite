@@ -7,7 +7,7 @@
   --BorderFooterColour: 2px solid gray;
 }
 
-.general_table{
+.general_table {
   height: 100%;
 }
 
@@ -23,8 +23,8 @@
   display: flex;
 }
 
-.botton_dot{
-  margin-left: 2px ;
+.botton_dot {
+  margin-left: 2px;
   padding: 2px;
   background-color: var(--BackgroundColour);
   border: none;
@@ -35,7 +35,7 @@
   opacity: 0.5;
 }
 
-.botton_dot:hover{
+.botton_dot:hover {
   background: var(--HoverColour);
   opacity: 1;
 }
@@ -56,12 +56,14 @@
 }
 
 .div_table_container thead {
-  position: sticky; /* make the table heads sticky */
-  top: 0px; /* table head will be placed from the top of the table and sticks to it */
+  position: sticky;
+  /* make the table heads sticky */
+  top: 0px;
+  /* table head will be placed from the top of the table and sticks to it */
   background-color: var(--BackgroundColour);
 }
 
-.table_container{
+.table_container {
   height: 100%;
 }
 
@@ -70,24 +72,26 @@
   height: 100%;
 }
 
-.table_head tr{
+.table_head tr {
   width: 100%;
   box-sizing: border-box;
 }
 
-.table_head th{
+.table_head th {
   outline: var(--OutlineHeaderColour);
   padding: 2px;
+  font-weight: bold;
 }
 
-.table_head td{
+.table_head td {
   outline: var(--OutlineHeaderColour);
 }
 
 
-.table_body td{
+.table_body td {
   outline: var(--OutlineBodyColour);
-  max-width: 0; /* khong bi gioi han keo */
+  max-width: 0;
+  /* khong bi gioi han keo */
 }
 
 
@@ -95,13 +99,15 @@
   background-color: var(--HoverColour);
 }
 
-.table_footer{
-  position: sticky; /* make the table heads sticky */
-  bottom: 0px; /* table head will be placed from the top of the table and sticks to it */
+.table_footer {
+  position: sticky;
+  /* make the table heads sticky */
+  bottom: 0px;
+  /* table head will be placed from the top of the table and sticks to it */
   background-color: var(--BackgroundColour);
 }
 
-.table_footer_tr td{
+.table_footer_tr td {
   outline: var(--OutlineFooterColour);
   border-Top: var(--BorderFooterColour);
   border-Bottom: var(--BorderFooterColour);
@@ -109,17 +115,17 @@
 }
 
 
-.table_body_td_checkbox{
+.table_body_td_checkbox {
   text-align: center;
   width: 0%;
 }
 
 /* Cho checkbox */
-.table_head_tr_th_checkbox{
+.table_head_tr_th_checkbox {
   width: 0%;
 }
 
-.footer_checkbox{
+.footer_checkbox {
   width: 3px;
   border-top: var(--BorderFooterColour);
   border-bottom: var(--BorderFooterColour);
@@ -129,21 +135,26 @@
 
 /* Custom Scrollbar for tbody */
 .div_table_container::-webkit-scrollbar {
-  height: 5px; /* Chiều cao của thanh scrollbar ngang */
-  width: 5px; /* Adjust the width as needed */
+  height: 5px;
+  /* Chiều cao của thanh scrollbar ngang */
+  width: 5px;
+  /* Adjust the width as needed */
 }
 
 
 .div_table_container::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Color of the track */
+  background: #f1f1f1;
+  /* Color of the track */
 }
 
 .div_table_container::-webkit-scrollbar-thumb {
-  background: #888; /* Color of the scrollbar thumb */
-  border-radius: 10px; /* Rounded corners for the thumb */
+  background: #888;
+  /* Color of the scrollbar thumb */
+  border-radius: 10px;
+  /* Rounded corners for the thumb */
 }
 
 .div_table_container::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Color of the thumb on hover */
+  background: #555;
+  /* Color of the thumb on hover */
 }
-
