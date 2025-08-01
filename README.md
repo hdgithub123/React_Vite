@@ -82,7 +82,7 @@ column = [
         accessorKey: 'key of data',
         header: 'Chuỗi hiển thị lên header hoặc có thể sử dụng 1 đoạn mã JSX ',
         id: 'key of data', // bắt buộc phải có
-        filterType: 'text of type filter', // có các dạng filter  (text, NumberFilter, DateFilter, DateTimeFilter, RangeFilter, CheckboxFilter)
+        filterType: 'text of type filter', // có các dạng filter  (text, number, date, dateTime, range, checkbox)
         footer: info => `Count: ${CountFooter(info.table)}`, // có 3 loại footer (SumFooter, AverageFooter,CountFooter )
         cell: TextCell, // có thể lựa chọn các cell có sẵn ( TextCell,EditableCell,DateCell,DateUsCell,DateVnCell,DateTimeCell,DateTimeUsCell,DateTimeVnCell,NumberCell,NumberUsCell,NumberVnCell,ExplandingDateCell,ExplandingTextCell,TextCellExplanding, ) hoặc tự xây dựng
         groupCell: TextGroupCell,
@@ -93,7 +93,7 @@ column = [
     ...
 ]
 
-filter:  (text, NumberFilter, DateFilter, DateTimeFilter, RangeFilter, CheckboxFilter) //CheckboxFilter cho các  giá trị true/false
+filter:  (text, number, date, dateTime, range, checkbox) //checkbox cho các  giá trị true/false
 footer: (
     SumFooter: info => {`Sum: ${SumFooter(info.column, info.table,0,2)}`} 
     AverageFooter: info => {`Average: ${AverageFooter(info.column, info.table,1,2)}`}
