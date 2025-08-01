@@ -73,7 +73,6 @@ function ReactTableNomalArrowkey({ data, columns, columnsShow = [] , onDataChang
             if (selectedRowIds[rows.id] !== true) {
                 checkboxCheck = true;
             }
-            checkboxCheck = false;
         } else {
             checkboxCheck = true;
         }

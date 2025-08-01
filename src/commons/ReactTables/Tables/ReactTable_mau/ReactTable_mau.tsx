@@ -77,7 +77,6 @@ function ReactTable_mau({ data, columns, columnsShow = [], onDataChange = ()=>{}
             if (selectedRowIds[rows.id] !== true) {
                 checkboxCheck = true;
             }
-            checkboxCheck = false;
         } else {
             checkboxCheck = true;
         }

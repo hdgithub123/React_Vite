@@ -77,7 +77,6 @@ function ReactTableBasicArrowkey({ data, columns, onDataChange = ()=>{}, onRowSe
             if (selectedRowIds[rows.id] !== true) {
                 checkboxCheck = true;
             }
-            checkboxCheck = false;
         } else {
             checkboxCheck = true;
         }

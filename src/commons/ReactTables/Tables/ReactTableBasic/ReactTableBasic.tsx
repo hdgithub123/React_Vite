@@ -76,7 +76,6 @@ function ReactTableBasic({ data, columns, columnsShow = [], onDataChange = ()=>{
             if (selectedRowIds[rows.id] !== true) {
                 checkboxCheck = true;
             }
-            checkboxCheck = false;
         } else {
             checkboxCheck = true;
         }

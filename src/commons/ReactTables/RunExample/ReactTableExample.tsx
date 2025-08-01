@@ -29,7 +29,7 @@ import {ReactTableBasic,
     ReactTableNomalArrowkey,
     ReactTablePages,
     SearchDropDown,
-    ReactTable_mau,} from '../../../index'
+    } from '../../../index'
 
 
 function ReactTableExample() {
@@ -179,7 +179,7 @@ function ReactTableExample() {
                     </ReactTablePages>
                 </div> */}
 
-            {/* <div className={styles.div5}>
+            <div className={styles.div5}>
                     <ReactTableFullArrowkey
                         data={Data}
                         columns={cl}

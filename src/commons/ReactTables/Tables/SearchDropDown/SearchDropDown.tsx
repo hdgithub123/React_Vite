@@ -68,7 +68,6 @@ function SearchDropDown({ data, columns, columnsShow = [] , onRowSelect = ()=>{}
             if (selectedRowIds[rows.id] !== true) {
                 checkboxCheck = true;
             }
-            checkboxCheck = false;
         } else {
             checkboxCheck = true;
         }
