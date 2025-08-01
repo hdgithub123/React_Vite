@@ -4,6 +4,7 @@ import DateFilter from './DateFilter';
 import DateTimeFilter from './DateTimeFilter';
 import RangeFilter from './RangeFilter';
 import CheckboxFilter from './CheckboxFilter';
+import MultiSelectFilter from './MultiSelectFilter'
 
 function Filter({ column }) {
     const filterType = column.columnDef.filterType
@@ -20,6 +21,8 @@ function Filter({ column }) {
             return <RangeFilter column={column}></RangeFilter>
         case 'checkbox':
             return <CheckboxFilter column={column}></CheckboxFilter>
+        case 'multiSelect':
+            return <MultiSelectFilter column={column}></MultiSelectFilter>
         default:
             return null;
     }

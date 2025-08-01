@@ -32,7 +32,8 @@ export const DraggableTableHeader = ({ header }) => {
         zIndex: isDragging ? 1 : 0,
         boxSizing: 'border-box',
         whiteSpace: 'nowrap',
-        overflow: 'hidden',
+        // overflow: 'hidden',
+        overflow: 'visible', 
         textOverflow: 'ellipsis',
     };
     return (

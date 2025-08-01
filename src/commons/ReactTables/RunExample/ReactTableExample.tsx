@@ -82,7 +82,7 @@ function ReactTableExample() {
             <div className={styles.parent}>
 
 
-                <div className={styles.div3} style={{ width: '800px', maxHeight: '300px' }}>
+                <div className={styles.div3} style={{ width: '800px', maxHeight: '1000px' }}>
                   
                     <ReactTableFull 
                     data={Data} 
@@ -179,7 +179,7 @@ function ReactTableExample() {
                     </ReactTablePages>
                 </div> */}
 
-            <div className={styles.div5}>
+            {/* <div className={styles.div5}>
                     <ReactTableFullArrowkey
                         data={Data}
                         columns={cl}

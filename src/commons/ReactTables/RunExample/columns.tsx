@@ -324,7 +324,7 @@ const columnssubrowf = [
                 accessorFn: (row) => row.lastName,
                 id: 'lastName',
                 header: () => <span>Last Name</span>,
-                filterType: 'text',
+                filterType: 'multiSelect',
                 cell: TextCell,
                 aggregatedCell: TextCell,
             },
