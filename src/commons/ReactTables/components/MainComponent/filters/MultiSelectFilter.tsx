@@ -116,7 +116,7 @@ function MultiSelectFilter({ column }) {
                         }}
                         disabled={selectedValues.length === 0}
                     >
-                        Xóa lựa chọn
+                        Remove Select
                     </button>
                 </div>
             )}
