@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import useOnClickOutside from '../../utils/Others/useOnClickOutside'
+import useAutoAdjustAbsolutePosition from '../../utils/Others/useAutoAdjustChildPosition'
 
 
 function MultiSelectFilter({ column }) {
@@ -8,6 +9,7 @@ function MultiSelectFilter({ column }) {
     const [selectedValues, setSelectedValues] = useState(() => column.getFilterValue() || []);
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef(null);
+    const showRef = useRef(null);
     column.columnDef.filterFn = multiSelectFn;
     // Hook xử lý click ra ngoài
     useOnClickOutside(containerRef, () => setIsOpen(false));
@@ -44,6 +46,8 @@ function MultiSelectFilter({ column }) {
         setIsOpen(true);
     }
 
+
+       useAutoAdjustAbsolutePosition(showRef, isOpen);
     return (
         <div ref={containerRef} style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', zIndex: 1, overflow: 'visible', }}>
             <input
@@ -58,6 +62,7 @@ function MultiSelectFilter({ column }) {
             {isOpen && (
 
                 <div
+                ref={showRef}
                     style={{
                         position: 'absolute',
                         top: "100%",
