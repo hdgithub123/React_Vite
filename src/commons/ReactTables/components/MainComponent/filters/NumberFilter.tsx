@@ -75,7 +75,7 @@ function NumberFilter({ column }) {
             />}
             {multilShow && <MultiSelectFilter column={column}></MultiSelectFilter>}
             <select style={{ width: '33px' }} value={filterFn} onChange={handleFilterChange}>
-                <option value="multiSelectFilter" title="Multil Select">M</option>
+                <option value="multiSelectFilter" title="Multi Select">M</option>
                 <option value="EqualsNumber" title="Equals">=</option>
                 <option value="weakEqualsNumber" title="Weak Equals">{'≤'}</option>
                 <option value="weakNumber" title="Weak">{'<'}</option>

@@ -74,7 +74,7 @@ function DateFilter({ column }) {
             />}
             {multilShow && <MultiSelectFilter column={column}></MultiSelectFilter>}
             <select style={{ width: '33px' }} value={filterFn} onChange={handleFilterChange}>
-                 <option value="multiSelectFilter" title="Multil Select">M</option>
+                 <option value="multiSelectFilter" title="Multi Select">M</option>
                 <option value="EqualsDate" title="Equal">=</option>
                 <option value="weakEqualsDate" title="Weak Equal">{'≤'}</option>
                 <option value="weakDate" title="Weak">{'<'}</option>

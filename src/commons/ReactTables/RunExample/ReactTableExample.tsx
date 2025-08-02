@@ -7,7 +7,7 @@ import EditableCell from '../components/utils/cells/edit/EditableCell'
 
 
 
-import { makeData, makeDataphhu, generateRandomObjectiveArray } from './makeData';
+import { makeData, makeDataphhu, generateRandomObjectiveArray, makeDatarandom } from './makeData';
 import { columns, columns2 } from './columns';
 
 // import ReactTableNomal from './Tables/ReactTableBase/ReactTableNomal/ReactTableNomal';
@@ -22,14 +22,15 @@ import { columns, columns2 } from './columns';
 // import ReactTableFullArrowkey from '../Tables/ReactTableFullArrowkey/ReactTableFullArrowkey';
 // import ReactTableNomalArrowkey from '../Tables/ReactTableNomalArrowkey/ReactTableNomalArrowkey';
 // import SearchDropDown from '../Tables/SearchDropDown/SearchDropDown';
-import {ReactTableBasic,
+import {
+    ReactTableBasic,
     ReactTableBasicArrowkey,
     ReactTableFull,
     ReactTableFullArrowkey,
     ReactTableNomalArrowkey,
     ReactTablePages,
     SearchDropDown,
-    } from '../../../index'
+} from '../../../index'
 
 
 function ReactTableExample() {
@@ -56,17 +57,27 @@ function ReactTableExample() {
     };
     // var d3 = new Date();
     // console.log("time:-1",d3.getTime())
-
+    const [random, setRandom] = useState(1);
     const btnclick = () => {
         console.log("selectedMoreData", selectedMoreData)
-         setData(makeData)
+        setData(makeData)
         // console.log("makeData",makeData)
         // console.log("dataChange",dataChange)
     }
 
     const btnclick2 = () => {
         // setData(generateRandomObjectiveArray(500))
-        setData(makeDataphhu)
+        if (random === 1) {
+            setData(makeDatarandom);
+            setRandom(2);
+        } else if (random === 2) {
+            setData(makeData);
+            setRandom(0);
+        } else {
+            setData(makeDataphhu);
+            setRandom(1);
+        }
+
         // console.log("Data",Data)
         // var d = new Date();
         // console.log("time:0",d.getTime())
@@ -84,18 +95,18 @@ function ReactTableExample() {
 
 
                 <div className={styles.div3} style={{ width: '800px', maxHeight: '1000px' }}>
-                  
-                    <ReactTableFull 
-                    data={Data} 
-                    columns={columns}
-                    //columnsShow={['firstName', 'age', 'lastName','progress', 'status']}  
-                    onRowSelect={handleRowSelect} 
-                    onRowsSelect={handleRowsSelect}
-                    onDataChange={handleDataChange}
-                    exportFile= {{name:'day la file cua toi.xlsx', sheetName:'My Sheet' , title :"mỳile", description:'mo ta day nay'}}
-                    onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
-                    //grouped={['firstName','age']}
-                    isGlobalFilter = {true}
+
+                    <ReactTableFull
+                        data={Data}
+                        columns={columns}
+                        //columnsShow={['firstName', 'age', 'lastName','progress', 'status']}  
+                        onRowSelect={handleRowSelect}
+                        onRowsSelect={handleRowsSelect}
+                        onDataChange={handleDataChange}
+                        exportFile={{ name: 'day la file cua toi.xlsx', sheetName: 'My Sheet', title: "mỳile", description: 'mo ta day nay' }}
+                        onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
+                        //grouped={['firstName','age']}
+                        isGlobalFilter={true}
                     >
                     </ReactTableFull>
                 </div>
@@ -130,8 +141,8 @@ function ReactTableExample() {
                   </ReactTableNomalArrowkey>
               </div> */}
 
-               
-              {/* <div className={styles.SearchDropDown}>
+
+                {/* <div className={styles.SearchDropDown}>
                   <SearchDropDown 
                   data={Data} 
                   columns={columns} 
@@ -180,7 +191,7 @@ function ReactTableExample() {
                     </ReactTablePages>
                 </div> */}
 
-            {/* <div className={styles.div5}>
+                {/* <div className={styles.div5}>
                     <ReactTableFullArrowkey
                         data={Data}
                         columns={cl}
@@ -197,7 +208,7 @@ function ReactTableExample() {
                 </div> */}
 
 
-{/* 
+                {/* 
               <div className={styles.div5}>
                     <ReactTable_mau
                         data={Data}

@@ -151,11 +151,6 @@ function MultiSelectFilter({ column }) {
 
 export default MultiSelectFilter;
 
-// const multiSelectFn = (row, columnId, value) => {
-//     const cellValue = row.getValue(columnId);
-//     if (!value || value.length === 0) return true;
-//     return value.includes(cellValue);
-// };
 
 const multiSelectFn = (row, columnId, value) => {
     const cellValue = String(row.getValue(columnId));

@@ -62,8 +62,8 @@ function TextFilter({ column }) {
             />}
             {multilShow && <MultiSelectFilter column={column}></MultiSelectFilter>}
             <select style={{ width: '33px' }} value={filterFn} onChange={handleFilterChange}>
+                <option value="multiSelectFilter" title="Multi Select">M</option>
                 <option value="includesString" title="Includes String">∈</option>
-                <option value="multiSelectFilter" title="Multil Select">M</option>
                 <option value="NotIncludesString" title="Does Not Include String">∉</option>
                 {/* <option value="includesStringSensitive" title="Includes String Case Sensitive">∈S</option> */}
                 <option value="equalsString" title="Equals String">=</option>
