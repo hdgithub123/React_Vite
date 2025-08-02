@@ -45,6 +45,7 @@ import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/B
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
+import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
 
 function ReactTableFull({ data, columns, columnsShow = [], onDataChange = ()=>{}, onRowSelect = ()=>{}, onRowsSelect = ()=>{}, onVisibleColumnDataSelect = ()=>{}, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
     const [dataDef, setDataDef] = useState(data);
