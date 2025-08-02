@@ -7,28 +7,19 @@ function MultiSelectFilter({ column }) {
     const [allValues, setAllValues] = useState(Array.from(column.getFacetedUniqueValues().keys()));
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedValues, setSelectedValues] = useState(() => column.getFilterValue() || []);
-    // const [selectedValues, setSelectedValues] = useState([]);
-    // const [filteredValues, setFilteredValues] = useState(allValues);
     const [filteredValues, setFilteredValues] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const containerRef = useRef(null);
     const showRef = useRef(null);
-
     column.columnDef.filterFn = multiSelectFn;
-
-    // Hook xử lý click ra ngoài
-    useOnClickOutside(containerRef, () => setIsOpen(false));
 
     // Cập nhật filteredValues khi searchTerm hoặc allValues thay đổi
     useEffect(() => {
         const filtered = allValues.filter(value => {
-            if (!value || String(value).trim() === '') return false; // loại bỏ giá trị rỗng
             return String(value).toLowerCase().includes(String(searchTerm).toLowerCase());
         });
         setFilteredValues(filtered);
     }, [searchTerm, allValues]);
-
-
 
     useEffect(() => {
         const newAllValues = Array.from(column.getFacetedUniqueValues().keys())
@@ -42,18 +33,21 @@ function MultiSelectFilter({ column }) {
     }, [selectedValues]);
 
 
-
     function handleCheckboxChange(e) {
         const value = e.target.value;
         const isChecked = e.target.checked;
-
+        let newValue;
+        if (!value) {
+            newValue = false;
+        } else {
+            newValue = value
+        }
         let updatedValues;
         if (isChecked) {
-            updatedValues = [...selectedValues, value];
+            updatedValues = [...selectedValues, newValue];
         } else {
-            updatedValues = selectedValues.filter(v => v !== value);
+            updatedValues = selectedValues.filter(v => v !== newValue);
         }
-        console.log("selectedValues", selectedValues)
         setSelectedValues(updatedValues);
     }
 
@@ -65,6 +59,15 @@ function MultiSelectFilter({ column }) {
         setIsOpen(true);
     };
 
+    const handleSelectValue = (selectedValues, value) => {
+        if (!value) {
+            return String(selectedValues).includes(false)
+        }
+        return selectedValues.includes(String(value))
+    }
+
+    // Hook xử lý click ra ngoài
+    useOnClickOutside(containerRef, () => setIsOpen(false));
     useAutoAdjustAbsolutePosition(showRef, isOpen);
     return (
         <div ref={containerRef} style={{ width: '100%', display: 'flex', justifyContent: 'center', position: 'relative', zIndex: 1, overflow: 'visible', }}>
@@ -107,7 +110,7 @@ function MultiSelectFilter({ column }) {
                                                 <input
                                                     type="checkbox"
                                                     value={value}
-                                                    checked={String(selectedValues).includes(value)}
+                                                    checked={handleSelectValue(selectedValues, value)}
                                                     onChange={handleCheckboxChange}
                                                 />
                                             </td>
@@ -152,11 +155,14 @@ function MultiSelectFilter({ column }) {
 export default MultiSelectFilter;
 
 
-const multiSelectFn = (row, columnId, value) => {
+const multiSelectFn = (row, columnId, valueFilterArray) => {
     const cellValue = String(row.getValue(columnId));
-    
-    if (!value || value.length === 0) return true;
-    if(!cellValue || cellValue.length === 0) return false;
-    return String(value).includes(cellValue);
+    if (!valueFilterArray || valueFilterArray.length === 0) {
+        return true;
+    }
+    if (!cellValue || cellValue.length === 0) {
+        return valueFilterArray.includes(false);
+    }
+    return valueFilterArray.includes(cellValue);
 };
 
