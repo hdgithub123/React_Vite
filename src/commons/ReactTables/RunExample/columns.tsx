@@ -341,7 +341,7 @@ const columnssubrowf = [
                     textAlign: 'right',
             }}>{`Sum: ${SumFooter(info.column, info.table,1,2)}`}</div>,
                 filterType: 'number',
-                cell: ({ cell }) => (
+                cell: ( cell ) => (
                     <NumberCell
                         initialValue={cell.getValue()}
                         minFractionDigits={0}
@@ -381,8 +381,13 @@ const columnssubrowf = [
                         accessorKey: 'status',
                         id: 'status',
                         header: 'Status',
-                        cell: TextCell,
-                        filterType: 'range',
+                        // cell: TextCell,
+                        cell: (cell) => {return (
+                            <div><div>hello</div>{cell.getValue()}</div>
+                            
+                        )},
+                        // filterType: 'range',
+                        filterType: 'text',
                     },
                     {
                         accessorKey: 'progress',
