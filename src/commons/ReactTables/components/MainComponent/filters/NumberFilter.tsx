@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import {DebouncedInput} from '../../utils/Others/DebouncedInput';
+import MultiSelectFilter from './MultiSelectFilter';
+
 
 function NumberFilter({ column }) {
     const [filterFn, setFilterFn] = useState('');
     const [columnFilterValue, setcolumnFilterValue] = useState('');
+    const [multilShow, setMultilShow] = useState(false);
     useEffect(() => {
         setFilterFn('EqualsNumber');
         column.columnDef.filterFn = EqualsNumber;
@@ -11,6 +14,7 @@ function NumberFilter({ column }) {
 
     const handleFilterChange = (e) => {
         setFilterFn(e.target.value);
+        setMultilShow(false)
         switch (e.target.value) {
             case 'EqualsNumber':
                 column.columnDef.filterFn = EqualsNumber;
@@ -36,6 +40,9 @@ function NumberFilter({ column }) {
             case 'ExistsNumber':
                 column.columnDef.filterFn = ExistsNumber;
                 break;
+            case 'multiSelectFilter':
+                setMultilShow(true)
+                break;
             default:
                 column.columnDef.filterFn = e.target.value;
         }
@@ -58,15 +65,17 @@ function NumberFilter({ column }) {
     }
     return (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-               <DebouncedInput
+               {!multilShow && <DebouncedInput
                 style={{ width: 'calc(100% - 35px)', marginRight: '2px' }}
                 onChange={handelOnChange}
                 placeholder={`Search...`}
                 type="number"
                 value={(columnFilterValue ?? '') as string}
             // debounce = {800}
-            />
+            />}
+            {multilShow && <MultiSelectFilter column={column}></MultiSelectFilter>}
             <select style={{ width: '33px' }} value={filterFn} onChange={handleFilterChange}>
+                <option value="multiSelectFilter" title="Multil Select">M</option>
                 <option value="EqualsNumber" title="Equals">=</option>
                 <option value="weakEqualsNumber" title="Weak Equals">{'≤'}</option>
                 <option value="weakNumber" title="Weak">{'<'}</option>

@@ -59,13 +59,14 @@ function ReactTableExample() {
 
     const btnclick = () => {
         console.log("selectedMoreData", selectedMoreData)
+         setData(makeData)
         // console.log("makeData",makeData)
         // console.log("dataChange",dataChange)
     }
 
     const btnclick2 = () => {
-        setData(generateRandomObjectiveArray(500))
-        // setData(makeDataphhu)
+        // setData(generateRandomObjectiveArray(500))
+        setData(makeDataphhu)
         // console.log("Data",Data)
         // var d = new Date();
         // console.log("time:0",d.getTime())

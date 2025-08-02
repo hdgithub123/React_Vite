@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { DebouncedInput } from '../../utils/Others/DebouncedInput';
+import MultiSelectFilter from './MultiSelectFilter';
+
 
 function TextFilter({ column }) {
     const [filterFn, setFilterFn] = useState('includesString');
     const [columnFilterValue, setcolumnFilterValue] = useState('');
+    const [multilShow, setMultilShow] = useState(false);
     const handleFilterChange = (e) => {
         setFilterFn(e.target.value);
+        setMultilShow(false)
         switch (e.target.value) {
             case 'NotIncludesString':
                 column.columnDef.filterFn = NotIncludesString;
@@ -21,6 +25,9 @@ function TextFilter({ column }) {
                 break;
             case 'ExistsString':
                 column.columnDef.filterFn = ExistsString;
+                break;
+            case 'multiSelectFilter':
+                setMultilShow(true)
                 break;
             default:
                 column.columnDef.filterFn = e.target.value;
@@ -45,16 +52,18 @@ function TextFilter({ column }) {
 
     return (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-            <DebouncedInput
+            {!multilShow && <DebouncedInput
                 style={{ width: 'calc(100% - 35px)', marginRight: '2px' }}
                 onChange={handelOnChange}
                 placeholder={`Search...`}
                 type="text"
                 value={(columnFilterValue ?? '') as string}
             // debounce = {800}
-            />
+            />}
+            {multilShow && <MultiSelectFilter column={column}></MultiSelectFilter>}
             <select style={{ width: '33px' }} value={filterFn} onChange={handleFilterChange}>
                 <option value="includesString" title="Includes String">∈</option>
+                <option value="multiSelectFilter" title="Multil Select">M</option>
                 <option value="NotIncludesString" title="Does Not Include String">∉</option>
                 {/* <option value="includesStringSensitive" title="Includes String Case Sensitive">∈S</option> */}
                 <option value="equalsString" title="Equals String">=</option>

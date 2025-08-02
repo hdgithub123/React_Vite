@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
-import {DebouncedInput} from '../../utils/Others/DebouncedInput';
+import { DebouncedInput } from '../../utils/Others/DebouncedInput';
+import MultiSelectFilter from './MultiSelectFilter';
 
 function DateTimeFilter({ column }) {
     const [filterFn, setFilterFn] = useState('');
     const [columnFilterValue, setcolumnFilterValue] = useState('');
+    const [multilShow, setMultilShow] = useState(false);
     useEffect(() => {
         setFilterFn('EqualsDate');
         column.columnDef.filterFn = EqualsDateTime;
@@ -11,6 +13,7 @@ function DateTimeFilter({ column }) {
 
     const handleFilterChange = (e) => {
         setFilterFn(e.target.value);
+        setMultilShow(false)
         switch (e.target.value) {
             case 'EqualsDateTime':
                 column.columnDef.filterFn = EqualsDateTime;
@@ -36,6 +39,9 @@ function DateTimeFilter({ column }) {
             case 'ExistsDateTime':
                 column.columnDef.filterFn = ExistsDateTime;
                 break;
+            case 'multiSelectFilter':
+                setMultilShow(true)
+                break;
             default:
                 column.columnDef.filterFn = e.target.value;
         }
@@ -54,16 +60,17 @@ function DateTimeFilter({ column }) {
     }
     return (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-            <DebouncedInput
+            {!multilShow && <DebouncedInput
                 style={{ width: 'calc(100% - 35px)', marginRight: '2px' }}
                 onChange={handelOnChange}
                 placeholder={`Search...`}
                 type="datetime-local"
                 value={(columnFilterValue ?? '') as string}
             // debounce = {800}
-            />
-
+            />}
+            {multilShow && <MultiSelectFilter column={column}></MultiSelectFilter>}
             <select style={{ width: '33px' }} value={filterFn} onChange={handleFilterChange}>
+                <option value="multiSelectFilter" title="Multil Select">M</option>
                 <option value="EqualsDateTime" title="Equal">=</option>
                 <option value="weakEqualsDateTime" title="Weak Equal">{'≤'}</option>
                 <option value="weakDateTime" title="Weak">{'<'}</option>
