@@ -45,6 +45,7 @@ function ReactTableExample() {
     };
 
     const handleRowsSelect = (rowData) => {
+        console.log("rowData",rowData)
         setSelectedMoreData(rowData); // Update state with the selected row data
     };
 
@@ -99,7 +100,7 @@ function ReactTableExample() {
                     <ReactTableFull
                         data={Data}
                         columns={columns}
-                        //columnsShow={['firstName', 'age', 'lastName','progress', 'status']}  
+                        columnsShow={['firstName', 'age', 'lastName','progress', 'status']}  
                         onRowSelect={handleRowSelect}
                         onRowsSelect={handleRowsSelect}
                         onDataChange={handleDataChange}

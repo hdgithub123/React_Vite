@@ -43,5 +43,6 @@ export function getSelectedData<T>(table: Table<T>): T[] {
   const selectedRowIds = new Set(Object.keys(rowSelection));
 
   // Start with the root rows
-  return extractSelectedRows(table.getRowModel().rows, selectedRowIds);
+  // return extractSelectedRows(table.getRowModel().rows, selectedRowIds);
+   return extractSelectedRows(table.getPreFilteredRowModel().rows, selectedRowIds);
 };
