@@ -1,7 +1,7 @@
 const makeData1 = [
-    { firstName: '1Alice', lastName: 'Smith', age: 28, visits: "2024-01-01", progress: 75, status: 'relationship' },
-    { firstName: '2Bob', lastName: 'Johnson', age: 32, visits: "2024-02-01", progress: 80, status: 'single' },
-    { firstName: '3Charlie', lastName: 'Williams', age: 45, visits: "2024-03-01", progress: 85, status: 'complicated' },
+    { firstName: '1Alice', lastName: 'Smith', age: 0, visits: "2024-01-01", progress: 75, status: 'relationship' },
+    { firstName: '2Bob', lastName: 'Johnson', age: 0, visits: "2024-02-01", progress: 80, status: 'single' },
+    { firstName: '3Charlie', lastName: 'Williams', age: 0, visits: "2024-03-01", progress: 85, status: 'complicated' },
     { firstName: '4David', lastName: 'Brown', age: 23, visits: "2024-04-01", progress: 90, status: 'relationship' },
     { firstName: '5Eva', lastName: 'Jones', age: 36, visits: "2024-05-01", progress: 70, status: 'single' },
     { firstName: '6Frank', lastName: 'Miller', age: 40, visits: "2024-06-01", progress: 75, status: 'complicated' },

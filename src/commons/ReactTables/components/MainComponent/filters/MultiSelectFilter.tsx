@@ -60,6 +60,10 @@ function MultiSelectFilter({ column }) {
     };
 
     const handleSelectValue = (selectedValues, value) => {
+        if (String(value) === '0') {
+            return String(selectedValues).includes('0')
+        }
+       
         if (!value) {
             return String(selectedValues).includes(false)
         }
