@@ -7,7 +7,7 @@ function DateTimeFilter({ column }) {
     const [columnFilterValue, setcolumnFilterValue] = useState('');
     const [multilShow, setMultilShow] = useState(false);
     useEffect(() => {
-        setFilterFn('EqualsDate');
+        setFilterFn('EqualsDateTime');
         column.columnDef.filterFn = EqualsDateTime;
     }, []);
 
