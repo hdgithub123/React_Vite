@@ -36,7 +36,7 @@ function MultiSelectFilter({ column, table }) {
   const handleCheckboxChange = e => {
     const value = e.target.value;
     const isChecked = e.target.checked;
-    const normalizedValue = value === '' ? false : value;
+    const normalizedValue = value === ''? false : value;
     const updatedValues = isChecked
       ? [...selectedValues, normalizedValue]
       : selectedValues.filter(v => v !== normalizedValue);
@@ -45,7 +45,8 @@ function MultiSelectFilter({ column, table }) {
 
   const handleSelectValue = (selectedValues, value) => {
     if (String(value) === '0') return selectedValues.includes('0');
-    if (!value) return selectedValues.includes(false);
+    if (value === '') return selectedValues.includes(false);
+    if (!value || value === null || value === undefined) return selectedValues.includes(false);
     return selectedValues.includes(String(value));
   };
 
@@ -113,7 +114,7 @@ function MultiSelectFilter({ column, table }) {
                         <td style={{ padding: '4px', width: '30px', textAlign: 'center' }}>
                           <input
                             type="checkbox"
-                            value={value}
+                            value={value ?? ''}
                             checked={handleSelectValue(selectedValues, value)}
                             onChange={handleCheckboxChange}
                           />
@@ -156,8 +157,9 @@ function MultiSelectFilter({ column, table }) {
 export default MultiSelectFilter;
 
 const multiSelectFn = (row, columnId, valueFilterArray) => {
-  const cellValue = String(row.getValue(columnId));
+  const cellValue = row.getValue(columnId);
+  const stringCellValue = String(cellValue)
   if (!valueFilterArray || valueFilterArray.length === 0) return true;
-  if (!cellValue || cellValue.length === 0) return valueFilterArray.includes(false);
-  return valueFilterArray.includes(cellValue);
+  if (!cellValue || cellValue.length === 0 || cellValue === undefined || cellValue === null) return valueFilterArray.includes(false);
+  return valueFilterArray.includes(stringCellValue);
 };

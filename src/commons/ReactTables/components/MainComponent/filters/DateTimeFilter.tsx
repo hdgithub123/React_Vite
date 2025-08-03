@@ -91,14 +91,14 @@ export default DateTimeFilter;
 const ExistsDateTime = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
     // Return true if the cell value is null or an empty string, otherwise return false
-    return cellValue !== null && cellValue !== '';
+   return cellValue !== null && cellValue !== '' && cellValue !== undefined && cellValue;
 }
 
 const EmptyDateTime = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
 
     // Return true if the cell value is null or an empty string, otherwise return false
-    return cellValue === null || cellValue === '';
+    return cellValue === null || cellValue === '' || cellValue === undefined || !cellValue ;
 
 }
 

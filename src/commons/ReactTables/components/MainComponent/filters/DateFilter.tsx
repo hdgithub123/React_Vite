@@ -96,7 +96,7 @@ const ExistsDate = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
 
     // Return true if the cell value is null or an empty string, otherwise return false
-    return cellValue !== null && cellValue !== '';
+    return cellValue !== null && cellValue !== '' && cellValue !== undefined && cellValue;
 
 }
 
@@ -105,7 +105,7 @@ const EmptyDate = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
 
     // Return true if the cell value is null or an empty string, otherwise return false
-    return cellValue === null || cellValue === '';
+    return cellValue === null || cellValue === '' || cellValue === undefined || !cellValue ;
 }
 
 const EqualsDate = (row, columnId, value) => {

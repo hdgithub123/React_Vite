@@ -97,7 +97,7 @@ const ExistsNumber = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
 
     // Return true if the cell value is null or an empty string, otherwise return false
-    return cellValue !== null && cellValue !== '';
+    return cellValue !== null && cellValue !== '' && cellValue !== undefined && cellValue;
 
 }
 
@@ -106,7 +106,7 @@ const EmptyNumber = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
 
     // Return true if the cell value is null or an empty string, otherwise return false
-    return cellValue === null || cellValue === '';
+    return cellValue === null || cellValue === '' || cellValue === undefined || !cellValue ;
 
 }
 
