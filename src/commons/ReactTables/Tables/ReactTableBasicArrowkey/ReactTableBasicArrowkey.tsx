@@ -46,9 +46,10 @@ import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/Global
 import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
 import { throttle } from '../../components/utils/Others/throttle';
 import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/ButtonPanel';
+import getOldFilteredSelectionByField from '../../components/utils/Others/getOldFilteredSelectionByField'
 
 
-function ReactTableBasicArrowkey({ data, columns, onDataChange = ()=>{}, onRowSelect = ()=>{}, onRowsSelect = ()=>{}, onVisibleColumnDataSelect = ()=>{}, grouped = [], exportFile = {}, isGlobalFilter = false }) {
+function ReactTableBasicArrowkey({ data, columns, onDataChange = () => { }, onRowSelect = () => { }, onRowsSelect = () => { }, onVisibleColumnDataSelect = () => { }, grouped = [], exportFile = {}, isGlobalFilter = false, fieldUnique = null }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -177,6 +178,13 @@ function ReactTableBasicArrowkey({ data, columns, onDataChange = ()=>{}, onRowSe
     };
 
     useEffect(() => {
+        if (!table || !data) return;
+        if (fieldUnique) {
+            const filteredSelection = getOldFilteredSelectionByField(dataDef, data, table, fieldUnique);
+            table.setRowSelection(filteredSelection);
+        } else {
+            table.resetRowSelection();
+        }
         setDataDef(data)
     }, [data]);
 
@@ -216,10 +224,10 @@ function ReactTableBasicArrowkey({ data, columns, onDataChange = ()=>{}, onRowSe
     }, [grouping, columnFilters]);
 
     const handleRowClick = (rowData) => {
-        const rowClick = getOneRowData(rowData)     
-            if (onRowSelect) {
-                onRowSelect(rowClick);
-            }
+        const rowClick = getOneRowData(rowData)
+        if (onRowSelect) {
+            onRowSelect(rowClick);
+        }
     };
 
     const handleTriStateCheckboxSelectChange = (value) => {
@@ -296,11 +304,11 @@ function ReactTableBasicArrowkey({ data, columns, onDataChange = ()=>{}, onRowSe
     }, [selectedIndex]);
 
     const lengthData = table.getRowModel().rows.length
-    const updateSelectedIndex = useMemo(()=>{
+    const updateSelectedIndex = useMemo(() => {
         return throttle((newIndex) => {
             setSelectedIndex(newIndex);
-          }, 200);
-    },[])
+        }, 200);
+    }, [])
 
 
     const handleKeyDown = (e) => {
@@ -313,13 +321,13 @@ function ReactTableBasicArrowkey({ data, columns, onDataChange = ()=>{}, onRowSe
             }
         } else if (e.key === 'Enter') {
             if (onRowSelect) {
-                const rowEnter = getOneRowData(rows[selectedIndex])   
+                const rowEnter = getOneRowData(rows[selectedIndex])
                 onRowSelect(rowEnter);
             }
         }
     };
 
-    const handleonBlur =() => {
+    const handleonBlur = () => {
         setSelectedIndex(-1);
     }
 
@@ -360,16 +368,16 @@ function ReactTableBasicArrowkey({ data, columns, onDataChange = ()=>{}, onRowSe
     return (
         <div className={styles.general_table}>
             <div className={styles.container}>
-                <div style={{display:'flex', alignItems: 'center', width:'100%'}}>
-                {/* Render các nút điều khiển */}
-                <div className={styles.botton_dot}>
-                    <ButtonPanel table={table} exportFile={exportFile}></ButtonPanel>
+                <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                    {/* Render các nút điều khiển */}
+                    <div className={styles.botton_dot}>
+                        <ButtonPanel table={table} exportFile={exportFile}></ButtonPanel>
+                    </div>
+                    {/* Tạo Global Filter */}
+                    {isGlobalFilter === true ? (<div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                        <GlobalFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} onhandleKeyDown={handleKeyDown}></GlobalFilter>
+                    </div>) : null}
                 </div>
-                {/* Tạo Global Filter */}
-                {isGlobalFilter === true ? (<div style={{display:'flex', alignItems: 'center', width:'100%'}}>
-                <GlobalFilter globalFilter= {globalFilter} setGlobalFilter= {setGlobalFilter} onhandleKeyDown={handleKeyDown}></GlobalFilter>
-                </div>) : null}
-            </div>
 
                 {/* Tạo Drop Group Area */}
                 <DndContext

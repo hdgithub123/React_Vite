@@ -48,8 +48,11 @@ import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/Global
 import { getRowModelData } from '../../components/MainComponent/Others/getRowModelData';
 import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
 import { throttle } from '../../components/utils/Others/throttle';
+import getOldFilteredSelectionByField from '../../components/utils/Others/getOldFilteredSelectionByField'
 
-function ReactTableFullArrowkey({ data, columns, columnsShow = [], onDataChange = ()=>{}, onRowSelect = ()=>{}, onRowsSelect = ()=>{}, onVisibleColumnDataSelect = ()=>{}, grouped = [], exportFile = {}, isGlobalFilter = false }) {
+
+
+function ReactTableFullArrowkey({ data, columns, columnsShow = [], onDataChange = () => { }, onRowSelect = () => { }, onRowsSelect = () => { }, onVisibleColumnDataSelect = () => { }, grouped = [], exportFile = {}, isGlobalFilter = false, fieldUnique = null }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -178,6 +181,13 @@ function ReactTableFullArrowkey({ data, columns, columnsShow = [], onDataChange 
     };
 
     useEffect(() => {
+        if (!table || !data) return;
+        if (fieldUnique) {
+            const filteredSelection = getOldFilteredSelectionByField(dataDef, data, table, fieldUnique);
+            table.setRowSelection(filteredSelection);
+        } else {
+            table.resetRowSelection();
+        }
         setDataDef(data)
     }, [data]);
 

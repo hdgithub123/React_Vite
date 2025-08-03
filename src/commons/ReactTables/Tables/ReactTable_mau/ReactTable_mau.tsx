@@ -45,9 +45,9 @@ import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/B
 import { getDataVisibleColumn } from '../../components/MainComponent/Others/getDataVisibleColumn';
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
+import getOldFilteredSelectionByField from '../../components/utils/Others/getOldFilteredSelectionByField'
 
-
-function ReactTable_mau({ data, columns, columnsShow = [], onDataChange = ()=>{}, onRowSelect = ()=>{} , onRowsSelect = ()=>{}, onVisibleColumnDataSelect = ()=>{}, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
+function ReactTable_mau({ data, columns, columnsShow = [], onDataChange = () => { }, onRowSelect = () => { }, onRowsSelect = () => { }, onVisibleColumnDataSelect = () => { }, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false, fieldUnique = null }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -177,6 +177,13 @@ function ReactTable_mau({ data, columns, columnsShow = [], onDataChange = ()=>{}
     };
 
     useEffect(() => {
+        if (!table || !data) return;
+        if (fieldUnique) {
+            const filteredSelection = getOldFilteredSelectionByField(dataDef, data, table, fieldUnique);
+            table.setRowSelection(filteredSelection);
+        } else {
+            table.resetRowSelection();
+        }
         setDataDef(data)
     }, [data]);
 
@@ -230,10 +237,10 @@ function ReactTable_mau({ data, columns, columnsShow = [], onDataChange = ()=>{}
     }, [grouping, columnFilters]);
 
     const handleRowClick = (rowData) => {
-        const rowClick = getOneRowData(rowData)     
-            if (onRowSelect) {
-                onRowSelect(rowClick);
-            }
+        const rowClick = getOneRowData(rowData)
+        if (onRowSelect) {
+            onRowSelect(rowClick);
+        }
     };
 
     const handleTriStateCheckboxSelectChange = (value) => {

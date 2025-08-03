@@ -61,7 +61,7 @@ function ReactTableExample() {
     const [random, setRandom] = useState(1);
     const btnclick = () => {
         console.log("selectedMoreData", selectedMoreData)
-        setData(makeData)
+        setData(makeDataphhu)
         // console.log("makeData",makeData)
         // console.log("dataChange",dataChange)
     }
@@ -108,6 +108,7 @@ function ReactTableExample() {
                         onVisibleColumnDataSelect={handleonVisibleColumnDataSelect}
                         //grouped={['firstName','age']}
                         isGlobalFilter={true}
+                        fieldUnique={'firstName'}
                     >
                     </ReactTableFull>
                 </div>

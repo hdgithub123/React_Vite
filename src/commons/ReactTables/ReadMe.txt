@@ -34,7 +34,8 @@ onRowsSelect,
 onVisibleColumnDataSelect, 
 grouped = [], 
 exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, 
-isGlobalFilter = false 
+isGlobalFilter = false,
+fieldUnique = ""  
 } 
 
 
@@ -369,3 +370,5 @@ const column = [
         ],
     },
 ]
+
+fieldUnique = "" - để filed có trường duy nhất vào thì khi load lại data sẽ giữ nguyên selection rows ví dụ fieldUnique = "id"

@@ -45,9 +45,10 @@ import { ButtonPanel } from '../../components/MainComponent/Others/ButtonPanel/B
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
 import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
+import getOldFilteredSelectionByField from '../../components/utils/Others/getOldFilteredSelectionByField'
 
 
-function ReactTableBasic({ data, columns, columnsShow = [], onDataChange = ()=>{}, onRowSelect = ()=>{}, onRowsSelect = ()=>{}, onVisibleColumnDataSelect = ()=>{}, exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
+function ReactTableBasic({ data, columns, columnsShow = [], onDataChange = () => { }, onRowSelect = () => { }, onRowsSelect = () => { }, onVisibleColumnDataSelect = () => { }, exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false, fieldUnique = null }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -176,6 +177,13 @@ function ReactTableBasic({ data, columns, columnsShow = [], onDataChange = ()=>{
     };
 
     useEffect(() => {
+        if (!table || !data) return;
+        if (fieldUnique) {
+            const filteredSelection = getOldFilteredSelectionByField(dataDef, data, table, fieldUnique);
+            table.setRowSelection(filteredSelection);
+        } else {
+            table.resetRowSelection();
+        }
         setDataDef(data)
     }, [data]);
 

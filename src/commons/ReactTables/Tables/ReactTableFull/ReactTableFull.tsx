@@ -46,8 +46,10 @@ import { getDataVisibleColumn } from '../../components/MainComponent/Others/getD
 import { getIsAllRowsSelected, getToggleAllRowsSelectedHandler } from '../../components/MainComponent/Others/RowsSelected'
 import { GlobalFilter } from '../../components/MainComponent/GlobalFilter/GlobalFilter';
 import { getOneRowData } from '../../components/MainComponent/Others/getOneRowData';
+import getOldFilteredSelectionByField from '../../components/utils/Others/getOldFilteredSelectionByField'
 
-function ReactTableFull({ data, columns, columnsShow = [], onDataChange = ()=>{}, onRowSelect = ()=>{}, onRowsSelect = ()=>{}, onVisibleColumnDataSelect = ()=>{}, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false }) {
+
+function ReactTableFull({ data, columns, columnsShow = [], onDataChange = () => { }, onRowSelect = () => { }, onRowsSelect = () => { }, onVisibleColumnDataSelect = () => { }, grouped = [], exportFile = { name: "Myfile.xlsx", sheetName: "Sheet1", title: null, description: null }, isGlobalFilter = false, fieldUnique = null }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -176,6 +178,14 @@ function ReactTableFull({ data, columns, columnsShow = [], onDataChange = ()=>{}
     };
 
     useEffect(() => {
+        if (!table || !data) return;
+        if (fieldUnique) {
+            const filteredSelection = getOldFilteredSelectionByField(dataDef, data, table, fieldUnique);
+            table.setRowSelection(filteredSelection);
+        } else {
+            table.resetRowSelection();
+        }
+
         setDataDef(data)
     }, [data]);
 
@@ -231,10 +241,10 @@ function ReactTableFull({ data, columns, columnsShow = [], onDataChange = ()=>{}
 
 
     const handleRowClick = (rowData) => {
-        const rowClick = getOneRowData(rowData)     
-            if (onRowSelect) {
-                onRowSelect(rowClick);
-            }
+        const rowClick = getOneRowData(rowData)
+        if (onRowSelect) {
+            onRowSelect(rowClick);
+        }
     };
 
     const handleTriStateCheckboxSelectChange = (value) => {
@@ -432,4 +442,6 @@ function ReactTableFull({ data, columns, columnsShow = [], onDataChange = ()=>{}
 }
 export default ReactTableFull;
 
+
+type Row = Record<string, any>;
 

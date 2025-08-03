@@ -240,7 +240,7 @@ type Person = {
       status: 'complicated',
     },
     {
-      firstName: "Sam",
+      firstName: "2Bob",
       lastName: "Johnson",
       age: 35,
       visits: "2025-01-01",
