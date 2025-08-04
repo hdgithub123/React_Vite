@@ -56,8 +56,9 @@ export const DragAlongCell = ({ cell }) => {
     return (
         <td
             ref={setNodeRef}
+            key = {cell.id}
             {...{
-                key: cell.id,
+                // key: cell.id,
                 style: {
                     style,
                     // ...getCommonPinningStyles(column),
