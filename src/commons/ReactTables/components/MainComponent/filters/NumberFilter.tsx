@@ -41,13 +41,46 @@ function NumberFilter({ column }) {
                 column.columnDef.filterFn = EqualsNumber;
         }
 
-    }, [filterFn]);
+    }, []);
 
 
 
     const handleFilterChange = (e) => {
         setFilterFn(e.target.value);
         setMultilShow(false)
+        switch (e.target.value) {
+            case 'EqualsNumber':
+                column.columnDef.filterFn = EqualsNumber;
+                break;
+            case 'weakEqualsNumber':
+                column.columnDef.filterFn = weakEqualsNumber;
+                break;
+            case 'weakNumber':
+                column.columnDef.filterFn = weakNumber;
+                break;
+            case 'GreaterEqualsNumber':
+                column.columnDef.filterFn = GreaterEqualsNumber;
+                break;
+            case 'GreaterNumber':
+                column.columnDef.filterFn = GreaterNumber;
+                break;
+            case 'DifferentNumber':
+                column.columnDef.filterFn = DifferentNumber;
+                break;
+            case 'EmptyNumber':
+                column.columnDef.filterFn = EmptyNumber;
+                break;
+            case 'ExistsNumber':
+                column.columnDef.filterFn = ExistsNumber;
+                break;
+            case 'multiSelectFilter':
+                setMultilShow(true)
+                break;
+            default:
+                column.columnDef.filterFn = e.target.value;
+        }
+
+
         if (e.target.value === "EmptyNumber") {
             column.setFilterValue("Empty")
         } else if (e.target.value === "ExistsNumber") {

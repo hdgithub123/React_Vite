@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { DebouncedInput } from '../../utils/Others/DebouncedInput';
 import MultiSelectFilter from './MultiSelectFilter';
+
 
 
 function TextFilter({ column }) {
@@ -9,8 +10,8 @@ function TextFilter({ column }) {
     const [multilShow, setMultilShow] = useState(false);
 
 
-    useEffect(() => {
-
+    useLayoutEffect(() => {
+        console.log("filterFn", filterFn)
         switch (filterFn) {
             case 'NotIncludesString':
                 column.columnDef.filterFn = NotIncludesString;
@@ -35,11 +36,33 @@ function TextFilter({ column }) {
         }
 
 
-    }, [filterFn])
+    }, [])
 
     const handleFilterChange = (e) => {
         setFilterFn(e.target.value);
         setMultilShow(false)
+        switch (e.target.value) {
+            case 'NotIncludesString':
+                column.columnDef.filterFn = NotIncludesString;
+                break;
+            case 'startWithString':
+                column.columnDef.filterFn = startWithString;
+                break;
+            case 'endWithString':
+                column.columnDef.filterFn = endWithString;
+                break;
+            case 'EmptyString':
+                column.columnDef.filterFn = EmptyString;
+                break;
+            case 'ExistsString':
+                column.columnDef.filterFn = ExistsString;
+                break;
+            case 'multiSelectFilter':
+                setMultilShow(true)
+                break;
+            default:
+                column.columnDef.filterFn = e.target.value;
+        }
         if (e.target.value === "EmptyString") {
             column.setFilterValue("Empty")
         } else if (e.target.value === "ExistsString") {
@@ -94,16 +117,15 @@ const ExistsString = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
 
     // Return true if the cell value is null or an empty string, otherwise return false
-    return cellValue !== null && cellValue !== '' && cellValue !== undefined && cellValue;
-
+    return !!(cellValue !== null && cellValue !== '' && cellValue !== undefined);
 }
 
 const EmptyString = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
 
     // Return true if the cell value is null or an empty string, otherwise return false
-    return cellValue === null || cellValue === '' || cellValue === undefined || !cellValue;
-
+    // return !!(cellValue === null || cellValue === '' || cellValue === undefined || !cellValue);
+    return !cellValue
 }
 
 

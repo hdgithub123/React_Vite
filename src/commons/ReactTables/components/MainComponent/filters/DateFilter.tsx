@@ -38,12 +38,44 @@ function DateFilter({ column }) {
             default:
                 column.columnDef.filterFn = EqualsDate;
         }
-    }, [filterFn]);
+    }, []);
 
 
     const handleFilterChange = (e) => {
         setFilterFn(e.target.value);
         setMultilShow(false)
+        switch (e.target.value) {
+            case 'EqualsDate':
+                column.columnDef.filterFn = EqualsDate;
+                break;
+            case 'weakEqualsDate':
+                column.columnDef.filterFn = weakEqualsDate;
+                break;
+            case 'weakDate':
+                column.columnDef.filterFn = weakDate;
+                break;
+            case 'GreaterEqualsDate':
+                column.columnDef.filterFn = GreaterEqualsDate;
+                break;
+            case 'GreaterDate':
+                column.columnDef.filterFn = GreaterDate;
+                break;
+            case 'DifferentDate':
+                column.columnDef.filterFn = DifferentDate;
+                break;
+            case 'EmptyDate':
+                column.columnDef.filterFn = EmptyDate;
+                break;
+            case 'ExistsDate':
+                column.columnDef.filterFn = ExistsDate;
+                break;
+             case 'multiSelectFilter':
+                setMultilShow(true)
+                break;
+            default:
+                column.columnDef.filterFn = e.target.value;
+        }
+
         if (e.target.value === "EmptyDate") {
             column.setFilterValue("0001-01-01")
         } else if (e.target.value === "ExistsDate") {

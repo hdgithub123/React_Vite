@@ -8,7 +8,7 @@ function DateTimeFilter({ column }) {
     const [multilShow, setMultilShow] = useState(false);
 
     useEffect(() => {
-       switch (filterFn) {
+        switch (filterFn) {
             case 'EqualsDateTime':
                 column.columnDef.filterFn = EqualsDateTime;
                 break;
@@ -39,11 +39,42 @@ function DateTimeFilter({ column }) {
             default:
                 column.columnDef.filterFn = EqualsDateTime;
         }
-    }, [filterFn]);
+    }, []);
 
     const handleFilterChange = (e) => {
         setFilterFn(e.target.value);
         setMultilShow(false)
+        switch (e.target.value) {
+            case 'EqualsDateTime':
+                column.columnDef.filterFn = EqualsDateTime;
+                break;
+            case 'weakEqualsDateTime':
+                column.columnDef.filterFn = weakEqualsDateTime;
+                break;
+            case 'weakDateTime':
+                column.columnDef.filterFn = weakDateTime;
+                break;
+            case 'GreaterEqualsDateTime':
+                column.columnDef.filterFn = GreaterEqualsDateTime;
+                break;
+            case 'GreaterDateTime':
+                column.columnDef.filterFn = GreaterDateTime;
+                break;
+            case 'DifferentDateTime':
+                column.columnDef.filterFn = DifferentDateTime;
+                break;
+            case 'EmptyDateTime':
+                column.columnDef.filterFn = EmptyDateTime;
+                break;
+            case 'ExistsDateTime':
+                column.columnDef.filterFn = ExistsDateTime;
+                break;
+            case 'multiSelectFilter':
+                setMultilShow(true)
+                break;
+            default:
+                column.columnDef.filterFn = EqualsDateTime;
+        }
         if (e.target.value === "EmptyDateTime") {
             column.setFilterValue("0001-01-01 00:00")
         } else if (columnFilterValue) {
