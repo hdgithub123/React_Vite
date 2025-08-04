@@ -114,6 +114,18 @@ cell: (
   NumberUsCell,
   NumberVnCell,
 )
+
+có thể tự xây dựng cell với các tham số đầu vào có sẵn:
+
+
+Thuộc tính	    Mô tả
+getValue()	    Trả về giá trị của ô (dữ liệu gốc)
+row	            Thông tin về dòng hiện tại (row.original, row.index, v.v.)
+column	        Thông tin về cột hiện tại
+table	        Toàn bộ bảng (để truy cập state, API, v.v.)
+renderValue()	Trả về giá trị đã được format nếu có
+cell	        Thông tin chi tiết về ô (nếu bạn dùng display column)
+
 với NumberCell,NumberUsCell,NumberVnCell phải được khai báo  
             cell: ({ cell }) => (
                     <NumberCell
