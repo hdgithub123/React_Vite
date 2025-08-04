@@ -81,6 +81,7 @@ ví dụ: đối với dữ liệu có phân bậc
 column = [
    {
         accessorKey: 'key of data',
+        accessorFn: accessorFn?: (originalRow: TData, index: number) => any // ví dụ row => row.active === 1,  --> hàm biến đổi thông tin trong dữ liệu trong Table nhưng không làm thay đổi dữ liệu. ví dụ biến đôi 1- male, 0 -female nhưng data vẫn là 0,1
         header: 'Chuỗi hiển thị lên header hoặc có thể sử dụng 1 đoạn mã JSX ',
         id: 'key of data', // bắt buộc phải có
         filterType: 'text of type filter', // có các dạng filter  (text, NumberFilter, DateFilter, DateTimeFilter, RangeFilter, CheckboxFilter)
