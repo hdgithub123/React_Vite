@@ -80,6 +80,7 @@ ví dụ: đối với dữ liệu có phân bậc
 column = [
    {
         accessorKey: 'key of data',
+        accessorFn?: (originalRow: TData, index: number) => any  //--> dùng thay cho accessorKey để chuyển đổi kiểu dữ liêu. nếu dùng hàm này thì cell.getValue() sẽ lấy giá trị theo hàm này. ví dụ accessorFn: row => row.active === 1, biến đổi dữ liệu thành true, false.
         header: 'Chuỗi hiển thị lên header hoặc có thể sử dụng 1 đoạn mã JSX ',
         id: 'key of data', // bắt buộc phải có
         filterType: 'text of type filter', // có các dạng filter  (text, number, date, dateTime, range, checkbox,multiSelect)
@@ -125,6 +126,8 @@ column	        Thông tin về cột hiện tại
 table	        Toàn bộ bảng (để truy cập state, API, v.v.)
 renderValue()	Trả về giá trị đã được format nếu có
 cell	        Thông tin chi tiết về ô (nếu bạn dùng display column)
+chú ý nếu có accessorFn: thì dữ liệu sẽ getValue() sẽ được lấy theo hàm accessorFn
+
 
 với NumberCell,NumberUsCell,NumberVnCell phải được khai báo  
             cell: ({ cell }) => (
