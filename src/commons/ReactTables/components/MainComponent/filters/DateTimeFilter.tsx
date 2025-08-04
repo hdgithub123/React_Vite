@@ -3,7 +3,7 @@ import { DebouncedInput } from '../../utils/Others/DebouncedInput';
 import MultiSelectFilter from './MultiSelectFilter';
 
 function DateTimeFilter({ column }) {
-    const [filterFn, setFilterFn] = useState('');
+    const [filterFn, setFilterFn] = useState('EqualsDateTime');
     const [columnFilterValue, setcolumnFilterValue] = useState('');
     const [multilShow, setMultilShow] = useState(false);
 
