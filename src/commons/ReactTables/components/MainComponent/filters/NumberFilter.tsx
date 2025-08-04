@@ -1,21 +1,15 @@
-import { useState, useEffect } from 'react';
-import {DebouncedInput} from '../../utils/Others/DebouncedInput';
+import { useState, useEffect, useRef } from 'react';
+import { DebouncedInput } from '../../utils/Others/DebouncedInput';
 import MultiSelectFilter from './MultiSelectFilter';
 
 
 function NumberFilter({ column }) {
-    const [filterFn, setFilterFn] = useState('');
+    const [filterFn, setFilterFn] = useState('EqualsNumber');
     const [columnFilterValue, setcolumnFilterValue] = useState('');
     const [multilShow, setMultilShow] = useState(false);
-    useEffect(() => {
-        setFilterFn('EqualsNumber');
-        column.columnDef.filterFn = EqualsNumber;
-    }, []);
 
-    const handleFilterChange = (e) => {
-        setFilterFn(e.target.value);
-        setMultilShow(false)
-        switch (e.target.value) {
+    useEffect(() => {
+        switch (filterFn) {
             case 'EqualsNumber':
                 column.columnDef.filterFn = EqualsNumber;
                 break;
@@ -44,14 +38,21 @@ function NumberFilter({ column }) {
                 setMultilShow(true)
                 break;
             default:
-                column.columnDef.filterFn = e.target.value;
+                column.columnDef.filterFn = EqualsNumber;
         }
 
+    }, [filterFn]);
+
+
+
+    const handleFilterChange = (e) => {
+        setFilterFn(e.target.value);
+        setMultilShow(false)
         if (e.target.value === "EmptyNumber") {
             column.setFilterValue("Empty")
-        } else if (e.target.value === "ExistsNumber"){
+        } else if (e.target.value === "ExistsNumber") {
             column.setFilterValue("Not Empty")
-        }else if (columnFilterValue) {
+        } else if (columnFilterValue) {
             column.setFilterValue(columnFilterValue);
         } else {
             column.setFilterValue(undefined); // or handle the empty case as needed
@@ -65,7 +66,7 @@ function NumberFilter({ column }) {
     }
     return (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-               {!multilShow && <DebouncedInput
+            {!multilShow && <DebouncedInput
                 style={{ width: 'calc(100% - 35px)', marginRight: '2px' }}
                 onChange={handelOnChange}
                 placeholder={`Search...`}
@@ -106,7 +107,7 @@ const EmptyNumber = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
 
     // Return true if the cell value is null or an empty string, otherwise return false
-    return cellValue === null || cellValue === '' || cellValue === undefined || !cellValue ;
+    return cellValue === null || cellValue === '' || cellValue === undefined || !cellValue;
 
 }
 

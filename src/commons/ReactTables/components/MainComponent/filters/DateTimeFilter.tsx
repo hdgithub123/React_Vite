@@ -6,15 +6,9 @@ function DateTimeFilter({ column }) {
     const [filterFn, setFilterFn] = useState('');
     const [columnFilterValue, setcolumnFilterValue] = useState('');
     const [multilShow, setMultilShow] = useState(false);
-    useEffect(() => {
-        setFilterFn('EqualsDateTime');
-        column.columnDef.filterFn = EqualsDateTime;
-    }, []);
 
-    const handleFilterChange = (e) => {
-        setFilterFn(e.target.value);
-        setMultilShow(false)
-        switch (e.target.value) {
+    useEffect(() => {
+       switch (filterFn) {
             case 'EqualsDateTime':
                 column.columnDef.filterFn = EqualsDateTime;
                 break;
@@ -43,8 +37,13 @@ function DateTimeFilter({ column }) {
                 setMultilShow(true)
                 break;
             default:
-                column.columnDef.filterFn = e.target.value;
+                column.columnDef.filterFn = EqualsDateTime;
         }
+    }, [filterFn]);
+
+    const handleFilterChange = (e) => {
+        setFilterFn(e.target.value);
+        setMultilShow(false)
         if (e.target.value === "EmptyDateTime") {
             column.setFilterValue("0001-01-01 00:00")
         } else if (columnFilterValue) {
@@ -91,14 +90,14 @@ export default DateTimeFilter;
 const ExistsDateTime = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
     // Return true if the cell value is null or an empty string, otherwise return false
-   return cellValue !== null && cellValue !== '' && cellValue !== undefined && cellValue;
+    return cellValue !== null && cellValue !== '' && cellValue !== undefined && cellValue;
 }
 
 const EmptyDateTime = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
 
     // Return true if the cell value is null or an empty string, otherwise return false
-    return cellValue === null || cellValue === '' || cellValue === undefined || !cellValue ;
+    return cellValue === null || cellValue === '' || cellValue === undefined || !cellValue;
 
 }
 

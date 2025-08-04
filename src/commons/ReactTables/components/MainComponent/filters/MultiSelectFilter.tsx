@@ -4,7 +4,7 @@ import useOnClickOutside from '../../utils/Others/useOnClickOutside';
 import useAutoAdjustAbsolutePosition from '../../utils/Others/useAutoAdjustChildPosition';
 import { DebouncedInput } from '../../utils/Others/DebouncedInput';
 
-function MultiSelectFilter({ column, table }) {
+function MultiSelectFilter({ column }) {
   const [allValues, setAllValues] = useState(Array.from(column.getFacetedUniqueValues().keys()));
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedValues, setSelectedValues] = useState(() => column.getFilterValue() || []);
@@ -105,7 +105,7 @@ function MultiSelectFilter({ column, table }) {
                     const fakeContext = {
                       getValue: () => value,
                       column,
-                      table,
+                      table:null,
                       row: undefined,
                     };
 
@@ -160,6 +160,6 @@ const multiSelectFn = (row, columnId, valueFilterArray) => {
   const cellValue = row.getValue(columnId);
   const stringCellValue = String(cellValue)
   if (!valueFilterArray || valueFilterArray.length === 0) return true;
-  if (!cellValue || cellValue.length === 0 || cellValue === undefined || cellValue === null) return valueFilterArray.includes(false);
+  if (!cellValue || cellValue.length === 0 || cellValue === undefined || cellValue === null || cellValue === '') return valueFilterArray.includes(false);
   return valueFilterArray.includes(stringCellValue);
 };

@@ -1,19 +1,13 @@
 import { useState, useEffect } from 'react';
-import {DebouncedInput} from '../../utils/Others/DebouncedInput';
+import { DebouncedInput } from '../../utils/Others/DebouncedInput';
 import MultiSelectFilter from './MultiSelectFilter';
 function DateFilter({ column }) {
-    const [filterFn, setFilterFn] = useState('');
+    const [filterFn, setFilterFn] = useState('EqualsDate');
     const [columnFilterValue, setcolumnFilterValue] = useState('');
     const [multilShow, setMultilShow] = useState(false);
-    useEffect(() => {
-        setFilterFn('EqualsDate');
-        column.columnDef.filterFn = EqualsDate;
-    }, []);
 
-    const handleFilterChange = (e) => {
-        setFilterFn(e.target.value);
-        setMultilShow(false)
-        switch (e.target.value) {
+    useEffect(() => {
+        switch (filterFn) {
             case 'EqualsDate':
                 column.columnDef.filterFn = EqualsDate;
                 break;
@@ -42,10 +36,14 @@ function DateFilter({ column }) {
                 setMultilShow(true)
                 break;
             default:
-                column.columnDef.filterFn = e.target.value;
+                column.columnDef.filterFn = EqualsDate;
         }
+    }, [filterFn]);
 
 
+    const handleFilterChange = (e) => {
+        setFilterFn(e.target.value);
+        setMultilShow(false)
         if (e.target.value === "EmptyDate") {
             column.setFilterValue("0001-01-01")
         } else if (e.target.value === "ExistsDate") {
@@ -64,7 +62,7 @@ function DateFilter({ column }) {
     }
     return (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-            {!multilShow &&  <DebouncedInput
+            {!multilShow && <DebouncedInput
                 style={{ width: 'calc(100% - 35px)', marginRight: '2px' }}
                 onChange={handelOnChange}
                 placeholder={`Search...`}
@@ -74,7 +72,7 @@ function DateFilter({ column }) {
             />}
             {multilShow && <MultiSelectFilter column={column}></MultiSelectFilter>}
             <select style={{ width: '33px' }} value={filterFn} onChange={handleFilterChange}>
-                 <option value="multiSelectFilter" title="Multi Select">M</option>
+                <option value="multiSelectFilter" title="Multi Select">M</option>
                 <option value="EqualsDate" title="Equal">=</option>
                 <option value="weakEqualsDate" title="Weak Equal">{'≤'}</option>
                 <option value="weakDate" title="Weak">{'<'}</option>
@@ -105,7 +103,7 @@ const EmptyDate = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
 
     // Return true if the cell value is null or an empty string, otherwise return false
-    return cellValue === null || cellValue === '' || cellValue === undefined || !cellValue ;
+    return cellValue === null || cellValue === '' || cellValue === undefined || !cellValue;
 }
 
 const EqualsDate = (row, columnId, value) => {
