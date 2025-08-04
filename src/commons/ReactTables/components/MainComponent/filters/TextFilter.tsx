@@ -11,7 +11,6 @@ function TextFilter({ column }) {
 
 
     useLayoutEffect(() => {
-        console.log("filterFn", filterFn)
         switch (filterFn) {
             case 'NotIncludesString':
                 column.columnDef.filterFn = NotIncludesString;
@@ -124,7 +123,6 @@ const EmptyString = (row, columnId, value) => {
     const cellValue = row.getValue(columnId);
 
     // Return true if the cell value is null or an empty string, otherwise return false
-    // return !!(cellValue === null || cellValue === '' || cellValue === undefined || !cellValue);
     return !cellValue
 }
 
