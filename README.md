@@ -42,6 +42,7 @@ SearchDropDown(
     {
     data,
     columns,
+    onGlobalFilterChange,
     onRowSelect,
     columnDisplay, 
     cssStyleTable = null, 

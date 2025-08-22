@@ -40,7 +40,7 @@ import { throttle } from '../../components/utils/Others/throttle';
 import { SearchFilter } from './SearchFilter';
 
 
-function SearchDropDown({ data, columns, columnsShow = [] , onRowSelect = ()=>{}, columnDisplay, cssStyleTable = null, cssStyleTextFilter = null, }) {
+function SearchDropDown({ data, columns, columnsShow = [] ,onGlobalFilterChange = () => {}, onRowSelect = ()=>{}, columnDisplay, cssStyleTable = null, cssStyleTextFilter = null, }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -194,6 +194,7 @@ function SearchDropDown({ data, columns, columnsShow = [] , onRowSelect = ()=>{}
             updatedFilter.filterGlobalValue = rowClick[columnDisplay]
             // Set the global filter with the updated object
             setGlobalFilter(updatedFilter);
+            onGlobalFilterChange(updatedFilter.filterGlobalValue);
             setisDropDown(false)
         }
     };
@@ -280,6 +281,7 @@ function SearchDropDown({ data, columns, columnsShow = [] , onRowSelect = ()=>{}
                     updatedFilter.filterGlobalValue = rowEnter[columnDisplay]
                     // Set the global filter with the updated object
                     setGlobalFilter(updatedFilter);
+                    onGlobalFilterChange(updatedFilter.filterGlobalValue);
                     setisDropDown(false)
             }
         }
