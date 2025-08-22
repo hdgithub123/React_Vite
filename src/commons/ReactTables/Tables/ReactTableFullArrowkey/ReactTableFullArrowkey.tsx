@@ -271,9 +271,9 @@ function ReactTableFullArrowkey({ data, columns, columnsShow = [], onDataChange 
             const listItemSelect = parentRef.current.querySelector(`tr[data-key="${selectedIndex}"]`);
             const listContainerRectTop = parentRef.current.getBoundingClientRect().top; // vi tri top tọa độ table
             // Tính toán chiều cao của header
-            const theadHeight = parentRef.current.querySelector('thead').getBoundingClientRect().height; // chiều cao của phần header
-            const tfootheight = parentRef.current.querySelector('tfoot').getBoundingClientRect().height;
-            const tfootTop = parentRef.current.querySelector('tfoot').getBoundingClientRect().top; // vị trí top của footer
+            const theadHeight = parentRef.current.querySelector('thead')?.getBoundingClientRect().height || 0; // chiều cao của phần header
+            const tfootheight = parentRef.current.querySelector('tfoot')?.getBoundingClientRect().height || 0;
+            const tfootTop = parentRef.current.querySelector('tfoot')?.getBoundingClientRect().top || 0; // vị trí top của footer
 
             let firstKey = 1
             for (let i = 1; i < 1000; i++) {

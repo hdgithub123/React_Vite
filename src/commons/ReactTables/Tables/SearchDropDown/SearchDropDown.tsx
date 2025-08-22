@@ -40,7 +40,7 @@ import { throttle } from '../../components/utils/Others/throttle';
 import { SearchFilter } from './SearchFilter';
 
 
-function SearchDropDown({ data, columns, columnsShow = [] ,onGlobalFilterChange = () => {}, onRowSelect = ()=>{}, columnDisplay, cssStyleTable = null, cssStyleTextFilter = null, }) {
+function SearchDropDown({ data, columns, columnsShow = [], onGlobalFilterChange = () => { }, onRowSelect = () => { }, columnDisplay, cssStyleTable = null, cssStyleTextFilter = null, }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -145,14 +145,14 @@ function SearchDropDown({ data, columns, columnsShow = [] ,onGlobalFilterChange 
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
-            if (active && over && active.id !== over.id) {
-                setColumnOrder(columnOrder => {
-                    const oldIndex = columnOrder.indexOf(active.id as string);
-                    const newIndex = columnOrder.indexOf(over.id as string);
-                    return arrayMove(columnOrder, oldIndex, newIndex);
+        if (active && over && active.id !== over.id) {
+            setColumnOrder(columnOrder => {
+                const oldIndex = columnOrder.indexOf(active.id as string);
+                const newIndex = columnOrder.indexOf(over.id as string);
+                return arrayMove(columnOrder, oldIndex, newIndex);
 
-                });
-            }
+            });
+        }
     };
 
 
@@ -209,9 +209,9 @@ function SearchDropDown({ data, columns, columnsShow = [] ,onGlobalFilterChange 
             const listItemSelect = parentRef.current.querySelector(`tr[data-key="${selectedIndex}"]`);
             const listContainerRectTop = parentRef.current.getBoundingClientRect().top; // vi tri top tọa độ table
             // Tính toán chiều cao của header
-            const theadHeight = parentRef.current.querySelector('thead').getBoundingClientRect().height; // chiều cao của phần header
-            const tfootheight = parentRef.current.querySelector('tfoot').getBoundingClientRect().height;
-            const tfootTop = parentRef.current.querySelector('tfoot').getBoundingClientRect().top; // vị trí top của footer
+            const theadHeight = parentRef.current.querySelector('thead')?.getBoundingClientRect().height || 0;// chiều cao của phần header
+            const tfootheight = parentRef.current.querySelector('tfoot')?.getBoundingClientRect().height || 0;
+            const tfootTop = parentRef.current.querySelector('tfoot')?.getBoundingClientRect().top || 0; // vị trí top của footer
 
             let firstKey = 1
             for (let i = 1; i < 1000; i++) {
@@ -275,14 +275,14 @@ function SearchDropDown({ data, columns, columnsShow = [] ,onGlobalFilterChange 
             }
         } else if (e.key === 'Enter') {
             if (onRowSelect) {
-                    const rowEnter = getOneRowData(rows[selectedIndex])
-                    onRowSelect(rowEnter);
-                    let updatedFilter = { ...globalFilter };
-                    updatedFilter.filterGlobalValue = rowEnter[columnDisplay]
-                    // Set the global filter with the updated object
-                    setGlobalFilter(updatedFilter);
-                    onGlobalFilterChange(updatedFilter.filterGlobalValue);
-                    setisDropDown(false)
+                const rowEnter = getOneRowData(rows[selectedIndex])
+                onRowSelect(rowEnter);
+                let updatedFilter = { ...globalFilter };
+                updatedFilter.filterGlobalValue = rowEnter[columnDisplay]
+                // Set the global filter with the updated object
+                setGlobalFilter(updatedFilter);
+                onGlobalFilterChange(updatedFilter.filterGlobalValue);
+                setisDropDown(false)
             }
         }
     };
@@ -290,17 +290,17 @@ function SearchDropDown({ data, columns, columnsShow = [] ,onGlobalFilterChange 
     const handleonBlur = () => {
         setSelectedIndex(-1);
     }
-    
+
 
     const handleDivonMouseLeave = () => {
         setisDropDown(false)
     }
-    
+
     const handleonhandleonFilterDoubleClick = () => {
         setisDropDown(true)
     }
 
-    
+
     // bắt đầu render Virtual
 
     const { rows } = table.getRowModel()
@@ -338,93 +338,93 @@ function SearchDropDown({ data, columns, columnsShow = [] ,onGlobalFilterChange 
     return (
         <div className={styles.general_table}>
             <div className={styles.container} onMouseLeave={handleDivonMouseLeave}>
-                {/* Tạo Global Filter */} 
+                {/* Tạo Global Filter */}
                 <div className={styles.globalFilter}>
                     <SearchFilter globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} onhandleKeyDown={handleKeyDown} onhandleonDoubleClick={handleonhandleonFilterDoubleClick} cssStyleTextFilter={cssStyleTextFilter} ></SearchFilter>
                 </div>
                 {isDropDown === true ? (
-                     <div className={styles.div_table_container}>
-                    <DndContext
-                        collisionDetection={closestCenter}
-                        modifiers={[restrictToHorizontalAxis]}
-                        onDragEnd={handleDragEnd}
-                        autoScroll={false}
-                        sensors={sensors}
-                    >
-                        <div
-                            ref={parentRef}
-                            className={styles.div_table_container_dnd}
-                            style={cssStyleTable}
+                    <div className={styles.div_table_container}>
+                        <DndContext
+                            collisionDetection={closestCenter}
+                            modifiers={[restrictToHorizontalAxis]}
+                            onDragEnd={handleDragEnd}
+                            autoScroll={false}
+                            sensors={sensors}
                         >
-                            {/* Bắt đầu render table */}
-                            <table id={'React_table_id'} className={styles.table_container} onKeyDown={handleKeyDown} onBlur={handleonBlur}>
-                                <thead className={styles.table_head}>
-                                    {table.getHeaderGroups().map((headerGroup, rowIndex) => (
-                                        <tr className={styles.table_head_tr} key={headerGroup.id}>
-                                            <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
-                                                {headerGroup.headers.map((header) =>
-                                                    isLeafColumn(header) ? (
-                                                        <DraggableTableHeader key={header.id} header={header} />
-                                                    ) : (
-                                                        <StaticTableHeader key={header.id} header={header} />
-                                                    )
-                                                )}
-                                            </SortableContext>
-                                        </tr>
-                                    ))}
-                                </thead>
-                                {table.getRowModel().rows.length > 0 ? (
-                                    <tbody className={styles.table_body}>
-                                        {before > 0 && (
-                                            <tr className={styles.table_body_tr}>
-                                                <td style={{ height: `${before}px` }}></td>
-                                            </tr>
-                                        )}
-                                        {items.map((virtualRow, index) => {
-                                            const row = rows[virtualRow.index]
-                                            return (
-                                                <tr
-                                                    className={`${styles.table_body_tr} ${rows.indexOf(row) === selectedIndex ? styles.table_body_highlightkeymove : ''}`}
-                                                    data-key={rows.indexOf(row)}
-                                                    key={row.id}
-                                                    onDoubleClick={() => handleRowClick(row)}
-                                                >
-                                                    {row.getVisibleCells().map((cell) => {
-                                                        return (
-                                                            <DragACell key={cell.id} cell={cell} />
+                            <div
+                                ref={parentRef}
+                                className={styles.div_table_container_dnd}
+                                style={cssStyleTable}
+                            >
+                                {/* Bắt đầu render table */}
+                                <table id={'React_table_id'} className={styles.table_container} onKeyDown={handleKeyDown} onBlur={handleonBlur}>
+                                    <thead className={styles.table_head}>
+                                        {table.getHeaderGroups().map((headerGroup, rowIndex) => (
+                                            <tr className={styles.table_head_tr} key={headerGroup.id}>
+                                                <SortableContext id="sortable-ContextHeaders" items={columnOrder} strategy={horizontalListSortingStrategy}>
+                                                    {headerGroup.headers.map((header) =>
+                                                        isLeafColumn(header) ? (
+                                                            <DraggableTableHeader key={header.id} header={header} />
+                                                        ) : (
+                                                            <StaticTableHeader key={header.id} header={header} />
                                                         )
-                                                    })}
-                                                </tr>
-                                            )
-                                        })}
-                                        {after > 0 && (
-                                            <tr className={styles.table_body_tr}>
-                                                <td style={{ height: `${after}px` }}></td>
+                                                    )}
+                                                </SortableContext>
                                             </tr>
-                                        )}
-                                    </tbody>
-                                ) : (
-                                    <tbody>
-                                        <tr className={styles.table_body}>
-                                            <td></td>
-                                            <td colSpan={countLeafColumns(columns)} style={{ textAlign: 'center' }}>
-                                                No data available
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                )}
-                                {shouldRenderFooter && <tfoot className={styles.table_footer}>
-                                    <tr className={styles.table_footer_tr}>
-                                        {/* <td className={styles.footer_checkbox}></td> */}
-                                        {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
-                                            <DraggableTablefooter key={header.id} header={header} />
                                         ))}
-                                    </tr>
-                                </tfoot>}
-                            </table>
-                        </div>
-                    </DndContext>
-                </div>) : null}
+                                    </thead>
+                                    {table.getRowModel().rows.length > 0 ? (
+                                        <tbody className={styles.table_body}>
+                                            {before > 0 && (
+                                                <tr className={styles.table_body_tr}>
+                                                    <td style={{ height: `${before}px` }}></td>
+                                                </tr>
+                                            )}
+                                            {items.map((virtualRow, index) => {
+                                                const row = rows[virtualRow.index]
+                                                return (
+                                                    <tr
+                                                        className={`${styles.table_body_tr} ${rows.indexOf(row) === selectedIndex ? styles.table_body_highlightkeymove : ''}`}
+                                                        data-key={rows.indexOf(row)}
+                                                        key={row.id}
+                                                        onDoubleClick={() => handleRowClick(row)}
+                                                    >
+                                                        {row.getVisibleCells().map((cell) => {
+                                                            return (
+                                                                <DragACell key={cell.id} cell={cell} />
+                                                            )
+                                                        })}
+                                                    </tr>
+                                                )
+                                            })}
+                                            {after > 0 && (
+                                                <tr className={styles.table_body_tr}>
+                                                    <td style={{ height: `${after}px` }}></td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    ) : (
+                                        <tbody>
+                                            <tr className={styles.table_body}>
+                                                <td></td>
+                                                <td colSpan={countLeafColumns(columns)} style={{ textAlign: 'center' }}>
+                                                    No data available
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    )}
+                                    {shouldRenderFooter && <tfoot className={styles.table_footer}>
+                                        <tr className={styles.table_footer_tr}>
+                                            {/* <td className={styles.footer_checkbox}></td> */}
+                                            {table.getHeaderGroups()[leafHeaderGroupIndex].headers.map(header => (
+                                                <DraggableTablefooter key={header.id} header={header} />
+                                            ))}
+                                        </tr>
+                                    </tfoot>}
+                                </table>
+                            </div>
+                        </DndContext>
+                    </div>) : null}
             </div>
         </div>
 
