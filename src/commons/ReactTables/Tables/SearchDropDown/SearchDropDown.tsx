@@ -186,6 +186,12 @@ function SearchDropDown({ data, columns, columnsShow = [], onGlobalFilterChange 
         table.setExpanded(true);
     }, [columnFilters]);
 
+
+        // sử dụng để expanded all
+    useEffect(() => {
+        onGlobalFilterChange(globalFilter.filterGlobalValue);
+    }, [globalFilter]);
+
     const handleRowClick = (rowData) => {
         const rowClick = getOneRowData(rowData)
         if (onRowSelect) {
@@ -194,7 +200,7 @@ function SearchDropDown({ data, columns, columnsShow = [], onGlobalFilterChange 
             updatedFilter.filterGlobalValue = rowClick[columnDisplay]
             // Set the global filter with the updated object
             setGlobalFilter(updatedFilter);
-            onGlobalFilterChange(updatedFilter.filterGlobalValue);
+            // onGlobalFilterChange(updatedFilter.filterGlobalValue);
             setisDropDown(false)
         }
     };
@@ -227,7 +233,7 @@ function SearchDropDown({ data, columns, columnsShow = [], onGlobalFilterChange 
                 }
             }
             const firstItem = parentRef.current.querySelector(`tbody tr:nth-child(${firstKey})`);
-            const dataKey = firstItem.getAttribute('data-key');
+            const dataKey = firstItem?.getAttribute('data-key') || 0;
             let listItem = null
             if (listItemSelect) {
                 listItem = listItemSelect
@@ -281,7 +287,7 @@ function SearchDropDown({ data, columns, columnsShow = [], onGlobalFilterChange 
                 updatedFilter.filterGlobalValue = rowEnter[columnDisplay]
                 // Set the global filter with the updated object
                 setGlobalFilter(updatedFilter);
-                onGlobalFilterChange(updatedFilter.filterGlobalValue);
+                // onGlobalFilterChange(updatedFilter.filterGlobalValue);
                 setisDropDown(false)
             }
         }

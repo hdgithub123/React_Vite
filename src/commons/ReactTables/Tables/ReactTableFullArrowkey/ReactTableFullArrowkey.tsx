@@ -289,7 +289,7 @@ function ReactTableFullArrowkey({ data, columns, columnsShow = [], onDataChange 
                 }
             }
             const firstItem = parentRef.current.querySelector(`tbody tr:nth-child(${firstKey})`);
-            const dataKey = firstItem.getAttribute('data-key');
+            const dataKey = firstItem?.getAttribute('data-key') || 0;
             let listItem = null
             if (listItemSelect) {
                 listItem = listItemSelect
