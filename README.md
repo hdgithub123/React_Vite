@@ -42,7 +42,8 @@ SearchDropDown(
     {
     data,
     columns,
-    onGlobalFilterChange,
+    onGlobalFilterChange,  --> hàm trả ra giá trị đang global filter
+    onChangeGlobalFilter: string,  ---> đưa giá trị vào global filter
     onRowSelect,
     columnDisplay, 
     cssStyleTable = null, 

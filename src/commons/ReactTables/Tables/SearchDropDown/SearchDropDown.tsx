@@ -40,7 +40,7 @@ import { throttle } from '../../components/utils/Others/throttle';
 import { SearchFilter } from './SearchFilter';
 
 
-function SearchDropDown({ data, columns, columnsShow = [], onGlobalFilterChange = () => { }, onRowSelect = () => { }, columnDisplay, cssStyleTable = null, cssStyleTextFilter = null, }) {
+function SearchDropDown({ data, columns, columnsShow = [], globalFilterValue = '', onChangeGlobalFilter = () => { }, onRowSelect = () => { }, columnDisplay, cssStyleTable = null, cssStyleTextFilter = null, }) {
     const [dataDef, setDataDef] = useState(data);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnOrder, setColumnOrder] = useState<string[]>(() =>
@@ -51,7 +51,7 @@ function SearchDropDown({ data, columns, columnsShow = [], onGlobalFilterChange 
     const GlobalFilterFn: FilterFn<any> = (rows, columnIds, filterValue) => {
         const valueInColumnId = String(rows.original[columnIds])
         const valueGlobalFilter = String(filterValue.filterGlobalValue)
-        let checkboxCheck
+        let checkboxCheck: any
         // const globalValueCheck = valueInColumnId.includes(valueGlobalFilter);
         const globalValueCheck = valueInColumnId.toLowerCase().includes(valueGlobalFilter.toLowerCase());
 
@@ -131,6 +131,10 @@ function SearchDropDown({ data, columns, columnsShow = [], onGlobalFilterChange 
         }, 0);
     };
 
+    useEffect(() => {
+        setGlobalFilter(prev => ({ ...prev, filterGlobalValue: globalFilterValue }));
+    }, [globalFilterValue]);
+
     const DragACell = ({ cell }) => {
         return <DragAlongCell cell={cell}></DragAlongCell>
 
@@ -187,9 +191,9 @@ function SearchDropDown({ data, columns, columnsShow = [], onGlobalFilterChange 
     }, [columnFilters]);
 
 
-        // sử dụng để expanded all
+    // sử dụng để expanded all
     useEffect(() => {
-        onGlobalFilterChange(globalFilter.filterGlobalValue);
+        onChangeGlobalFilter(globalFilter.filterGlobalValue);
     }, [globalFilter]);
 
     const handleRowClick = (rowData) => {
@@ -200,7 +204,6 @@ function SearchDropDown({ data, columns, columnsShow = [], onGlobalFilterChange 
             updatedFilter.filterGlobalValue = rowClick[columnDisplay]
             // Set the global filter with the updated object
             setGlobalFilter(updatedFilter);
-            // onGlobalFilterChange(updatedFilter.filterGlobalValue);
             setisDropDown(false)
         }
     };
